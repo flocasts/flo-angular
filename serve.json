@@ -1,6 +1,20 @@
 {
   "public": "dist/flosports-component-library",
-  "rewrites": [
-    { "source": "**", "destination": "/index.html" }
-  ]
+  "rewrites": [{
+    "source": "**",
+    "destination": "/index.html"
+  }],
+  "headers": [{
+    "source": "**/*.@(html|js|css|jpg|jpeg|gif|png)",
+    "headers": [{
+      "key": "Cache-Control",
+      "value": "max-age=7200"
+    }]
+  }, {
+    "source": "404.html",
+    "headers": [{
+      "key": "Cache-Control",
+      "value": "max-age=300"
+    }]
+  }]
 }
