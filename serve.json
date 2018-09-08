@@ -1,0 +1,6 @@
+{
+  "public": "dist/flosports-component-library",
+  "rewrites": [
+    { "source": "**", "destination": "/index.html" }
+  ]
+}
