@@ -1,1 +1,1 @@
-web: node_modules/.bin/serve --port $PORT
+web: node_modules/.bin/serve -p $PORT
