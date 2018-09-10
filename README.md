@@ -1,6 +1,7 @@
-# FlosportsComponentLibrary
+# Flosports Component Library
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.0.0-beta.2.
+## Building ALL libraries
+Run `npm run prepare`. This commmand is also exectud after every `npm install`.
 
 ## Development server
 

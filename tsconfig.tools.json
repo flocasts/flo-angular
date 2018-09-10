@@ -5,7 +5,7 @@
     "outDir": "./dist/out-tsc",
     "sourceMap": true,
     "declaration": false,
-    "module": "es2015",
+    "module": "commonjs",
     "moduleResolution": "node",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -16,14 +16,6 @@
     "lib": [
       "es2017",
       "dom"
-    ],
-    "paths": {
-      "@flosportsinc/window-frame": [
-        "dist/flosportsinc/window-frame"
-      ],
-      "@flosportsinc/window-frame/*": [
-        "dist/flosportsinc/window-frame/*"
-      ]
-    }
+    ]
   }
 }
