@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core'
 
 @Component({
   selector: 'flo-window-frame',
@@ -9,11 +9,5 @@ import { Component, OnInit } from '@angular/core';
   `,
   styles: []
 })
-export class WindowFrameComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class WindowFrameComponent {
 }

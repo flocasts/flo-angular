@@ -1,5 +1,5 @@
-import { NgModule } from '@angular/core';
-import { WindowFrameComponent } from './window-frame.component';
+import { NgModule } from '@angular/core'
+import { WindowFrameComponent } from './window-frame.component'
 
 @NgModule({
   imports: [

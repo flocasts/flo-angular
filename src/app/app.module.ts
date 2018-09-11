@@ -4,11 +4,13 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { FramerComponent } from './framer/framer.component'
 import { WindowFrameModule } from '@flosportsinc/window-frame'
+import { HomeComponent } from './home/home.component'
 
 @NgModule({
   declarations: [
     AppComponent,
-    FramerComponent
+    FramerComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,

@@ -1,20 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { WindowFrameComponent } from './window-frame.component'
+import { HomeComponent } from './home.component'
 
-describe('WindowFrameComponent', () => {
-  let component: WindowFrameComponent
-  let fixture: ComponentFixture<WindowFrameComponent>
+// tslint:disable:no-let
+describe('HomeComponent', () => {
+  let component: HomeComponent
+  let fixture: ComponentFixture<HomeComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WindowFrameComponent ]
+      declarations: [ HomeComponent ]
     })
     .compileComponents()
   }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WindowFrameComponent)
+    fixture = TestBed.createComponent(HomeComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })
