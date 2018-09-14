@@ -1,24 +1,22 @@
 <h2>Window Frame</h2>
 <p>The <em>flo-window-frame</em> component is a response grid window/tile manager.</p>
-
-<div style="background-color: red; height: 500px;">
-  <flo-window-frame>
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <!-- <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940">
-    <img floWindowFrame src="https://images.pexels.com/photos/8769/pen-writing-notes-studying.jpg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"> -->
-    <!-- <video floWindowFrameElement width="400" controls>
-      <source src="https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
-    </video>
-    <video floWindowFrameElement width="400" controls>
-      <source src="https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
-    </video> -->
-  </flo-window-frame>
+<h4>Goals:</h4>
+<ul>
+  <li>Responsive for an arbitrary number of elements with a high degree of layout symmetry.</li>
+  <li>Primary use for video element layout, but arbitarty elements should also work.</li>
+  <li>CSS based solution with minimal Javascript</li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+<div>
+  <div *ngFor="let item of containers">
+    <flo-window-frame>
+      <video floWindowFrame playsinline controls autoplay muted *ngFor="let _ of item">
+        <source src="https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+      </video>
+    </flo-window-frame>
+    <br>
+  </div>
 </div>
