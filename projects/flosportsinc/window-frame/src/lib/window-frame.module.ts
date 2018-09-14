@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core'
 import { WindowFrameComponent } from './window-frame.component'
+import { WindowFrameDirective } from './window-frame.directive'
 
 @NgModule({
-  imports: [
-  ],
-  declarations: [WindowFrameComponent],
-  exports: [WindowFrameComponent]
+  declarations: [WindowFrameComponent, WindowFrameDirective],
+  exports: [WindowFrameComponent, WindowFrameDirective],
+  entryComponents: [WindowFrameComponent]
 })
 export class WindowFrameModule { }

@@ -1,2 +1,22 @@
 <h2>Window Frame</h2>
-<flo-window-frame></flo-window-frame>
+<p>The <em>flo-window-frame</em> component is a response grid window/tile manager.</p>
+<h4>Goals:</h4>
+<ul>
+  <li>Responsive for an arbitrary number of elements with a high degree of layout symmetry.</li>
+  <li>Primary use for video element layout, but arbitarty elements should also work.</li>
+  <li>CSS based solution with minimal Javascript</li>
+  <li></li>
+  <li></li>
+  <li></li>
+  <li></li>
+</ul>
+<div>
+  <div *ngFor="let item of containers">
+    <flo-window-frame>
+      <video floWindowFrame playsinline controls autoplay muted *ngFor="let _ of item">
+        <source src="https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+      </video>
+    </flo-window-frame>
+    <br>
+  </div>
+</div>
