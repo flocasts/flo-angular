@@ -1,6 +1,6 @@
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ApplicationRef, ViewChild, Input, OnInit
+  AfterContentInit, ViewChild, Input, OnInit
 } from '@angular/core'
 import { WindowFrameDirective } from './window-frame.directive'
 
@@ -62,7 +62,7 @@ export class WindowFrameComponent implements AfterContentInit, OnInit {
   @ViewChild('windowFrameContainer') windowFrameContainer: ElementRef<HTMLDivElement>
   @ContentChildren(WindowFrameDirective, { read: ElementRef }) children: QueryList<ElementRef<HTMLDivElement>>
 
-  constructor(private renderer: Renderer2, private elm: ElementRef) { }
+  constructor(private renderer: Renderer2) { }
 
   ngOnInit() {
     const maxWidth = 1.77 * this.maxHeight
