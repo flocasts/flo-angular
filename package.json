@@ -25,6 +25,7 @@
     "core-js": "^2.5.7",
     "rxjs": "^6.3.3",
     "serve": "^10.0.2",
+    "typescript-monads": "^3.3.0",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

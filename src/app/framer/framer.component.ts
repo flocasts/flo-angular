@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-import { distinctUntilChanged } from 'rxjs/operators'
+import { distinctUntilChanged, map, startWith, debounceTime } from 'rxjs/operators'
+import { ICompConfigForm } from './framer.interface'
 
-const fill = (num: number) => Array(num).fill(0).map((_, i) => i + 1)
-const redNested = (num: number) => fill(num).reduce((acc, _curr, idx) => [...acc, fill(idx)], [])
 const objectsAreEqual = (a: any) => (b: any) => JSON.stringify(a) === JSON.stringify(b)
 
-const MAX_HEIGHT_START_VALUE = 900
-const ELEMENT_COUNT_START_VALUE = 4
+const FORM_DEBOUNCE_TIME = 1000
+const DEFAULT_MAX_HEIGHT = 600
+const DEFAULT_ELEMENT_COUNT = 4
+const DEFAULT_VIDEO_SOURCE_URL = 'https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4'
 
 @Component({
   selector: 'app-framer',
@@ -15,17 +16,29 @@ const ELEMENT_COUNT_START_VALUE = 4
   styleUrls: ['./framer.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FramerComponent implements OnInit {
-  readonly containers = redNested(ELEMENT_COUNT_START_VALUE)
-
+export class FramerComponent {
   readonly formGroup = new FormGroup({
-    maxHeight: new FormControl(MAX_HEIGHT_START_VALUE, [Validators.required]),
-    elementCount: new FormControl(ELEMENT_COUNT_START_VALUE, [Validators.required])
+    maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required]),
+    elementCount: new FormControl(DEFAULT_ELEMENT_COUNT, [Validators.required]),
+    videoSource: new FormControl(DEFAULT_VIDEO_SOURCE_URL, [Validators.required])
   })
 
-  ngOnInit() {
-    this.formGroup.valueChanges
-      .pipe(distinctUntilChanged((a, b) => objectsAreEqual(a)(b)))
-      .subscribe(console.log)
-  }
+  readonly view_ = this.formGroup.valueChanges.pipe(
+    // debounceTime(FORM_DEBOUNCE_TIME),
+    distinctUntilChanged((a, b) => objectsAreEqual(a)(b)),
+    startWith(this.formGroup.value),
+    map<ICompConfigForm, any>(a => {
+      return {
+        maxHeight: a.maxHeight,
+        videos: Array(a.elementCount).fill(0).map((c, id) => {
+          return {
+            id,
+            src: a.videoSource
+          }
+        })
+      }
+    })
+  )
+
+  readonly trackByVideoId = (_: number, item: any) => item.id
 }

@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core'
 import { WindowFrameComponent } from './window-frame.component'
-import { WindowFrameDirective } from './window-frame.directive'
+import { WindowPaneItemDirective } from './window-frame.directive'
+import { WindowPaneComponent } from './window-pane.component'
 
 @NgModule({
-  declarations: [WindowFrameComponent, WindowFrameDirective],
-  exports: [WindowFrameComponent, WindowFrameDirective],
-  entryComponents: [WindowFrameComponent]
+  declarations: [WindowFrameComponent, WindowPaneComponent, WindowPaneItemDirective],
+  exports: [WindowFrameComponent, WindowPaneComponent, WindowPaneItemDirective],
+  entryComponents: [WindowFrameComponent, WindowPaneComponent]
 })
 export class WindowFrameModule { }
