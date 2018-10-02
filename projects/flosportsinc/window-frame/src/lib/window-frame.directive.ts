@@ -1,6 +1,6 @@
 import { Directive } from '@angular/core'
 
 @Directive({
-  selector: '[floWindowFrame]'
+  selector: '[floWindowPaneItem]'
 })
-export class WindowFrameDirective { }
+export class WindowPaneItemDirective { }

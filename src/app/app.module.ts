@@ -5,6 +5,7 @@ import { AppComponent } from './app.component'
 import { FramerComponent } from './framer/framer.component'
 import { WindowFrameModule } from '@flosportsinc/window-frame'
 import { HomeComponent } from './home/home.component'
+import { ReactiveFormsModule } from '@angular/forms'
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { HomeComponent } from './home/home.component'
     HomeComponent
   ],
   imports: [
+    ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
     WindowFrameModule

@@ -5,18 +5,28 @@
   <li>Responsive for an arbitrary number of elements with a high degree of layout symmetry.</li>
   <li>Primary use for video element layout, but arbitarty elements should also work.</li>
   <li>CSS based solution with minimal Javascript</li>
-  <li></li>
-  <li></li>
-  <li></li>
-  <li></li>
 </ul>
 <div>
-  <div *ngFor="let item of containers">
-    <flo-window-frame>
-      <video floWindowFrame playsinline controls autoplay muted *ngFor="let _ of item">
-        <source src="https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4" type="video/mp4">
+  <h3>Demo Configurator</h3>
+  <form [formGroup]="formGroup">
+    <div>
+      <label for="maxHeight">Max Height</label>
+      <input id="maxHeight" placeholder="max height" type="number" formControlName="maxHeight">
+    </div>
+    <div>
+      <label for="elementCount">Elements</label>
+      <input id="elementCount" placeholder="4" type="number" formControlName="elementCount">
+    </div>
+    <div>
+      <label for="videoSource">Video Source</label>
+      <input id="videoSource" placeholder="video source url" type="text" formControlName="videoSource">
+    </div>
+  </form>
+  <flo-window-frame [maxHeight]="view.maxHeight" *ngIf="view_ | async as view">
+    <flo-window-pane *ngFor="let vid of view.videos; trackBy: trackByVideoId">
+      <video floWindowFrame playsinline controls autoplay muted>
+        <source [src]="vid.src" type="video/mp4">
       </video>
-    </flo-window-frame>
-    <br>
-  </div>
+    </flo-window-pane>
+  </flo-window-frame>
 </div>

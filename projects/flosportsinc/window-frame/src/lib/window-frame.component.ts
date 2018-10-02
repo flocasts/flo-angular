@@ -1,13 +1,11 @@
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ApplicationRef, ViewChild, Input, OnInit
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges
 } from '@angular/core'
-import { WindowFrameDirective } from './window-frame.directive'
+import { maybe } from 'typescript-monads'
+import { WindowPaneComponent } from './window-pane.component'
 
-// Ideally, we only need @QueryChildren to query the transcluded nodes. The current solution
-// relies on MutationObserver to watch these changes until the Angular issue is fixed.
-// See this issue for more info: https://github.com/angular/angular/issues/12818
-
+const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
 const computeColumns = (length: number) => Math.ceil(Math.sqrt(length))
 const applyGridStyles =
@@ -16,14 +14,6 @@ const applyGridStyles =
       (renderer: Renderer2) =>
         (length: number) =>
           renderer.setStyle(element, style, getGridTemplateColumns(computeColumns(length)))
-
-const wrap =
-  (el: HTMLElement) =>
-    (wrapper: HTMLElement) => {
-      // tslint:disable-next-line:no-unused-expression
-      el.parentNode && el.parentNode.insertBefore(wrapper, el)
-      wrapper.appendChild(el)
-    }
 
 @Component({
   selector: 'flo-window-frame',
@@ -36,13 +26,7 @@ const wrap =
       display: grid;
       margin: auto;
     }
-    #windowFrameContainer ::ng-deep > div {
-      overflow: hidden;
-      height: 0;
-      padding-top: 56.25%;
-      position: relative;
-    }
-    #windowFrameContainer ::ng-deep > div > * {
+    #windowFrameContainer ::ng-deep > flo-window-pane > * {
       position: absolute;
       top: 0;
       left: 0;
@@ -53,71 +37,93 @@ const wrap =
   `],
   template: `
     <div #windowFrameContainer id="windowFrameContainer">
-      <ng-content select="[floWindowFrame]"></ng-content>
+      <ng-content select="flo-window-pane"></ng-content>
     </div>
   `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WindowFrameComponent implements AfterContentInit, OnInit {
+export class WindowFrameComponent implements AfterContentInit, OnChanges {
   @Input() maxHeight = 900
-  @ViewChild('windowFrameContainer') windowFrameContainer: ElementRef<HTMLDivElement>
-  @ContentChildren(WindowFrameDirective, { read: ElementRef }) children: QueryList<ElementRef<HTMLDivElement>>
+  @ViewChild('windowFrameContainer') windowFrameContainer?: ElementRef<HTMLDivElement>
+  @ContentChildren(WindowPaneComponent, { read: ElementRef }) children?: QueryList<ElementRef<HTMLDivElement>>
 
-  constructor(private renderer: Renderer2, private elm: ElementRef) { }
+  readonly maybeContainer = () => maybe(this.windowFrameContainer).map(ref => ref.nativeElement)
+  readonly maybeChildren = () => maybe(this.children)
+  readonly maybeImport = () => this.maybeContainer()
+    .flatMap(container => this.maybeChildren()
+      .map(children => {
+        return {
+          children,
+          container
+        }
+      }))
 
-  ngOnInit() {
-    const maxWidth = 1.77 * this.maxHeight
-    this.renderer.setStyle(this.windowFrameContainer.nativeElement, 'max-width', `${maxWidth}px`)
+  readonly setNgStyle =
+    (elm: HTMLElement) =>
+      (style: string) =>
+        (value: string) =>
+          this.renderer.setStyle(elm, style, value)
+
+  readonly maybeSetContainerStyle =
+    () =>
+      this.maybeContainer().map(this.setNgStyle)
+
+  readonly setContainerMaxWidth =
+    (height: number) =>
+      (elm: HTMLDivElement) =>
+        this.setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
+
+  constructor(private renderer: Renderer2) { }
+
+  ngOnChanges() {
+    this.maybeImport().tapSome(a => this.tryer(a))
   }
 
-  ngAfterContentInit() {
+  tryer(obj: {
+    children: QueryList<ElementRef<HTMLDivElement>>
+    container: HTMLDivElement;
+  }) {
     const applyGridStyleByNumber =
       (count: number) =>
         (style: string) =>
-          applyGridStyles(style)(this.windowFrameContainer.nativeElement)(this.renderer)(count)
+          applyGridStyles(style)(obj.container)(this.renderer)(count)
 
-    applyGridStyleByNumber(this.children.length)('grid-template-columns')
-
-    // wrap all elements in a selection box div
-    this.children.forEach(a => {
-      const elm = this.renderer.createElement('div')
-      wrap(a.nativeElement)(elm)
-    })
-
-    applyGridStyleByNumber(this.children.length)('grid-template-rows')
-
-    // TODO: cleanup
-    if (this.children.length === 2) {
-      this.renderer.removeStyle(this.windowFrameContainer.nativeElement, 'max-width')
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement, 'max-height', `${this.maxHeight}px`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement, 'grid-template-columns', `1fr 1fr 1fr 1fr`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement, 'grid-template-rows', `1fr 1fr 1fr 1fr`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[0], 'grid-row', `2 / span 2`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[1], 'grid-row', `2 / span 2`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[0], 'grid-column', `1 / span 2`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[1], 'grid-column', `3 / span 2`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[0], 'align-self', `center`)
-      this.renderer.setStyle(this.windowFrameContainer.nativeElement.children[1], 'align-self', `center`)
-    }
-
-    // TODO: cleanup/finish this logic
-    const observer = new MutationObserver(a => {
-      a.forEach(v => {
-        const approviedElements = Array.from((v.target as HTMLDivElement).children).filter(z => z.hasAttribute('floWindowFrame'))
-        applyGridStyleByNumber(approviedElements.length)('grid-template-columns')
-
-        if (approviedElements.length >= 3) {
-          applyGridStyleByNumber(approviedElements.length)('grid-template-rows')
-          this.renderer.addClass(this.windowFrameContainer.nativeElement, 'windowFrameContainer-multi')
-          if (approviedElements.length === 2) {
-            this.renderer.addClass(this.windowFrameContainer.nativeElement, 'wfc-col-2')
-          }
-        } else {
-          this.renderer.removeClass(this.windowFrameContainer.nativeElement, 'windowFrameContainer-multi')
-          this.renderer.addClass(this.windowFrameContainer.nativeElement, 'wfc-col-2')
-        }
+    if (obj.children.length === 1) {
+      this.renderer.removeStyle(obj.container, 'grid-template-columns')
+      this.renderer.removeStyle(obj.container, 'grid-template-rows')
+      this.renderer.removeStyle(obj.container, 'max-height')
+      this.setContainerMaxWidth(this.maxHeight)(obj.container)
+    } else if (obj.children.length === 2) {
+      this.renderer.setStyle(obj.container, 'grid-template-columns', `1fr 1fr 1fr 1fr`)
+      this.renderer.setStyle(obj.container, 'grid-template-rows', `1fr 1fr 1fr 1fr`)
+      this.renderer.setStyle(obj.container.children[0], 'grid-row', `2 / span 2`)
+      this.renderer.setStyle(obj.container.children[1], 'grid-row', `2 / span 2`)
+      this.renderer.setStyle(obj.container.children[0], 'grid-column', `1 / span 2`)
+      this.renderer.setStyle(obj.container.children[1], 'grid-column', `3 / span 2`)
+      this.renderer.setStyle(obj.container.children[0], 'align-self', `center`)
+      this.renderer.setStyle(obj.container.children[1], 'align-self', `center`)
+      this.renderer.setStyle(obj.container, 'max-width', `${this.maxHeight * 3.55}px`)
+      this.renderer.setStyle(obj.container, 'max-height', `${this.maxHeight}px`)
+    } else {
+      Array.from(obj.container.children).forEach(c => {
+        this.renderer.removeStyle(c, 'grid-row')
+        this.renderer.removeStyle(c, 'grid-column')
+        this.renderer.removeStyle(c, 'align-self')
       })
-    })
-    const config = { attributes: false, childList: true, subtree: false }
-    observer.observe(this.windowFrameContainer.nativeElement, config)
+      this.renderer.removeStyle(obj.container, 'max-height')
+      applyGridStyleByNumber(obj.children.length)('grid-template-columns')
+      applyGridStyleByNumber(obj.children.length)('grid-template-rows')
+      this.setContainerMaxWidth(this.maxHeight)(obj.container)
+    }
+  }
+
+  ngAfterContentInit() {
+    this.maybeImport()
+      .tapSome(obj => {
+        this.tryer(obj)
+        obj.children.changes.subscribe(() => {
+          this.tryer(obj)
+        })
+      })
   }
 }
