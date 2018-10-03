@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { WindowFrameComponent } from './viewport-grid.component'
+import { ViewportGridComponent } from './viewport-grid.component'
 
 describe('WindowFrameComponent', () => {
-  let component: WindowFrameComponent
-  let fixture: ComponentFixture<WindowFrameComponent>
+  let component: ViewportGridComponent
+  let fixture: ComponentFixture<ViewportGridComponent>
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WindowFrameComponent ]
+      declarations: [ ViewportGridComponent ]
     })
     .compileComponents()
   }))
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(WindowFrameComponent)
+    fixture = TestBed.createComponent(ViewportGridComponent)
     component = fixture.componentInstance
     fixture.detectChanges()
   })
