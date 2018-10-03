@@ -1,32 +1,36 @@
-<h2>Window Frame</h2>
-<p>The <em>flo-window-frame</em> component is a response grid window/tile manager.</p>
+<h2>Window Panels</h2>
+<p>The <em>flo-window-panes</em> component is a response grid window/tile manager.</p>
 <h4>Goals:</h4>
 <ul>
+  <li>High Performance with minimal CPU and memory usage</li>
   <li>Responsive for an arbitrary number of elements with a high degree of layout symmetry.</li>
-  <li>Primary use for video element layout, but arbitarty elements should also work.</li>
-  <li>CSS based solution with minimal Javascript</li>
+  <li>Primarily designed for a multi-camera grid layout, but arbitarty DOM elements should also work.</li>
+  <li>CSS based solution with minimal Javascript (for layout) to enable a server rendered and jitter free user
+    experience</li>
+  <li>Drag and drop to swap element positions (Coming Soon)</li>
+  <li>Extensive API for handle to customize for broad use-cases</li>
 </ul>
-<div>
-  <h3>Demo Configurator</h3>
-  <form [formGroup]="formGroup">
-    <div>
-      <label for="maxHeight">Max Height</label>
-      <input id="maxHeight" placeholder="max height" type="number" formControlName="maxHeight">
-    </div>
-    <div>
-      <label for="elementCount">Elements</label>
-      <input id="elementCount" placeholder="4" type="number" formControlName="elementCount">
-    </div>
-    <div>
-      <label for="videoSource">Video Source</label>
-      <input id="videoSource" placeholder="video source url" type="text" formControlName="videoSource">
-    </div>
-  </form>
-  <flo-window-frame [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" (paneSelected)="test($event)">
-    <flo-window-pane *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-      <video floWindowPaneItem playsinline controls muted>
-        <source [src]="vid.src" type="video/mp4">
-      </video>
-    </flo-window-pane>
-  </flo-window-frame>
-</div>
+<h3>Demo Configurator</h3>
+<form [formGroup]="formGroup">
+  <div>
+    <label for="maxHeight">Max Height</label>
+    <input id="maxHeight" placeholder="max height" type="number" formControlName="maxHeight">
+  </div>
+  <div>
+    <label for="elementCount">Elements</label>
+    <input id="elementCount" placeholder="4" type="number" formControlName="elementCount">
+  </div>
+  <div>
+    <label for="videoSource">Video Source</label>
+    <input id="videoSource" placeholder="video source url" type="text" formControlName="videoSource">
+  </div>
+</form>
+<br>
+
+<flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" (paneSelected)="test($event)">
+  <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
+    <video floViewportGridBoxItem playsinline muted>
+      <source [src]="vid.src" type="video/mp4">
+    </video>
+  </flo-viewport-grid-box>
+</flo-viewport-grid>

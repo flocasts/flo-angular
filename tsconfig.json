@@ -19,11 +19,11 @@
       "dom"
     ],
     "paths": {
-      "@flosportsinc/window-frame": [
-        "dist/flosportsinc/window-frame"
+      "@flosportsinc/viewport-grid": [
+        "dist/flosportsinc/viewport-grid"
       ],
-      "@flosportsinc/window-frame/*": [
-        "dist/flosportsinc/window-frame/*"
+      "@flosportsinc/viewport-grid/*": [
+        "dist/flosportsinc/viewport-grid/*"
       ]
     }
   }

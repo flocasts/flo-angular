@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 
-import { WindowFrameComponent } from './window-frame.component'
+import { WindowFrameComponent } from './viewport-grid.component'
 
 describe('WindowFrameComponent', () => {
   let component: WindowFrameComponent

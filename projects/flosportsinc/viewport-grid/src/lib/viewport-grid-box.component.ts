@@ -3,12 +3,13 @@ import {
 } from '@angular/core'
 import { maybe } from 'typescript-monads'
 import { Subject } from 'rxjs'
-import { WindowPaneItemDirective } from './window-frame.directive'
+import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 
 const SELECTION_CLASS = 'selected'
+export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 
 @Component({
-  selector: 'flo-window-pane',
+  selector: GRID_BOX_SELECTOR_NAME,
   styles: [`
     :host {
       overflow: hidden;
@@ -29,12 +30,12 @@ const SELECTION_CLASS = 'selected'
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WindowPaneComponent<TElement = HTMLElement> {
+export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @Output() public readonly isSelected$ = new Subject<boolean>()
-  @Output() public readonly clicked$ = new Subject<WindowPaneComponent<TElement>>()
+  @Output() public readonly clicked$ = new Subject<ViewportGridBoxComponent<TElement>>()
+  @ContentChild(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItem?: ElementRef<TElement>
+  @ContentChildren(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItems?: QueryList<ElementRef<TElement>>
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
-  @ContentChild(WindowPaneItemDirective, { read: ElementRef }) private readonly _panelItem?: ElementRef<TElement>
-  @ContentChildren(WindowPaneItemDirective, { read: ElementRef }) private readonly _panelItems?: QueryList<ElementRef<TElement>>
   @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
 
   private readonly _maybeSlectionContainer = () => maybe(this._selectionContainer).map(a => a.nativeElement)
@@ -64,5 +65,5 @@ export class WindowPaneComponent<TElement = HTMLElement> {
         some: el => el.classList.contains(SELECTION_CLASS)
       })
 
-  constructor(private _renderer: Renderer2, public elementRef: ElementRef<WindowPaneComponent<TElement>>) { }
+  constructor(private _renderer: Renderer2, public elementRef: ElementRef<ViewportGridBoxComponent<TElement>>) { }
 }

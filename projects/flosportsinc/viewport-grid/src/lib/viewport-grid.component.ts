@@ -1,9 +1,9 @@
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, HostListener, Output
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
 } from '@angular/core'
 import { maybe } from 'typescript-monads'
-import { WindowPaneComponent } from './window-pane.component'
+import { ViewportGridBoxComponent, GRID_BOX_SELECTOR_NAME } from './viewport-grid-box.component'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 
@@ -20,17 +20,17 @@ const applyGridStyles =
           renderer.setStyle(element, style, getGridTemplateColumns(computeColumns(length)))
 
 @Component({
-  selector: 'flo-window-frame',
+  selector: 'flo-viewport-grid',
   styles: [`
     :host {
       display: block;
       background: black;
     }
-    #windowFrameContainer {
+    #gridContainer {
       display: grid;
       margin: auto;
     }
-    #windowFrameContainer ::ng-deep > flo-window-pane > * {
+    #gridContainer ::ng-deep > ${GRID_BOX_SELECTOR_NAME} > * {
       position: absolute;
       top: 0;
       left: 0;
@@ -39,19 +39,19 @@ const applyGridStyles =
     }
   `],
   template: `
-    <div #windowFrameContainer id="windowFrameContainer">
-      <ng-content select="flo-window-pane"></ng-content>
+    <div #gridContainer id="gridContainer">
+      <ng-content select="${GRID_BOX_SELECTOR_NAME}"></ng-content>
     </div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WindowFrameComponent implements AfterContentInit, OnChanges {
+export class ViewportGridComponent implements AfterContentInit, OnChanges {
   @Input() maxHeight = DEFAULT_MAX_HEIGHT
-  @Output() paneSelected = new Subject<WindowPaneComponent>()
-  @ViewChild('windowFrameContainer') windowFrameContainer?: ElementRef<HTMLDivElement>
-  @ContentChildren(WindowPaneComponent) windowPanes?: QueryList<WindowPaneComponent>
+  @Output() paneSelected = new Subject<ViewportGridBoxComponent>()
+  @ViewChild('gridContainer') gridContainer?: ElementRef<HTMLDivElement>
+  @ContentChildren(ViewportGridBoxComponent) windowPanes?: QueryList<ViewportGridBoxComponent>
 
-  readonly maybeContainer = () => maybe(this.windowFrameContainer).map(ref => ref.nativeElement)
+  readonly maybeContainer = () => maybe(this.gridContainer).map(ref => ref.nativeElement)
   readonly maybeChildren = () => maybe(this.windowPanes)
   readonly maybeImport = () => this.maybeContainer()
     .flatMap(container => this.maybeChildren()
@@ -84,7 +84,7 @@ export class WindowFrameComponent implements AfterContentInit, OnChanges {
   }
 
   tryer(obj: {
-    children: QueryList<WindowPaneComponent>
+    children: QueryList<ViewportGridBoxComponent>
     container: HTMLDivElement;
   }) {
     const applyGridStyleByNumber =
@@ -135,16 +135,16 @@ export class WindowFrameComponent implements AfterContentInit, OnChanges {
 
 
         this.tryer(obj)
-        obj.children.changes.subscribe((d: QueryList<WindowPaneComponent>) => {
+        obj.children.changes.subscribe((d: QueryList<ViewportGridBoxComponent>) => {
           d.toArray().forEach(z => {
             z.clicked$.pipe(
               takeUntil(obj.children.changes)
             )
-            .subscribe(zz => {
-              obj.children.forEach(c => c.setSelected(false))
-              zz.setSelected(true)
-              this.paneSelected.next(zz)
-            })
+              .subscribe(zz => {
+                obj.children.forEach(c => c.setSelected(false))
+                zz.setSelected(true)
+                this.paneSelected.next(zz)
+              })
           })
           this.tryer(obj)
         })

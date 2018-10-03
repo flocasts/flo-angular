@@ -126,33 +126,33 @@
         }
       }
     },
-    "@flosportsinc/window-frame": {
-      "root": "projects/flosportsinc/window-frame",
-      "sourceRoot": "projects/flosportsinc/window-frame/src",
+    "@flosportsinc/viewport-grid": {
+      "root": "projects/flosportsinc/viewport-grid",
+      "sourceRoot": "projects/flosportsinc/viewport-grid/src",
       "projectType": "library",
       "prefix": "lib",
       "targets": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/flosportsinc/window-frame/tsconfig.lib.json",
-            "project": "projects/flosportsinc/window-frame/ng-package.json"
+            "tsConfig": "projects/flosportsinc/viewport-grid/tsconfig.lib.json",
+            "project": "projects/flosportsinc/viewport-grid/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/flosportsinc/window-frame/src/test.ts",
-            "tsConfig": "projects/flosportsinc/window-frame/tsconfig.spec.json",
-            "karmaConfig": "projects/flosportsinc/window-frame/karma.conf.js"
+            "main": "projects/flosportsinc/viewport-grid/src/test.ts",
+            "tsConfig": "projects/flosportsinc/viewport-grid/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/viewport-grid/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/flosportsinc/window-frame/tsconfig.lib.json",
-              "projects/flosportsinc/window-frame/tsconfig.spec.json"
+              "projects/flosportsinc/viewport-grid/tsconfig.lib.json",
+              "projects/flosportsinc/viewport-grid/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

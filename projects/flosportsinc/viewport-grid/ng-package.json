@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/flosportsinc/window-frame",
+  "dest": "../../../dist/flosportsinc/viewport-grid",
   "lib": {
     "entryFile": "src/public_api.ts"
   }

@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './framer.interface'
-import { WindowPaneComponent } from '@flosportsinc/window-frame/lib/window-pane.component'
+import { ViewportGridBoxComponent } from '@flosportsinc/viewport-grid'
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
@@ -42,7 +42,7 @@ export class FramerComponent {
 
   readonly trackByVideoId = (_: number, item: any) => item.id
 
-  test(d: WindowPaneComponent<HTMLVideoElement>) {
+  test(d: ViewportGridBoxComponent<HTMLVideoElement>) {
     d.maybePanelItemElements().tapSome(vids => {
       console.log(vids)
     })

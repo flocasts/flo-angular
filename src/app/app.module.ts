@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { FramerComponent } from './framer/framer.component'
-import { WindowFrameModule } from '@flosportsinc/window-frame'
+import { ViewportGridModule } from '@flosportsinc/viewport-grid'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule } from '@angular/forms'
 
@@ -17,9 +17,8 @@ import { ReactiveFormsModule } from '@angular/forms'
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,
-    WindowFrameModule
+    ViewportGridModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
