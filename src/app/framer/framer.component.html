@@ -22,9 +22,9 @@
       <input id="videoSource" placeholder="video source url" type="text" formControlName="videoSource">
     </div>
   </form>
-  <flo-window-frame [maxHeight]="view.maxHeight" *ngIf="view_ | async as view">
+  <flo-window-frame [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" (paneSelected)="test($event)">
     <flo-window-pane *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-      <video floWindowFrame playsinline controls autoplay muted>
+      <video floWindowPaneItem playsinline controls muted>
         <source [src]="vid.src" type="video/mp4">
       </video>
     </flo-window-pane>

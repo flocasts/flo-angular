@@ -1,9 +1,13 @@
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, HostListener, Output
 } from '@angular/core'
 import { maybe } from 'typescript-monads'
 import { WindowPaneComponent } from './window-pane.component'
+import { Subject } from 'rxjs'
+import { takeUntil } from 'rxjs/operators'
+
+const DEFAULT_MAX_HEIGHT = 900
 
 const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
@@ -30,7 +34,6 @@ const applyGridStyles =
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
       height: 100%;
       object-fit: cover;
     }
@@ -43,12 +46,13 @@ const applyGridStyles =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WindowFrameComponent implements AfterContentInit, OnChanges {
-  @Input() maxHeight = 900
+  @Input() maxHeight = DEFAULT_MAX_HEIGHT
+  @Output() paneSelected = new Subject<WindowPaneComponent>()
   @ViewChild('windowFrameContainer') windowFrameContainer?: ElementRef<HTMLDivElement>
-  @ContentChildren(WindowPaneComponent, { read: ElementRef }) children?: QueryList<ElementRef<HTMLDivElement>>
+  @ContentChildren(WindowPaneComponent) windowPanes?: QueryList<WindowPaneComponent>
 
   readonly maybeContainer = () => maybe(this.windowFrameContainer).map(ref => ref.nativeElement)
-  readonly maybeChildren = () => maybe(this.children)
+  readonly maybeChildren = () => maybe(this.windowPanes)
   readonly maybeImport = () => this.maybeContainer()
     .flatMap(container => this.maybeChildren()
       .map(children => {
@@ -80,7 +84,7 @@ export class WindowFrameComponent implements AfterContentInit, OnChanges {
   }
 
   tryer(obj: {
-    children: QueryList<ElementRef<HTMLDivElement>>
+    children: QueryList<WindowPaneComponent>
     container: HTMLDivElement;
   }) {
     const applyGridStyleByNumber =
@@ -117,11 +121,31 @@ export class WindowFrameComponent implements AfterContentInit, OnChanges {
     }
   }
 
+  // CLEANUP
   ngAfterContentInit() {
     this.maybeImport()
       .tapSome(obj => {
+        obj.children.forEach(a => {
+          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(b => {
+            obj.children.forEach(c => c.setSelected(false))
+            b.setSelected(true)
+            this.paneSelected.next(b)
+          })
+        })
+
+
         this.tryer(obj)
-        obj.children.changes.subscribe(() => {
+        obj.children.changes.subscribe((d: QueryList<WindowPaneComponent>) => {
+          d.toArray().forEach(z => {
+            z.clicked$.pipe(
+              takeUntil(obj.children.changes)
+            )
+            .subscribe(zz => {
+              obj.children.forEach(c => c.setSelected(false))
+              zz.setSelected(true)
+              this.paneSelected.next(zz)
+            })
+          })
           this.tryer(obj)
         })
       })
