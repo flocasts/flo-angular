@@ -29,7 +29,7 @@
 
 <flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" (paneSelected)="test($event)">
   <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-    <video floViewportGridBoxItem playsinline muted>
+    <video floViewportGridBoxItem appSimpleTest playsinline muted>
       <source [src]="vid.src" type="video/mp4">
     </video>
   </flo-viewport-grid-box>

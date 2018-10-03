@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ContentChildren, ElementRef, Directive, ViewChildren, QueryList } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './framer.interface'
@@ -21,6 +21,13 @@ const mapFromForm = (input: ICompConfigForm) => {
   }
 }
 
+@Directive({
+  selector: '[appSimpleTest]'
+})
+export class AppSimpleTestDirective {
+  constructor(public elementRef: ElementRef<AppSimpleTestDirective>) { }
+}
+
 @Component({
   selector: 'app-framer',
   templateUrl: './framer.component.html',
@@ -28,6 +35,8 @@ const mapFromForm = (input: ICompConfigForm) => {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FramerComponent {
+  @ViewChildren(AppSimpleTestDirective) readonly appTest: QueryList<AppSimpleTestDirective>
+
   readonly formGroup = new FormGroup({
     maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required]),
     elementCount: new FormControl(DEFAULT_ELEMENT_COUNT, [Validators.required]),
@@ -43,8 +52,12 @@ export class FramerComponent {
   readonly trackByVideoId = (_: number, item: any) => item.id
 
   test(d: ViewportGridBoxComponent<HTMLVideoElement>) {
-    d.maybePanelItemElements().tapSome(vids => {
-      console.log(vids)
+    d.maybePanelItemElement().tapSome(vid => {
+      // console.log(this.appTest.toArray().map(a => a.nativeElement)[0])
+      // const c = this.appTest.toArray().map(s => s.nativeElement) as ReadonlyArray<HTMLDivElement>
+      const instances = this.appTest.toArray().filter((a: any) => a.elementRef.nativeElement === vid)
+      console.log(instances)
+      // console.log(this.appTest.toArray().map(s => s.nativeElement).find(a => a === vid))
     })
   }
 }
