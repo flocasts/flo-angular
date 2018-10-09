@@ -9,6 +9,13 @@ import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive
 const SELECTION_CLASS = 'selected'
 export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 
+const s4 = () =>
+  Math.floor((1 + Math.random()) * 0x10000)
+    .toString(16)
+    .substring(1)
+
+const guid = () => s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+
 @Component({
   selector: GRID_BOX_SELECTOR_NAME,
   styles: [`
@@ -34,6 +41,8 @@ export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 })
 export class ViewportGridBoxComponent<TElement = HTMLElement> {
   constructor(private _renderer: Renderer2, public elementRef: ElementRef<ViewportGridBoxComponent<TElement>>) { }
+
+  public readonly guid = guid()
 
   @Output() public readonly isSelected$ = new Subject<boolean>()
   @Output() public readonly clicked$ = new Subject<ViewportGridBoxComponent<TElement>>()
@@ -66,7 +75,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   public readonly isSelected =
     () =>
       this._maybeSlectionContainer().match({
-        none: () => undefined,
+        none: () => false,
         some: el => el.classList.contains(SELECTION_CLASS)
       })
 }

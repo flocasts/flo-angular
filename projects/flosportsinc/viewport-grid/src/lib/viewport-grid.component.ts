@@ -1,7 +1,7 @@
 import { maybe } from 'typescript-monads'
 import { ViewportGridBoxComponent, GRID_BOX_SELECTOR_NAME } from './viewport-grid-box.component'
 import { Subject } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil, map, distinctUntilChanged } from 'rxjs/operators'
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
   AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
@@ -14,6 +14,7 @@ export interface ViewportGridBoxSelectedEvent<TElement = HTMLElement> {
 }
 
 export interface ViewportGridBoxSelectedElementEvent<TElement = HTMLElement> {
+  readonly selectedViewportElementGuid: string
   readonly selectedViewportElement: IMaybe<TElement>
   readonly otherViewPortElements: ReadonlyArray<IMaybe<ReadonlyArray<TElement>>>
 }
@@ -23,6 +24,15 @@ const DEFAULT_MAX_HEIGHT = 900
 const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
 const computeColumns = (length: number) => Math.ceil(Math.sqrt(length))
+
+const compareGuids =
+  (x: ViewportGridBoxSelectedElementEvent, y: ViewportGridBoxSelectedElementEvent) =>
+    x.selectedViewportElementGuid === y.selectedViewportElementGuid
+
+const compareWraGuids =
+  (x: ViewportGridBoxSelectedEvent, y: ViewportGridBoxSelectedEvent) =>
+    x.selectedViewport.guid === y.selectedViewport.guid
+
 const applyGridStyles =
   (style: string) =>
     (element: HTMLElement) =>
@@ -57,9 +67,12 @@ const applyGridStyles =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportGridComponent implements AfterContentInit, OnChanges {
+  private readonly paneSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
+  private readonly paneElementSelectedSource$ = new Subject<any>()
+
   @Input() readonly maxHeight = DEFAULT_MAX_HEIGHT
-  @Output() readonly paneSelected = new Subject<ViewportGridBoxSelectedEvent>()
-  @Output() readonly paneElementSelected = new Subject<ViewportGridBoxSelectedElementEvent>()
+  @Output() readonly paneSelected = this.paneSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
+  @Output() readonly paneElementSelected = this.paneElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
   @ViewChild('gridContainer') readonly gridContainer?: ElementRef<HTMLDivElement>
   @ContentChildren(ViewportGridBoxComponent) readonly windowPanes?: QueryList<ViewportGridBoxComponent>
 
@@ -92,48 +105,46 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
   constructor(private renderer: Renderer2) { }
 
   ngOnChanges() {
-    this.maybeImport().tapSome(a => this.tryer(a))
+    this.maybeImport().tapSome(a => this.tryer(a.children)(a.container))
   }
 
-  readonly tryer = (obj: {
-    children: QueryList<ViewportGridBoxComponent>
-    container: HTMLDivElement;
-  }) => {
-    const applyGridStyleByNumber =
-      (count: number) =>
-        (style: string) =>
-          applyGridStyles(style)(obj.container)(this.renderer)(count)
+  readonly tryer =
+    (children: QueryList<ViewportGridBoxComponent>) =>
+      (container: HTMLDivElement) => {
+        const applyGridStyleByNumber =
+          (count: number) =>
+            (style: string) =>
+              applyGridStyles(style)(container)(this.renderer)(count)
 
-    if (obj.children.length === 1) {
-      this.renderer.removeStyle(obj.container, 'grid-template-columns')
-      this.renderer.removeStyle(obj.container, 'grid-template-rows')
-      this.renderer.removeStyle(obj.container, 'max-height')
-      this.setContainerMaxWidth(this.maxHeight)(obj.container)
-    } else if (obj.children.length === 2) {
-      this.renderer.setStyle(obj.container, 'grid-template-columns', `1fr 1fr 1fr 1fr`)
-      this.renderer.setStyle(obj.container, 'grid-template-rows', `1fr 1fr 1fr 1fr`)
-      this.renderer.setStyle(obj.container.children[0], 'grid-row', `2 / span 2`)
-      this.renderer.setStyle(obj.container.children[1], 'grid-row', `2 / span 2`)
-      this.renderer.setStyle(obj.container.children[0], 'grid-column', `1 / span 2`)
-      this.renderer.setStyle(obj.container.children[1], 'grid-column', `3 / span 2`)
-      this.renderer.setStyle(obj.container.children[0], 'align-self', `center`)
-      this.renderer.setStyle(obj.container.children[1], 'align-self', `center`)
-      this.renderer.setStyle(obj.container, 'max-width', `${this.maxHeight * 3.55}px`)
-      this.renderer.setStyle(obj.container, 'max-height', `${this.maxHeight}px`)
-    } else {
-      Array.from(obj.container.children).forEach(c => {
-        this.renderer.removeStyle(c, 'grid-row')
-        this.renderer.removeStyle(c, 'grid-column')
-        this.renderer.removeStyle(c, 'align-self')
-      })
-      this.renderer.removeStyle(obj.container, 'max-height')
-      applyGridStyleByNumber(obj.children.length)('grid-template-columns')
-      applyGridStyleByNumber(obj.children.length)('grid-template-rows')
-      this.setContainerMaxWidth(this.maxHeight)(obj.container)
-    }
-  }
+        if (children.length === 1) {
+          this.renderer.removeStyle(container, 'grid-template-columns')
+          this.renderer.removeStyle(container, 'grid-template-rows')
+          this.renderer.removeStyle(container, 'max-height')
+          this.setContainerMaxWidth(this.maxHeight)(container)
+        } else if (children.length === 2) {
+          this.renderer.setStyle(container, 'grid-template-columns', `1fr 1fr 1fr 1fr`)
+          this.renderer.setStyle(container, 'grid-template-rows', `1fr 1fr 1fr 1fr`)
+          this.renderer.setStyle(container.children[0], 'grid-row', `2 / span 2`)
+          this.renderer.setStyle(container.children[1], 'grid-row', `2 / span 2`)
+          this.renderer.setStyle(container.children[0], 'grid-column', `1 / span 2`)
+          this.renderer.setStyle(container.children[1], 'grid-column', `3 / span 2`)
+          this.renderer.setStyle(container.children[0], 'align-self', `center`)
+          this.renderer.setStyle(container.children[1], 'align-self', `center`)
+          this.renderer.setStyle(container, 'max-width', `${this.maxHeight * 3.55}px`)
+          this.renderer.setStyle(container, 'max-height', `${this.maxHeight}px`)
+        } else {
+          Array.from(container.children).forEach(c => {
+            this.renderer.removeStyle(c, 'grid-row')
+            this.renderer.removeStyle(c, 'grid-column')
+            this.renderer.removeStyle(c, 'align-self')
+          })
+          this.renderer.removeStyle(container, 'max-height')
+          applyGridStyleByNumber(children.length)('grid-template-columns')
+          applyGridStyleByNumber(children.length)('grid-template-rows')
+          this.setContainerMaxWidth(this.maxHeight)(container)
+        }
+      }
 
-  // CLEANUP
   ngAfterContentInit() {
     this.maybeImport()
       .tapSome(obj => {
@@ -145,36 +156,51 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
               selectedViewport,
               otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
             }
-            this.paneSelected.next(grouped)
-            const d = grouped.otherViewPorts.map(z => z.maybePanelItemElements())
-            this.paneElementSelected.next({
+            this.paneSelectedSource$.next(grouped)
+            this.paneElementSelectedSource$.next({
+              selectedViewportElementGuid: grouped.selectedViewport.guid,
               selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
               otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
             })
           })
         })
 
-        this.tryer(obj)
-        obj.children.changes.subscribe((d: QueryList<ViewportGridBoxComponent>) => {
-          d.toArray().forEach(z => {
-            z.clicked$
-              .pipe(takeUntil(obj.children.changes))
-              .subscribe(selectedViewport => {
-                obj.children.forEach(c => c.setSelected(false))
-                selectedViewport.setSelected(true)
-                const grouped = {
-                  selectedViewport,
-                  otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
-                }
-                this.paneSelected.next(grouped)
-                this.paneElementSelected.next({
-                  selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
-                  otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
+        if (!obj.children.some(z => z.isSelected())) {
+          maybe(obj.children.toArray()[0])
+            .tapSome(dd => dd.setSelected(true))
+        }
+
+        this.tryer(obj.children)(obj.container)
+        obj.children.changes
+          .pipe(map<any, ViewportGridBoxComponent<HTMLElement>[]>(a => a.toArray()))
+          .subscribe(viewports => {
+            viewports.forEach(z => {
+              z.clicked$
+                .pipe(takeUntil(obj.children.changes))
+                .subscribe(selectedViewport => {
+                  obj.children.forEach(c => c.setSelected(false))
+                  selectedViewport.setSelected(true)
+
+                  const grouped = {
+                    selectedViewport,
+                    otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
+                  }
+                  this.paneSelectedSource$.next(grouped)
+                  this.paneElementSelectedSource$.next({
+                    selectedViewportElementGuid: grouped.selectedViewport.guid,
+                    selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
+                    otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
+                  })
                 })
-              })
+            })
+
+            if (!viewports.some(z => z.isSelected())) {
+              maybe(viewports.slice(-1)[0])
+                .tapSome(dd => dd.setSelected(true))
+            }
+
+            this.tryer(obj.children)(obj.container)
           })
-          this.tryer(obj)
-        })
       })
   }
 }

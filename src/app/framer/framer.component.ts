@@ -46,5 +46,7 @@ export class FramerComponent {
 
   test(d: ViewportGridBoxSelectedElementEvent<HTMLVideoElement>) {
     console.log(d)
+    // d.selectedViewportElement.tapSome(console.log)
+    // console.log(d.selectedViewportElement)
   }
 }
