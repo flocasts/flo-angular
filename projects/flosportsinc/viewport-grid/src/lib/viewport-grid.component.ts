@@ -1,11 +1,22 @@
-import {
-  Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
-} from '@angular/core'
 import { maybe } from 'typescript-monads'
 import { ViewportGridBoxComponent, GRID_BOX_SELECTOR_NAME } from './viewport-grid-box.component'
 import { Subject } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
+import {
+  Component, ContentChildren, ElementRef, QueryList, Renderer2,
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
+} from '@angular/core'
+import { IMaybe } from 'typescript-monads/interfaces'
+
+export interface ViewportGridBoxSelectedEvent<TElement = HTMLElement> {
+  readonly selectedViewport: ViewportGridBoxComponent<TElement>
+  readonly otherViewPorts: ReadonlyArray<ViewportGridBoxComponent<TElement>>
+}
+
+export interface ViewportGridBoxSelectedElementEvent<TElement = HTMLElement> {
+  readonly selectedViewportElement: IMaybe<TElement>
+  readonly otherViewPortElements: ReadonlyArray<IMaybe<ReadonlyArray<TElement>>>
+}
 
 const DEFAULT_MAX_HEIGHT = 900
 
@@ -46,10 +57,11 @@ const applyGridStyles =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportGridComponent implements AfterContentInit, OnChanges {
-  @Input() maxHeight = DEFAULT_MAX_HEIGHT
-  @Output() paneSelected = new Subject<ViewportGridBoxComponent>()
-  @ViewChild('gridContainer') gridContainer?: ElementRef<HTMLDivElement>
-  @ContentChildren(ViewportGridBoxComponent) windowPanes?: QueryList<ViewportGridBoxComponent>
+  @Input() readonly maxHeight = DEFAULT_MAX_HEIGHT
+  @Output() readonly paneSelected = new Subject<ViewportGridBoxSelectedEvent>()
+  @Output() readonly paneElementSelected = new Subject<ViewportGridBoxSelectedElementEvent>()
+  @ViewChild('gridContainer') readonly gridContainer?: ElementRef<HTMLDivElement>
+  @ContentChildren(ViewportGridBoxComponent) readonly windowPanes?: QueryList<ViewportGridBoxComponent>
 
   readonly maybeContainer = () => maybe(this.gridContainer).map(ref => ref.nativeElement)
   readonly maybeChildren = () => maybe(this.windowPanes)
@@ -83,10 +95,10 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
     this.maybeImport().tapSome(a => this.tryer(a))
   }
 
-  tryer(obj: {
+  readonly tryer = (obj: {
     children: QueryList<ViewportGridBoxComponent>
     container: HTMLDivElement;
-  }) {
+  }) => {
     const applyGridStyleByNumber =
       (count: number) =>
         (style: string) =>
@@ -126,24 +138,39 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
     this.maybeImport()
       .tapSome(obj => {
         obj.children.forEach(a => {
-          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(b => {
+          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(selectedViewport => {
             obj.children.forEach(c => c.setSelected(false))
-            b.setSelected(true)
-            this.paneSelected.next(b)
+            selectedViewport.setSelected(true)
+            const grouped = {
+              selectedViewport,
+              otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
+            }
+            this.paneSelected.next(grouped)
+            const d = grouped.otherViewPorts.map(z => z.maybePanelItemElements())
+            this.paneElementSelected.next({
+              selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
+              otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
+            })
           })
         })
-
 
         this.tryer(obj)
         obj.children.changes.subscribe((d: QueryList<ViewportGridBoxComponent>) => {
           d.toArray().forEach(z => {
-            z.clicked$.pipe(
-              takeUntil(obj.children.changes)
-            )
-              .subscribe(zz => {
+            z.clicked$
+              .pipe(takeUntil(obj.children.changes))
+              .subscribe(selectedViewport => {
                 obj.children.forEach(c => c.setSelected(false))
-                zz.setSelected(true)
-                this.paneSelected.next(zz)
+                selectedViewport.setSelected(true)
+                const grouped = {
+                  selectedViewport,
+                  otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
+                }
+                this.paneSelected.next(grouped)
+                this.paneElementSelected.next({
+                  selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
+                  otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
+                })
               })
           })
           this.tryer(obj)
