@@ -5,7 +5,7 @@ import { takeUntil, map, distinctUntilChanged } from 'rxjs/operators'
 import { IMaybe } from 'typescript-monads/interfaces'
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output, OnDestroy
 } from '@angular/core'
 
 export interface ViewportGridBoxSelectedEvent<TElement = HTMLElement> {
@@ -39,6 +39,45 @@ const applyGridStyles =
         (length: number) =>
           renderer.setStyle(element, style, getGridTemplateColumns(computeColumns(length)))
 
+const resetSelected =
+  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+    arr.forEach(c => c.setSelected(false))
+
+const setSelected =
+  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+    (selectedViewport: ViewportGridBoxComponent) => {
+      resetSelected(arr)
+      selectedViewport.setSelected(true)
+    }
+
+const combineSelectionViews =
+  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+    (selectedViewport: ViewportGridBoxComponent) => {
+      const containerView = {
+        selectedViewport,
+        otherViewPorts: arr.filter(v => v.elementRef !== selectedViewport.elementRef)
+      }
+      return {
+        containerView,
+        elementView: {
+          selectedViewportElementGuid: selectedViewport.guid,
+          selectedViewportElement: selectedViewport.maybePanelItemElement(),
+          otherViewPortElements: arr.filter(v => v.elementRef !== selectedViewport.elementRef).map(e => e.maybePanelItemElements())
+        }
+      }
+    }
+
+const emit =
+  (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
+    (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
+      (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+        (selectedViewport: ViewportGridBoxComponent) => {
+          setSelected(arr)(selectedViewport)
+          const grouped = combineSelectionViews(arr)(selectedViewport)
+          paneSelectedSource.next(grouped.containerView)
+          paneElementSelectedSource.next(grouped.elementView)
+        }
+
 @Component({
   selector: 'flo-viewport-grid',
   styles: [`
@@ -65,9 +104,12 @@ const applyGridStyles =
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewportGridComponent implements AfterContentInit, OnChanges {
+export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDestroy {
+  constructor(private renderer: Renderer2) { }
+
   private readonly paneSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
-  private readonly paneElementSelectedSource$ = new Subject<any>()
+  private readonly paneElementSelectedSource$ = new Subject<ViewportGridBoxSelectedElementEvent>()
+  private readonly ngDestroy$ = new Subject<ViewportGridBoxSelectedElementEvent>()
 
   @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
   @Input() public readonly startingSelectedIndex = 0
@@ -87,25 +129,22 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
         }
       }))
 
+  public readonly maybeGetSelectedItem =
+    <TElement extends HTMLElement>(): IMaybe<ViewportGridBoxComponent<TElement>> =>
+      this._maybeChildren()
+        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+
   private readonly _setNgStyle =
     (elm: HTMLElement) =>
       (style: string) =>
         (value: string) =>
           this.renderer.setStyle(elm, style, value)
 
-  private readonly _maybeSetContainerStyle =
-    () =>
-      this._maybeContainer().map(this._setNgStyle)
-
   private readonly setContainerMaxWidth =
     (height: number) =>
       (elm: HTMLDivElement) =>
         this._setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
 
-  public readonly maybeGetSelectedItem =
-    <TElement extends HTMLElement>(): IMaybe<ViewportGridBoxComponent<TElement>> =>
-      this._maybeChildren()
-        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
 
   public readonly maybeGetSelectedElementItem =
     <TElement extends HTMLElement>(): IMaybe<TElement> =>
@@ -119,13 +158,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
         .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
         .flatMap(a => a.maybePanelItemElements())
 
-  constructor(private renderer: Renderer2) { }
-
-  ngOnChanges() {
-    this._maybeImport().tapSome(a => this._tryer(a.children)(a.container))
-  }
-
-  private readonly _tryer =
+  private readonly _renderGrid =
     (children: QueryList<ViewportGridBoxComponent>) =>
       (container: HTMLDivElement) => {
         const applyGridStyleByNumber =
@@ -162,67 +195,52 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
         }
       }
 
+  ngOnChanges() {
+    this._maybeImport().tapSome(a => this._renderGrid(a.children)(a.container))
+  }
+
+  ngOnDestroy() {
+    this.ngDestroy$.next()
+    this.ngDestroy$.complete()
+  }
+
   ngAfterContentInit() {
     this._maybeImport()
       .tapSome(obj => {
-        const arr = obj.children.toArray()
+        const children = obj.children
+        const arr = children.toArray()
+        const push = emit(this.paneSelectedSource$)(this.paneElementSelectedSource$)
+
         arr.forEach(a => {
-          a.elementRef.nativeElement.addEventListener('dragstart', console.log)
-          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(selectedViewport => {
-            arr.forEach(c => c.setSelected(false))
-            selectedViewport.setSelected(true)
-            const grouped = {
-              selectedViewport,
-              otherViewPorts: arr.filter(v => v.elementRef !== selectedViewport.elementRef)
-            }
-            this.paneSelectedSource$.next(grouped)
-            this.paneElementSelectedSource$.next({
-              selectedViewportElementGuid: grouped.selectedViewport.guid,
-              selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
-              otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
-            })
-          })
+          // a.elementRef.nativeElement.addEventListener('dragstart', console.log)
+          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(push(arr))
         })
 
-        if (!obj.children.some(z => z.isSelected())) {
+        if (!children.some(z => z.isSelected())) {
           // const index = this.startingSelectedIndex + 1 <= arr.length
           //   ? this.startingSelectedIndex
           //   : arr.length
-          // console.log(index)
-          maybe(arr[0])
-            .tapSome(dd => dd.setSelected(true))
+          maybe(arr[0]).tapSome(dd => dd.setSelected(true))
         }
 
-        this._tryer(obj.children)(obj.container)
-        obj.children.changes
-          .pipe(map<any, ViewportGridBoxComponent<HTMLElement>[]>(a => a.toArray()))
-          .subscribe(viewports => {
-            viewports.forEach(z => {
-              z.clicked$
-                .pipe(takeUntil(obj.children.changes))
-                .subscribe(selectedViewport => {
-                  obj.children.forEach(c => c.setSelected(false))
-                  selectedViewport.setSelected(true)
+        this._renderGrid(children)(obj.container)
 
-                  const grouped = {
-                    selectedViewport,
-                    otherViewPorts: arr.filter(v => v.elementRef !== selectedViewport.elementRef)
-                  }
-                  this.paneSelectedSource$.next(grouped)
-                  this.paneElementSelectedSource$.next({
-                    selectedViewportElementGuid: grouped.selectedViewport.guid,
-                    selectedViewportElement: grouped.selectedViewport.maybePanelItemElement(),
-                    otherViewPortElements: grouped.otherViewPorts.map(e => e.maybePanelItemElements())
-                  })
-                })
-            })
+        // APPLY WHEN ELEMENTS SWAPPED IN AND OUT
+        children.changes
+          .pipe(
+            takeUntil(this.ngDestroy$),
+            map<any, ViewportGridBoxComponent<HTMLElement>[]>(a => a.toArray())
+          )
+          .subscribe(viewports => {
+            viewports.forEach(z => z.clicked$
+              .pipe(takeUntil(children.changes))
+              .subscribe(push(viewports)))
 
             if (!viewports.some(z => z.isSelected())) {
-              maybe(viewports.slice(-1)[0])
-                .tapSome(dd => dd.setSelected(true))
+              maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
             }
 
-            this._tryer(obj.children)(obj.container)
+            this._renderGrid(children)(obj.container)
           })
       })
   }

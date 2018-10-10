@@ -1,20 +1,19 @@
+import { maybe } from 'typescript-monads'
+import { Subject } from 'rxjs'
+import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 import {
   Component, ChangeDetectionStrategy, ElementRef, ViewChild, Renderer2,
   Output, HostListener, QueryList, ContentChildren, ContentChild, HostBinding
 } from '@angular/core'
-import { maybe } from 'typescript-monads'
-import { Subject } from 'rxjs'
-import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 
 const SELECTION_CLASS = 'selected'
 export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 
-const s4 = () =>
-  Math.floor((1 + Math.random()) * 0x10000)
-    .toString(16)
-    .substring(1)
+const s4 = () => Math.floor((1 + Math.random()) * 0x10000)
+  .toString(16)
+  .substring(1)
 
-const guid = () => s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4()
+const shortGuid = () => s4() + s4() + s4()
 
 @Component({
   selector: GRID_BOX_SELECTOR_NAME,
@@ -26,7 +25,7 @@ const guid = () => s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4
       position: relative;
     }
     div.${SELECTION_CLASS} {
-      box-shadow: inset 0px 0px 0px 4px white;
+      box-shadow: inset 0px 0px 0px 3px white;
       z-index: 1;
       width: 100%;
       pointer-events: none;
@@ -42,7 +41,7 @@ const guid = () => s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4
 export class ViewportGridBoxComponent<TElement = HTMLElement> {
   constructor(private _renderer: Renderer2, public elementRef: ElementRef<TElement>) { }
 
-  public readonly guid = guid()
+  public readonly guid = shortGuid()
 
   @Output() public readonly isSelected$ = new Subject<boolean>()
   @Output() public readonly clicked$ = new Subject<ViewportGridBoxComponent<TElement>>()
@@ -67,16 +66,14 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
           this.isSelected$.next(isSelected)
         })
 
-  public readonly toggleSelected =
-    () =>
-      this.isSelected()
-        ? this.setSelected(false)
-        : this.setSelected(true)
+  public readonly toggleSelected = () =>
+    this.isSelected()
+      ? this.setSelected(false)
+      : this.setSelected(true)
 
-  public readonly isSelected =
-    () =>
-      this._maybeSlectionContainer().match({
-        none: () => false,
-        some: el => el.classList.contains(SELECTION_CLASS)
-      })
+  public readonly isSelected = () =>
+    this._maybeSlectionContainer().match({
+      none: () => false,
+      some: el => el.classList.contains(SELECTION_CLASS)
+    })
 }
