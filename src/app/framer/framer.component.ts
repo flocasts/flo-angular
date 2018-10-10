@@ -52,11 +52,10 @@ export class FramerComponent {
   ngAfterViewInit() {
     maybe(this.grid)
       .tapSome(grid => {
-        // todo
-        // grid.
-        grid.paneSelected$
-          // .pipe(startWith(res.item))
-          .subscribe(console.log)
+        grid.itemElementSelected$
+          .subscribe(a => {
+            a.selectedViewportElement.tapSome(console.log)
+          })
       })
   }
 }

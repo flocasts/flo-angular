@@ -78,6 +78,66 @@ const emit =
           paneElementSelectedSource.next(grouped.elementView)
         }
 
+const getPreSelectedIndex =
+  (supposedIndex: number) =>
+    (elementCount: number) =>
+      supposedIndex <= 0 || supposedIndex >= elementCount
+        ? 0
+        : supposedIndex
+
+const swapContainers =
+  (element: HTMLElement) => {
+    maybe(element.parentNode)
+      .tapSome(parent => {
+        parent.insertBefore(element, parent.firstChild)
+      })
+  }
+
+const dragStart = (ev: DragEvent) => {
+  maybe(ev.dataTransfer)
+    .flatMap(dataTransfer => maybe(ev.target).map(target => {
+      return {
+        dataTransfer,
+        target
+      }
+    }))
+    .tapSome(res => {
+      // res.dataTransfer.dropEffect = 'move'
+      res.dataTransfer.setData('text/plain', (res.target as any).id)
+    })
+}
+
+const dragOverHandler =
+  (parent: ViewportGridBoxComponent<HTMLElement>) =>
+    (ev: DragEvent) => {
+      ev.preventDefault()
+      maybe(ev.target)
+        .tapSome((target: any) => {
+          const d = target as HTMLElement
+          d.style.border = '0px 0px 0px 3px yellow'
+          // parent.set
+          parent.setDropStyles()
+        })
+    }
+
+const dropHandler =
+  (parent: ViewportGridBoxComponent<HTMLElement>) =>
+    (ev: DragEvent) => {
+      ev.preventDefault()
+      maybe(ev.dataTransfer).tapSome(dt => {
+        dt.dropEffect = 'link'
+        const data = dt.getData('text')
+        // tslint:disable-next-line:no-unused-expression
+        if (ev.target) {
+          const elm = document.getElementById(data)
+          if (elm) {
+            // swapContainers(elm)
+            // (ev.target as HTMLElement).appendChild(elm)
+          }
+        }
+      })
+    }
+
 @Component({
   selector: 'flo-viewport-grid',
   styles: [`
@@ -107,20 +167,20 @@ const emit =
 export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDestroy {
   constructor(private renderer: Renderer2) { }
 
-  private readonly paneSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
-  private readonly paneElementSelectedSource$ = new Subject<ViewportGridBoxSelectedElementEvent>()
+  private readonly itemSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
+  private readonly itemElementSelectedSource$ = new Subject<ViewportGridBoxSelectedElementEvent>()
   private readonly ngDestroy$ = new Subject<ViewportGridBoxSelectedElementEvent>()
 
   @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
   @Input() public readonly startingSelectedIndex = 0
-  @Output() public readonly paneSelected$ = this.paneSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
-  @Output() public readonly paneElementSelected$ = this.paneElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
+  @Output() public readonly itemSelected$ = this.itemSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
+  @Output() public readonly itemElementSelected$ = this.itemElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
   @ViewChild('gridContainer') private readonly _gridContainer?: ElementRef<HTMLDivElement>
   @ContentChildren(ViewportGridBoxComponent) private readonly _windowPanes?: QueryList<ViewportGridBoxComponent>
 
   private readonly _maybeContainer = () => maybe(this._gridContainer).map(ref => ref.nativeElement)
   private readonly _maybeChildren = () => maybe(this._windowPanes)
-  private readonly _maybeImport = () => this._maybeContainer()
+  private readonly _maybeCombinedView = () => this._maybeContainer()
     .flatMap(container => this._maybeChildren()
       .map(children => {
         return {
@@ -140,11 +200,10 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         (value: string) =>
           this.renderer.setStyle(elm, style, value)
 
-  private readonly setContainerMaxWidth =
+  private readonly _setContainerMaxWidth =
     (height: number) =>
       (elm: HTMLDivElement) =>
         this._setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
-
 
   public readonly maybeGetSelectedElementItem =
     <TElement extends HTMLElement>(): IMaybe<TElement> =>
@@ -158,7 +217,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
         .flatMap(a => a.maybePanelItemElements())
 
-  private readonly _renderGrid =
+  private readonly _setGridStyles =
     (children: QueryList<ViewportGridBoxComponent>) =>
       (container: HTMLDivElement) => {
         const applyGridStyleByNumber =
@@ -166,22 +225,30 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
             (style: string) =>
               applyGridStyles(style)(container)(this.renderer)(count)
 
+        const removeElementStyle = (elm: HTMLElement) => (style: string) => this.renderer.removeStyle(elm, style)
+        const removeContainerStyle = (style: string) => removeElementStyle(container)(style)
+        const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this.renderer.setStyle(elm, style, value)
+        const setElementStyleContainer = (style: string) => (value: string) => setElementStyle(container)(style)(value)
+
         if (children.length === 1) {
-          this.renderer.removeStyle(container, 'grid-template-columns')
-          this.renderer.removeStyle(container, 'grid-template-rows')
-          this.renderer.removeStyle(container, 'max-height')
-          this.setContainerMaxWidth(this.maxHeight)(container)
+          removeContainerStyle('grid-template-columns')
+          removeContainerStyle('grid-template-rows')
+          removeContainerStyle('max-height')
+          this._setContainerMaxWidth(this.maxHeight)(container)
         } else if (children.length === 2) {
-          this.renderer.setStyle(container, 'grid-template-columns', `1fr 1fr 1fr 1fr`)
-          this.renderer.setStyle(container, 'grid-template-rows', `1fr 1fr 1fr 1fr`)
-          this.renderer.setStyle(container.children[0], 'grid-row', `2 / span 2`)
-          this.renderer.setStyle(container.children[1], 'grid-row', `2 / span 2`)
-          this.renderer.setStyle(container.children[0], 'grid-column', `1 / span 2`)
-          this.renderer.setStyle(container.children[1], 'grid-column', `3 / span 2`)
-          this.renderer.setStyle(container.children[0], 'align-self', `center`)
-          this.renderer.setStyle(container.children[1], 'align-self', `center`)
-          this.renderer.setStyle(container, 'max-width', `${this.maxHeight * 3.55}px`)
-          this.renderer.setStyle(container, 'max-height', `${this.maxHeight}px`)
+          const child0 = setElementStyle(container.children[0] as HTMLElement)
+          const child1 = setElementStyle(container.children[1] as HTMLElement)
+
+          setElementStyleContainer('grid-template-columns')(`1fr 1fr 1fr 1fr`)
+          setElementStyleContainer('grid-template-rows')(`1fr 1fr 1fr 1fr`)
+          setElementStyleContainer('max-width')(`${this.maxHeight * 3.55}px`)
+          setElementStyleContainer('max-height')(`${this.maxHeight}px`)
+          child0('grid-row')(`2 / span 2`)
+          child0('align-self')(`center`)
+          child0('grid-column')(`1 / span 2`)
+          child1('grid-row')(`2 / span 2`)
+          child1('grid-column')(`3 / span 2`)
+          child1('align-self')(`center`)
         } else {
           Array.from(container.children).forEach(c => {
             this.renderer.removeStyle(c, 'grid-row')
@@ -191,12 +258,12 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
           this.renderer.removeStyle(container, 'max-height')
           applyGridStyleByNumber(children.length)('grid-template-columns')
           applyGridStyleByNumber(children.length)('grid-template-rows')
-          this.setContainerMaxWidth(this.maxHeight)(container)
+          this._setContainerMaxWidth(this.maxHeight)(container)
         }
       }
 
   ngOnChanges() {
-    this._maybeImport().tapSome(a => this._renderGrid(a.children)(a.container))
+    this._maybeCombinedView().tapSome(a => this._setGridStyles(a.children)(a.container))
   }
 
   ngOnDestroy() {
@@ -205,25 +272,25 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
   }
 
   ngAfterContentInit() {
-    this._maybeImport()
+    this._maybeCombinedView()
       .tapSome(obj => {
         const children = obj.children
         const arr = children.toArray()
-        const push = emit(this.paneSelectedSource$)(this.paneElementSelectedSource$)
+        const push = emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
 
         arr.forEach(a => {
-          // a.elementRef.nativeElement.addEventListener('dragstart', console.log)
+          a.elementRef.nativeElement.addEventListener('dragstart', dragStart)
+          a.elementRef.nativeElement.addEventListener('dragover', dragOverHandler(a))
+          a.elementRef.nativeElement.addEventListener('drop', dropHandler(a))
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(push(arr))
         })
 
         if (!children.some(z => z.isSelected())) {
-          // const index = this.startingSelectedIndex + 1 <= arr.length
-          //   ? this.startingSelectedIndex
-          //   : arr.length
-          maybe(arr[0]).tapSome(dd => dd.setSelected(true))
+          const index = getPreSelectedIndex(+this.startingSelectedIndex)(children.length)
+          maybe(arr[index]).tapSome(dd => dd.setSelected(true))
         }
 
-        this._renderGrid(children)(obj.container)
+        this._setGridStyles(children)(obj.container)
 
         // APPLY WHEN ELEMENTS SWAPPED IN AND OUT
         children.changes
@@ -240,7 +307,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
               maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
             }
 
-            this._renderGrid(children)(obj.container)
+            this._setGridStyles(children)(obj.container)
           })
       })
   }

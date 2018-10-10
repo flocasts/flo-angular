@@ -7,7 +7,7 @@
   <li>Primarily designed for a multi-camera grid layout, but arbitarty DOM elements should also work.</li>
   <li>CSS based solution with minimal Javascript (for layout) to enable a server rendered and jitter free user
     experience</li>
-  <li>Drag and drop to swap element positions (Coming Soon)</li>
+  <li>Drag and drop to swap element positions</li>
   <li>Extensive API for handle to customize for broad use-cases</li>
 </ul>
 <h3>Demo Configurator</h3>
@@ -26,7 +26,7 @@
   </div>
 </form>
 <br>
-<flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" startingSelectedIndex="1">
+<flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" startingSelectedIndex="-1">
   <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
     <video floViewportGridBoxItem playsinline controls muted>
       <source [src]="vid.src" type="video/mp4">
