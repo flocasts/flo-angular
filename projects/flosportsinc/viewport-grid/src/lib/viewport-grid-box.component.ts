@@ -40,7 +40,7 @@ const guid = () => s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportGridBoxComponent<TElement = HTMLElement> {
-  constructor(private _renderer: Renderer2, public elementRef: ElementRef<ViewportGridBoxComponent<TElement>>) { }
+  constructor(private _renderer: Renderer2, public elementRef: ElementRef<TElement>) { }
 
   public readonly guid = guid()
 
@@ -49,6 +49,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @ContentChild(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItem?: ElementRef<TElement>
   @ContentChildren(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItems?: QueryList<ElementRef<TElement>>
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
+  @HostBinding('draggable') public readonly draggable = true
   @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
 
   private readonly _maybeSlectionContainer = () => maybe(this._selectionContainer).map(a => a.nativeElement)

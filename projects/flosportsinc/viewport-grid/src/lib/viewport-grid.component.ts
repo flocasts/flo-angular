@@ -2,11 +2,11 @@ import { maybe } from 'typescript-monads'
 import { ViewportGridBoxComponent, GRID_BOX_SELECTOR_NAME } from './viewport-grid-box.component'
 import { Subject } from 'rxjs'
 import { takeUntil, map, distinctUntilChanged } from 'rxjs/operators'
+import { IMaybe } from 'typescript-monads/interfaces'
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
   AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output
 } from '@angular/core'
-import { IMaybe } from 'typescript-monads/interfaces'
 
 export interface ViewportGridBoxSelectedEvent<TElement = HTMLElement> {
   readonly selectedViewport: ViewportGridBoxComponent<TElement>
@@ -20,7 +20,6 @@ export interface ViewportGridBoxSelectedElementEvent<TElement = HTMLElement> {
 }
 
 const DEFAULT_MAX_HEIGHT = 900
-
 const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
 const computeColumns = (length: number) => Math.ceil(Math.sqrt(length))
@@ -70,17 +69,17 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
   private readonly paneSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
   private readonly paneElementSelectedSource$ = new Subject<any>()
 
-  @Input() readonly maxHeight = DEFAULT_MAX_HEIGHT
-  @Input() readonly startingSelectedIndex = 0
-  @Output() readonly paneSelected = this.paneSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
-  @Output() readonly paneElementSelected = this.paneElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
-  @ViewChild('gridContainer') readonly gridContainer?: ElementRef<HTMLDivElement>
-  @ContentChildren(ViewportGridBoxComponent) readonly windowPanes?: QueryList<ViewportGridBoxComponent>
+  @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
+  @Input() public readonly startingSelectedIndex = 0
+  @Output() public readonly paneSelected$ = this.paneSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
+  @Output() public readonly paneElementSelected$ = this.paneElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
+  @ViewChild('gridContainer') private readonly _gridContainer?: ElementRef<HTMLDivElement>
+  @ContentChildren(ViewportGridBoxComponent) private readonly _windowPanes?: QueryList<ViewportGridBoxComponent>
 
-  readonly maybeContainer = () => maybe(this.gridContainer).map(ref => ref.nativeElement)
-  readonly maybeChildren = () => maybe(this.windowPanes)
-  readonly maybeImport = () => this.maybeContainer()
-    .flatMap(container => this.maybeChildren()
+  private readonly _maybeContainer = () => maybe(this._gridContainer).map(ref => ref.nativeElement)
+  private readonly _maybeChildren = () => maybe(this._windowPanes)
+  private readonly _maybeImport = () => this._maybeContainer()
+    .flatMap(container => this._maybeChildren()
       .map(children => {
         return {
           children,
@@ -88,45 +87,45 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
         }
       }))
 
-  readonly setNgStyle =
+  private readonly _setNgStyle =
     (elm: HTMLElement) =>
       (style: string) =>
         (value: string) =>
           this.renderer.setStyle(elm, style, value)
 
-  readonly maybeSetContainerStyle =
+  private readonly _maybeSetContainerStyle =
     () =>
-      this.maybeContainer().map(this.setNgStyle)
+      this._maybeContainer().map(this._setNgStyle)
 
-  readonly setContainerMaxWidth =
+  private readonly setContainerMaxWidth =
     (height: number) =>
       (elm: HTMLDivElement) =>
-        this.setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
+        this._setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
 
-  readonly getSelected =
+  public readonly maybeGetSelectedItem =
     <TElement extends HTMLElement>(): IMaybe<ViewportGridBoxComponent<TElement>> =>
-      this.maybeChildren()
+      this._maybeChildren()
         .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
 
-  readonly getSelectedElement =
+  public readonly maybeGetSelectedElementItem =
     <TElement extends HTMLElement>(): IMaybe<TElement> =>
-      this.maybeChildren()
+      this._maybeChildren()
         .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
         .flatMap(a => a.maybePanelItemElement())
 
-  readonly getSelectedElements =
+  public readonly maybeGetSelectedElementItems =
     <TElement extends HTMLElement>(): IMaybe<ReadonlyArray<TElement>> =>
-      this.maybeChildren()
+      this._maybeChildren()
         .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
         .flatMap(a => a.maybePanelItemElements())
 
   constructor(private renderer: Renderer2) { }
 
   ngOnChanges() {
-    this.maybeImport().tapSome(a => this.tryer(a.children)(a.container))
+    this._maybeImport().tapSome(a => this._tryer(a.children)(a.container))
   }
 
-  readonly tryer =
+  private readonly _tryer =
     (children: QueryList<ViewportGridBoxComponent>) =>
       (container: HTMLDivElement) => {
         const applyGridStyleByNumber =
@@ -164,10 +163,11 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
       }
 
   ngAfterContentInit() {
-    this.maybeImport()
+    this._maybeImport()
       .tapSome(obj => {
         const arr = obj.children.toArray()
         arr.forEach(a => {
+          a.elementRef.nativeElement.addEventListener('dragstart', console.log)
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(selectedViewport => {
             arr.forEach(c => c.setSelected(false))
             selectedViewport.setSelected(true)
@@ -193,7 +193,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
             .tapSome(dd => dd.setSelected(true))
         }
 
-        this.tryer(obj.children)(obj.container)
+        this._tryer(obj.children)(obj.container)
         obj.children.changes
           .pipe(map<any, ViewportGridBoxComponent<HTMLElement>[]>(a => a.toArray()))
           .subscribe(viewports => {
@@ -222,7 +222,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
                 .tapSome(dd => dd.setSelected(true))
             }
 
-            this.tryer(obj.children)(obj.container)
+            this._tryer(obj.children)(obj.container)
           })
       })
   }

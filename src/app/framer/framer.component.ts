@@ -51,7 +51,10 @@ export class FramerComponent {
   // tslint:disable-next-line:use-life-cycle-interface
   ngAfterViewInit() {
     maybe(this.grid)
-      .flatMap(a => a.getSelectedElements())
-      .tapSome(console.log)
+      // .flatMap(a => a.getSelectedElements())
+      .tapSome(grid => {
+        // todo
+        // grid.
+      })
   }
 }
