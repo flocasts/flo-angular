@@ -1,8 +1,12 @@
-import { Component, ChangeDetectionStrategy, ContentChildren, ElementRef, Directive, ViewChildren, QueryList } from '@angular/core'
+import {
+  Component, ChangeDetectionStrategy, ContentChildren,
+  ElementRef, Directive, ViewChildren, QueryList, ViewChild
+} from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './framer.interface'
-import { ViewportGridBoxItemDirective, ViewportGridBoxSelectedElementEvent } from '@flosportsinc/viewport-grid'
+import { ViewportGridComponent } from '@flosportsinc/viewport-grid'
+import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
@@ -28,7 +32,7 @@ const mapFromForm = (input: ICompConfigForm) => {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FramerComponent {
-  @ViewChildren(ViewportGridBoxItemDirective) readonly appTest: QueryList<ViewportGridBoxItemDirective>
+  @ViewChild(ViewportGridComponent) readonly grid?: ViewportGridComponent
 
   readonly formGroup = new FormGroup({
     maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required]),
@@ -44,9 +48,10 @@ export class FramerComponent {
 
   readonly trackByVideoId = (_: number, item: any) => item.id
 
-  test(d: ViewportGridBoxSelectedElementEvent<HTMLVideoElement>) {
-    console.log(d)
-    // d.selectedViewportElement.tapSome(console.log)
-    // console.log(d.selectedViewportElement)
+  // tslint:disable-next-line:use-life-cycle-interface
+  ngAfterViewInit() {
+    maybe(this.grid)
+      .flatMap(a => a.getSelectedElements())
+      .tapSome(console.log)
   }
 }

@@ -71,6 +71,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
   private readonly paneElementSelectedSource$ = new Subject<any>()
 
   @Input() readonly maxHeight = DEFAULT_MAX_HEIGHT
+  @Input() readonly startingSelectedIndex = 0
   @Output() readonly paneSelected = this.paneSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
   @Output() readonly paneElementSelected = this.paneElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
   @ViewChild('gridContainer') readonly gridContainer?: ElementRef<HTMLDivElement>
@@ -101,6 +102,23 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
     (height: number) =>
       (elm: HTMLDivElement) =>
         this.setNgStyle(elm)('max-width')(`${maxWidthFromHeight(height)}px`)
+
+  readonly getSelected =
+    <TElement extends HTMLElement>(): IMaybe<ViewportGridBoxComponent<TElement>> =>
+      this.maybeChildren()
+        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+
+  readonly getSelectedElement =
+    <TElement extends HTMLElement>(): IMaybe<TElement> =>
+      this.maybeChildren()
+        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+        .flatMap(a => a.maybePanelItemElement())
+
+  readonly getSelectedElements =
+    <TElement extends HTMLElement>(): IMaybe<ReadonlyArray<TElement>> =>
+      this.maybeChildren()
+        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+        .flatMap(a => a.maybePanelItemElements())
 
   constructor(private renderer: Renderer2) { }
 
@@ -148,13 +166,14 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
   ngAfterContentInit() {
     this.maybeImport()
       .tapSome(obj => {
-        obj.children.forEach(a => {
+        const arr = obj.children.toArray()
+        arr.forEach(a => {
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(selectedViewport => {
-            obj.children.forEach(c => c.setSelected(false))
+            arr.forEach(c => c.setSelected(false))
             selectedViewport.setSelected(true)
             const grouped = {
               selectedViewport,
-              otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
+              otherViewPorts: arr.filter(v => v.elementRef !== selectedViewport.elementRef)
             }
             this.paneSelectedSource$.next(grouped)
             this.paneElementSelectedSource$.next({
@@ -166,7 +185,11 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
         })
 
         if (!obj.children.some(z => z.isSelected())) {
-          maybe(obj.children.toArray()[0])
+          // const index = this.startingSelectedIndex + 1 <= arr.length
+          //   ? this.startingSelectedIndex
+          //   : arr.length
+          // console.log(index)
+          maybe(arr[0])
             .tapSome(dd => dd.setSelected(true))
         }
 
@@ -183,7 +206,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges {
 
                   const grouped = {
                     selectedViewport,
-                    otherViewPorts: obj.children.toArray().filter(v => v.elementRef !== selectedViewport.elementRef)
+                    otherViewPorts: arr.filter(v => v.elementRef !== selectedViewport.elementRef)
                   }
                   this.paneSelectedSource$.next(grouped)
                   this.paneElementSelectedSource$.next({
