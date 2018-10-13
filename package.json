@@ -7,6 +7,8 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test",
+    "test.ci.app": "ng test flosports-component-library --watch=false --progress=false --browsers=ChromeHeadlessCI",
+    "test.ci.viewport-grid": "ng test @flosportsinc/viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "prepare": "node_modules/.bin/ts-node --project tsconfig.tools.json build.ts",
