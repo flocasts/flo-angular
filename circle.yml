@@ -66,7 +66,7 @@ jobs:
           command: npm ci
       - run:
           name: Execute Tests
-          command: ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
+          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   # semver:
   #   <<: *defaults
   #   steps:
