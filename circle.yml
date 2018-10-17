@@ -103,7 +103,7 @@ workflows:
   version: 2
   build_test_release:
     jobs:
-      - build
+      - production_build
       - unit_tests
       - e2e_tests
       # - semver:
