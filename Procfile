@@ -1,1 +1,1 @@
-web: node_modules/.bin/serve -p $PORT
+web: node dist server.js
