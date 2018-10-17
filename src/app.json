@@ -9,15 +9,14 @@
   },
   "environments": {
     "test": {
-      
+      "buildpacks": [
+        {
+          "url": "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
+        },
+        {
+          "url": "heroku/nodejs"
+        }
+      ]
     }
-  },
-  "buildpacks": [
-    {
-      "url": "heroku/nodejs"
-    },
-    {
-      "url": "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
-    }
-  ]
+  }
 }
