@@ -5,7 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  build:
+  production_build:
     <<: *defaults
     steps:
       - checkout
@@ -14,17 +14,17 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm
+          name: Install Dependencies
           command: npm ci
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run:
-          name: Lint
+          name: Exectue Lint
           command: npm run lint
       - run:
-          name: Build
+          name: Exectue Build
           command: npm run build.prod
   unit_tests:
     <<: *defaults
@@ -38,7 +38,7 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm
+          name: Install Dependencies
           command: npm ci
       - run:
           name: Test
@@ -53,20 +53,20 @@ jobs:
       #     name: Post coverage results
       #     command:
       #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
-  # e2e_tests:
-  #   <<: *defaults
-  #   docker:
-  #     - image: circleci/node:10.12-browsers
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package.json" }}
-  #     - run:
-  #         name: Install npm
-  #         command: npm ci
-  #     - run:
-  #         name: Test
-  #         command: 'npm run gen.config && CI_ENV=stag npm run test.e2e.ci'
+  e2e_tests:
+    <<: *defaults
+    docker:
+      - image: circleci/node:10.12-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Execute Tests
+          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   # semver:
   #   <<: *defaults
   #   steps:
@@ -103,9 +103,9 @@ workflows:
   version: 2
   build_test_release:
     jobs:
-      - build
+      - production_build
       - unit_tests
-      # - e2e_tests
+      - e2e_tests
       # - semver:
       #     requires:
       #       - build
