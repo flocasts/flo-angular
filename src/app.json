@@ -1,5 +1,5 @@
 {
-  "env":{
+  "env": {
     "HEROKU_APP_NAME": {
       "required": true
     },
@@ -10,8 +10,12 @@
   "environments": {
     "test": {
       "buildpacks": [
-        "https://github.com/heroku/heroku-buildpack-nodejs#v130",
-        "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
+        {
+          "url": "https://github.com/heroku/heroku-buildpack-nodejs#v130"
+        },
+        {
+          "url": "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
+        }
       ]
     }
   }
