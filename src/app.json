@@ -10,6 +10,7 @@
   "environments": {
     "test": {
       "buildpacks": [
+        "https://github.com/heroku/heroku-buildpack-nodejs#v130",
         "https://github.com/jontewks/puppeteer-heroku-buildpack.git"
       ]
     }
