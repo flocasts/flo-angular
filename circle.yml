@@ -53,20 +53,20 @@ jobs:
       #     name: Post coverage results
       #     command:
       #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
-  # e2e_tests:
-  #   <<: *defaults
-  #   docker:
-  #     - image: circleci/node:10.12-browsers
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package.json" }}
-  #     - run:
-  #         name: Install npm
-  #         command: npm ci
-  #     - run:
-  #         name: Test
-  #         command: 'npm run gen.config && CI_ENV=stag npm run test.e2e.ci'
+  e2e_tests:
+    <<: *defaults
+    docker:
+      - image: circleci/node:10.12-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install npm
+          command: npm ci
+      - run:
+          name: Test
+          command: ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   # semver:
   #   <<: *defaults
   #   steps:
