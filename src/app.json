@@ -1,12 +1,4 @@
 {
-  "buildpacks": [
-    {
-      "url": "jontewks/puppeteer"
-    },
-    {
-      "url": "heroku/nodejs"
-    }
-  ],
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
