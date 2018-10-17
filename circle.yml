@@ -5,7 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  build:
+  production_build:
     <<: *defaults
     steps:
       - checkout
@@ -14,17 +14,17 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm
+          name: Install Dependencies
           command: npm ci
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
       - run:
-          name: Lint
+          name: Exectue Lint
           command: npm run lint
       - run:
-          name: Build
+          name: Exectue Build
           command: npm run build.prod
   unit_tests:
     <<: *defaults
@@ -38,7 +38,7 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm
+          name: Install Dependencies
           command: npm ci
       - run:
           name: Test
@@ -62,10 +62,10 @@ jobs:
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
-          name: Install npm
+          name: Install Dependencies
           command: npm ci
       - run:
-          name: Test
+          name: Execute Tests
           command: ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   # semver:
   #   <<: *defaults
@@ -105,7 +105,7 @@ workflows:
     jobs:
       - build
       - unit_tests
-      # - e2e_tests
+      - e2e_tests
       # - semver:
       #     requires:
       #       - build
