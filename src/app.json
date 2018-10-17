@@ -1,4 +1,6 @@
 {
+  "name": "flosports-component-library",
+  "description": "flosports-component-library",
   "env": {
     "HEROKU_APP_NAME": {
       "required": true
