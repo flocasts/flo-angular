@@ -47,10 +47,10 @@ jobs:
       #     prefix: tests
       - store_artifacts:
           path: coverage
-      - run:
-          name: Post coverage results
-          command:
-            node_modules/.bin/codecov -F docs_site
+    #   - run:
+    #       name: Post coverage results
+    #       command:
+    #         node_modules/.bin/codecov -F docs_site
   test_viewport_grid:
     <<: *defaults
     # environment:
@@ -72,10 +72,10 @@ jobs:
       #     prefix: tests
       - store_artifacts:
           path: coverage
-      - run:
-          name: Post coverage results
-          command:
-            node_modules/.bin/codecov -F viewport-grid
+    #   - run:
+    #       name: Post coverage results
+    #       command:
+    #         node_modules/.bin/codecov -F viewport-grid
   e2e:
     <<: *defaults
     steps:
