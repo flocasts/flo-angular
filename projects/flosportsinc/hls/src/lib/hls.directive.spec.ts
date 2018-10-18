@@ -7,6 +7,19 @@ import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
 import { SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY } from './hls.tokens'
 
+@Component({
+  selector: 'flo-test-component',
+  template: '<video floHls="http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>'
+})
+export class HlsTestComponent { }
+
+@NgModule({
+  imports: [HlsModule],
+  declarations: [HlsTestComponent],
+  exports: [HlsTestComponent]
+})
+export class HlsTestingModule { }
+
 const createSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
   hoist.autoDetectChanges()
@@ -49,19 +62,6 @@ const setTestBedToMediaSourceModule = () => {
     ]
   })
 }
-
-@Component({
-  selector: 'flo-test-component',
-  template: '<video floHls="http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>'
-})
-export class HlsTestComponent { }
-
-@NgModule({
-  imports: [HlsModule],
-  declarations: [HlsTestComponent],
-  exports: [HlsTestComponent]
-})
-export class HlsTestingModule { }
 
 describe(`${HlsDirective.name} when client supports Media Source Extensions`, () => {
   beforeEach(() => setTestBedToMediaSourceModule())

@@ -1,6 +1,6 @@
 import { HlsDirective } from './hls.directive'
 import { defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory } from './hls.module'
-import * as hls from 'hls.js'
+// import * as hls from 'hls.js'
 
 describe(`${HlsDirective.name} default injection tokens`, () => {
   describe(`${defaultHlsSupportedNativelyFunction.name}`, () => {

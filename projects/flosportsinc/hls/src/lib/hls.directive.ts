@@ -83,9 +83,11 @@ export class HlsDirective<TMseClient> implements OnDestroy, OnChanges, AfterView
 
   private _nativeClientPathSubscription = combineLatest(
     this._hlsClientNative$,
-    this._hlsSrcChanges$,
-    (_, src) => src
-  ).pipe(takeUntil(this._ngOnDestroy$))
+    this._hlsSrcChanges$
+  ).pipe(
+    map(res => res[1]),
+    takeUntil(this._ngOnDestroy$)
+  )
     .subscribe(src => {
       this.videoElement.setAttribute('src', src)
       this.videoElement.addEventListener('loadedmetadata', () => {
@@ -103,9 +105,11 @@ export class HlsDirective<TMseClient> implements OnDestroy, OnChanges, AfterView
 
   private _mediaSourceClientPathSubscription = combineLatest(
     this._hlsClientSupported$,
-    this._hlsSrcChanges$,
-    (_, src) => src
-  ).pipe(takeUntil(this._ngOnDestroy$))
+    this._hlsSrcChanges$
+  ).pipe(
+    map(res => res[1]),
+    takeUntil(this._ngOnDestroy$)
+  )
     .subscribe(src => {
       const mseClient = this._mseInitTask({
         src,
