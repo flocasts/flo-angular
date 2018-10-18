@@ -6,7 +6,7 @@ import { FramerComponent } from './framer/framer.component'
 import { ViewportGridModule } from '@flosportsinc/viewport-grid'
 import { HlsModule } from '@flosportsinc/hls'
 import { HomeComponent } from './home/home.component'
-import { ReactiveFormsModule } from '@angular/forms'
+import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
 
 @NgModule({
@@ -17,6 +17,7 @@ import { HlsComponent } from './hls/hls.component'
     HlsComponent
   ],
   imports: [
+    FormsModule,
     ReactiveFormsModule,
     BrowserModule,
     AppRoutingModule,

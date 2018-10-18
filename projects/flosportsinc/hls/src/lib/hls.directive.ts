@@ -58,10 +58,10 @@ export class HlsDirective<TMseClient> implements OnDestroy, OnChanges, AfterView
   }
 
   public ngOnDestroy() {
+    emitAndUnsubscribe(this._ngOnDestroy$)
     this._nativeClientPathSubscription.unsubscribe()
     this._mediaSourceClientPathSubscription.unsubscribe()
     this._destroyPlayerSubscription.unsubscribe()
-    emitAndUnsubscribe(this._ngOnDestroy$)
   }
 
   public ngOnChanges(changes: SimpleChanges) {

@@ -8,5 +8,18 @@
 </ul>
 <h3>Demo</h3>
 
-<p>Streaming: <a href="http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8">http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8</a></p>
-<video floHls="http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" width="300px" autoplay controls></video>
+<h4>Choose Stream (HLS Source)</h4>
+<form [formGroup]="formGroup">
+  <select formControlName="dropdown">
+    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
+    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
+    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Big Buck Bunny</option>
+    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Tears of Steel</option>
+    <option value="https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8">Apple Advanced stream</option>
+    <option value="https://devstreaming-cdn.apple.com/videos/streaming/examples/bipbop_adv_example_hevc/master.m3u8">Apple Advanced stream (HEVC/H.264)</option>
+  </select>
+  <div></div>
+  <input placeholder="paste an hls url" type="text" formControlName="input">
+  <input placeholder="paste an hls url" type="checkbox" >
+</form>
+<video [floHls]="(hls$ | async)" width="50%" autoplay poster="https://www.flosports.tv/wp-content/uploads/2016/01/FloSports-Logo-sm2.png"></video>
