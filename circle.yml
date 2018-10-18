@@ -1,7 +1,7 @@
 defaults: &defaults
   resource_class: xlarge
   docker:
-    - image: circleci/node:10.12.0
+    - image: circleci/node:10.12-browsers
 
 version: 2
 jobs:
@@ -26,10 +26,8 @@ jobs:
       - run:
           name: Exectue Build
           command: npm run build.prod
-  unit_tests:
+  unit_tests_doc_site:
     <<: *defaults
-    docker:
-      - image: circleci/node:10.12-browsers
     # environment:
     #   TEST_REPORT_FILENAME: 'test-results.xml'
     #   TZ: '/usr/share/zoneinfo/America/Chicago'
@@ -43,7 +41,32 @@ jobs:
       - run:
           name: Test
           command:
-            npm test
+            npm run test.ci.app
+      # - store_artifacts:
+      #     path: test-results.xml
+      #     prefix: tests
+      # - store_artifacts:
+      #     path: ./coverage
+      # - run:
+      #     name: Post coverage results
+      #     command:
+      #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
+  unit_tests_viewport_grid:
+    <<: *defaults
+    # environment:
+    #   TEST_REPORT_FILENAME: 'test-results.xml'
+    #   TZ: '/usr/share/zoneinfo/America/Chicago'
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command:
+            npm run test.ci.viewport-grid
       # - store_artifacts:
       #     path: test-results.xml
       #     prefix: tests
@@ -55,8 +78,6 @@ jobs:
       #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
   e2e_tests:
     <<: *defaults
-    docker:
-      - image: circleci/node:10.12-browsers
     steps:
       - checkout
       - restore_cache:
@@ -104,7 +125,8 @@ workflows:
   build_test_release:
     jobs:
       - production_build
-      - unit_tests
+      - unit_tests_docs_site
+      - unit_tests_viewport_grid
       - e2e_tests
       # - semver:
       #     requires:
