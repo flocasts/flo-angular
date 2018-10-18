@@ -124,7 +124,7 @@ workflows:
   version: 2
   build_test_release:
     jobs:
-      - production_build
+      - build_production
       - test_docs_site
       - test_viewport_grid
       - e2e
