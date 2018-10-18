@@ -63,7 +63,7 @@ jobs:
       - run:
           name: Post coverage results
           command:
-            node_modules/.bin/codecov -F "viewport-grid"
+            node_modules/.bin/codecov -F viewport_grid
   e2e:
     <<: *defaults
     steps:
