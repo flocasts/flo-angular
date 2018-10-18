@@ -37,14 +37,12 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command:
-            npm run test.ci.app
+          command: npm run test.ci.app
       - store_artifacts:
           path: coverage
       - run:
           name: Post coverage results
-          command:
-            node_modules/.bin/codecov -F docs_site
+          command: node_modules/.bin/codecov -F docs_site
   test_viewport_grid:
     <<: *defaults
     steps:
@@ -56,14 +54,29 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command:
-            npm run test.ci.viewport-grid
+          command: npm run test.ci.viewport-grid
       - store_artifacts:
           path: coverage
       - run:
           name: Post coverage results
-          command:
-            node_modules/.bin/codecov -F viewport_grid
+          command: node_modules/.bin/codecov -F viewport_grid
+  test_hls:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command: npm run test.ci.hls
+      - store_artifacts:
+          path: coverage
+      - run:
+          name: Post coverage results
+          command: node_modules/.bin/codecov -F hls
   e2e:
     <<: *defaults
     steps:
@@ -114,6 +127,7 @@ workflows:
     jobs:
       - build_production
       - test_docs_site
+      - test_hls
       - test_viewport_grid
       - e2e
       # - semver:

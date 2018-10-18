@@ -10,6 +10,7 @@
     "build.prod": "ng build --prod && ts-node --project tsconfig.server.json tools/compress.ts && tsc --project tsconfig.server.json",
     "test": "ng test",
     "test.ci.app": "ng test flosports-component-library --watch=false --code-coverage --progress=false --browsers=ChromeHeadlessCI",
+    "test.ci.hls": "ng test @flosportsinc/hls --watch=false --code-coverage --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.viewport-grid": "ng test @flosportsinc/viewport-grid --watch=false --code-coverage --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "e2e": "ng e2e",

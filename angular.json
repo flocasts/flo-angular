@@ -160,6 +160,41 @@
           }
         }
       }
+    },
+    "@flosportsinc/hls": {
+      "root": "projects/flosportsinc/hls",
+      "sourceRoot": "projects/flosportsinc/hls/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/hls/tsconfig.lib.json",
+            "project": "projects/flosportsinc/hls/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/flosportsinc/hls/src/test.ts",
+            "tsConfig": "projects/flosportsinc/hls/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/hls/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/hls/tsconfig.lib.json",
+              "projects/flosportsinc/hls/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flosports-component-library"
