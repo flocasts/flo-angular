@@ -1,12 +1,15 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 import { HlsComponent } from './hls.component'
+import { FormsModule, ReactiveFormsModule } from '@angular/forms'
+import { HlsModule } from '@flosportsinc/hls'
 
 describe('HlsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ HlsComponent ]
+      imports: [FormsModule, ReactiveFormsModule, HlsModule],
+      declarations: [HlsComponent]
     })
-    .compileComponents()
+      .compileComponents()
   }))
 
   it('should create', () => {
