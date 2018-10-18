@@ -72,23 +72,23 @@ jobs:
       - run:
           name: Post coverage results
           command: node_modules/.bin/codecov -F viewport_grid
-#   test_hls:
-#     <<: *defaults
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           key: dependency-cache-{{ checksum "package.json" }}
-#       - run:
-#           name: Install Dependencies
-#           command: npm ci
-#       - run:
-#           name: Test
-#           command: npm run test.ci.hls
-#       - store_artifacts:
-#           path: coverage
-#       - run:
-#           name: Post coverage results
-#           command: node_modules/.bin/codecov -F hls
+  test_hls:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command: npm run test.ci.hls
+      - store_artifacts:
+          path: coverage
+      - run:
+          name: Post coverage results
+          command: node_modules/.bin/codecov -F hls
   # semver:
   #   <<: *defaults
   #   steps:
@@ -128,6 +128,7 @@ workflows:
       - build_production
       - test_docs_site
       - test_viewport_grid
+      - test_hls
       - e2e
       # - semver:
       #     requires:
