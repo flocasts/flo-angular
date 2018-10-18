@@ -26,6 +26,18 @@ jobs:
       - run:
           name: Exectue Build
           command: npm run build.prod
+  e2e:
+    <<: *defaults
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Execute Tests
+          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   test_docs_site:
     <<: *defaults
     steps:
@@ -77,18 +89,6 @@ jobs:
 #       - run:
 #           name: Post coverage results
 #           command: node_modules/.bin/codecov -F hls
-  e2e:
-    <<: *defaults
-    steps:
-      - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - run:
-          name: Execute Tests
-          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   # semver:
   #   <<: *defaults
   #   steps:
@@ -127,7 +127,6 @@ workflows:
     jobs:
       - build_production
       - test_docs_site
-    #   - test_hls
       - test_viewport_grid
       - e2e
       # - semver:
