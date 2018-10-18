@@ -28,9 +28,6 @@ jobs:
           command: npm run build.prod
   test_docs_site:
     <<: *defaults
-    # environment:
-    #   TEST_REPORT_FILENAME: 'test-results.xml'
-    #   TZ: '/usr/share/zoneinfo/America/Chicago'
     steps:
       - checkout
       - restore_cache:
@@ -42,20 +39,14 @@ jobs:
           name: Test
           command:
             npm run test.ci.app
-      # - store_artifacts:
-      #     path: test-results.xml
-      #     prefix: tests
       - store_artifacts:
           path: coverage
-    #   - run:
-    #       name: Post coverage results
-    #       command:
-    #         node_modules/.bin/codecov -F docs_site
+      - run:
+          name: Post coverage results
+          command:
+            node_modules/.bin/codecov -F docs_site
   test_viewport_grid:
     <<: *defaults
-    # environment:
-    #   TEST_REPORT_FILENAME: 'test-results.xml'
-    #   TZ: '/usr/share/zoneinfo/America/Chicago'
     steps:
       - checkout
       - restore_cache:
@@ -67,15 +58,12 @@ jobs:
           name: Test
           command:
             npm run test.ci.viewport-grid
-      # - store_artifacts:
-      #     path: test-results.xml
-      #     prefix: tests
       - store_artifacts:
           path: coverage
-    #   - run:
-    #       name: Post coverage results
-    #       command:
-    #         node_modules/.bin/codecov -F viewport-grid
+      - run:
+          name: Post coverage results
+          command:
+            node_modules/.bin/codecov -F viewport-grid
   e2e:
     <<: *defaults
     steps:
