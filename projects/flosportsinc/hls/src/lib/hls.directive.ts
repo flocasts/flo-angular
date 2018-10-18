@@ -72,7 +72,6 @@ export class HlsDirective<TMseClient> implements OnDestroy, OnChanges, AfterView
       .tapSome(a => this._hlsSrcChanges$.next(a))
   }
 
-  // tslint:disable:member-ordering
   private readonly _hlsClientSupported$ = this._ngAfterViewInit$.pipe(
     filter(_ => this._isMediaSourceSupported)
   )

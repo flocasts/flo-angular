@@ -1,10 +1,13 @@
+import {
+  SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, IMSEDestroyFunc,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
+  IVideoElementSupportsHlsCheck,
+  SUPPORTS_HLS_NATIVELY,
+  IMSEInitFunc,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
+} from './hls.tokens'
 import { NgModule } from '@angular/core'
 import { HlsDirective } from './hls.directive'
-import {
-  SUPPORTS_HLS_NATIVELY, SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, IVideoElementSupportsHlsCheck,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, IMSEInitFunc,
-  IMSEDestroyFunc
-} from './hls.tokens'
 import * as Hls from 'hls.js'
 
 export function defaultIsSupportedFactory() {
@@ -12,13 +15,12 @@ export function defaultIsSupportedFactory() {
 }
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsCheck {
-  return function (ve: HTMLVideoElement) {
-    return ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
-  }
+  const lambda = (ve: HTMLVideoElement) => ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
+  return lambda
 }
 
 export function defaultMseClientInitFunction(): IMSEInitFunc<Hls> {
-  return function (initEvent) {
+  const lambda = (initEvent) => {
     const client = new Hls()
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
@@ -32,13 +34,15 @@ export function defaultMseClientInitFunction(): IMSEInitFunc<Hls> {
 
     return client
   }
+  return lambda
 }
 
 export function defaultMseClientDestroyFunction(): IMSEDestroyFunc<Hls> {
-  return function (destroyEvent) {
+  const lambda = (destroyEvent) => {
     destroyEvent.clientRef.stopLoad()
     destroyEvent.clientRef.destroy()
   }
+  return lambda
 }
 
 @NgModule({
