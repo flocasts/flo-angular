@@ -1,11 +1,11 @@
 defaults: &defaults
   resource_class: xlarge
   docker:
-    - image: circleci/node:10.12.0
+    - image: circleci/node:10.12-browsers
 
 version: 2
 jobs:
-  production_build:
+  build_production:
     <<: *defaults
     steps:
       - checkout
@@ -26,13 +26,8 @@ jobs:
       - run:
           name: Exectue Build
           command: npm run build.prod
-  unit_tests:
+  test_docs_site:
     <<: *defaults
-    docker:
-      - image: circleci/node:10.12-browsers
-    # environment:
-    #   TEST_REPORT_FILENAME: 'test-results.xml'
-    #   TZ: '/usr/share/zoneinfo/America/Chicago'
     steps:
       - checkout
       - restore_cache:
@@ -43,20 +38,34 @@ jobs:
       - run:
           name: Test
           command:
-            npm test
-      # - store_artifacts:
-      #     path: test-results.xml
-      #     prefix: tests
-      # - store_artifacts:
-      #     path: ./coverage
-      # - run:
-      #     name: Post coverage results
-      #     command:
-      #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
-  e2e_tests:
+            npm run test.ci.app
+      - store_artifacts:
+          path: coverage
+      - run:
+          name: Post coverage results
+          command:
+            node_modules/.bin/codecov -F docs_site
+  test_viewport_grid:
     <<: *defaults
-    docker:
-      - image: circleci/node:10.12-browsers
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command:
+            npm run test.ci.viewport-grid
+      - store_artifacts:
+          path: coverage
+      - run:
+          name: Post coverage results
+          command:
+            node_modules/.bin/codecov -F viewport_grid
+  e2e:
+    <<: *defaults
     steps:
       - checkout
       - restore_cache:
@@ -103,9 +112,10 @@ workflows:
   version: 2
   build_test_release:
     jobs:
-      - production_build
-      - unit_tests
-      - e2e_tests
+      - build_production
+      - test_docs_site
+      - test_viewport_grid
+      - e2e
       # - semver:
       #     requires:
       #       - build
