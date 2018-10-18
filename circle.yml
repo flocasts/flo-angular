@@ -5,7 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  production_build:
+  build_production:
     <<: *defaults
     steps:
       - checkout
@@ -26,7 +26,7 @@ jobs:
       - run:
           name: Exectue Build
           command: npm run build.prod
-  unit_tests_doc_site:
+  test_docs_site:
     <<: *defaults
     # environment:
     #   TEST_REPORT_FILENAME: 'test-results.xml'
@@ -51,7 +51,7 @@ jobs:
       #     name: Post coverage results
       #     command:
       #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
-  unit_tests_viewport_grid:
+  test_viewport_grid:
     <<: *defaults
     # environment:
     #   TEST_REPORT_FILENAME: 'test-results.xml'
@@ -76,7 +76,7 @@ jobs:
       #     name: Post coverage results
       #     command:
       #       'node_modules/.bin/codecov --token=c3fb1296-98dd-4bc2-a4d1-8a23e4294278'
-  e2e_tests:
+  e2e:
     <<: *defaults
     steps:
       - checkout
@@ -125,9 +125,9 @@ workflows:
   build_test_release:
     jobs:
       - production_build
-      - unit_tests_docs_site
-      - unit_tests_viewport_grid
-      - e2e_tests
+      - test_docs_site
+      - test_viewport_grid
+      - e2e
       # - semver:
       #     requires:
       #       - build
