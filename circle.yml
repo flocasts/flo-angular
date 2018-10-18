@@ -45,8 +45,8 @@ jobs:
       # - store_artifacts:
       #     path: test-results.xml
       #     prefix: tests
-      # - store_artifacts:
-      #     path: ./coverage
+      - store_artifacts:
+          path: coverage
       # - run:
       #     name: Post coverage results
       #     command:
@@ -70,8 +70,8 @@ jobs:
       # - store_artifacts:
       #     path: test-results.xml
       #     prefix: tests
-      # - store_artifacts:
-      #     path: ./coverage
+      - store_artifacts:
+          path: coverage
       # - run:
       #     name: Post coverage results
       #     command:
