@@ -1,4 +1,7 @@
 :host {
   max-width: 100%;
   margin: auto;
+  input {
+    min-width: 320px;
+  }
 }

@@ -10,36 +10,40 @@
 <h3>Demo</h3>
 
 <h4>Choose Stream (HLS Source)</h4>
+<div>
+  <label for="preselected_input">Source (pre selected)</label>
+  <select id="preselected_input" [formControl]="dropdown">
+    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
+    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
+    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel</option>
+    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream</option>
+  </select>
+</div>
 <form [formGroup]="formGroup">
   <div>
-    <label for="preselected_input">Source (pre selected)</label>
-    <select id="preselected_input" formControlName="dropdown">
-      <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
-      <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
-      <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel</option>
-      <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream</option>
-    </select>
-  </div>
-  <div>
-    <label for="manual_input">Source</label>
-    <input id="manual_input" placeholder="paste an hls url" type="text" formControlName="input">
+    <label for="src">Source</label>
+    <input id="src" placeholder="paste an hls url" type="text" formControlName="src">
   </div>
   <div>
     <label for="poster">Poster</label>
     <input id="poster" placeholder="poster source url" type="text" formControlName="poster">
     </div>
-  <label for="checkbox">Show Controls</label>
-  <input id="checkbox" placeholder="paste an hls url" type="checkbox" formControlName="showControls">
+  <label for="controls">Show Controls</label>
+  <input id="controls" placeholder="paste an hls url" type="checkbox" formControlName="controls">
   <div>
     <label for="autoplay">Autoplay</label>
     <input id="autoplay" type="checkbox" formControlName="autoplay">
   </div>
+  <div>
+    <label for="playsinline">Playsinline</label>
+    <input id="playsinline" type="checkbox" formControlName="playsinline">
+  </div>
 </form>
 <video 
-  *ngIf="(hls$ | async) as src"
-  [floHls]="src"
+  *ngIf="(config$ | async) as config"
   height="400px"
-  [controls]="false"
-  [autoplay]="true"
-  playsinline>
+  playsinline
+  [floHls]="config?.src"
+  [controls]="config?.controls"
+  [autoplay]="config?.playsinline">
 </video>
