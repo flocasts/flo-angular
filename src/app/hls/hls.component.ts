@@ -32,6 +32,6 @@ export class HlsComponent implements OnDestroy {
   }
 
   onMessage(event: HlsMessage) {
-    console.log(event)
+    // You can listen to the HlsJs messages
   }
 }
