@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core'
+import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
 import { startWith } from 'rxjs/operators'
 import { HlsMessage } from '@flosportsinc/hls'
@@ -8,7 +8,8 @@ const DEFAULT_SRC = 'https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 @Component({
   selector: 'app-hls',
   templateUrl: './hls.component.html',
-  styleUrls: ['./hls.component.scss']
+  styleUrls: ['./hls.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HlsComponent implements OnDestroy {
   public readonly dropdown = new FormControl(DEFAULT_SRC)
