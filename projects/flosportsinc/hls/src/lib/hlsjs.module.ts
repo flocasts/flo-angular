@@ -21,14 +21,19 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsC
   return lambda
 }
 
-export function defaultMseClientInitFunction(): IMseInitFunc<Hls, any> {
-  const lambda: IMseInitFunc<Hls, any> = initEvent => {
+export interface HlsMessage {
+  readonly key: keyof typeof Hls.Events
+  readonly message: any
+}
+
+export function defaultMseClientInitFunction(): IMseInitFunc<Hls, HlsMessage> {
+  const lambda: IMseInitFunc<Hls, HlsMessage> = initEvent => {
     const client = new Hls()
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
-    // Object.keys(Hls.Events).forEach(key => {
-    //   client.on(Hls.Events[key], (a, b) => initEvent.messageSource.next(b))
-    // })
+    Object.keys(Hls.Events).forEach(key => {
+      client.on(Hls.Events[key], (eventKey: any, b) => initEvent.messageSource.next({ key: eventKey, message: b }))
+    })
     return client
   }
   return lambda

@@ -46,15 +46,12 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _hlsSrcChanges$ = new Subject<string>()
   private readonly _hlsMseClientSource$ = new Subject<TMseClient>()
   private readonly _hlsMseClientMessages$ = new Subject<TMseMessage>()
-  // private readonly _readyToPlaySource$ = new Subject<IMseClientReadyEvent<TMseClient>>()
-  // private readonly _errorSource$ = new Subject<HlsErrorEvent>()
-  // private readonly sub = this._hlsMseClientMessages$.subscribe(console.log)
   public readonly videoElement = this.el.nativeElement
 
   @Input() public readonly floHls?: string
   @Output() public readonly hlsClient = this._hlsMseClientSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
+  @Output() public readonly hlsClientMessage = this._hlsMseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
   // @Output() public readonly errors = this._errorSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
-  // @Output() public readonly readyToPlay = this._readyToPlaySource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
 
   public ngAfterViewInit() {
     emitAndUnsubscribe(this._ngAfterViewInit$)

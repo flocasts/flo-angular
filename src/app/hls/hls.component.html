@@ -42,6 +42,7 @@
 <video *ngIf="config$ | async as config"
   height="400px"
   [floHls]="config?.src"
+  (hlsClientMessage)="onMessage($event)"
   [poster]="config?.poster"
   [controls]="config?.controls"
   [autoplay]="config?.autoplay"
