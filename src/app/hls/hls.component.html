@@ -16,8 +16,8 @@
     <select id="preselected_input" formControlName="dropdown">
       <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
       <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
-      <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Big Buck Bunny</option>
-      <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Tears of Steel</option>
+      <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel</option>
+      <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream</option>
     </select>
   </div>
   <div>
@@ -30,12 +30,16 @@
     </div>
   <label for="checkbox">Show Controls</label>
   <input id="checkbox" placeholder="paste an hls url" type="checkbox" formControlName="showControls">
+  <div>
+    <label for="autoplay">Autoplay</label>
+    <input id="autoplay" type="checkbox" formControlName="autoplay">
+  </div>
 </form>
 <video 
   *ngIf="(hls$ | async) as src"
   [floHls]="src"
   height="400px"
-  controls
-  playsinline
-  autoplay>
+  [controls]="false"
+  [autoplay]="true"
+  playsinline>
 </video>

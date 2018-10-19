@@ -1,10 +1,12 @@
 import {
-  SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, IMSEDestroyFunc,
+  SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   IVideoElementSupportsHlsCheck,
   SUPPORTS_HLS_NATIVELY,
-  IMSEInitFunc,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
+  IMseInitFunc,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
+  IMseSrcChangeFunc
 } from './hls.tokens'
 import { NgModule } from '@angular/core'
 import { HlsDirective } from './hls.directive'
@@ -19,27 +21,36 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsC
   return lambda
 }
 
-export function defaultMseClientInitFunction(): IMSEInitFunc<Hls, any> {
-  const lambda: IMSEInitFunc<Hls, any> = initEvent => {
+export function defaultMseClientInitFunction(): IMseInitFunc<Hls, any> {
+  const lambda: IMseInitFunc<Hls, any> = initEvent => {
+    console.log('Init Factory Call')
     const client = new Hls()
-    console.log('INIT!')
-    // client.on(Hls.Events.ERROR, console.log)
-    // client.attachMedia(initEvent.videoElement)
-    // client.on(Hls.Events.ERROR, console.log)
-    Object.keys(Hls.Events).forEach(key => {
-      client.on(Hls.Events[key], (a, b) => initEvent.messageSource.next(b))
-    })
+    client.loadSource(initEvent.src)
+    client.attachMedia(initEvent.videoElement)
+    // Object.keys(Hls.Events).forEach(key => {
+    //   client.on(Hls.Events[key], (a, b) => initEvent.messageSource.next(b))
+    // })
     return client
   }
   return lambda
 }
 
-export function defaultMseClientDestroyFunction(): IMSEDestroyFunc<Hls> {
-  const lambda: IMSEDestroyFunc<Hls> = destroyEvent => {
-    console.log('DESTROY')
-    // destroyEvent.clientRef.stopLoad()
-    // destroyEvent.clientRef.detachMedia()
-    // destroyEvent.clientRef.destroy()
+export function defaultMseClientSrcChangeFunction(): IMseSrcChangeFunc<Hls> {
+  const lambda: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
+    console.log('Src Change Factory Call')
+    srcChangeEvent.clientRef.detachMedia()
+    srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
+    srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
+  }
+  return lambda
+}
+
+export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
+  const lambda: IMseDestroyFunc<Hls> = destroyEvent => {
+    console.log('Destroy Factory Call')
+    destroyEvent.clientRef.stopLoad()
+    destroyEvent.clientRef.detachMedia()
+    destroyEvent.clientRef.destroy()
   }
   return lambda
 }
@@ -59,6 +70,10 @@ export function defaultMseClientDestroyFunction(): IMSEDestroyFunc<Hls> {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
+      useFactory: defaultMseClientSrcChangeFunction
     },
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,

@@ -18,6 +18,7 @@ export class HlsComponent implements OnDestroy {
     dropdown: new FormControl('https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'),
     input: new FormControl(undefined),
     showControls: new FormControl(true),
+    autoplay: new FormControl(true),
     poster: new FormControl('')
   })
 
