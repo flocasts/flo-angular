@@ -24,11 +24,6 @@ const emitAndUnsubscribe = (subject: Subject<undefined>) => {
   subject.unsubscribe()
 }
 
-// export interface HlsErrorEvent {
-//   readonly MediaSourceClientError?: any // TODO
-//   readonly NativeVideoError?: ErrorEvent
-// }
-
 export interface IMseClientReadyEvent<TMseClient> {
   readonly mseClient: TMseClient
   readonly videoElement: HTMLVideoElement
@@ -98,19 +93,13 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     takeUntil(this._ngOnDestroy$)
   ).subscribe(src => {
     this.videoElement.setAttribute('src', src)
-    // this.videoElement.addEventListener('loadedmetadata', () => {
-    //   // this.loaderPlaySourceTrigger()
-    // }, { passive: true })
-    // this.videoElement.addEventListener('error', err => { }, { passive: true })
-    // this.videoElement.addEventListener('')
-    // attachNativeEventListeners(video)
   })
 
 
   private _mediaSourceClientPathSourceChangeSubscription = combineLatest(
     this._mseHlsClientSupported$,
     this._hlsSrcChanges$,
-    this.hlsClient // TODO: change this to ready play event?
+    this.hlsClient
   ).pipe(
     skip(1),
     map(res => ({ src: res[1], mseClient: res[2] })),
@@ -138,47 +127,4 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _destroyPlayerSubscription = combineLatest(this.hlsClient, this._ngOnDestroy$)
     .pipe(take(1), map(a => a[0]))
     .subscribe(clientRef => this._mseDestroyTask({ clientRef, videoElement: this.videoElement }))
-
-  // private readonly hlsManifestParsed$ = this.hlsReady$.pipe(
-  //   take(1),
-  //   flatMapManifestParsed()
-  // )
-
-  // private readonly hlsLevelSwitched$ = this.hlsReady$.pipe(
-  //   take(1),
-  //   flatMapLevelSwitched(),
-  //   distinctUntilChanged()
-  // )
-
-  // public readonly emitChangeResolution = combineLatest(
-  //   this.hlsManifestParsed$,
-  //   this.hlsLevelSwitched$
-  // )
-  //   .pipe(
-  //     mapGetResolution(),
-  //     filter(Boolean),
-  //     distinctUntilChanged(),
-  //     takeUntil(this.ngOnDestroy$)
-  //   )
-  //   .subscribe(resolution => this.changeResolution.next(resolution))
-
-  // public readonly emitBufferCreated = this.hlsReady$
-  //   .pipe(
-  //     flatMapBufferCreated(),
-  //     takeUntil(this.ngOnDestroy$)
-  //   )
-  //   .subscribe(([err, data]) => this.bufferCreated.next(data))
-
-  // public readonly handleHlsError = this.hlsReady$
-  //   .pipe(
-  //     flatMapHlsErrors(),
-  //     takeUntil(this.ngOnDestroy$)
-  //   )
-  // .subscribe(([errName, error]) => delegateErrorHandler(error, this.errors))
 }
-
-// export const fromHlsEvent = (hls: Hls, eventName: string | any) =>
-//   fromEventPattern(
-//     (callback: any) => hls.on(eventName, callback),
-//     (callback: any) => hls.off(eventName, callback)
-//   )
