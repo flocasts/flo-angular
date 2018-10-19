@@ -34,8 +34,8 @@
 <video 
   *ngIf="(hls$ | async) as src"
   [floHls]="src"
-  width="100%"
   height="400px"
   controls
+  playsinline
   autoplay>
 </video>

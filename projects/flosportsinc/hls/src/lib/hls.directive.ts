@@ -29,6 +29,11 @@ const emitAndUnsubscribe = (subject: Subject<undefined>) => {
 //   readonly NativeVideoError?: ErrorEvent
 // }
 
+export interface IMseClientReadyEvent<TMseClient> {
+  readonly mseClient: TMseClient
+  readonly videoElement: HTMLVideoElement
+}
+
 @Directive({
   selector: 'video[floHls]'
 })
@@ -37,6 +42,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     @Inject(SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: boolean,
     @Inject(SUPPORTS_HLS_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsHlsCheck,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTask: IMSEInitFunc<TMseClient, TMseMessage>,
+    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseSourceChangeTask: IMSEInitFunc<TMseClient, TMseMessage>,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMSEDestroyFunc<TMseClient>
   ) { }
 
@@ -45,7 +51,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _hlsSrcChanges$ = new Subject<string>()
   private readonly _hlsMseClientSource$ = new Subject<TMseClient>()
   private readonly _hlsMseClientMessages$ = new Subject<TMseMessage>()
-  private readonly _readyToPlaySource$ = new Subject<HTMLVideoElement>()
+  private readonly _readyToPlaySource$ = new Subject<IMseClientReadyEvent<TMseClient>>()
   // private readonly _errorSource$ = new Subject<HlsErrorEvent>()
   private readonly sub = this._hlsMseClientMessages$.subscribe(console.log)
   public readonly videoElement = this.el.nativeElement
@@ -93,37 +99,36 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     takeUntil(this._ngOnDestroy$)
   ).subscribe(src => {
     this.videoElement.setAttribute('src', src)
-    this.videoElement.addEventListener('loadedmetadata', () => this.loaderPlaySourceTrigger(), { passive: true })
+    this.videoElement.addEventListener('loadedmetadata', () => {
+      // this.loaderPlaySourceTrigger()
+    }, { passive: true })
     this.videoElement.addEventListener('error', err => { }, { passive: true })
     // attachNativeEventListeners(video)
   })
 
-  loaderPlaySourceTrigger = () => {
-    this._readyToPlaySource$.next(this.videoElement)
-  }
 
-  private _mediaSourceClientPathSourceChangeSubscription = combineLatest(
-    this._hlsClientSupported$,
-    this._hlsSrcChanges$,
-    this.hlsClient
-  ).pipe(
-    skip(1),
-    map(res => ({ src: res[1], mseClient: res[2] })),
-    takeUntil(this._ngOnDestroy$)
-  ).subscribe(res => {
-    console.log('CHANGE SOURCE')
-    this._mseDestroyTask({ clientRef: res.mseClient, videoElement: this.videoElement })
-    const client = (res.mseClient as any)
-    client.detachMedia()
-    client.loadSource(res.src)
-    client.attachMedia(this.videoElement)
-    // this._mseInitTask({
-    //   src: res.src,
-    //   videoElement: this.videoElement,
-    //   readyToPlayTriggerFn: this.loaderPlaySourceTrigger,
-    //   messageSource: this._hlsMseClientMessages$
-    // })
-  })
+  // private _mediaSourceClientPathSourceChangeSubscription = combineLatest(
+  //   this._hlsClientSupported$,
+  //   this._hlsSrcChanges$,
+  //   this.hlsClient
+  // ).pipe(
+  //   skip(1),
+  //   map(res => ({ src: res[1], mseClient: res[2] })),
+  //   takeUntil(this._ngOnDestroy$)
+  // ).subscribe(res => {
+  //   console.log('CHANGE SOURCE')
+  //   this._mseDestroyTask({ clientRef: res.mseClient, videoElement: this.videoElement })
+  //   const client = (res.mseClient as any)
+  //   client.detachMedia()
+  //   client.loadSource(res.src)
+  //   client.attachMedia(this.videoElement)
+  //   // this._mseInitTask({
+  //   //   src: res.src,
+  //   //   videoElement: this.videoElement,
+  //   //   readyToPlayTriggerFn: this.loaderPlaySourceTrigger,
+  //   //   messageSource: this._hlsMseClientMessages$
+  //   // })
+  // })
 
   private _mediaSourceClientPathInitSubscription = combineLatest(
     this._hlsClientSupported$,
@@ -135,7 +140,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       const mseClient = this._mseInitTask({
         src,
         videoElement: this.videoElement,
-        readyToPlayTriggerFn: this.loaderPlaySourceTrigger,
+        readyToPlayTriggerFn: () => undefined,
         messageSource: this._hlsMseClientMessages$
       })
       this._hlsMseClientSource$.next(mseClient)
