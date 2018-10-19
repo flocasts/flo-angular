@@ -23,7 +23,6 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsC
 
 export function defaultMseClientInitFunction(): IMseInitFunc<Hls, any> {
   const lambda: IMseInitFunc<Hls, any> = initEvent => {
-    console.log('Init Factory Call')
     const client = new Hls()
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
@@ -37,7 +36,6 @@ export function defaultMseClientInitFunction(): IMseInitFunc<Hls, any> {
 
 export function defaultMseClientSrcChangeFunction(): IMseSrcChangeFunc<Hls> {
   const lambda: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
-    console.log('Src Change Factory Call')
     srcChangeEvent.clientRef.detachMedia()
     srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
     srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
@@ -47,7 +45,6 @@ export function defaultMseClientSrcChangeFunction(): IMseSrcChangeFunc<Hls> {
 
 export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
   const lambda: IMseDestroyFunc<Hls> = destroyEvent => {
-    console.log('Destroy Factory Call')
     destroyEvent.clientRef.stopLoad()
     destroyEvent.clientRef.detachMedia()
     destroyEvent.clientRef.destroy()

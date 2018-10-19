@@ -17,7 +17,6 @@ import {
 import { filter, map, takeUntil, take, skip } from 'rxjs/operators'
 import { Subject, combineLatest } from 'rxjs'
 import { maybe } from 'typescript-monads'
-// import * as Hls from 'hls.js'
 
 const emitAndUnsubscribe = (subject: Subject<undefined>) => {
   if (subject.closed) { return }
@@ -79,9 +78,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       .flatMap(a => a.currentValue === a.previousValue
         ? maybe<string>()
         : maybe<string>(a.currentValue))
-      .tapSome(src => {
-        this._hlsSrcChanges$.next(src)
-      })
+      .tapSome(src => this._hlsSrcChanges$.next(src))
   }
 
   private readonly _mseHlsClientSupported$ = this._ngAfterViewInit$.pipe(
@@ -127,7 +124,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     })
   })
 
-  private _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._hlsSrcChanges$ )
+  private _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._hlsSrcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
       const mseClient = this._mseInitTask({
