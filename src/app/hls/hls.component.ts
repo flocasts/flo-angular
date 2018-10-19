@@ -3,6 +3,11 @@ import { FormGroup, FormControl } from '@angular/forms'
 import { combineLatest, Subject } from 'rxjs'
 import { debounceTime, startWith, map, tap, distinctUntilChanged } from 'rxjs/operators'
 
+interface VideoInfo {
+  readonly src: string
+  readonly showControls: boolean
+}
+
 @Component({
   selector: 'app-hls',
   templateUrl: './hls.component.html',
@@ -11,10 +16,12 @@ import { debounceTime, startWith, map, tap, distinctUntilChanged } from 'rxjs/op
 export class HlsComponent implements OnDestroy {
   public readonly formGroup = new FormGroup({
     dropdown: new FormControl('https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'),
-    input: new FormControl(undefined)
+    input: new FormControl(undefined),
+    showControls: new FormControl(true),
+    poster: new FormControl('')
   })
 
-  private readonly _hlsUrlSource$ = new Subject<string>()
+  private readonly _hlsUrlSource$ = new Subject<VideoInfo>()
   private readonly _dropdownSubscription = this.formGroup.controls.dropdown.valueChanges
     .pipe(distinctUntilChanged())
     .subscribe(src => this._hlsUrlSource$.next(src))

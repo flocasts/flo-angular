@@ -15,32 +15,31 @@ export function defaultIsSupportedFactory() {
 }
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsCheck {
-  const lambda = (ve: HTMLVideoElement) => ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
+  const lambda: IVideoElementSupportsHlsCheck = ve => ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
   return lambda
 }
 
-export function defaultMseClientInitFunction(): IMSEInitFunc<Hls> {
-  const lambda = (initEvent) => {
+export function defaultMseClientInitFunction(): IMSEInitFunc<Hls, any> {
+  const lambda: IMSEInitFunc<Hls, any> = initEvent => {
     const client = new Hls()
-    client.loadSource(initEvent.src)
-    client.attachMedia(initEvent.videoElement)
-    client.on(Hls.Events.MANIFEST_PARSED, () => {
-      initEvent.readyToPlayTriggerFn()
+    console.log('INIT!')
+    // client.on(Hls.Events.ERROR, console.log)
+    // client.attachMedia(initEvent.videoElement)
+    // client.on(Hls.Events.ERROR, console.log)
+    Object.keys(Hls.Events).forEach(key => {
+      client.on(Hls.Events[key], (a, b) => initEvent.messageSource.next(b))
     })
-    // client.on(Hls.Events.ERROR, () => {
-
-    // })
-    // client.on('')
-
     return client
   }
   return lambda
 }
 
 export function defaultMseClientDestroyFunction(): IMSEDestroyFunc<Hls> {
-  const lambda = (destroyEvent) => {
-    destroyEvent.clientRef.stopLoad()
-    destroyEvent.clientRef.destroy()
+  const lambda: IMSEDestroyFunc<Hls> = destroyEvent => {
+    console.log('DESTROY')
+    // destroyEvent.clientRef.stopLoad()
+    // destroyEvent.clientRef.detachMedia()
+    // destroyEvent.clientRef.destroy()
   }
   return lambda
 }
