@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { FramerComponent } from './framer/framer.component'
 import { ViewportGridModule } from '@flosportsinc/viewport-grid'
-import { HlsModule } from '@flosportsinc/hls'
+import { HlsJsModule } from '@flosportsinc/hls'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
@@ -22,7 +22,7 @@ import { HlsComponent } from './hls/hls.component'
     BrowserModule,
     AppRoutingModule,
     ViewportGridModule,
-    HlsModule
+    HlsJsModule
   ],
   bootstrap: [AppComponent]
 })
