@@ -5,7 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  build_production:
+  e2e:
     <<: *defaults
     steps:
       - checkout
@@ -24,8 +24,8 @@ jobs:
           name: Exectue Lint
           command: npm run lint
       - run:
-          name: Exectue Build
-          command: npm run build.prod
+          name: Exectue E2E
+          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
   test_docs_site:
     <<: *defaults
     steps:
@@ -60,24 +60,7 @@ jobs:
       - run:
           name: Post coverage results
           command: node_modules/.bin/codecov -F viewport_grid
-#   test_hls:
-#     <<: *defaults
-#     steps:
-#       - checkout
-#       - restore_cache:
-#           key: dependency-cache-{{ checksum "package.json" }}
-#       - run:
-#           name: Install Dependencies
-#           command: npm ci
-#       - run:
-#           name: Test
-#           command: npm run test.ci.hls
-#       - store_artifacts:
-#           path: coverage
-#       - run:
-#           name: Post coverage results
-#           command: node_modules/.bin/codecov -F hls
-  e2e:
+  test_hls:
     <<: *defaults
     steps:
       - checkout
@@ -87,8 +70,13 @@ jobs:
           name: Install Dependencies
           command: npm ci
       - run:
-          name: Execute Tests
-          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
+          name: Test
+          command: npm run test.ci.hls
+      - store_artifacts:
+          path: coverage
+      - run:
+          name: Post coverage results
+          command: node_modules/.bin/codecov -F hls
   # semver:
   #   <<: *defaults
   #   steps:
@@ -125,10 +113,9 @@ workflows:
   version: 2
   build_test_release:
     jobs:
-      - build_production
       - test_docs_site
-    #   - test_hls
       - test_viewport_grid
+      - test_hls
       - e2e
       # - semver:
       #     requires:
