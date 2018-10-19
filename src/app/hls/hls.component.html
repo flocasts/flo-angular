@@ -28,22 +28,22 @@
     <label for="poster">Poster</label>
     <input id="poster" placeholder="poster source url" type="text" formControlName="poster">
     </div>
-  <label for="controls">Show Controls</label>
+  <label for="controls">controls</label>
   <input id="controls" placeholder="paste an hls url" type="checkbox" formControlName="controls">
   <div>
-    <label for="autoplay">Autoplay</label>
+    <label for="autoplay">autoplay</label>
     <input id="autoplay" type="checkbox" formControlName="autoplay">
   </div>
   <div>
-    <label for="playsinline">Playsinline</label>
+    <label for="playsinline">playsinline (ios)</label>
     <input id="playsinline" type="checkbox" formControlName="playsinline">
   </div>
 </form>
-<video 
-  *ngIf="(config$ | async) as config"
+<video *ngIf="config$ | async as config"
   height="400px"
-  playsinline
   [floHls]="config?.src"
+  [poster]="config?.poster"
   [controls]="config?.controls"
-  [autoplay]="config?.playsinline">
+  [autoplay]="config?.autoplay"
+  [attr.playsinline]="config?.playsinline">
 </video>

@@ -98,7 +98,6 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     takeUntil(this._ngOnDestroy$)
   ).subscribe(src => {
     this.videoElement.setAttribute('src', src)
-    // this.videoElement.addEventListener('loadedmetadata', console.log)
     // this.videoElement.addEventListener('loadedmetadata', () => {
     //   // this.loaderPlaySourceTrigger()
     // }, { passive: true })
