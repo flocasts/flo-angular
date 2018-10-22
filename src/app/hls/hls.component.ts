@@ -1,7 +1,6 @@
 import { Component, OnDestroy, ChangeDetectionStrategy } from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
 import { startWith } from 'rxjs/operators'
-import { HlsMessage } from '@flosportsinc/hls'
 
 const DEFAULT_SRC = 'https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
@@ -30,9 +29,5 @@ export class HlsComponent implements OnDestroy {
 
   ngOnDestroy() {
     this._dropdownSubscription.unsubscribe()
-  }
-
-  onMessage(event: HlsMessage) {
-    // You can listen to the HlsJs messages
   }
 }
