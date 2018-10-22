@@ -77,38 +77,6 @@ jobs:
       - run:
           name: Post coverage results
           command: node_modules/.bin/codecov -F hls
-  # semver:
-  #   <<: *defaults
-  #   steps:
-  #     - checkout
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package.json" }}
-  #     - run:
-  #         name: Install npm
-  #         command: npm ci
-  #     - run:
-  #         name: Semantic Release
-  #         command: ./node_modules/.bin/semantic-release
-  # deploy:
-  #   <<: *defaults
-  #   steps:
-  #     - checkout
-  #     - attach_workspace:
-  #         at: .
-  #     - restore_cache:
-  #         key: dependency-cache-{{ checksum "package.json" }}
-  #     - run:
-  #         name: Install npm
-  #         command: npm ci
-  #     - run:
-  #         name: Step1
-  #         command: chmod +x ./aws_circle_ci_creds.sh
-  #     - run:
-  #         name: Step2
-  #         command: ./aws_circle_ci_creds.sh
-  #     - run:
-  #         name: deploy
-  #         command: npm run deploy -- --env-config int01
 workflows:
   version: 2
   build_test_release:
@@ -117,21 +85,3 @@ workflows:
       - test_viewport_grid
       - test_hls
       - e2e
-      # - semver:
-      #     requires:
-      #       - build
-      #       - unit_tests
-      #       - e2e_tests
-      #     filters:
-      #       branches:
-      #         only: master
-#   - deploy:
-#       requires:
-#         - build
-#         - unit_tests
-#         - e2e_tests
-#         - lint
-#         - bundlesize
-#       filters:
-#         branches:
-#           only: develop
