@@ -4,6 +4,7 @@
   "private": true,
   "author": "Patrick Michalina <patrickmichalina@mac.com>",
   "contributors": [],
+  "license": "MIT",
   "browserslist": [
     "last 2 versions",
     "not ie <= 10",
