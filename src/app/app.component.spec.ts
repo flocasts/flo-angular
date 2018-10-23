@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing'
 import { RouterTestingModule } from '@angular/router/testing'
 import { AppComponent } from './app.component'
 import { SwUpdate } from '@angular/service-worker'
-import { of, empty } from 'rxjs'
+import { of, EMPTY } from 'rxjs'
 import { WINDOW } from './window.service'
 
 describe('AppComponent', () => {
@@ -26,7 +26,7 @@ describe('AppComponent', () => {
         {
           provide: SwUpdate,
           useValue: {
-            available: empty()
+            available: EMPTY
           }
         }
       ]
