@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
+import { WindowService } from './window.service'
 
 @Injectable({
   providedIn: 'root'
 })
 export class PwaService {
-  constructor(swUpdate: SwUpdate) {
+  constructor(ws: WindowService, swUpdate: SwUpdate) {
     swUpdate.available.subscribe(_ => {
-      window.location.reload()
+      ws.window().location.reload()
     })
   }
 }
