@@ -29,9 +29,6 @@
   </a> -->
 </p>
 
-# FloSports Angular Library (flo-angular) (WIP)
-This repo includes the following packages
-
 | Package       | Description   | Status |
 | ------------- | ------------- | ------ |
 | [@flosportsinc/ng-hls](projects/flosportsinc/ng-hls) | Cross platform HTTP Live Streaming (HLS) in Angular | Work in Progress
