@@ -2,7 +2,7 @@
 Cross platform HTTP Live Streaming (HLS) in Angular
 
 ## Installation (for hls.js based module)
-Save the library as an application dependency
+Save the library as an application dependency (this will also install the peer dependency hls.js)
 ```sh
 npm i @flosportsinc/ng-hls
 ```
