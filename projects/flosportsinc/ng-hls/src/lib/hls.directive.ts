@@ -19,6 +19,7 @@ import { Subject, combineLatest } from 'rxjs'
 import { maybe } from 'typescript-monads'
 
 const emitAndUnsubscribe = (subject: Subject<undefined>) => {
+  // tslint:disable-next-line:no-if-statement
   if (subject.closed) { return }
   subject.next()
   subject.unsubscribe()
@@ -83,7 +84,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     filter(_ => this._nativeSupportCheck(this.videoElement))
   )
 
-  private _nativeClientPathSubscription = combineLatest(
+  private readonly _nativeClientPathSubscription = combineLatest(
     this._hlsClientNative$,
     this._hlsSrcChanges$
   ).pipe(
@@ -94,7 +95,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   })
 
 
-  private _mediaSourceClientPathSourceChangeSubscription = combineLatest(
+  private readonly _mediaSourceClientPathSourceChangeSubscription = combineLatest(
     this._mseHlsClientSupported$,
     this._hlsSrcChanges$,
     this.hlsClient
@@ -110,7 +111,7 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     })
   })
 
-  private _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._hlsSrcChanges$)
+  private readonly _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._hlsSrcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
       const mseClient = this._mseInitTask({

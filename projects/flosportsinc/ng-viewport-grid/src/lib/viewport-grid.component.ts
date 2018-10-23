@@ -40,18 +40,18 @@ const applyGridStyles =
           renderer.setStyle(element, style, getGridTemplateColumns(computeColumns(length)))
 
 const resetSelected =
-  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+  (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
     arr.forEach(c => c.setSelected(false))
 
 const setSelected =
-  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+  (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
     (selectedViewport: ViewportGridBoxComponent) => {
       resetSelected(arr)
       selectedViewport.setSelected(true)
     }
 
 const combineSelectionViews =
-  (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+  (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
     (selectedViewport: ViewportGridBoxComponent) => {
       const containerView = {
         selectedViewport,
@@ -70,7 +70,7 @@ const combineSelectionViews =
 const emit =
   (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
     (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
-      (arr: ViewportGridBoxComponent<HTMLElement>[]) =>
+      (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
         (selectedViewport: ViewportGridBoxComponent) => {
           setSelected(arr)(selectedViewport)
           const grouped = combineSelectionViews(arr)(selectedViewport)
@@ -114,6 +114,7 @@ const dragOverHandler =
       maybe(ev.target)
         .tapSome((target: any) => {
           const d = target as HTMLElement
+          // tslint:disable-next-line:no-object-mutation
           d.style.border = '0px 0px 0px 3px yellow'
           // parent.set
           parent.setDropStyles()
@@ -125,11 +126,14 @@ const dropHandler =
     (ev: DragEvent) => {
       ev.preventDefault()
       maybe(ev.dataTransfer).tapSome(dt => {
+        // tslint:disable-next-line:no-object-mutation
         dt.dropEffect = 'link'
         const data = dt.getData('text')
         // tslint:disable-next-line:no-unused-expression
+        // tslint:disable-next-line:no-if-statement
         if (ev.target) {
           const elm = document.getElementById(data)
+          // tslint:disable-next-line:no-if-statement
           if (elm) {
             // swapContainers(elm)
             // (ev.target as HTMLElement).appendChild(elm)
@@ -230,11 +234,13 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this.renderer.setStyle(elm, style, value)
         const setElementStyleContainer = (style: string) => (value: string) => setElementStyle(container)(style)(value)
 
+        // tslint:disable-next-line:no-if-statement
         if (children.length === 1) {
           removeContainerStyle('grid-template-columns')
           removeContainerStyle('grid-template-rows')
           removeContainerStyle('max-height')
           this._setContainerMaxWidth(this.maxHeight)(container)
+        // tslint:disable-next-line:no-if-statement
         } else if (children.length === 2) {
           const child0 = setElementStyle(container.children[0] as HTMLElement)
           const child1 = setElementStyle(container.children[1] as HTMLElement)
@@ -285,6 +291,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(push(arr))
         })
 
+        // tslint:disable-next-line:no-if-statement
         if (!children.some(z => z.isSelected())) {
           const index = getPreSelectedIndex(+this.startingSelectedIndex)(children.length)
           maybe(arr[index]).tapSome(dd => dd.setSelected(true))
@@ -296,13 +303,14 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         children.changes
           .pipe(
             takeUntil(this.ngDestroy$),
-            map<any, ViewportGridBoxComponent<HTMLElement>[]>(a => a.toArray())
+            map<any, ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>>(a => a.toArray())
           )
           .subscribe(viewports => {
             viewports.forEach(z => z.clicked$
               .pipe(takeUntil(children.changes))
               .subscribe(push(viewports)))
 
+            // tslint:disable-next-line:no-if-statement
             if (!viewports.some(z => z.isSelected())) {
               maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
             }
