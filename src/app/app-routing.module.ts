@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { FramerComponent } from './framer/framer.component'
+import { FramerComponent } from './viewport-grid/viewport-grid.component'
 import { HomeComponent } from './home/home.component'
 import { HlsComponent } from './hls/hls.component'
 

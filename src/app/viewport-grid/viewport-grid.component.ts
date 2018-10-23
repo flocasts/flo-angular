@@ -1,10 +1,9 @@
 import {
-  Component, ChangeDetectionStrategy, ContentChildren,
-  ElementRef, Directive, ViewChildren, QueryList, ViewChild
+  Component, ChangeDetectionStrategy, ViewChild
 } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
-import { ICompConfigForm } from './framer.interface'
+import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent } from '@flosportsinc/viewport-grid'
 import { maybe } from 'typescript-monads'
 

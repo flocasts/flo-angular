@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "flosports-component-library": {
+    "flo-angular": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/flosports-component-library",
+            "outputPath": "dist/flo-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -54,18 +54,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "flosports-component-library:build"
+            "browserTarget": "flo-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "flosports-component-library:build:production"
+              "browserTarget": "flo-angular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "flosports-component-library:build"
+            "browserTarget": "flo-angular:build"
           }
         },
         "test": {
@@ -100,7 +100,7 @@
         }
       }
     },
-    "flosports-component-library-e2e": {
+    "flo-angular-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "targets": {
@@ -108,11 +108,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "flosports-component-library:serve"
+            "devServerTarget": "flo-angular:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "flosports-component-library:serve:production"
+              "devServerTarget": "flo-angular:serve:production"
             }
           }
         },
@@ -200,5 +200,5 @@
       }
     }
   },
-  "defaultProject": "flosports-component-library"
+  "defaultProject": "flo-angular"
 }
