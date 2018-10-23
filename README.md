@@ -1,3 +1,34 @@
+<h1 align="center" style="border-bottom: none;">FloSports Angular</h1>
+<h3 align="center">A collection of Angular components for live video streaming.</h3>
+<p align="center">
+  <a href="https://circleci.com/gh/flocasts/flo-angular">
+    <img alt="codecov" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield">
+  </a>
+  <a href="https://codecov.io/gh/flocasts/flo-angular">
+    <img alt="codecov" src="https://codecov.io/gh/flocasts/flo-angular/branch/master/graph/badge.svg">
+  </a>
+  <a href="https://greenkeeper.io">
+    <img alt="greenkeeper" src="https://badges.greenkeeper.io/semantic-release/semantic-release.svg">
+  </a>
+  <a href="https://david-dm.org/flocasts/flo-angular">
+    <img alt="greenkeeper" src="https://david-dm.org/flocasts/flo-angular/status.svg">
+  </a>
+  <a href="https://david-dm.org/flocasts/flo-angular?type=dev">
+    <img alt="greenkeeper" src="https://david-dm.org/flocasts/flo-angular/dev-status.svg">
+  </a>
+  <a href="https://github.com/semantic-release/semantic-release">
+    <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
+  </a>
+  <a href="license.md">
+    <img alt="license" src="https://img.shields.io/badge/License-MIT-yellow.svg">
+  </a>
+</p>
+<p align="center">
+  <!-- <a href="https://www.npmjs.com/package/typescript-monads">
+    <img alt="npm latest version" src="https://img.shields.io/npm/v/typescript-monads/latest.svg">
+  </a> -->
+</p>
+
 # FloSports Angular Library (flo-angular) (WIP)
 This repo includes the following packages
 
@@ -29,3 +60,24 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 
 ## Further help
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+
+The MIT License (MIT)
+Copyright (c) 2018 FloSports, Inc.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
