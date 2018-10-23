@@ -8,6 +8,9 @@ import { HlsJsModule } from '@flosportsinc/ng-hls'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
+import { ServiceWorkerModule } from '@angular/service-worker'
+import { environment } from '../environments/environment'
+import { PwaService } from './pwa.service'
 
 @NgModule({
   declarations: [
@@ -22,8 +25,14 @@ import { HlsComponent } from './hls/hls.component'
     BrowserModule,
     AppRoutingModule,
     ViewportGridModule,
-    HlsJsModule
+    HlsJsModule,
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
+  providers: [PwaService],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(_pwa: PwaService) {
+    // none
+  }
+}
