@@ -19,7 +19,7 @@
   <a href="https://github.com/semantic-release/semantic-release">
     <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
   </a>
-  <a href="license.md">
+  <a href="LICENSE.md">
     <img alt="license" src="https://img.shields.io/badge/License-MIT-yellow.svg">
   </a>
 </p>
@@ -59,7 +59,7 @@ Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protrac
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 ## License
-The MIT License (MIT)
+The MIT License (MIT)  
 Copyright (c) 2018 FloSports, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
