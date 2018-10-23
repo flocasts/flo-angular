@@ -1,11 +1,18 @@
 import { TestBed } from '@angular/core/testing'
 import { PwaService } from './pwa.service'
 import { ServiceWorkerModule } from '@angular/service-worker'
+import { WINDOW } from './window.service'
 
 describe('PwaService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
       ServiceWorkerModule.register('')
+    ],
+    providers: [
+      {
+        provide: WINDOW,
+        useValue: window
+      }
     ]
   }))
 
