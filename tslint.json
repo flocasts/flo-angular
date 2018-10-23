@@ -1,5 +1,9 @@
 {
+  "extends": [
+    "tslint-immutable"
+  ],
   "rulesDirectory": [
+    "tools/tslint-rules",
     "node_modules/codelyzer"
   ],
   "rules": {
@@ -116,6 +120,27 @@
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
     "component-class-suffix": true,
-    "directive-class-suffix": true
+    "banana-in-box": true,
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
+    "templates-no-negated-async": true,
+    "directive-class-suffix": true,
+    "readonly-keyword": true,
+    "readonly-array": true,
+    "no-let": true,
+    "no-object-mutation": true,
+    "no-delete": true,
+    "no-method-signature": false,
+    "no-expression-statement": false,
+    "no-if-statement": true,
+    "validate-decorators": [
+      false,
+      {
+        "Component": {
+          "changeDetection": "\\.OnPush$"
+        }
+      },
+      "**/!(*.spec).ts"
+    ]
   }
 }
