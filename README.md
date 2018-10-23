@@ -2,10 +2,12 @@
 This repo includes the following packages
 
 | Package       | Description   | Status |
-| ------------- | ------------- | ------------- |
-| [@flosportsinc/ng-hls](projects/flosportsinc/ng-hls)                                | Cross platform HTTP Live Streaming (HLS) in Angular | Work in Progress
-| [@flosportsinc/ng-viewport-grid](projects/flosportsinc/ng-viewport-grid)            | Responsive video grid for mutlicamera layouts in Angular  | Work in Progress
-| [@flosportsinc/ng-universal-services](projects/flosportsinc/ng-universal-services)  | Common services for Angular Universal apps  | Planned
+| ------------- | ------------- | ------ |
+| [@flosportsinc/ng-hls](projects/flosportsinc/ng-hls) | Cross platform HTTP Live Streaming (HLS) in Angular | Work in Progress
+| [@flosportsinc/ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | Work in Progress
+| [@flosportsinc/ng-video-grid](projects/flosportsinc/ng-video-grid) | Responsive video grid for mutlicamera layouts | Planned
+| [@flosportsinc/ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned
+| [@flosportsinc/ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | Planned
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.
