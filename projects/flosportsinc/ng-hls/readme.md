@@ -1,5 +1,5 @@
 # FloSports Angular HLS Module
 
 ```sh
-npm i @flosportsinc/hls
+npm i @flosportsinc/ng-hls
 ```

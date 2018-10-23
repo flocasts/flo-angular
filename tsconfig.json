@@ -19,17 +19,17 @@
       "dom"
     ],
     "paths": {
-      "@flosportsinc/viewport-grid": [
-        "dist/flosportsinc/viewport-grid"
+      "@flosportsinc/ng-viewport-grid": [
+        "dist/flosportsinc/ng-viewport-grid"
       ],
-      "@flosportsinc/viewport-grid/*": [
-        "dist/flosportsinc/viewport-grid/*"
+      "@flosportsinc/ng-viewport-grid/*": [
+        "dist/flosportsinc/ng-viewport-grid/*"
       ],
-      "@flosportsinc/hls": [
-        "dist/flosportsinc/hls"
+      "@flosportsinc/ng-hls": [
+        "dist/flosportsinc/ng-hls"
       ],
-      "@flosportsinc/hls/*": [
-        "dist/flosportsinc/hls/*"
+      "@flosportsinc/ng-hls/*": [
+        "dist/flosportsinc/ng-hls/*"
       ]
     }
   }

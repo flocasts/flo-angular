@@ -4,7 +4,7 @@ import {
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
-import { ViewportGridComponent } from '@flosportsinc/viewport-grid'
+import { ViewportGridComponent } from '@flosportsinc/ng-viewport-grid'
 import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
@@ -25,9 +25,9 @@ const mapFromForm = (input: ICompConfigForm) => {
 }
 
 @Component({
-  selector: 'app-framer',
-  templateUrl: './framer.component.html',
-  styleUrls: ['./framer.component.scss'],
+  selector: 'app-viewport-grid',
+  templateUrl: './viewport-grid.component.html',
+  styleUrls: ['./viewport-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FramerComponent {
