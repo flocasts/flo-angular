@@ -2,7 +2,7 @@
 <h3 align="center">A collection of Angular components for live video streaming.</h3>
 <p align="center">
   <a href="https://circleci.com/gh/flocasts/flo-angular">
-    <img alt="codecov" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield">
+    <img alt="ci" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield">
   </a>
   <a href="https://codecov.io/gh/flocasts/flo-angular">
     <img alt="codecov" src="https://codecov.io/gh/flocasts/flo-angular/branch/master/graph/badge.svg">
@@ -11,10 +11,10 @@
     <img alt="greenkeeper" src="https://badges.greenkeeper.io/semantic-release/semantic-release.svg">
   </a>
   <a href="https://david-dm.org/flocasts/flo-angular">
-    <img alt="greenkeeper" src="https://david-dm.org/flocasts/flo-angular/status.svg">
+    <img alt="deps" src="https://david-dm.org/flocasts/flo-angular/status.svg">
   </a>
   <a href="https://david-dm.org/flocasts/flo-angular?type=dev">
-    <img alt="greenkeeper" src="https://david-dm.org/flocasts/flo-angular/dev-status.svg">
+    <img alt="dev-deps" src="https://david-dm.org/flocasts/flo-angular/dev-status.svg">
   </a>
   <a href="https://github.com/semantic-release/semantic-release">
     <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
@@ -22,11 +22,6 @@
   <a href="LICENSE.md">
     <img alt="license" src="https://img.shields.io/badge/License-MIT-yellow.svg">
   </a>
-</p>
-<p align="center">
-  <!-- <a href="https://www.npmjs.com/package/typescript-monads">
-    <img alt="npm latest version" src="https://img.shields.io/npm/v/typescript-monads/latest.svg">
-  </a> -->
 </p>
 
 | Package       | Description   | Status |
