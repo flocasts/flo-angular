@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "flosports-component-library": {
+    "flo-angular": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -17,7 +17,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/flosports-component-library",
+            "outputPath": "dist/flo-angular",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -54,18 +54,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "flosports-component-library:build"
+            "browserTarget": "flo-angular:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "flosports-component-library:build:production"
+              "browserTarget": "flo-angular:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "flosports-component-library:build"
+            "browserTarget": "flo-angular:build"
           }
         },
         "test": {
@@ -100,7 +100,7 @@
         }
       }
     },
-    "flosports-component-library-e2e": {
+    "flo-angular-e2e": {
       "root": "e2e/",
       "projectType": "application",
       "targets": {
@@ -108,11 +108,11 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "e2e/protractor.conf.js",
-            "devServerTarget": "flosports-component-library:serve"
+            "devServerTarget": "flo-angular:serve"
           },
           "configurations": {
             "production": {
-              "devServerTarget": "flosports-component-library:serve:production"
+              "devServerTarget": "flo-angular:serve:production"
             }
           }
         },
@@ -127,34 +127,34 @@
         }
       }
     },
-    "@flosportsinc/viewport-grid": {
-      "root": "projects/flosportsinc/viewport-grid",
-      "sourceRoot": "projects/flosportsinc/viewport-grid/src",
+    "@flosportsinc/ng-viewport-grid": {
+      "root": "projects/flosportsinc/ng-viewport-grid",
+      "sourceRoot": "projects/flosportsinc/ng-viewport-grid/src",
       "projectType": "library",
       "prefix": "lib",
       "targets": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/flosportsinc/viewport-grid/tsconfig.lib.json",
-            "project": "projects/flosportsinc/viewport-grid/ng-package.json"
+            "tsConfig": "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-viewport-grid/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/viewport-grid/src/test.ts",
-            "tsConfig": "projects/flosportsinc/viewport-grid/tsconfig.spec.json",
-            "karmaConfig": "projects/flosportsinc/viewport-grid/karma.conf.js"
+            "main": "projects/flosportsinc/ng-viewport-grid/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-viewport-grid/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/flosportsinc/viewport-grid/tsconfig.lib.json",
-              "projects/flosportsinc/viewport-grid/tsconfig.spec.json"
+              "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
+              "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -163,34 +163,34 @@
         }
       }
     },
-    "@flosportsinc/hls": {
-      "root": "projects/flosportsinc/hls",
-      "sourceRoot": "projects/flosportsinc/hls/src",
+    "@flosportsinc/ng-hls": {
+      "root": "projects/flosportsinc/ng-hls",
+      "sourceRoot": "projects/flosportsinc/ng-hls/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/flosportsinc/hls/tsconfig.lib.json",
-            "project": "projects/flosportsinc/hls/ng-package.json"
+            "tsConfig": "projects/flosportsinc/ng-hls/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-hls/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/hls/src/test.ts",
-            "tsConfig": "projects/flosportsinc/hls/tsconfig.spec.json",
-            "karmaConfig": "projects/flosportsinc/hls/karma.conf.js"
+            "main": "projects/flosportsinc/ng-hls/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-hls/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-hls/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/flosportsinc/hls/tsconfig.lib.json",
-              "projects/flosportsinc/hls/tsconfig.spec.json"
+              "projects/flosportsinc/ng-hls/tsconfig.lib.json",
+              "projects/flosportsinc/ng-hls/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"
@@ -200,5 +200,5 @@
       }
     }
   },
-  "defaultProject": "flosports-component-library"
+  "defaultProject": "flo-angular"
 }

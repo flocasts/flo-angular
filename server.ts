@@ -3,7 +3,7 @@ import { resolve } from 'path'
 
 const app = express()
 const expressStaticGzip = require('express-static-gzip')
-const baseDirectory = resolve('dist/flosports-component-library')
+const baseDirectory = resolve('dist/flo-angular')
 
 app.use('/', expressStaticGzip(baseDirectory, {
   enableBrotli: true,

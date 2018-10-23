@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, async } from '@angular/core/testing'
 import { HlsComponent } from './hls.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms'
-import { HlsJsModule } from '@flosportsinc/hls'
+import { HlsJsModule } from '@flosportsinc/ng-hls'
 
 describe('HlsComponent', () => {
   beforeEach(async(() => {

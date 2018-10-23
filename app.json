@@ -1,5 +1,5 @@
 {
-  "name": "flosports-component-library",
+  "name": "flo-angular",
   "env": {
     "HEROKU_APP_NAME": {
       "required": true

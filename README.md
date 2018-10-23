@@ -3,8 +3,8 @@ This repo includes the following packages
 
 | Package       | Description |
 | ------------- | ------------- |
-| [@flosportsinc/ng-hls](projects/flosportsinc/hls)                      | Cross platform HTTP Live Streaming (HLS) in Angular |
-| [@flosportsinc/ng-viewport-grid](projects/flosportsinc/viewport-grid)  | Responsive video grid for mutlicamera layouts in Angular  |
+| [@flosportsinc/ng-hls](projects/flosportsinc/ng-hls)                      | Cross platform HTTP Live Streaming (HLS) in Angular |
+| [@flosportsinc/ng-viewport-grid](projects/flosportsinc/ng-viewport-grid)  | Responsive video grid for mutlicamera layouts in Angular  |
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.
