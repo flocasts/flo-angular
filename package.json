@@ -93,7 +93,7 @@
       [
         "@semantic-release/exec",
         {
-          "generateNotesCmd": "ts-node --project tsconfig.tools.json tools/publish.ts ver=${nextRelease.version}"
+          "successCmd": "ts-node --project tsconfig.tools.json tools/publish.ts ver=${nextRelease.version}"
         }
       ],
       "@semantic-release/npm",

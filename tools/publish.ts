@@ -10,14 +10,19 @@ maybe(process.argv.find(a => a.includes('ver=')))
     PROJECTS
       .map(proj => resolve(proj.replace('@', 'dist/')))
       .forEach(path => {
-        const packagePath = resolve(path, 'package.json')
-        const file = JSON.parse(readFileSync(packagePath, 'utf-8').toString()) as any
-        const newFile = {
-          ...file,
-          version
+        try {
+          const packagePath = resolve(path, 'package.json')
+          const file = JSON.parse(readFileSync(packagePath, 'utf-8').toString()) as any
+          const newFile = {
+            ...file,
+            version
+          }
+          writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
+          exec(`npm publish --dry-run ${path}`)
+        } catch (err) {
+          console.error(err)
+          process.exit(1)
         }
-        writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
-        exec(`npm publish --dry-run ${path}`)
       })
   })
 
