@@ -75,6 +75,19 @@ jobs:
       - run:
           name: Post coverage results
           command: node_modules/.bin/codecov -F hls
+    semver:
+        <<: *defaults
+        steps:
+        - checkout
+        - restore_cache:
+            key: dependency-cache-{{ checksum "package.json" }}
+        - run:
+            name: Install npm
+            command: npm ci
+        - run:
+            name: Semantic Release
+            command: node_modules/.bin/semantic-release --dry-run
+
 workflows:
   version: 2
   build:
@@ -83,3 +96,9 @@ workflows:
       - test_viewport_grid
       - test_hls
       - e2e
+      - semver:
+          requires:
+            - test_docs_site
+            - test_viewport_grid
+            - test_hls
+            - e2e
