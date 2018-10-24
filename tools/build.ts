@@ -1,19 +1,15 @@
 import { execSync } from 'child_process'
-import { readFileSync } from 'fs'
+import { PROJECTS } from './libs'
 
 const createCommand = (str: string) => `node_modules/.bin/ng build ${str}`
-
-const tsconfig = readFileSync('tsconfig.json')
-const tsconfigObject = JSON.parse(tsconfig.toString())
-const libraries = Object.keys(tsconfigObject.compilerOptions.paths).filter(a => !a.includes('/*'))
 const printMessage = (refs: ReadonlyArray<string>) => {
   console.log('\nBUILDING LIBRARIES')
   console.log(refs.map(a => `   ${a}`).join('\n'), '\n')
 }
 
-printMessage(libraries)
+printMessage(PROJECTS)
 
-libraries
+PROJECTS
   .map(createCommand)
   .forEach(commandPath => {
     console.log(commandPath)
