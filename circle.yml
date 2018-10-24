@@ -75,7 +75,7 @@ jobs:
       - run:
           name: Post coverage results
           command: node_modules/.bin/codecov -F hls
-  semver:
+  publish:
     <<: *defaults
     steps:
       - checkout
@@ -96,7 +96,7 @@ workflows:
       - test_viewport_grid
       - test_hls
       - e2e
-      - semver:
+      - publish:
           requires:
             - test_docs_site
             - test_viewport_grid
