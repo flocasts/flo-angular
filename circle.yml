@@ -102,3 +102,6 @@ workflows:
             - test_viewport_grid
             - test_hls
             - e2e
+          filters:
+            branches:
+              only: master
