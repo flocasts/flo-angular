@@ -1,17 +1,22 @@
-import { Component, NgModule } from '@angular/core'
+import { Component, NgModule, Input, SimpleChange } from '@angular/core'
 import { TestBed, async } from '@angular/core/testing'
-import { HlsDirective } from './hls.directive'
+import { HlsDirective, emitAndUnsubscribe } from './hls.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
 import { SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY } from './hls.tokens'
 import { HlsJsModule } from './hlsjs.module'
 
+const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
+
 @Component({
   selector: 'flo-test-component',
-  template: '<video floHls="http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>'
+  template: '<video [floHls]="src"></video>'
 })
-export class HlsTestComponent { }
+export class HlsTestComponent {
+  // tslint:disable-next-line:readonly-keyword
+  @Input() public src?: string = TEST_SRC
+}
 
 @NgModule({
   imports: [HlsJsModule],
@@ -37,11 +42,11 @@ const setTestBedToNativeModule = () => {
     providers: [
       {
         provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
-        useValue: true
+        useValue: false
       },
       {
         provide: SUPPORTS_HLS_NATIVELY,
-        useValue: () => false
+        useValue: () => true
       }
     ]
   })
@@ -53,11 +58,11 @@ const setTestBedToMediaSourceModule = () => {
     providers: [
       {
         provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
-        useValue: false
+        useValue: true
       },
       {
         provide: SUPPORTS_HLS_NATIVELY,
-        useValue: () => true
+        useValue: () => false
       }
     ]
   })
@@ -77,6 +82,53 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
     done()
   })
 
+  it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
+    const testSub = new Subject<any>()
+    testSub.unsubscribe()
+    const spy1 = spyOn(testSub, 'next')
+    const spy2 = spyOn(testSub, 'unsubscribe')
+    emitAndUnsubscribe(testSub)
+    expect(spy1).not.toHaveBeenCalled()
+    expect(spy2).not.toHaveBeenCalled()
+    done()
+  })
+
+  it('should trigger MSE source change', done => {
+    const wrapper = createSut()
+    const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
+    wrapper.instance.ngOnChanges({
+      floHls: new SimpleChange(TEST_SRC, 'http://www.test.com', false)
+    })
+    expect(spy).toHaveBeenCalled()
+    done()
+  })
+
+  it('should trigger destory function for DI configurations', done => {
+    const wrapper = createSut()
+    const spy = spyOn(wrapper.instance as any, '_mseDestroyTask')
+    wrapper.hoist.destroy()
+    expect(spy).toHaveBeenCalled()
+    done()
+  })
+
+  it('should skip src change when value is same', () => {
+    const wrapper = createSut()
+    const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
+    wrapper.instance.ngOnChanges({
+      floHls: new SimpleChange(TEST_SRC, TEST_SRC, false)
+    })
+    expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('should skip src change when value is undefined', () => {
+    const wrapper = createSut()
+    const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
+    wrapper.instance.ngOnChanges({
+      floHls: new SimpleChange(undefined, undefined, false)
+    })
+    expect(spy).not.toHaveBeenCalled()
+  })
+
   it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', async(() => {
     const wrapper = createSut()
     const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
@@ -90,12 +142,16 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
     expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
   }))
 
-  // it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
-  //   const wrapper = createSut()
-  //   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
+  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
+    const wrapper = createSut()
+    const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
 
-  //   expect(() => internalNgAfterViewInit$.pipe(take(1)).subscribe()).toThrow(new ObjectUnsubscribedError())
-  // }))
+    expect(() => {
+      internalNgAfterViewInit$.pipe(take(1)).subscribe()
+    }).toThrow(new ObjectUnsubscribedError())
+
+    wrapper.hoist.destroy()
+  }))
 })
 
 describe(`${HlsDirective.name} when client supports HLS natively`, () => {
@@ -125,10 +181,14 @@ describe(`${HlsDirective.name} when client supports HLS natively`, () => {
     expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
   }))
 
-  // it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
-  //   const wrapper = createSut()
-  //   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
+  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
+    const wrapper = createSut()
+    const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
 
-  //   expect(() => internalNgAfterViewInit$.pipe(take(1)).subscribe()).toThrow(new ObjectUnsubscribedError())
-  // }))
+    expect(() => {
+      internalNgAfterViewInit$.pipe(take(1)).subscribe()
+    }).toThrow(new ObjectUnsubscribedError())
+
+    wrapper.hoist.destroy()
+  }))
 })

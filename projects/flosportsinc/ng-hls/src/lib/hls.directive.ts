@@ -18,7 +18,7 @@ import { filter, map, takeUntil, take, skip } from 'rxjs/operators'
 import { Subject, combineLatest } from 'rxjs'
 import { maybe } from 'typescript-monads'
 
-const emitAndUnsubscribe = (subject: Subject<undefined>) => {
+export const emitAndUnsubscribe = (subject: Subject<undefined>) => {
   // tslint:disable-next-line:no-if-statement
   if (subject.closed) { return }
   subject.next()
@@ -117,7 +117,6 @@ export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       const mseClient = this._mseInitTask({
         src,
         videoElement: this.videoElement,
-        readyToPlayTriggerFn: () => undefined,
         messageSource: this._hlsMseClientMessages$
       })
       this._hlsMseClientSource$.next(mseClient)
