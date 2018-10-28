@@ -10,7 +10,6 @@ export const MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK = new InjectionToken<IM
 export interface IMseInitOptions<TMessage> {
   readonly src: string
   readonly videoElement: HTMLVideoElement
-  readonly readyToPlayTriggerFn: Function
   readonly messageSource: Subject<TMessage>
 }
 
