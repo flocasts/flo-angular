@@ -5,6 +5,19 @@ defaults: &defaults
 
 version: 2
 jobs:
+  prep_coverage:
+    <<: *defaults
+    steps:
+      - run:
+          name: Download cc-test-reporter
+          command: |
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc-test-reporter
   e2e:
     <<: *defaults
     steps:
@@ -28,6 +41,8 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -35,16 +50,19 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command: npm run test.ci.app
-      - store_artifacts:
-          path: coverage
-      - run:
-          name: Post coverage results
-          command: node_modules/.bin/codecov -F docs_site
+          command: |
+            npm run test.ci.app
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.flo-angular.json
   test_viewport_grid:
     <<: *defaults
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -52,16 +70,19 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command: npm run test.ci.viewport-grid
-      - store_artifacts:
-          path: coverage
-      - run:
-          name: Post coverage results
-          command: node_modules/.bin/codecov -F viewport_grid
+          command: |
+            npm run test.ci.viewport-grid
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-viewport-grid.json coverage/ng-viewport-grid/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.ng-viewport-grid.json
   test_hls:
     <<: *defaults
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -69,12 +90,23 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command: npm run test.ci.hls
-      - store_artifacts:
-          path: coverage
+          command: |
+            npm run test.ci.hls
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-hls.json coverage/ng-hls/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.ng-hls.json
+  upload_coverage:
+    <<: *defaults
+    steps:
+      - attach_workspace:
+          at: /tmp
       - run:
-          name: Post coverage results
-          command: node_modules/.bin/codecov -F hls
+          name: Upload coverage results to Code Climate
+          command: |
+            /tmp/cc-test-reporter sum-coverage /tmp/cc.*.json -p 3 -o /tmp/cc.total.json
+            /tmp/cc-test-reporter upload-coverage -i /tmp/cc.total.json
   publish:
     <<: *defaults
     steps:
@@ -92,15 +124,28 @@ workflows:
   version: 2
   build:
     jobs:
-      - test_docs_site
-      - test_viewport_grid
-      - test_hls
+      - prep_coverage
       - e2e
+      - test_docs_site:
+          requires:
+            - prep_coverage
+      - test_viewport_grid:
+          requires:
+            - prep_coverage
+      - test_hls:
+          requires:
+            - prep_coverage
+      - upload_coverage:
+          requires:
+            - test_docs_site
+            - test_viewport_grid
+            - test_hls
       - publish:
           requires:
             - test_docs_site
             - test_viewport_grid
             - test_hls
+            - upload_coverage
             - e2e
           filters:
             branches:
