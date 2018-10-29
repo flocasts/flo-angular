@@ -52,7 +52,7 @@ jobs:
           name: Test
           command: |
             npm run test.ci.app
-            /tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json ../coverage/flo-angular/lcov.info
+            /tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
       # - persist_to_workspace:
       #     root: tmp
       #     paths:
