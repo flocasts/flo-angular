@@ -43,7 +43,7 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/repo/tmp
+          at: /tmp/workspace
       # - restore_cache:
       #     key: dependency-cache-{{ checksum "package.json" }}
       # - run:
