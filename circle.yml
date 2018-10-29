@@ -51,12 +51,12 @@ jobs:
       - run:
           name: Test
           command: |
-            ./tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - cc.flo-angular.json
-      - run: ls /tmp -lah
+            ls -lah
+            /tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json ../coverage/flo-angular/lcov.info
+      # - persist_to_workspace:
+      #     root: tmp
+      #     paths:
+      #       - cc.flo-angular.json
   test_viewport_grid:
     <<: *defaults
     steps:
