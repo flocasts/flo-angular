@@ -1,5 +1,4 @@
 defaults: &defaults
-  working_directory: /tmp
   resource_class: xlarge
   docker:
     - image: circleci/node:10.12-browsers
@@ -15,7 +14,7 @@ jobs:
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - persist_to_workspace:
-          root: ./
+          root: /tmp
           paths:
             - cc-test-reporter
   e2e:
@@ -43,19 +42,19 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - run:
-          name: Test
-          command: |
-            ./cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
-      - persist_to_workspace:
-          root: ./
-          paths: 
-            - cc.flo-angular.json
+      # - restore_cache:
+      #     key: dependency-cache-{{ checksum "package.json" }}
+      # - run:
+      #     name: Install Dependencies
+      #     command: npm ci
+      # - run:
+      #     name: Test
+      #     command: |
+      #       ./tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
+      # - persist_to_workspace:
+      #     root: ./tmp
+      #     paths:
+      #       - cc.flo-angular.json
       - run: ls -lah
   test_viewport_grid:
     <<: *defaults
@@ -126,8 +125,8 @@ workflows:
       # - upload_coverage:
       #     requires:
       #       - test_docs_site
-            # - test_viewport_grid
-            # - test_hls
+      # - test_viewport_grid
+      # - test_hls
       # - publish:
       #     requires:
       #       - test_docs_site
