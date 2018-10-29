@@ -53,10 +53,10 @@ jobs:
           command: |
             npm run test.ci.app
             /tmp/cc-test-reporter format-coverage -t lcov -o /tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
-      - persist_to_workspace:
-          root: tmp
-          paths:
-            - cc.flo-angular.json
+      # - persist_to_workspace:
+      #     root: tmp
+      #     paths:
+      #       - cc.flo-angular.json
       - run: ls /tmp -lah
   test_viewport_grid:
     <<: *defaults
