@@ -12,7 +12,6 @@ jobs:
       - run:
           name: Download cc-test-reporter
           command: |
-            # mkdir -p tmp/
             curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - persist_to_workspace:
@@ -43,20 +42,20 @@ jobs:
     steps:
       - attach_workspace:
           at: /tmp
-      # - restore_cache:
-      #     key: dependency-cache-{{ checksum "package.json" }}
-      # - run:
-      #     name: Install Dependencies
-      #     command: npm ci
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
       - run:
           name: Test
           command: |
-            ls -lah
-            # ./cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
-      # - persist_to_workspace:
-      #     root: tmp
-      #     paths: 
-      #       - cc.flo-angular.json
+            ./cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
+      - persist_to_workspace:
+          root: ./
+          paths: 
+            - cc.flo-angular.json
+      - run: ls -lah
   test_viewport_grid:
     <<: *defaults
     steps:
