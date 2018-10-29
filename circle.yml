@@ -81,6 +81,8 @@ jobs:
     <<: *defaults
     steps:
       - checkout
+      - attach_workspace:
+          at: /tmp
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
@@ -88,9 +90,13 @@ jobs:
           command: npm ci
       - run:
           name: Test
-          command: npm run test.ci.hls
-      - store_artifacts:
-          path: coverage
+          command: |
+            npm run test.ci.hls
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-hls.json coverage/ng-hls/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.ng-hls.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -99,7 +105,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            /tmp/cc-test-reporter sum-coverage /tmp/cc.*.json -p 2 -o /tmp/cc.total.json
+            /tmp/cc-test-reporter sum-coverage /tmp/cc.*.json -p 3 -o /tmp/cc.total.json
             /tmp/cc-test-reporter upload-coverage -i /tmp/cc.total.json
   publish:
     <<: *defaults
@@ -119,26 +125,28 @@ workflows:
   build:
     jobs:
       - prep_coverage
-      # - e2e
+      - e2e
       - test_docs_site:
           requires:
             - prep_coverage
       - test_viewport_grid:
           requires:
             - prep_coverage
-      # - test_hls:
-      #     requires:
-      #       - prep_coverage
+      - test_hls:
+          requires:
+            - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
             - test_viewport_grid
-      # - publish:
-      #     requires:
-      #       - test_docs_site
-      #       - test_viewport_grid
-      #       - test_hls
-      #       - e2e
-      #     filters:
-      #       branches:
-      #         only: master
+            - test_hls
+      - publish:
+          requires:
+            - test_docs_site
+            - test_viewport_grid
+            - test_hls
+            - upload_coverage
+            - e2e
+          filters:
+            branches:
+              only: master
