@@ -41,8 +41,8 @@ jobs:
   test_docs_site:
     <<: *defaults
     steps:
-      # - attach_workspace:
-      #     at: /tmp
+      - attach_workspace:
+          at: /tmp
       # - restore_cache:
       #     key: dependency-cache-{{ checksum "package.json" }}
       # - run:
