@@ -42,17 +42,16 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: ~/tmp
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: ~/repo/tmp
+      # - restore_cache:
+      #     key: dependency-cache-{{ checksum "package.json" }}
+      # - run:
+      #     name: Install Dependencies
+      #     command: npm ci
       - run:
           name: Test
           command: |
-            npm run test.ci.app
-            ./cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
+            ./tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
       - persist_to_workspace:
           root: tmp
           paths: 
