@@ -11,10 +11,11 @@ jobs:
       - run:
           name: Download cc-test-reporter
           command: |
-            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-            chmod +x ./cc-test-reporter
+            mkdir -p tmp/
+            curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./tmp/cc-test-reporter
+            chmod +x ./tmp/cc-test-reporter
       - persist_to_workspace:
-          root: /tmp
+          root: tmp
           paths:
             - cc-test-reporter
   e2e:
@@ -55,7 +56,7 @@ jobs:
       #     root: ./tmp
       #     paths:
       #       - cc.flo-angular.json
-      - run: ls -lah
+      - run: ls /tmp -lah
   test_viewport_grid:
     <<: *defaults
     steps:
