@@ -2,11 +2,15 @@
 <h3 align="center">A collection of Angular components for live video streaming.</h3>
 <p align="center">
   <a href="https://circleci.com/gh/flocasts/flo-angular">
-    <img alt="ci" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield">
+    <img alt="build" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield&circle-token=254d41274907bc2b5e4d13d066d9d7e5e6aaf323">
+  <a href="https://codeclimate.com/repos/5bd607992cf6f7026e00273b/test_coverage">
+    <img alt="test coverage" src="https://api.codeclimate.com/v1/badges/11396ac422c213d7b44e/test_coverage" />
   </a>
-  <a href="https://codecov.io/gh/flocasts/flo-angular">
-    <img alt="codecov" src="https://codecov.io/gh/flocasts/flo-angular/branch/master/graph/badge.svg">
+  <a href="https://codeclimate.com/repos/5bd607992cf6f7026e00273b/maintainability">
+    <img alt="maintainability" src="https://api.codeclimate.com/v1/badges/11396ac422c213d7b44e/maintainability" />
   </a>
+</p>
+<p align="center">
   <a href="https://greenkeeper.io">
     <img alt="greenkeeper" src="https://badges.greenkeeper.io/semantic-release/semantic-release.svg">
   </a>
@@ -16,6 +20,8 @@
   <a href="https://david-dm.org/flocasts/flo-angular?type=dev">
     <img alt="dev-deps" src="https://david-dm.org/flocasts/flo-angular/dev-status.svg">
   </a>
+</p>
+<p align="center">
   <a href="https://github.com/semantic-release/semantic-release">
     <img alt="semantic-release" src="https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg">
   </a>
