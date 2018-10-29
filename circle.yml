@@ -90,11 +90,11 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: ~/repo/tmp
+          at: /tmp
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./tmp/cc-test-reporter sum-coverage tmp/cc.*.json -p 3 -o tmp/cc.total.json
+            ./tmp/cc-test-reporter sum-coverage tmp/cc.*.json -p 1 -o tmp/cc.total.json
             ./tmp/cc-test-reporter upload-coverage -i tmp/cc.total.json
   publish:
     <<: *defaults
@@ -124,9 +124,9 @@ workflows:
       # - test_hls:
       #     requires:
       #       - prep_coverage
-      # - upload_coverage:
-      #     requires:
-      #       - test_docs_site
+      - upload_coverage:
+          requires:
+            - test_docs_site
       # - test_viewport_grid
       # - test_hls
       # - publish:
