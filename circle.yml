@@ -126,14 +126,14 @@ workflows:
       - upload_coverage:
           requires:
             - test_docs_site
-            - test_viewport_grid
-            - test_hls
-      - publish:
-          requires:
-            - test_docs_site
-            - test_viewport_grid
-            - test_hls
-            - e2e
-          filters:
-            branches:
-              only: master
+            # - test_viewport_grid
+            # - test_hls
+      # - publish:
+      #     requires:
+      #       - test_docs_site
+      #       - test_viewport_grid
+      #       - test_hls
+      #       - e2e
+      #     filters:
+      #       branches:
+      #         only: master
