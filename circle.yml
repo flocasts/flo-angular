@@ -51,6 +51,7 @@ jobs:
       - run:
           name: Test
           command: |
+            ls -lah
             ./tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
       - persist_to_workspace:
           root: tmp
