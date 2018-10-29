@@ -43,19 +43,19 @@ jobs:
       - checkout
       - attach_workspace:
           at: /tmp
-      # - restore_cache:
-      #     key: dependency-cache-{{ checksum "package.json" }}
-      # - run:
-      #     name: Install Dependencies
-      #     command: npm ci
-      # - run:
-      #     name: Test
-      #     command: |
-      #       ./tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
-      # - persist_to_workspace:
-      #     root: ./tmp
-      #     paths:
-      #       - cc.flo-angular.json
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command: |
+            ./tmp/cc-test-reporter format-coverage -t lcov -o cc.flo-angular.json coverage/flo-angular/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.flo-angular.json
       - run: ls /tmp -lah
   test_viewport_grid:
     <<: *defaults
