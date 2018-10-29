@@ -112,6 +112,7 @@ workflows:
   version: 2
   build:
     jobs:
+      - prep_coverage
       - e2e
       - test_docs_site:
           requires:
