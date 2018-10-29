@@ -19,7 +19,6 @@ jobs:
           root: ./
           paths:
             - cc-test-reporter
-      - run: ls -lah
   e2e:
     <<: *defaults
     steps:
@@ -42,8 +41,8 @@ jobs:
   test_docs_site:
     <<: *defaults
     steps:
-      - attach_workspace:
-          at: /workspace
+      # - attach_workspace:
+      #     at: /tmp
       # - restore_cache:
       #     key: dependency-cache-{{ checksum "package.json" }}
       # - run:
@@ -53,11 +52,11 @@ jobs:
           name: Test
           command: |
             ls -lah
-            ./cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
-      - persist_to_workspace:
-          root: tmp
-          paths: 
-            - cc.flo-angular.json
+            # ./cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
+      # - persist_to_workspace:
+      #     root: tmp
+      #     paths: 
+      #       - cc.flo-angular.json
   test_viewport_grid:
     <<: *defaults
     steps:
@@ -115,9 +114,9 @@ workflows:
     jobs:
       - prep_coverage
       # - e2e
-      # - test_docs_site:
-      #     requires:
-      #       - prep_coverage
+      - test_docs_site:
+          requires:
+            - prep_coverage
       # - test_viewport_grid:
       #     requires:
       #       - prep_coverage
