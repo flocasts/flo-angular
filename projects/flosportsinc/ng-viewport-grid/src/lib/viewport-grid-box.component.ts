@@ -9,7 +9,6 @@ import {
 
 const BORDER_CLASS = 'border'
 const SELECTION_CLASS = 'selected'
-const DROP_STYLE_CLASS = 'drop'
 
 export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 
@@ -27,9 +26,6 @@ export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
       transition: box-shadow 500ms;
       width: 100%;
       pointer-events: none;
-    }
-    div.${BORDER_CLASS}.${DROP_STYLE_CLASS} {
-      box-shadow: inset 0px 0px 0px 3px yellow;
     }
     div.${BORDER_CLASS}.${SELECTION_CLASS} {
       box-shadow: inset 0px 0px 0px 3px white;
@@ -49,7 +45,6 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @ContentChild(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItem?: ElementRef<TElement>
   @ContentChildren(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItems?: QueryList<ElementRef<TElement>>
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
-  @HostBinding('draggable') public readonly draggable = true
   @HostBinding('attr.id') public readonly guid = shortGuid()
   @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
 
@@ -81,14 +76,6 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
             : this.removeBorderClass(el)(SELECTION_CLASS)
           this.isSelected$.next(isSelected)
         })
-
-  public readonly setDropStyles = () =>
-    this._maybeSlectionContainer()
-      .tapSome(el => {
-        this.isSelected()
-          ? this.removeBorderClass(el)(DROP_STYLE_CLASS)
-          : this.addBorderClass(el)(DROP_STYLE_CLASS)
-      })
 
   public readonly toggleSelected = () =>
     this.isSelected()

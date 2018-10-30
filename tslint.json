@@ -133,8 +133,9 @@
     "no-method-signature": false,
     "no-expression-statement": false,
     "no-if-statement": true,
+    "trackBy-function": true,
     "validate-decorators": [
-      false,
+      true,
       {
         "Component": {
           "changeDetection": "\\.OnPush$"
