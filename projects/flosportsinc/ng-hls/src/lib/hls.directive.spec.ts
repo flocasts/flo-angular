@@ -68,19 +68,46 @@ const setTestBedToMediaSourceModule = () => {
   })
 }
 
+const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
+  const wrapper = createSut()
+  const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
+
+  internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
+    expect(response).toBeUndefined()
+  })
+
+  wrapper.hoist.destroy()
+
+  expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
+})
+
+const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
+  const wrapper = createSut()
+  const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
+
+  expect(() => {
+    internalNgAfterViewInit$.pipe(take(1)).subscribe()
+  }).toThrow(new ObjectUnsubscribedError())
+
+  wrapper.hoist.destroy()
+})
+
+const shouldCompileTestComponent = done => {
+  expect(createSut().hoist).toBeDefined()
+  done()
+}
+
+const shouldCompilerDirective = done => {
+  expect(createSut().directive).toBeDefined()
+  done()
+}
+
 describe(`${HlsDirective.name} when client supports Media Source Extensions`, () => {
   beforeEach(() => setTestBedToMediaSourceModule())
   afterEach(() => TestBed.resetTestingModule())
 
-  it('should compile the test component', done => {
-    expect(createSut().hoist).toBeDefined()
-    done()
-  })
-
-  it('should compile the directive under test', done => {
-    expect(createSut().directive).toBeDefined()
-    done()
-  })
+  it('should compile the test component', shouldCompileTestComponent)
+  it('should compile the directive under test', shouldCompilerDirective)
 
   it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
     const testSub = new Subject<any>()
@@ -129,66 +156,16 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
     expect(spy).not.toHaveBeenCalled()
   })
 
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', async(() => {
-    const wrapper = createSut()
-    const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
-
-    internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-      expect(response).toBeUndefined()
-    })
-
-    wrapper.hoist.destroy()
-
-    expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-  }))
-
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
-    const wrapper = createSut()
-    const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
-
-    expect(() => {
-      internalNgAfterViewInit$.pipe(take(1)).subscribe()
-    }).toThrow(new ObjectUnsubscribedError())
-
-    wrapper.hoist.destroy()
-  }))
+  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
+  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 
 describe(`${HlsDirective.name} when client supports HLS natively`, () => {
   beforeEach(() => setTestBedToNativeModule())
   afterEach(() => TestBed.resetTestingModule())
 
-  it('should compile the test component', done => {
-    expect(createSut().hoist).toBeDefined()
-    done()
-  })
-
-  it('should compile the directive under test', done => {
-    expect(createSut().directive).toBeDefined()
-    done()
-  })
-
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', async(() => {
-    const wrapper = createSut()
-    const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
-
-    internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-      expect(response).toBeUndefined()
-    })
-
-    wrapper.hoist.destroy()
-
-    expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-  }))
-
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', async(() => {
-    const wrapper = createSut()
-    const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
-
-    expect(() => {
-      internalNgAfterViewInit$.pipe(take(1)).subscribe()
-    }).toThrow(new ObjectUnsubscribedError())
-
-    wrapper.hoist.destroy()
-  }))
+  it('should compile the test component', shouldCompileTestComponent)
+  it('should compile the directive under test', shouldCompilerDirective)
+  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
+  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
