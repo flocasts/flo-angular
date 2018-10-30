@@ -45,7 +45,6 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @ContentChild(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItem?: ElementRef<TElement>
   @ContentChildren(ViewportGridBoxItemDirective, { read: ElementRef }) private readonly _panelItems?: QueryList<ElementRef<TElement>>
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
-  @HostBinding('draggable') public readonly draggable = true
   @HostBinding('attr.id') public readonly guid = shortGuid()
   @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
 
