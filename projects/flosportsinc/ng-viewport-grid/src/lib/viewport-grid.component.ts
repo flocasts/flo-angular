@@ -85,62 +85,6 @@ const getPreSelectedIndex =
         ? 0
         : supposedIndex
 
-const swapContainers =
-  (element: HTMLElement) => {
-    maybe(element.parentNode)
-      .tapSome(parent => {
-        parent.insertBefore(element, parent.firstChild)
-      })
-  }
-
-const dragStart = (ev: DragEvent) => {
-  maybe(ev.dataTransfer)
-    .flatMap(dataTransfer => maybe(ev.target).map(target => {
-      return {
-        dataTransfer,
-        target
-      }
-    }))
-    .tapSome(res => {
-      // res.dataTransfer.dropEffect = 'move'
-      res.dataTransfer.setData('text/plain', (res.target as any).id)
-    })
-}
-
-const dragOverHandler =
-  (parent: ViewportGridBoxComponent<HTMLElement>) =>
-    (ev: DragEvent) => {
-      ev.preventDefault()
-      maybe(ev.target)
-        .tapSome((target: any) => {
-          const d = target as HTMLElement
-          // tslint:disable-next-line:no-object-mutation
-          d.style.border = '0px 0px 0px 3px yellow'
-          // parent.set
-          parent.setDropStyles()
-        })
-    }
-
-const dropHandler =
-  (parent: ViewportGridBoxComponent<HTMLElement>) =>
-    (ev: DragEvent) => {
-      ev.preventDefault()
-      maybe(ev.dataTransfer).tapSome(dt => {
-        // tslint:disable-next-line:no-object-mutation
-        dt.dropEffect = 'link'
-        const data = dt.getData('text')
-        maybe(ev.target)
-          .tapSome(() => {
-            const elm = document.getElementById(data)
-            // tslint:disable-next-line:no-if-statement
-            if (elm) {
-              // swapContainers(elm)
-              // (ev.target as HTMLElement).appendChild(elm)
-            }
-          })
-      })
-    }
-
 @Component({
   selector: 'flo-viewport-grid',
   styles: [`
@@ -284,9 +228,6 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         const push = emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
 
         arr.forEach(a => {
-          a.elementRef.nativeElement.addEventListener('dragstart', dragStart)
-          a.elementRef.nativeElement.addEventListener('dragover', dragOverHandler(a))
-          a.elementRef.nativeElement.addEventListener('drop', dropHandler(a))
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(push(arr))
         })
 
