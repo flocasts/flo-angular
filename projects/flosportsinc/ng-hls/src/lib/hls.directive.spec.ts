@@ -36,33 +36,17 @@ const createSut = () => {
   }
 }
 
-const setTestBedToNativeModule = () => {
+const setTestBed = (supportsMle: boolean) => (native: boolean) => {
   TestBed.configureTestingModule({
     imports: [HlsTestingModule],
     providers: [
       {
         provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
-        useValue: false
+        useValue: supportsMle
       },
       {
         provide: SUPPORTS_HLS_NATIVELY,
-        useValue: () => true
-      }
-    ]
-  })
-}
-
-const setTestBedToMediaSourceModule = () => {
-  TestBed.configureTestingModule({
-    imports: [HlsTestingModule],
-    providers: [
-      {
-        provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
-        useValue: true
-      },
-      {
-        provide: SUPPORTS_HLS_NATIVELY,
-        useValue: () => false
+        useValue: () => native
       }
     ]
   })
@@ -102,8 +86,17 @@ const shouldCompilerDirective = done => {
   done()
 }
 
+const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
+  const wrapper = createSut()
+  const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
+  wrapper.instance.ngOnChanges({
+    floHls: sc
+  })
+  expect(spy).not.toHaveBeenCalled()
+}
+
 describe(`${HlsDirective.name} when client supports Media Source Extensions`, () => {
-  beforeEach(() => setTestBedToMediaSourceModule())
+  beforeEach(() => setTestBed(true)(false))
   afterEach(() => TestBed.resetTestingModule())
 
   it('should compile the test component', shouldCompileTestComponent)
@@ -139,21 +132,11 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
   })
 
   it('should skip src change when value is same', () => {
-    const wrapper = createSut()
-    const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
-    wrapper.instance.ngOnChanges({
-      floHls: new SimpleChange(TEST_SRC, TEST_SRC, false)
-    })
-    expect(spy).not.toHaveBeenCalled()
+    skipSrcChangeWhenValueIs(new SimpleChange(TEST_SRC, TEST_SRC, false))
   })
 
   it('should skip src change when value is undefined', () => {
-    const wrapper = createSut()
-    const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
-    wrapper.instance.ngOnChanges({
-      floHls: new SimpleChange(undefined, undefined, false)
-    })
-    expect(spy).not.toHaveBeenCalled()
+    skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
   })
 
   it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
@@ -161,7 +144,7 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
 })
 
 describe(`${HlsDirective.name} when client supports HLS natively`, () => {
-  beforeEach(() => setTestBedToNativeModule())
+  beforeEach(() => setTestBed(false)(true))
   afterEach(() => TestBed.resetTestingModule())
 
   it('should compile the test component', shouldCompileTestComponent)
