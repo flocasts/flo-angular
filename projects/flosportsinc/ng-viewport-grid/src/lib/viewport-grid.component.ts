@@ -129,16 +129,15 @@ const dropHandler =
         // tslint:disable-next-line:no-object-mutation
         dt.dropEffect = 'link'
         const data = dt.getData('text')
-        // tslint:disable-next-line:no-unused-expression
-        // tslint:disable-next-line:no-if-statement
-        if (ev.target) {
-          const elm = document.getElementById(data)
-          // tslint:disable-next-line:no-if-statement
-          if (elm) {
-            // swapContainers(elm)
-            // (ev.target as HTMLElement).appendChild(elm)
-          }
-        }
+        maybe(ev.target)
+          .tapSome(() => {
+            const elm = document.getElementById(data)
+            // tslint:disable-next-line:no-if-statement
+            if (elm) {
+              // swapContainers(elm)
+              // (ev.target as HTMLElement).appendChild(elm)
+            }
+          })
       })
     }
 
@@ -240,7 +239,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
           removeContainerStyle('grid-template-rows')
           removeContainerStyle('max-height')
           this._setContainerMaxWidth(this.maxHeight)(container)
-        // tslint:disable-next-line:no-if-statement
+          // tslint:disable-next-line:no-if-statement
         } else if (children.length === 2) {
           const child0 = setElementStyle(container.children[0] as HTMLElement)
           const child1 = setElementStyle(container.children[1] as HTMLElement)
