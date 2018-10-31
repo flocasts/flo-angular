@@ -11,7 +11,7 @@ import { HlsComponent } from './hls/hls.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
 import { PwaService } from './pwa.service'
-import { WindowService, WINDOW } from './window.service'
+import { WindowModule } from '@flosportsinc/ng-services'
 
 @NgModule({
   declarations: [
@@ -27,15 +27,11 @@ import { WindowService, WINDOW } from './window.service'
     AppRoutingModule,
     ViewportGridModule,
     HlsJsModule,
+    WindowModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   providers: [
-    PwaService,
-    WindowService,
-    {
-      provide: WINDOW,
-      useValue: window
-    }
+    PwaService
   ],
   bootstrap: [AppComponent]
 })

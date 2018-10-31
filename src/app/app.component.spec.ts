@@ -3,7 +3,7 @@ import { RouterTestingModule } from '@angular/router/testing'
 import { AppComponent } from './app.component'
 import { SwUpdate } from '@angular/service-worker'
 import { of, EMPTY } from 'rxjs'
-import { WINDOW } from './window.service'
+import { WINDOW } from '@flosportsinc/ng-services'
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
