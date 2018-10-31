@@ -19,6 +19,11 @@ export interface ViewportGridBoxSelectedElementEvent<TElement = HTMLElement> {
   readonly otherViewPortElements: ReadonlyArray<IMaybe<ReadonlyArray<TElement>>>
 }
 
+interface CombinedView {
+  readonly children: QueryList<ViewportGridBoxComponent<HTMLElement>>
+  readonly container: HTMLDivElement
+}
+
 const DEFAULT_MAX_HEIGHT = 900
 const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
@@ -129,7 +134,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
   private readonly _maybeChildren = () => maybe(this._windowPanes)
   private readonly _maybeCombinedView = () => this._maybeContainer()
     .flatMap(container => this._maybeChildren()
-      .map(children => {
+      .map<CombinedView>(children => {
         return {
           children,
           container
@@ -165,54 +170,53 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         .flatMap(a => a.maybePanelItemElements())
 
   private readonly _setGridStyles =
-    (children: QueryList<ViewportGridBoxComponent>) =>
-      (container: HTMLDivElement) => {
-        const applyGridStyleByNumber =
-          (count: number) =>
-            (style: string) =>
-              applyGridStyles(style)(container)(this.renderer)(count)
+    (combined: CombinedView) => {
+      const applyGridStyleByNumber =
+        (count: number) =>
+          (style: string) =>
+            applyGridStyles(style)(combined.container)(this.renderer)(count)
 
-        const removeElementStyle = (elm: HTMLElement) => (style: string) => this.renderer.removeStyle(elm, style)
-        const removeContainerStyle = (style: string) => removeElementStyle(container)(style)
-        const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this.renderer.setStyle(elm, style, value)
-        const setElementStyleContainer = (style: string) => (value: string) => setElementStyle(container)(style)(value)
+      const removeElementStyle = (elm: HTMLElement) => (style: string) => this.renderer.removeStyle(elm, style)
+      const removeContainerStyle = (style: string) => removeElementStyle(combined.container)(style)
+      const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this.renderer.setStyle(elm, style, value)
+      const setElementStyleContainer = (style: string) => (value: string) => setElementStyle(combined.container)(style)(value)
 
+      // tslint:disable-next-line:no-if-statement
+      if (combined.children.length === 1) {
+        removeContainerStyle('grid-template-columns')
+        removeContainerStyle('grid-template-rows')
+        removeContainerStyle('max-height')
+        this._setContainerMaxWidth(this.maxHeight)(combined.container)
         // tslint:disable-next-line:no-if-statement
-        if (children.length === 1) {
-          removeContainerStyle('grid-template-columns')
-          removeContainerStyle('grid-template-rows')
-          removeContainerStyle('max-height')
-          this._setContainerMaxWidth(this.maxHeight)(container)
-          // tslint:disable-next-line:no-if-statement
-        } else if (children.length === 2) {
-          const child0 = setElementStyle(container.children[0] as HTMLElement)
-          const child1 = setElementStyle(container.children[1] as HTMLElement)
+      } else if (combined.children.length === 2) {
+        const child0 = setElementStyle(combined.container.children[0] as HTMLElement)
+        const child1 = setElementStyle(combined.container.children[1] as HTMLElement)
 
-          setElementStyleContainer('grid-template-columns')(`1fr 1fr 1fr 1fr`)
-          setElementStyleContainer('grid-template-rows')(`1fr 1fr 1fr 1fr`)
-          setElementStyleContainer('max-width')(`${this.maxHeight * 3.55}px`)
-          setElementStyleContainer('max-height')(`${this.maxHeight}px`)
-          child0('grid-row')(`2 / span 2`)
-          child0('align-self')(`center`)
-          child0('grid-column')(`1 / span 2`)
-          child1('grid-row')(`2 / span 2`)
-          child1('grid-column')(`3 / span 2`)
-          child1('align-self')(`center`)
-        } else {
-          Array.from(container.children).forEach(c => {
-            this.renderer.removeStyle(c, 'grid-row')
-            this.renderer.removeStyle(c, 'grid-column')
-            this.renderer.removeStyle(c, 'align-self')
-          })
-          this.renderer.removeStyle(container, 'max-height')
-          applyGridStyleByNumber(children.length)('grid-template-columns')
-          applyGridStyleByNumber(children.length)('grid-template-rows')
-          this._setContainerMaxWidth(this.maxHeight)(container)
-        }
+        setElementStyleContainer('grid-template-columns')(`1fr 1fr 1fr 1fr`)
+        setElementStyleContainer('grid-template-rows')(`1fr 1fr 1fr 1fr`)
+        setElementStyleContainer('max-width')(`${this.maxHeight * 3.55}px`)
+        setElementStyleContainer('max-height')(`${this.maxHeight}px`)
+        child0('grid-row')(`2 / span 2`)
+        child0('align-self')(`center`)
+        child0('grid-column')(`1 / span 2`)
+        child1('grid-row')(`2 / span 2`)
+        child1('grid-column')(`3 / span 2`)
+        child1('align-self')(`center`)
+      } else {
+        Array.from(combined.container.children).forEach(c => {
+          this.renderer.removeStyle(c, 'grid-row')
+          this.renderer.removeStyle(c, 'grid-column')
+          this.renderer.removeStyle(c, 'align-self')
+        })
+        this.renderer.removeStyle(combined.container, 'max-height')
+        applyGridStyleByNumber(combined.children.length)('grid-template-columns')
+        applyGridStyleByNumber(combined.children.length)('grid-template-rows')
+        this._setContainerMaxWidth(this.maxHeight)(combined.container)
       }
+    }
 
   ngOnChanges() {
-    this._maybeCombinedView().tapSome(a => this._setGridStyles(a.children)(a.container))
+    this._maybeCombinedView().tapSome(a => this._setGridStyles(a))
   }
 
   ngOnDestroy() {
@@ -220,15 +224,37 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
     this.ngDestroy$.complete()
   }
 
+  private readonly _push = emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
+
+  private readonly _updateOnChanges = (combined: CombinedView) => {
+    combined.children.changes
+      .pipe(
+        takeUntil(this.ngDestroy$),
+        map<any, ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>>(a => a.toArray())
+      )
+      .subscribe(viewports => {
+        viewports.forEach(z => z.clicked$
+          .pipe(takeUntil(combined.children.changes))
+          .subscribe(this._push(viewports)))
+
+        // tslint:disable-next-line:no-if-statement
+        if (!viewports.some(z => z.isSelected())) {
+          maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
+        }
+
+        this._setGridStyles(combined)
+      })
+  }
+
+
   ngAfterContentInit() {
     this._maybeCombinedView()
       .tapSome(obj => {
         const children = obj.children
         const arr = children.toArray()
-        const push = emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
 
         arr.forEach(a => {
-          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(push(arr))
+          a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(this._push(arr))
         })
 
         // tslint:disable-next-line:no-if-statement
@@ -237,26 +263,8 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
           maybe(arr[index]).tapSome(dd => dd.setSelected(true))
         }
 
-        this._setGridStyles(children)(obj.container)
-
-        // APPLY WHEN ELEMENTS SWAPPED IN AND OUT
-        children.changes
-          .pipe(
-            takeUntil(this.ngDestroy$),
-            map<any, ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>>(a => a.toArray())
-          )
-          .subscribe(viewports => {
-            viewports.forEach(z => z.clicked$
-              .pipe(takeUntil(children.changes))
-              .subscribe(push(viewports)))
-
-            // tslint:disable-next-line:no-if-statement
-            if (!viewports.some(z => z.isSelected())) {
-              maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
-            }
-
-            this._setGridStyles(children)(obj.container)
-          })
+        this._setGridStyles(obj)
+        this._updateOnChanges(obj)
       })
   }
 }
