@@ -1,6 +1,5 @@
-import { Injectable, InjectionToken, Inject } from '@angular/core'
-
-export const WINDOW = new InjectionToken<Window>('cfg.window')
+import { Injectable, Inject } from '@angular/core'
+import { WINDOW } from './tokens'
 
 export interface IWindowService {
   window<T>(): Window & T
@@ -10,7 +9,7 @@ export interface IWindowService {
   providedIn: 'root'
 })
 export class WindowService {
-  constructor(@Inject(WINDOW) private _window: Window) { }
+  constructor(@Inject(WINDOW) private _window: any) { }
 
   public readonly window = <T>() => this._window as Window & T
 }

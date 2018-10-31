@@ -201,6 +201,42 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-services": {
+      "root": "projects/flosportsinc/ng-services",
+      "sourceRoot": "projects/flosportsinc/ng-services/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-services/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-services/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-services/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-services/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-services/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-services/tsconfig.lib.json",
+              "projects/flosportsinc/ng-services/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"

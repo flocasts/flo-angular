@@ -31,6 +31,12 @@
       ],
       "@flosportsinc/ng-hls/*": [
         "dist/flosportsinc/ng-hls/*"
+      ],
+      "@flosportsinc/ng-services": [
+        "dist/flosportsinc/ng-services"
+      ],
+      "@flosportsinc/ng-services/*": [
+        "dist/flosportsinc/ng-services/*"
       ]
     }
   }

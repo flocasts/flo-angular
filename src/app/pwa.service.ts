@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core'
 import { SwUpdate } from '@angular/service-worker'
-import { WindowService } from './window.service'
+import { WindowService } from '@flosportsinc/ng-services'
 
 @Injectable({
   providedIn: 'root'

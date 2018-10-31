@@ -1,5 +1,6 @@
 import { TestBed } from '@angular/core/testing'
-import { WindowService, WINDOW } from './window.service'
+import { WindowService } from './window.service'
+import { WINDOW } from './tokens'
 
 describe('WindowService', () => {
   afterEach(() => TestBed.resetTestingModule())
@@ -20,11 +21,12 @@ describe('WindowService', () => {
       providers: [
         {
           provide: WINDOW,
-          useValue: window
+          useValue: { test: 1 }
         }
       ]
     })
     const service: WindowService = TestBed.get(WindowService)
     expect(service).toBeTruthy()
+    expect(service.window()).toEqual({ test: 1 })
   })
 })
