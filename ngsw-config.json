@@ -7,12 +7,12 @@
       "resources": {
         "files": [
           "/favicon.ico",
-          "/index.html",
           "/*.css",
           "/*.js"
         ]
       }
-    }, {
+    },
+    {
       "name": "assets",
       "installMode": "lazy",
       "updateMode": "prefetch",
@@ -20,6 +20,17 @@
         "files": [
           "/assets/**"
         ]
+      }
+    }
+  ],
+  "dataGroups": [
+    {
+      "name": "rendered",
+      "urls": [
+        "/"
+      ],
+      "cacheConfig": {
+        "strategy": "freshness"
       }
     }
   ]

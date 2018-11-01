@@ -19,7 +19,7 @@
     "start": "ng serve",
     "start.prod": "npm run build.prod && node dist/server.js",
     "build": "ng build --service-worker",
-    "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.server.json tools/compress.ts && tsc --project tsconfig.server.json",
+    "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.tools.json tools/compress.ts && ng run flo-angular:node && npm run webpack.server",
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.hls": "ng test @flosportsinc/ng-hls --watch=false --progress=false --browsers=ChromeHeadlessCI",
@@ -29,10 +29,7 @@
     "e2e": "ng e2e",
     "prepare": "ts-node --project tsconfig.tools.json tools/build.ts",
     "heroku-postbuild": "npm run build.prod",
-    "build:ssr": "npm run build:client-and-server-bundles && npm run webpack:server",
-    "serve:ssr": "node dist/server.js",
-    "build:client-and-server-bundles": "ng build --prod && ng run flo-angular:node",
-    "webpack:server": "webpack --config webpack.server.config.js --progress --colors"
+    "webpack.server": "webpack --config webpack.server.config.js --progress --colors"
   },
   "dependencies": {
     "@angular/animations": "^7.1.0-beta.1",
