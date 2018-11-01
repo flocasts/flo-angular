@@ -10,8 +10,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
-import { PwaService } from './pwa.service'
-import { WindowModule } from '@flosportsinc/ng-services'
+import { TransferHttpCacheModule } from '@nguniversal/common'
 
 @NgModule({
   declarations: [
@@ -23,16 +22,12 @@ import { WindowModule } from '@flosportsinc/ng-services'
   imports: [
     FormsModule,
     ReactiveFormsModule,
-    BrowserModule,
     AppRoutingModule,
     ViewportGridModule,
     HlsJsModule,
-    WindowModule,
+    TransferHttpCacheModule,
+    BrowserModule.withServerTransition({ appId: 'my-app' }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
-  ],
-  providers: [
-    PwaService
-  ],
-  bootstrap: [AppComponent]
+  ]
 })
 export class AppModule { }
