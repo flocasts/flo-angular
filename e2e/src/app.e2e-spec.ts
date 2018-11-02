@@ -16,7 +16,7 @@ describe('App', () => {
     page
       .navigateTo()
       .then(() => {
-        expect(page.getStateTransfer().getTagName()).toEqual('script2')
+        expect(page.getStateTransfer().getTagName()).toEqual('script')
         done()
       })
   })
