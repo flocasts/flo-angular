@@ -22,7 +22,7 @@ describe('App', () => {
       })
   })
 
-  it('should allow navigation to hls page', done => {
+  it('should navigate to the HLS demo page when link in nav is clicked', done => {
     const page = new AppPage()
     page
       .navigateTo()
@@ -36,7 +36,7 @@ describe('App', () => {
       })
   })
 
-  it('should allow navigation to viewport page', done => {
+  it('should navigate to the viewport-grid demo page when clicked from the navigation menu', done => {
     const page = new AppPage()
     page
       .navigateTo()
