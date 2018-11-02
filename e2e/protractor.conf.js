@@ -2,6 +2,9 @@
 // https://github.com/angular/protractor/blob/master/lib/config.ts
 
 const { SpecReporter } = require('jasmine-spec-reporter');
+const { exec } = require('child_process');
+
+let proc
 
 exports.config = {
   allScriptsTimeout: 11000,
@@ -12,12 +15,18 @@ exports.config = {
     'browserName': 'chrome'
   },
   directConnect: true,
-  baseUrl: 'http://localhost:4200/',
+  baseUrl: 'http://localhost:4201/',
   framework: 'jasmine',
   jasmineNodeOpts: {
     showColors: true,
     defaultTimeoutInterval: 30000,
     print: function() {}
+  },
+  beforeLaunch() {
+    proc = exec('node dist/server.js')
+  },
+  onCleanUp() {
+    process.kill(proc.pid)
   },
   onPrepare() {
     require('ts-node').register({

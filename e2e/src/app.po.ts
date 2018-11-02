@@ -8,4 +8,8 @@ export class AppPage {
   getParagraphText() {
     return element(by.css('app-root h1')).getText()
   }
+
+  getStateTransfer() {
+    return element(by.css('#my-app-state')).getWebElement()
+  }
 }

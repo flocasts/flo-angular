@@ -17,8 +17,10 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start.ssr": "npm run build.ssr && node dist/server.js",
     "start.prod": "npm run build.prod && node dist/server.js",
     "build": "ng build --service-worker",
+    "build.ssr": "ng build --service-worker && ng run flo-angular:node && npm run webpack.server",
     "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.tools.json tools/compress.ts && ng run flo-angular:node && npm run webpack.server",
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
@@ -26,7 +28,8 @@
     "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.services": "ng test @flosportsinc/ng-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",
-    "e2e": "ng e2e",
+    "e2e": "npm run build.ssr && ng e2e",
+    "e2e.prod": "npm run build.prod && ng e2e",
     "prepare": "ts-node --project tsconfig.tools.json tools/build.ts",
     "heroku-postbuild": "npm run build.prod",
     "webpack.server": "webpack --config webpack.server.config.js --progress --colors"

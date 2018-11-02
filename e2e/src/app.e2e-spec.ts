@@ -10,4 +10,14 @@ describe('App', () => {
         done()
       })
   })
+
+  it('should have state transfer script', done => {
+    const page = new AppPage()
+    page
+      .navigateTo()
+      .then(() => {
+        expect(page.getStateTransfer().getTagName()).toEqual('script2')
+        done()
+      })
+  })
 })
