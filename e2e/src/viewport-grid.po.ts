@@ -1,6 +1,7 @@
 import { browser, element, by } from 'protractor'
+import { BaseBrowser } from './browser.po'
 
-export class ViewportGridPage {
+export class ViewportGridPage extends BaseBrowser {
   navigateTo() {
     return browser.get('/viewport-grid')
   }

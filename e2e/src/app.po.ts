@@ -1,6 +1,7 @@
 import { browser, by, element } from 'protractor'
+import { BaseBrowser } from './browser.po'
 
-export class AppPage {
+export class AppPage extends BaseBrowser {
   navigateTo() {
     return browser.get('/')
   }

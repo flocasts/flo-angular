@@ -9,6 +9,7 @@
 //       .then(() => {
 //         // browser.wait(() => {
 //           browser.close()
+//           done()
 //           // done()
 //         // }, 2000)
 //         // const field = page.getMaxHeightInput()

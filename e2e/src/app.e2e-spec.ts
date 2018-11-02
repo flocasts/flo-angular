@@ -31,7 +31,7 @@ describe('App', () => {
           .click()
           .then(() => {
             expect(browser.getTitle()).toEqual('FloSports Component Library')
-              done()
+            done()
           })
       })
   })
@@ -45,7 +45,7 @@ describe('App', () => {
           .click()
           .then(() => {
             expect(browser.getTitle()).toEqual('FloSports Component Library')
-              done()
+            done()
           })
       })
   })
