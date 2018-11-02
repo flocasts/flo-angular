@@ -1,11 +1,15 @@
 import { browser, by, element } from 'protractor'
 
 export class HlsPage {
+  // constructor() {
+  //   browser.ignoreSynchronization = true
+  // }
+
   navigateTo() {
     return browser.get('/hls')
   }
 
-  getSrcField() {
-    return element(by.id('src'))
+  getSrcSelection() {
+    return element(by.id('preselected_input'))
   }
 }

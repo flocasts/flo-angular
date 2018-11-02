@@ -29,8 +29,8 @@
     "test.ci.services": "ng test @flosportsinc/ng-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",
     "e2e": "ng e2e",
-    "e2e.ssr": "npm run build.ssr && ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
-    "e2e.prod": "npm run build.prod && ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
+    "e2e.ssr": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
+    "e2e.prod": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
     "prepare": "ts-node --project tsconfig.tools.json tools/build.ts",
     "heroku-postbuild": "npm run build.prod",
     "webpack.server": "webpack --config webpack.server.config.js --progress --colors"
