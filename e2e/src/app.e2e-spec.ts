@@ -36,7 +36,7 @@ describe('App', () => {
       })
   })
 
-  it('should navigate to the viewport-grid demo page when clicked from the navigation menu', done => {
+  it('should navigate to the viewport-grid demo page when link in nav is clicked', done => {
     const page = new AppPage()
     page
       .navigateTo()
