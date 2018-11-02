@@ -8,8 +8,8 @@ import { ViewportGridComponent } from '@flosportsinc/ng-viewport-grid'
 import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
-const DEFAULT_ELEMENT_COUNT = 4
-const DEFAULT_VIDEO_SOURCE_URL = 'https://cdn.jsdelivr.net/npm/big-buck-bunny-1080p@0.0.6/video.mp4'
+const DEFAULT_ELEMENT_COUNT = 1
+const DEFAULT_VIDEO_SOURCE_URL = 'http://techslides.com/demos/sample-videos/small.mp4'
 
 const objectsAreEqual = (a: any) => (b: any) => JSON.stringify(a) === JSON.stringify(b)
 const mapFromForm = (input: ICompConfigForm) => {

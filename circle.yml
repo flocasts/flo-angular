@@ -35,8 +35,11 @@ jobs:
           name: Exectue Lint
           command: npm run lint
       - run:
+          name: Build
+          command: npm run build.prod
+      - run:
           name: Exectue E2E
-          command: ./node_modules/.bin/ng e2e --prod --protractor-config=./e2e/protractor-ci.conf.js
+          command: npm run e2e.ci
   test_docs_site:
     <<: *defaults
     steps:

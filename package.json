@@ -17,9 +17,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
+    "start.ssr": "npm run build.ssr && node dist/server.js",
     "start.prod": "npm run build.prod && node dist/server.js",
     "build": "ng build --service-worker",
-    "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.server.json tools/compress.ts && tsc --project tsconfig.server.json",
+    "build.ssr": "ng build --service-worker && ng run flo-angular:node && npm run webpack.server",
+    "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.tools.json tools/compress.ts && ng run flo-angular:node && npm run webpack.server",
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.hls": "ng test @flosportsinc/ng-hls --watch=false --progress=false --browsers=ChromeHeadlessCI",
@@ -27,8 +29,12 @@
     "test.ci.services": "ng test @flosportsinc/ng-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",
     "e2e": "ng e2e",
+    "e2e.ci": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ci.conf.js",
+    "e2e.ssr": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
+    "e2e.prod": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
     "prepare": "ts-node --project tsconfig.tools.json tools/build.ts",
-    "heroku-postbuild": "npm run build.prod"
+    "heroku-postbuild": "npm run build.prod",
+    "webpack.server": "webpack --config webpack.server.config.js --progress --colors"
   },
   "dependencies": {
     "@angular/animations": "^7.1.0-beta.1",
@@ -39,9 +45,13 @@
     "@angular/http": "^7.1.0-beta.1",
     "@angular/platform-browser": "^7.1.0-beta.1",
     "@angular/platform-browser-dynamic": "^7.1.0-beta.1",
-    "@angular/pwa": "^0.10.3",
+    "@angular/platform-server": "^7.1.0-beta.1",
+    "@angular/pwa": "^0.10.4",
     "@angular/router": "^7.1.0-beta.1",
     "@angular/service-worker": "^7.1.0-beta.1",
+    "@nguniversal/common": "^7.0.2",
+    "@nguniversal/express-engine": "^7.0.2",
+    "@nguniversal/module-map-ngfactory-loader": "^7.0.2",
     "compression": "^1.7.3",
     "core-js": "^2.5.7",
     "express": "^4.16.4",
@@ -52,9 +62,9 @@
     "zone.js": "~0.8.26"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.10.3",
-    "@angular-devkit/build-ng-packagr": "^0.10.3",
-    "@angular/cli": "^7.0.3",
+    "@angular-devkit/build-angular": "^0.10.4",
+    "@angular-devkit/build-ng-packagr": "^0.10.4",
+    "@angular/cli": "^7.0.4",
     "@angular/compiler-cli": "^7.1.0-beta.1",
     "@semantic-release/exec": "^3.3.0",
     "@types/express": "^4.16.0",
@@ -80,12 +90,14 @@
     "protractor": "^5.4.1",
     "semantic-release": "^15.10.6",
     "shelljs": "^0.8.2",
+    "ts-loader": "^5.3.0",
     "ts-node": "~7.0.1",
     "tsickle": "^0.33.1",
     "tslib": "^1.9.3",
     "tslint": "~5.11.0",
-    "tslint-immutable": "^4.8.0",
-    "typescript": "^3.1.5"
+    "tslint-immutable": "^4.9.0",
+    "typescript": "3.1.4",
+    "webpack-cli": "^3.1.2"
   },
   "release": {
     "branch": "master",

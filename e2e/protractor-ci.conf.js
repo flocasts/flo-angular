@@ -1,4 +1,4 @@
-const config = require('./protractor.conf').config;
+const config = require('./protractor-ssr.conf').config;
 
 config.capabilities = {
   browserName: 'chrome',

@@ -1,0 +1,38 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../out-tsc/app",
+    "baseUrl": "./",
+    "module": "commonjs",
+    "types": [
+      "node"
+    ],
+    "paths": {
+      "@flosportsinc/ng-viewport-grid": [
+        "../dist/flosportsinc/ng-viewport-grid"
+      ],
+      "@flosportsinc/ng-viewport-grid/*": [
+        "../dist/flosportsinc/ng-viewport-grid/*"
+      ],
+      "@flosportsinc/ng-hls": [
+        "../dist/flosportsinc/ng-hls"
+      ],
+      "@flosportsinc/ng-hls/*": [
+        "../dist/flosportsinc/ng-hls/*"
+      ],
+      "@flosportsinc/ng-services": [
+        "../dist/flosportsinc/ng-services"
+      ],
+      "@flosportsinc/ng-services/*": [
+        "../dist/flosportsinc/ng-services/*"
+      ]
+    }
+  },
+  "exclude": [
+    "test.ts",
+    "**/*.spec.ts"
+  ],
+  "angularCompilerOptions": {
+    "entryModule": "app/app.server.module#AppServerModule"
+  }
+}
