@@ -1,3 +1,6 @@
+// tslint:disable-next-line:no-object-mutation
+(global as any).window = {}
+
 import 'zone.js/dist/zone-node'
 import 'reflect-metadata'
 
@@ -11,10 +14,7 @@ enableProdMode()
 
 const app = express()
 const expressStaticGzip = require('express-static-gzip')
-const baseDirectory = resolve('dist/flo-angular/browser');
-// tslint:disable-next-line:no-object-mutation
-(global as any).window = {}
-
+const baseDirectory = resolve('dist/flo-angular/browser')
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/flo-angular/server/main')
 
 app.engine('html', ngExpressEngine({
