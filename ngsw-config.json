@@ -22,16 +22,5 @@
         ]
       }
     }
-  ],
-  "dataGroups": [
-    {
-      "name": "rendered",
-      "urls": [
-        "https://flosports-component-library"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness"
-      }
-    }
   ]
 }
