@@ -1,10 +1,6 @@
 import { browser, element, by } from 'protractor'
 
 export class ViewportGridPage {
-  constructor() {
-    browser.ignoreSynchronization = true
-  }
-
   navigateTo() {
     return browser.get('/viewport-grid')
   }

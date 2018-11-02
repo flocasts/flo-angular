@@ -1,10 +1,6 @@
 import { browser, by, element } from 'protractor'
 
 export class HlsPage {
-  // constructor() {
-  //   browser.ignoreSynchronization = true
-  // }
-
   navigateTo() {
     return browser.get('/hls')
   }
