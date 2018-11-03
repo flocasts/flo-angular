@@ -5,11 +5,10 @@ describe('WindowFrameComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ViewportGridComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
   }))
 
-  it('should create', () => {
+  it('should compile', () => {
     const fixture = TestBed.createComponent(ViewportGridComponent)
     const component = fixture.componentInstance
     fixture.detectChanges()
