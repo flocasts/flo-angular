@@ -5,11 +5,10 @@ describe(ViewportGridBoxComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ViewportGridBoxComponent]
-    })
-      .compileComponents()
+    }).compileComponents()
   }))
 
-  it('should create', () => {
+  it('should compile', () => {
     const fixture = TestBed.createComponent<ViewportGridBoxComponent<HTMLDivElement>>(ViewportGridBoxComponent)
     const component = fixture.componentInstance
     fixture.detectChanges()
