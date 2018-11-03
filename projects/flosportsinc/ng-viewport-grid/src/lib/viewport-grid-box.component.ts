@@ -50,6 +50,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @ContentChild(ViewportGridBoxItemDirective) private readonly _panelItem?: ViewportGridBoxItemDirective<TElement>
   @ContentChildren(ViewportGridBoxItemDirective) private readonly _panelItems?: QueryList<ViewportGridBoxItemDirective<TElement>>
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
+
   @HostBinding('attr.id') public readonly guid = shortGuid()
   @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
 
@@ -61,7 +62,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   public readonly maybePanelItemElements = () =>
     this.maybePanelItems().map(a => a.map(ref => ref.elementRef.nativeElement) as ReadonlyArray<TElement>)
 
-  public readonly addBorderClass =
+  private readonly _addBorderClass =
     (elm: HTMLElement) =>
       (cls: string) => {
         this._renderer.setStyle(elm, 'transition', computeFadeStyle(this.floViewportGridBoxShowSelectionBoxFadeTimeMs))
@@ -69,7 +70,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
         this._renderer.addClass(elm, cls)
       }
 
-  public readonly removeBorderClass =
+  private readonly _removeBorderClass =
     (elm: HTMLElement) =>
       (cls: string) => {
         this._renderer.removeClass(elm, BORDER_CLASS)
@@ -85,8 +86,8 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
             .tapSome(show => {
               const canShowGranular = !show.some(b => !b.floViewportGridBoxItemShowSelectionBox)
               this.floViewportGridBoxShowSelectionBox && canShowGranular && isSelected
-                ? this.addBorderClass(el)(SELECTION_CLASS)
-                : this.removeBorderClass(el)(SELECTION_CLASS)
+                ? this._addBorderClass(el)(SELECTION_CLASS)
+                : this._removeBorderClass(el)(SELECTION_CLASS)
               this.isSelected$.next(isSelected)
             })
         })
