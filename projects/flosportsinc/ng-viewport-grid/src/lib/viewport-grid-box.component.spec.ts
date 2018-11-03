@@ -1,22 +1,26 @@
 import { async, TestBed } from '@angular/core/testing'
 import { ViewportGridBoxComponent } from './viewport-grid-box.component'
-import { Component, NgModule } from '@angular/core'
+import { Component, NgModule, Input } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import { take } from 'rxjs/operators'
+import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 
 @Component({
   selector: 'flo-test-component',
   template: `
   <flo-viewport-grid-box>
-    <div floViewportGridBoxItem></div>
+    <div floViewportGridBoxItem
+      [floViewportGridBoxItemShowSelectionBox]="showSelectionBox"></div>
   </flo-viewport-grid-box>
   `
 })
 export class TestComponent {
+  // tslint:disable-next-line:readonly-keyword
+  @Input() showSelectionBox = true
 }
 
 @NgModule({
-  declarations: [TestComponent, ViewportGridBoxComponent],
+  declarations: [TestComponent, ViewportGridBoxItemDirective, ViewportGridBoxComponent],
   exports: [TestComponent]
 })
 export class TestingModule { }
@@ -79,6 +83,16 @@ describe(ViewportGridBoxComponent.name, () => {
     expect(elmsWithClass.length).toEqual(1)
   })
 
+  it('should add the border class when selected but not when a directive says no', () => {
+    const sut = createSut()
+    // tslint:disable-next-line:no-object-mutation
+    sut.hoist.componentInstance.showSelectionBox = false
+    sut.hoist.detectChanges()
+    sut.instance.setSelected(true)
+    const elmsWithClass = sut.directive.queryAll(By.css('div.flo-vp-selected'))
+    expect(elmsWithClass.length).toEqual(0)
+  })
+
   it('should remove the border class when selection is lost', () => {
     const sut = createSut()
 
@@ -119,5 +133,47 @@ describe(ViewportGridBoxComponent.name, () => {
 
     const elm = sut.directive.nativeElement as HTMLDivElement
     elm.click()
+  })
+
+  it('should expose panelItem', () => {
+    const sut = createSut()
+
+    sut.instance
+      .maybePanelItem()
+      .tap({
+        some: a => {
+          expect(a instanceof ViewportGridBoxItemDirective).toEqual(true)
+          expect(a).toBeTruthy()
+        },
+        none: () => expect(true).toEqual(false)
+      })
+  })
+
+  it('should expose panelItemElement', () => {
+    const sut = createSut()
+
+    sut.instance
+      .maybePanelItemElement()
+      .tap({
+        some: a => {
+          expect(a.tagName).toEqual('DIV')
+          expect(a).toBeTruthy()
+        },
+        none: () => expect(true).toEqual(false)
+      })
+  })
+
+  it('should expose panelItemElement', () => {
+    const sut = createSut()
+
+    sut.instance
+      .maybePanelItemElements()
+      .tap({
+        some: a => {
+          expect(a[0].tagName).toEqual('DIV')
+          expect(a.length).toEqual(1)
+        },
+        none: () => expect(true).toEqual(false)
+      })
   })
 })
