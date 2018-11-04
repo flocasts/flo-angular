@@ -88,7 +88,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "ng-packagr": "^4.4.0",
     "protractor": "^5.4.1",
-    "semantic-release": "^15.10.6",
+    "semantic-release": "^15.10.7",
     "shelljs": "^0.8.2",
     "ts-loader": "^5.3.0",
     "ts-node": "~7.0.1",
