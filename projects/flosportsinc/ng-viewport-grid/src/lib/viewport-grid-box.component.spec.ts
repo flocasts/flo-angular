@@ -4,13 +4,16 @@ import { Component, NgModule, Input } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import { take } from 'rxjs/operators'
 import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
+import { CommonModule } from '@angular/common'
 
 @Component({
   selector: 'flo-test-component',
   template: `
   <flo-viewport-grid-box>
-    <div floViewportGridBoxItem
-      [floViewportGridBoxItemShowSelectionBox]="showSelectionBox"></div>
+    <div
+      floViewportGridBoxItem
+      [floViewportGridBoxItemShowSelectionBox]="showSelectionBox">
+    </div>
   </flo-viewport-grid-box>
   `
 })
