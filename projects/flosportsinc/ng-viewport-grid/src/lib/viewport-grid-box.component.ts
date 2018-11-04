@@ -98,8 +98,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
       : this.setSelected(true)
 
   public readonly isSelected = () =>
-    this._maybeSlectionContainer().match({
-      none: () => false,
-      some: el => el.classList.contains(SELECTION_CLASS)
-    })
+    this._maybeSlectionContainer()
+      .map(el => el.classList.contains(SELECTION_CLASS))
+      .valueOr(false)
 }
