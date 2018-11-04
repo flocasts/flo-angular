@@ -11,9 +11,6 @@
   </a>
 </p>
 <p align="center">
-  <a href="https://greenkeeper.io">
-    <img alt="greenkeeper" src="https://badges.greenkeeper.io/semantic-release/semantic-release.svg">
-  </a>
   <a href="https://david-dm.org/flocasts/flo-angular">
     <img alt="deps" src="https://david-dm.org/flocasts/flo-angular/status.svg">
   </a>
