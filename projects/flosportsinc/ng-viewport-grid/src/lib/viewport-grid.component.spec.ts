@@ -13,7 +13,7 @@ const fill = (num: number) => Array(num).fill(0)
 @Component({
   selector: 'flo-test-component',
   template: `
-  <flo-viewport-grid>
+  <flo-viewport-grid [maxHeight]="maxHeight">
     <flo-viewport-grid-box *ngFor="let item of items$ | async; trackBy: trackByFn">
       <div floViewportGridBoxItem style="color: white; text-align: center;">test</div>
     </flo-viewport-grid-box>
@@ -21,6 +21,8 @@ const fill = (num: number) => Array(num).fill(0)
   `
 })
 export class TestComponent {
+  // tslint:disable-next-line:readonly-keyword
+  public maxHeight: number | undefined
   private readonly itemSource = new Subject<any>()
   readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
   public readonly setItems = (num: number) => this.itemSource.next(fill(num))
@@ -94,6 +96,15 @@ describe(ViewportGridComponent.name, () => {
         none: () => expect(true).toEqual(true),
         some: _ => expect(true).toEqual(false)
       })
+  })
+
+  it('should re-apply internal styles when OnChanges', () => {
+    const sut = createSut()
+    const spy = spyOn(sut.instance as any, '_setGridStyles')
+    // tslint:disable-next-line:no-object-mutation
+    sut.hoist.componentInstance.maxHeight = 400
+    sut.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
   })
 
   describe('grid with 1 box', () => {
