@@ -118,7 +118,7 @@ const getPreSelectedIndex =
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDestroy {
-  constructor(private renderer: Renderer2) { }
+  constructor(private _renderer: Renderer2) { }
 
   private readonly itemSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
   private readonly itemElementSelectedSource$ = new Subject<ViewportGridBoxSelectedElementEvent>()
@@ -151,7 +151,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
     (elm: HTMLElement) =>
       (style: string) =>
         (value: string) =>
-          this.renderer.setStyle(elm, style, value)
+          this._renderer.setStyle(elm, style, value)
 
   private readonly _setContainerMaxWidth =
     (height: number) =>
@@ -175,11 +175,11 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
       const applyGridStyleByNumber =
         (count: number) =>
           (style: string) =>
-            applyGridStyles(style)(combined.container)(this.renderer)(count)
+            applyGridStyles(style)(combined.container)(this._renderer)(count)
 
-      const removeElementStyle = (elm: HTMLElement) => (style: string) => this.renderer.removeStyle(elm, style)
+      const removeElementStyle = (elm: HTMLElement) => (style: string) => this._renderer.removeStyle(elm, style)
       const removeContainerStyle = (style: string) => removeElementStyle(combined.container)(style)
-      const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this.renderer.setStyle(elm, style, value)
+      const setElementStyle = (elm: HTMLElement) => (style: string) => (value: string) => this._renderer.setStyle(elm, style, value)
       const setElementStyleContainer = (style: string) => (value: string) => setElementStyle(combined.container)(style)(value)
 
       // tslint:disable-next-line:no-if-statement
@@ -205,11 +205,11 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         child1('align-self')(`center`)
       } else {
         Array.from(combined.container.children).forEach(c => {
-          this.renderer.removeStyle(c, 'grid-row')
-          this.renderer.removeStyle(c, 'grid-column')
-          this.renderer.removeStyle(c, 'align-self')
+          this._renderer.removeStyle(c, 'grid-row')
+          this._renderer.removeStyle(c, 'grid-column')
+          this._renderer.removeStyle(c, 'align-self')
         })
-        this.renderer.removeStyle(combined.container, 'max-height')
+        this._renderer.removeStyle(combined.container, 'max-height')
         applyGridStyleByNumber(combined.children.length)('grid-template-columns')
         applyGridStyleByNumber(combined.children.length)('grid-template-rows')
         this._setContainerMaxWidth(this.maxHeight)(combined.container)
