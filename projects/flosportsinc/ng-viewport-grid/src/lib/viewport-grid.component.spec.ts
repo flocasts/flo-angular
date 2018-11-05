@@ -22,7 +22,7 @@ const fill = (num: number) => Array(num).fill(0)
 })
 export class TestComponent {
   // tslint:disable-next-line:readonly-keyword
-  public maxHeight: number | undefined
+  public maxHeight = 400
   private readonly itemSource = new Subject<any>()
   readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
   public readonly setItems = (num: number) => this.itemSource.next(fill(num))
@@ -102,7 +102,7 @@ describe(ViewportGridComponent.name, () => {
     const sut = createSut()
     const spy = spyOn(sut.instance as any, '_setGridStyles')
     // tslint:disable-next-line:no-object-mutation
-    sut.hoist.componentInstance.maxHeight = 400
+    sut.hoist.componentInstance.maxHeight = 500
     sut.hoist.detectChanges()
     expect(spy).toHaveBeenCalled()
   })
@@ -131,5 +131,20 @@ describe(ViewportGridComponent.name, () => {
       sut.hoist.componentInstance.setItems(2)
       sut.hoist.detectChanges()
     })
+  })
+
+  it('should switch selecetions', () => {
+    const sut = createSut()
+    sut.hoist.componentInstance.setItems(6)
+    sut.hoist.detectChanges()
+    const thirdBox = sut.directive.children[0].children[2]
+    thirdBox.nativeElement.click()
+    sut.instance.maybeGetSelectedItem()
+      .tap({
+        some: a => expect(a.guid).toEqual(thirdBox.nativeElement.id),
+        none: () => expect(true).toEqual(false)
+      })
+    // thirdBox.componentInstance.
+    // Array.from((sut.directive.nativeElement as HTMLDivElement).children)[1].click()
   })
 })
