@@ -144,7 +144,15 @@ describe(ViewportGridComponent.name, () => {
         some: a => expect(a.guid).toEqual(thirdBox.nativeElement.id),
         none: () => expect(true).toEqual(false)
       })
-    // thirdBox.componentInstance.
-    // Array.from((sut.directive.nativeElement as HTMLDivElement).children)[1].click()
+  })
+
+  it('should always have a selection', () => {
+    const sut = createSut()
+    Array.from(sut.directive.children[0].children).map(a => a.componentInstance)
+      .forEach((a: ViewportGridBoxComponent) => a.setSelected(false))
+    sut.hoist.componentInstance.setItems(1)
+    sut.hoist.detectChanges()
+    const root = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
+    expect(root.isSelected()).toEqual(true)
   })
 })
