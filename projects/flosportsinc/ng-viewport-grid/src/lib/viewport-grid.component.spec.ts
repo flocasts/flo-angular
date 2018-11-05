@@ -6,6 +6,7 @@ import { ViewportGridBoxComponent } from './viewport-grid-box.component'
 import { Subject } from 'rxjs'
 import { startWith } from 'rxjs/operators'
 import { SharedTestingModule } from './test.module'
+import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 
 const fill = (num: number) => Array(num).fill(0)
 
@@ -213,5 +214,19 @@ describe(ViewportGridComponent.name, () => {
     const res2b = compareGuids({ selectedViewportElementGuid: 'abc' } as any, { selectedViewportElementGuid: '123' } as any)
     expect(res2a).toEqual(false)
     expect(res2b).toEqual(false)
+  })
+
+  it('should allow clicks through the inner elements after item is selected', () => {
+    const sut = createSut()
+    const components = sut.hoist.debugElement.queryAll(By.directive(ViewportGridBoxComponent))
+    const startincSelectedElm = components[0].children[0].nativeElement as HTMLDivElement
+    const elementToSelect = components[1].children[0].nativeElement as HTMLDivElement
+
+    expect(window.getComputedStyle(startincSelectedElm).pointerEvents).toBe('none')
+    expect(window.getComputedStyle(elementToSelect).pointerEvents).toBe('auto')
+    elementToSelect.click()
+    sut.hoist.detectChanges()
+    expect(window.getComputedStyle(startincSelectedElm).pointerEvents).toBe('auto')
+    expect(window.getComputedStyle(elementToSelect).pointerEvents).toBe('none')
   })
 })
