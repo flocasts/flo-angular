@@ -2,11 +2,10 @@ import { async, TestBed } from '@angular/core/testing'
 import { ViewportGridComponent } from './viewport-grid.component'
 import { Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
-import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 import { ViewportGridBoxComponent } from './viewport-grid-box.component'
-import { CommonModule } from '@angular/common'
 import { Subject } from 'rxjs'
 import { startWith } from 'rxjs/operators'
+import { SharedTestingModule } from './test.module'
 
 const fill = (num: number) => Array(num).fill(0)
 
@@ -14,7 +13,7 @@ const fill = (num: number) => Array(num).fill(0)
   selector: 'flo-base-test-component',
   template: ``
 })
-export abstract class BaseTestComponent {
+export class BaseTestComponent {
   constructor() { }
   // tslint:disable-next-line:readonly-keyword
   public maxHeight = 400
@@ -66,16 +65,14 @@ export class TestStartIndex1Component extends BaseTestComponent {
 }
 
 @NgModule({
-  imports: [CommonModule],
+  imports: [SharedTestingModule],
   declarations: [
+    BaseTestComponent,
     TestComponent,
     TestStartIndex1Component,
-    TestStartIndex20Component,
-    ViewportGridComponent,
-    ViewportGridBoxItemDirective,
-    ViewportGridBoxComponent
+    TestStartIndex20Component
   ],
-  exports: [TestComponent, TestStartIndex1Component, TestStartIndex20Component]
+  exports: [BaseTestComponent, TestComponent, TestStartIndex1Component, TestStartIndex20Component]
 })
 export class TestingModule { }
 
