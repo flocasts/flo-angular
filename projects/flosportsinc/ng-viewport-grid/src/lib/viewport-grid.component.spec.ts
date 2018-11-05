@@ -1,50 +1,83 @@
 import { async, TestBed } from '@angular/core/testing'
-import { ViewportGridComponent } from './viewport-grid.component'
+import { ViewportGridComponent, compareWrappedGuids, compareGuids } from './viewport-grid.component'
 import { Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
-import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 import { ViewportGridBoxComponent } from './viewport-grid-box.component'
-import { CommonModule } from '@angular/common'
 import { Subject } from 'rxjs'
 import { startWith } from 'rxjs/operators'
+import { SharedTestingModule } from './test.module'
 
 const fill = (num: number) => Array(num).fill(0)
 
 @Component({
-  selector: 'flo-test-component',
-  template: `
-  <flo-viewport-grid [maxHeight]="maxHeight">
-    <flo-viewport-grid-box *ngFor="let item of items$ | async; trackBy: trackByFn">
-      <div floViewportGridBoxItem style="color: white; text-align: center;">test</div>
-    </flo-viewport-grid-box>
-  </flo-viewport-grid>
-  `
+  selector: 'flo-base-test-component',
+  template: ``
 })
-export class TestComponent {
+export class BaseTestComponent {
+  constructor() { }
   // tslint:disable-next-line:readonly-keyword
-  public maxHeight: number | undefined
-  private readonly itemSource = new Subject<any>()
-  readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
+  public maxHeight = 400
+  // tslint:disable-next-line:readonly-keyword
+  public startingSelectedIndex = 0
+  public readonly itemSource = new Subject<any>()
+  public readonly iter = (num: number) => this.itemSource.next(fill(num))
+  public readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
   public readonly setItems = (num: number) => this.itemSource.next(fill(num))
   trackByFn(index) {
     return index
   }
 }
 
+const template = `
+<flo-viewport-grid [maxHeight]="maxHeight" [startingSelectedIndex]="startingSelectedIndex">
+  <flo-viewport-grid-box *ngFor="let item of items$ | async; trackBy: trackByFn">
+    <div floViewportGridBoxItem style="color: white; text-align: center;">test</div>
+  </flo-viewport-grid-box>
+</flo-viewport-grid>
+`
+
+@Component({
+  selector: 'flo-test-component',
+  template
+})
+export class TestComponent extends BaseTestComponent { }
+
+@Component({
+  selector: 'flo-test-component-20',
+  template
+})
+export class TestStartIndex20Component extends BaseTestComponent {
+  constructor() {
+    super()
+    this.startingSelectedIndex = 20
+  }
+}
+
+@Component({
+  selector: 'flo-test-component-1',
+  template
+})
+export class TestStartIndex1Component extends BaseTestComponent {
+  constructor() {
+    super()
+    this.startingSelectedIndex = 1
+  }
+}
+
 @NgModule({
-  imports: [CommonModule],
+  imports: [SharedTestingModule],
   declarations: [
+    BaseTestComponent,
     TestComponent,
-    ViewportGridComponent,
-    ViewportGridBoxItemDirective,
-    ViewportGridBoxComponent
+    TestStartIndex1Component,
+    TestStartIndex20Component
   ],
-  exports: [TestComponent]
+  exports: [BaseTestComponent, TestComponent, TestStartIndex1Component, TestStartIndex20Component]
 })
 export class TestingModule { }
 
-const createSut = () => {
-  const hoist = TestBed.createComponent<TestComponent>(TestComponent)
+const createSut = (comp: any = TestComponent) => {
+  const hoist = TestBed.createComponent<TestComponent>(comp)
   hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(ViewportGridComponent))
   return {
@@ -102,7 +135,7 @@ describe(ViewportGridComponent.name, () => {
     const sut = createSut()
     const spy = spyOn(sut.instance as any, '_setGridStyles')
     // tslint:disable-next-line:no-object-mutation
-    sut.hoist.componentInstance.maxHeight = 400
+    sut.hoist.componentInstance.maxHeight = 500
     sut.hoist.detectChanges()
     expect(spy).toHaveBeenCalled()
   })
@@ -131,5 +164,54 @@ describe(ViewportGridComponent.name, () => {
       sut.hoist.componentInstance.setItems(2)
       sut.hoist.detectChanges()
     })
+  })
+
+  it('should switch selecetions', () => {
+    const sut = createSut()
+    sut.hoist.componentInstance.setItems(6)
+    sut.hoist.detectChanges()
+    const thirdBox = sut.directive.children[0].children[2]
+    thirdBox.nativeElement.click()
+    sut.instance.maybeGetSelectedItem()
+      .tap({
+        some: a => expect(a.guid).toEqual(thirdBox.nativeElement.id),
+        none: () => expect(true).toEqual(false)
+      })
+  })
+
+  it('should always have a selection', () => {
+    const sut = createSut()
+    Array.from(sut.directive.children[0].children).map(a => a.componentInstance)
+      .forEach((a: ViewportGridBoxComponent) => a.setSelected(false))
+    sut.hoist.componentInstance.setItems(1)
+    sut.hoist.detectChanges()
+    const root = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
+    expect(root.isSelected()).toEqual(true)
+  })
+
+  it('should start with correct box selection', () => {
+    const sut = createSut(TestStartIndex1Component)
+    sut.hoist.detectChanges()
+    const d = sut.directive.children[0].children[1].componentInstance as ViewportGridBoxComponent
+    expect(d.isSelected()).toEqual(true)
+  })
+
+  it('should default to 0 index if forced index is greater than total gridBoxes', () => {
+    const sut = createSut(TestStartIndex20Component)
+    sut.hoist.detectChanges()
+    const d = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
+    expect(d.isSelected()).toEqual(true)
+  })
+
+  it('should compare guids', () => {
+    const res1a = compareWrappedGuids({ selectedViewport: { guid: '123' } } as any, { selectedViewport: { guid: '123' } } as any)
+    const res1b = compareGuids({ selectedViewportElementGuid: '123' } as any, { selectedViewportElementGuid: '123' } as any)
+    expect(res1a).toEqual(true)
+    expect(res1b).toEqual(true)
+
+    const res2a = compareWrappedGuids({ selectedViewport: { guid: 'abc' } } as any, { selectedViewport: { guid: '123' } } as any)
+    const res2b = compareGuids({ selectedViewportElementGuid: 'abc' } as any, { selectedViewportElementGuid: '123' } as any)
+    expect(res2a).toEqual(false)
+    expect(res2b).toEqual(false)
   })
 })

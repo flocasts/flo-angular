@@ -29,11 +29,11 @@ const maxWidthFromHeight = (height: number) => 1.77 * height
 const getGridTemplateColumns = (length: number) => Array.from(Array(length).keys()).map(() => '1fr').join(' ')
 const computeColumns = (length: number) => Math.ceil(Math.sqrt(length))
 
-const compareGuids =
+export const compareGuids =
   (x: ViewportGridBoxSelectedElementEvent, y: ViewportGridBoxSelectedElementEvent) =>
     x.selectedViewportElementGuid === y.selectedViewportElementGuid
 
-const compareWraGuids =
+export const compareWrappedGuids =
   (x: ViewportGridBoxSelectedEvent, y: ViewportGridBoxSelectedEvent) =>
     x.selectedViewport.guid === y.selectedViewport.guid
 
@@ -126,7 +126,7 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
 
   @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
   @Input() public readonly startingSelectedIndex = 0
-  @Output() public readonly itemSelected$ = this.itemSelectedSource$.pipe(distinctUntilChanged(compareWraGuids))
+  @Output() public readonly itemSelected$ = this.itemSelectedSource$.pipe(distinctUntilChanged(compareWrappedGuids))
   @Output() public readonly itemElementSelected$ = this.itemElementSelectedSource$.pipe(distinctUntilChanged(compareGuids))
   @ViewChild('gridContainer') private readonly _gridContainer?: ElementRef<HTMLDivElement>
   @ContentChildren(ViewportGridBoxComponent) private readonly _windowPanes?: QueryList<ViewportGridBoxComponent>
@@ -251,18 +251,14 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
   ngAfterContentInit() {
     this._maybeCombinedView()
       .tapSome(obj => {
-        const children = obj.children
-        const arr = children.toArray()
+        const arr = obj.children.toArray()
 
         arr.forEach(a => {
           a.clicked$.pipe(takeUntil(obj.children.changes)).subscribe(this._push(arr))
         })
 
-        // tslint:disable-next-line:no-if-statement
-        if (!children.some(z => z.isSelected())) {
-          const index = getPreSelectedIndex(+this.startingSelectedIndex)(children.length)
-          maybe(arr[index]).tapSome(dd => dd.setSelected(true))
-        }
+        const index = getPreSelectedIndex(+this.startingSelectedIndex)(obj.children.length)
+        maybe(arr[index]).tapSome(dd => dd.setSelected(true))
 
         this._setGridStyles(obj)
         this._updateOnChanges(obj)

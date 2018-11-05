@@ -5,7 +5,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent } from '@flosportsinc/ng-viewport-grid'
-import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
@@ -46,15 +45,4 @@ export class FramerComponent {
   )
 
   readonly trackByVideoId = (_: number, item: any) => item.id
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngAfterViewInit() {
-    maybe(this.grid)
-      .tapSome(grid => {
-        grid.itemElementSelected$
-          .subscribe(a => {
-            a.selectedViewportElement.tapSome(console.log)
-          })
-      })
-  }
 }
