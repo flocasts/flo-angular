@@ -1,5 +1,5 @@
 import { async, TestBed } from '@angular/core/testing'
-import { ViewportGridComponent } from './viewport-grid.component'
+import { ViewportGridComponent, compareWrappedGuids, compareGuids } from './viewport-grid.component'
 import { Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import { ViewportGridBoxComponent } from './viewport-grid-box.component'
@@ -19,9 +19,9 @@ export class BaseTestComponent {
   public maxHeight = 400
   // tslint:disable-next-line:readonly-keyword
   public startingSelectedIndex = 0
-  public readonly setStartingIndex = (idx: number) => this.startingSelectedIndex === idx
-  private readonly itemSource = new Subject<any>()
-  readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
+  public readonly itemSource = new Subject<any>()
+  public readonly iter = (num: number) => this.itemSource.next(fill(num))
+  public readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
   public readonly setItems = (num: number) => this.itemSource.next(fill(num))
   trackByFn(index) {
     return index
@@ -201,5 +201,17 @@ describe(ViewportGridComponent.name, () => {
     sut.hoist.detectChanges()
     const d = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
     expect(d.isSelected()).toEqual(true)
+  })
+
+  it('should compare guids', () => {
+    const res1a = compareWrappedGuids({ selectedViewport: { guid: '123' } } as any, { selectedViewport: { guid: '123' } } as any)
+    const res1b = compareGuids({ selectedViewportElementGuid: '123' } as any, { selectedViewportElementGuid: '123' } as any)
+    expect(res1a).toEqual(true)
+    expect(res1b).toEqual(true)
+
+    const res2a = compareWrappedGuids({ selectedViewport: { guid: 'abc' } } as any, { selectedViewport: { guid: '123' } } as any)
+    const res2b = compareGuids({ selectedViewportElementGuid: 'abc' } as any, { selectedViewportElementGuid: '123' } as any)
+    expect(res2a).toEqual(false)
+    expect(res2b).toEqual(false)
   })
 })

@@ -26,7 +26,7 @@
   </div>
 </form>
 <br>
-<flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" startingSelectedIndex="-1">
+<flo-viewport-grid [maxHeight]="view.maxHeight" *ngIf="view_ | async as view" startingSelectedIndex="2">
   <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
     <video floViewportGridBoxItem playsinline controls muted>
       <source [src]="vid.src" type="video/mp4">
