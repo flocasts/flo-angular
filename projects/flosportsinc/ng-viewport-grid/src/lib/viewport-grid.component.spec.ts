@@ -11,18 +11,16 @@ import { startWith } from 'rxjs/operators'
 const fill = (num: number) => Array(num).fill(0)
 
 @Component({
-  selector: 'flo-test-component',
-  template: `
-  <flo-viewport-grid [maxHeight]="maxHeight">
-    <flo-viewport-grid-box *ngFor="let item of items$ | async; trackBy: trackByFn">
-      <div floViewportGridBoxItem style="color: white; text-align: center;">test</div>
-    </flo-viewport-grid-box>
-  </flo-viewport-grid>
-  `
+  selector: 'flo-base-test-component',
+  template: ``
 })
-export class TestComponent {
+export abstract class BaseTestComponent {
+  constructor() { }
   // tslint:disable-next-line:readonly-keyword
   public maxHeight = 400
+  // tslint:disable-next-line:readonly-keyword
+  public startingSelectedIndex = 0
+  public readonly setStartingIndex = (idx: number) => this.startingSelectedIndex === idx
   private readonly itemSource = new Subject<any>()
   readonly items$ = this.itemSource.asObservable().pipe(startWith(fill(4)))
   public readonly setItems = (num: number) => this.itemSource.next(fill(num))
@@ -31,20 +29,58 @@ export class TestComponent {
   }
 }
 
+const template = `
+<flo-viewport-grid [maxHeight]="maxHeight" [startingSelectedIndex]="startingSelectedIndex">
+  <flo-viewport-grid-box *ngFor="let item of items$ | async; trackBy: trackByFn">
+    <div floViewportGridBoxItem style="color: white; text-align: center;">test</div>
+  </flo-viewport-grid-box>
+</flo-viewport-grid>
+`
+
+@Component({
+  selector: 'flo-test-component',
+  template
+})
+export class TestComponent extends BaseTestComponent { }
+
+@Component({
+  selector: 'flo-test-component-20',
+  template
+})
+export class TestStartIndex20Component extends BaseTestComponent {
+  constructor() {
+    super()
+    this.startingSelectedIndex = 20
+  }
+}
+
+@Component({
+  selector: 'flo-test-component-1',
+  template
+})
+export class TestStartIndex1Component extends BaseTestComponent {
+  constructor() {
+    super()
+    this.startingSelectedIndex = 1
+  }
+}
+
 @NgModule({
   imports: [CommonModule],
   declarations: [
     TestComponent,
+    TestStartIndex1Component,
+    TestStartIndex20Component,
     ViewportGridComponent,
     ViewportGridBoxItemDirective,
     ViewportGridBoxComponent
   ],
-  exports: [TestComponent]
+  exports: [TestComponent, TestStartIndex1Component, TestStartIndex20Component]
 })
 export class TestingModule { }
 
-const createSut = () => {
-  const hoist = TestBed.createComponent<TestComponent>(TestComponent)
+const createSut = (comp: any = TestComponent) => {
+  const hoist = TestBed.createComponent<TestComponent>(comp)
   hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(ViewportGridComponent))
   return {
@@ -154,5 +190,19 @@ describe(ViewportGridComponent.name, () => {
     sut.hoist.detectChanges()
     const root = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
     expect(root.isSelected()).toEqual(true)
+  })
+
+  it('should start with correct box selection', () => {
+    const sut = createSut(TestStartIndex1Component)
+    sut.hoist.detectChanges()
+    const d = sut.directive.children[0].children[1].componentInstance as ViewportGridBoxComponent
+    expect(d.isSelected()).toEqual(true)
+  })
+
+  it('should default to 0 index if forced index is greater than total gridBoxes', () => {
+    const sut = createSut(TestStartIndex20Component)
+    sut.hoist.detectChanges()
+    const d = sut.directive.children[0].children[0].componentInstance as ViewportGridBoxComponent
+    expect(d.isSelected()).toEqual(true)
   })
 })
