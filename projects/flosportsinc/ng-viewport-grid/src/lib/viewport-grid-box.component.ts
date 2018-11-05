@@ -26,14 +26,14 @@ export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
     .${BORDER_CLASS} {
       z-index: 1;
       width: 100%;
-      pointer-events: none;
     }
     div.${SELECTION_CLASS} {
       box-shadow: ${DEFAULT_BOX}
+      pointer-events: none;
     }
   `],
   template: `
-    <div #selectionContainer></div>
+    <div #selectionContainer class="flo-vp-border"></div>
     <ng-content></ng-content>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -66,14 +66,12 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
     (elm: HTMLElement) =>
       (cls: string) => {
         this._renderer.setStyle(elm, 'transition', computeFadeStyle(this.floViewportGridBoxShowSelectionBoxFadeTimeMs))
-        this._renderer.addClass(elm, BORDER_CLASS)
         this._renderer.addClass(elm, cls)
       }
 
   private readonly _removeBorderClass =
     (elm: HTMLElement) =>
       (cls: string) => {
-        this._renderer.removeClass(elm, BORDER_CLASS)
         this._renderer.removeStyle(elm, 'transition')
         this._renderer.removeClass(elm, cls)
       }
