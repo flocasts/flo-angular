@@ -35,6 +35,11 @@
               "src/assets",
               "src/manifest.json",
               {
+                "input": ".",
+                "glob": "README.md",
+                "output": "./assets/md"
+              },
+              {
                 "input": "projects/flosportsinc",
                 "glob": "**/*.md",
                 "output": "./assets/md"

@@ -13,13 +13,15 @@ import { environment } from '../environments/environment'
 import { TransferHttpCacheModule } from '@nguniversal/common'
 import { MarkdownModule } from 'ngx-markdown'
 import { HttpClientModule, HttpClient } from '@angular/common/http'
+import { NotFoundComponent } from './not-found/not-found.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     FramerComponent,
     HomeComponent,
-    HlsComponent
+    HlsComponent,
+    NotFoundComponent
   ],
   imports: [
     FormsModule,
