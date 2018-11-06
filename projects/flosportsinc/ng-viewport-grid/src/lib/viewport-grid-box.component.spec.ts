@@ -4,7 +4,7 @@ import { Component, NgModule, Input } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import { take } from 'rxjs/operators'
 import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
-import { CommonModule } from '@angular/common'
+import { SharedTestingModule } from './test.module'
 
 @Component({
   selector: 'flo-test-component',
@@ -23,7 +23,8 @@ export class TestComponent {
 }
 
 @NgModule({
-  declarations: [TestComponent, ViewportGridBoxItemDirective, ViewportGridBoxComponent],
+  imports: [SharedTestingModule],
+  declarations: [TestComponent],
   exports: [TestComponent]
 })
 export class TestingModule { }
