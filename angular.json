@@ -36,6 +36,11 @@
               "src/manifest.json",
               {
                 "input": ".",
+                "glob": "LICENSE.md",
+                "output": "./assets/md"
+              },
+              {
+                "input": ".",
                 "glob": "README.md",
                 "output": "./assets/md"
               },
