@@ -25,6 +25,13 @@
   ],
   "dataGroups": [
     {
+      "name": "fonts",
+      "urls": ["https://fonts.gstatic.com"],
+      "cacheConfig": {
+        "strategy": "performance"
+      }
+    },
+    {
       "name": "rendered",
       "urls": [
         "/"
