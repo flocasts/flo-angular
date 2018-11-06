@@ -33,12 +33,20 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/manifest.json"
+              "src/manifest.json",
+              {
+                "input": "projects/flosportsinc",
+                "glob": "**/*.md",
+                "output": "./assets/md"
+              }
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/prismjs/themes/prism-okaidia.css"
             ],
-            "scripts": []
+            "scripts": [
+              "node_modules/prismjs/prism.js"
+            ]
           },
           "configurations": {
             "production": {

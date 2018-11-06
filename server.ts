@@ -8,6 +8,7 @@ import { resolve } from 'path'
 import { enableProdMode } from '@angular/core'
 import { ngExpressEngine } from '@nguniversal/express-engine'
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader'
+// import { SOME_TOKEN } from 'src/app/tokens'
 import * as express from 'express'
 
 enableProdMode()
@@ -15,12 +16,16 @@ enableProdMode()
 const app = express()
 const expressStaticGzip = require('express-static-gzip')
 const baseDirectory = resolve('dist/flo-angular/browser')
-const { AppServerModuleNgFactory, LAZY_MODULE_MAP } = require('./dist/flo-angular/server/main')
+const { AppServerModuleNgFactory, LAZY_MODULE_MAP, SOME_TOKEN } = require('./dist/flo-angular/server/main')
 
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
   providers: [
-    provideModuleMap(LAZY_MODULE_MAP)
+    provideModuleMap(LAZY_MODULE_MAP),
+    {
+      provide: SOME_TOKEN,
+      useValue: baseDirectory
+    }
   ]
 }))
 app.set('view engine', 'html')
