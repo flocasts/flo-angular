@@ -1,6 +1,6 @@
 <h1 align="center" style="border-bottom: none;">FloSports Angular</h1>
 <h3 align="center">A collection of Angular components for live video streaming.</h3>
-<p align="center">
+<p align="center"> 
   <a href="https://circleci.com/gh/flocasts/flo-angular">
     <img alt="build" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield&circle-token=254d41274907bc2b5e4d13d066d9d7e5e6aaf323">
   <a href="https://codeclimate.com/repos/5bd607992cf6f7026e00273b/test_coverage">
