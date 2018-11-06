@@ -10,7 +10,7 @@ const sharedKarmaConfig = (dir) => (config) => {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: coverageIstanbulReporter(dir),
-    reporters: ['progress', 'kjhtml', 'coverage-istanbul'],
+    reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
