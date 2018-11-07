@@ -1,4 +1,4 @@
-# FloSports Angular Viewport-Grid Module
+# Angular Viewport Grid
 
 ```sh
 npm i @flosportsinc/ng-viewport-grid

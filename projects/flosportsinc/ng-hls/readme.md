@@ -1,4 +1,4 @@
-# FloSports Angular HLS Module
+# Angular Media Source Extensions
 Cross platform HTTP Live Streaming (HLS) in Angular
 
 ## Installation (for hls.js based module)

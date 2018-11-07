@@ -14,6 +14,7 @@ import { TransferHttpCacheModule } from '@nguniversal/common'
 import { MarkdownModule } from 'ngx-markdown'
 import { HttpClientModule, HttpClient } from '@angular/common/http'
 import { NotFoundComponent } from './not-found/not-found.component'
+import { UniversalServicesComponent } from './universal-services/universal-services.component'
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { NotFoundComponent } from './not-found/not-found.component'
     FramerComponent,
     HomeComponent,
     HlsComponent,
+    UniversalServicesComponent,
     NotFoundComponent
   ],
   imports: [
