@@ -16,7 +16,6 @@
     "member-access": [false, "no-public"],
     "newline-before-return": false,
     "array-type": false,
-    
     "directive-selector": [
       true,
       "attribute",

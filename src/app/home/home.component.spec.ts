@@ -1,6 +1,6 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing'
-
 import { HomeComponent } from './home.component'
+import { SharedTestingModule } from '../shared.testing.module'
 
 // tslint:disable:no-let
 describe('HomeComponent', () => {
@@ -9,6 +9,7 @@ describe('HomeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [SharedTestingModule],
       declarations: [ HomeComponent ]
     })
     .compileComponents()

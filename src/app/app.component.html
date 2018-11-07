@@ -1,11 +1,11 @@
-<h1>FloSports Angular</h1>
-
-<ul class="primary-nav">
-  <li><a routerLink>Home</a></li>
-  <li>
-    <span>Packages</span>
-    <ul><li><a routerLink="hls">ng-hls</a></li></ul>
-    <ul><li><a routerLink="viewport-grid">ng-viewport-grid</a></li></ul>
-  </li>
-</ul>
-<router-outlet></router-outlet>
+<nav>
+  <ul class="unstyled">
+    <li><a routerLink>Home</a></li>
+    <li><a routerLink="hls">Media Source Extentions</a> </li>
+    <li><a routerLink="viewport-grid">Viewport Grid</a></li>
+    <li><a routerLink="universal-services">Universal Services</a></li>
+  </ul>
+</nav>
+<div class="content">
+  <router-outlet></router-outlet>
+</div>

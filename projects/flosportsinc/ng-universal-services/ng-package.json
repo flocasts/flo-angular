@@ -1,6 +1,6 @@
 {
   "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
-  "dest": "../../../dist/flosportsinc/ng-services",
+  "dest": "../../../dist/flosportsinc/ng-universal-services",
   "lib": {
     "entryFile": "src/public_api.ts"
   }

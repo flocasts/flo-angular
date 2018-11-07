@@ -1,6 +1,6 @@
 <h1 align="center" style="border-bottom: none;">FloSports Angular</h1>
 <h3 align="center">A collection of Angular components for live video streaming.</h3>
-<p align="center">
+<p align="center"> 
   <a href="https://circleci.com/gh/flocasts/flo-angular">
     <img alt="build" src="https://circleci.com/gh/flocasts/flo-angular.svg?style=shield&circle-token=254d41274907bc2b5e4d13d066d9d7e5e6aaf323">
   <a href="https://codeclimate.com/repos/5bd607992cf6f7026e00273b/test_coverage">
@@ -33,7 +33,7 @@
 | [@flosportsinc/ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | Work in Progress
 | [@flosportsinc/ng-video-grid](projects/flosportsinc/ng-video-grid) | Responsive video grid for mutlicamera layouts | Planned
 | [@flosportsinc/ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned
-| [@flosportsinc/ng-universal-services](projects/flosportsinc/ng-services) | Common services for Angular Universal | Planned
+| [@flosportsinc/ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | Planned
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.

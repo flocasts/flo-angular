@@ -1,5 +1,5 @@
 {
-  "name": "@flosportsinc/ng-services",
+  "name": "@flosportsinc/ng-universal-services",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": "^7.0.0",

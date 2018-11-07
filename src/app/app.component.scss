@@ -1,0 +1,11 @@
+:host {
+  @media screen and (min-width: 800px) {
+    display: flex;
+  }
+  .content {
+    width: 100%;
+  }
+  nav {
+    width: 260px;
+  }
+}

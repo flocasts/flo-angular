@@ -15,6 +15,6 @@ export class AppPage extends BaseBrowser {
   }
 
   getNav() {
-    return element(by.css('ul.primary-nav'))
+    return element(by.css('ul.unstyled'))
   }
 }

@@ -17,7 +17,8 @@ export function defaultIsSupportedFactory() {
 }
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsCheck {
-  const lambda: IVideoElementSupportsHlsCheck = ve => ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
+  const lambda: IVideoElementSupportsHlsCheck = ve =>
+    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
   return lambda
 }
 

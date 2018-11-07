@@ -11,13 +11,19 @@ import { HlsComponent } from './hls/hls.component'
 import { ServiceWorkerModule } from '@angular/service-worker'
 import { environment } from '../environments/environment'
 import { TransferHttpCacheModule } from '@nguniversal/common'
+import { MarkdownModule } from 'ngx-markdown'
+import { HttpClientModule, HttpClient } from '@angular/common/http'
+import { NotFoundComponent } from './not-found/not-found.component'
+import { UniversalServicesComponent } from './universal-services/universal-services.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     FramerComponent,
     HomeComponent,
-    HlsComponent
+    HlsComponent,
+    UniversalServicesComponent,
+    NotFoundComponent
   ],
   imports: [
     FormsModule,
@@ -27,7 +33,9 @@ import { TransferHttpCacheModule } from '@nguniversal/common'
     HlsJsModule,
     TransferHttpCacheModule,
     BrowserModule.withServerTransition({ appId: 'my-app' }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    HttpClientModule,
+    MarkdownModule.forRoot({ loader: HttpClient }),
   ]
 })
 export class AppModule { }

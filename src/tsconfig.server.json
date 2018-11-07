@@ -20,11 +20,11 @@
       "@flosportsinc/ng-hls/*": [
         "../dist/flosportsinc/ng-hls/*"
       ],
-      "@flosportsinc/ng-services": [
-        "../dist/flosportsinc/ng-services"
+      "@flosportsinc/ng-universal-services": [
+        "../dist/flosportsinc/ng-universal-services"
       ],
-      "@flosportsinc/ng-services/*": [
-        "../dist/flosportsinc/ng-services/*"
+      "@flosportsinc/ng-universal-services/*": [
+        "../dist/flosportsinc/ng-universal-services/*"
       ]
     }
   },
