@@ -1,5 +1,5 @@
 /*
- * Public API Surface of ng-services
+ * Public API Surface of ng-universal-services
  */
 
 export * from './lib/window.service'

@@ -115,11 +115,11 @@ jobs:
           name: Test
           command: |
             npm run test.ci.services
-            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-services.json coverage/ng-services/lcov.info
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-universal-services.json coverage/ng-universal-services/lcov.info
       - persist_to_workspace:
           root: tmp
           paths:
-            - cc.ng-services.json
+            - cc.ng-universal-services.json
   upload_coverage:
     <<: *defaults
     steps:

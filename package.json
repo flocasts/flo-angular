@@ -26,7 +26,7 @@
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.hls": "ng test @flosportsinc/ng-hls --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test.ci.services": "ng test @flosportsinc/ng-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
+    "test.ci.services": "ng test @flosportsinc/ng-universal-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",
     "e2e": "ng e2e",
     "e2e.ci": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ci.conf.js",
