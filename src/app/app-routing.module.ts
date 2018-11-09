@@ -5,10 +5,19 @@ import { HomeComponent } from './home/home.component'
 import { HlsComponent } from './hls/hls.component'
 import { NotFoundComponent } from './not-found/not-found.component'
 import { UniversalServicesComponent } from './universal-services/universal-services.component'
+import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
+import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-  { path: 'hls', component: HlsComponent },
+  {
+    path: 'hls',
+    component: HlsComponent,
+    children: [
+      { path: '', component: HlsReadmeComponent },
+      { path: 'demo', component: HlsDemoComponent }
+    ]
+  },
   { path: 'viewport-grid', component: FramerComponent },
   { path: 'universal-services', component: UniversalServicesComponent },
   { path: '**', component: NotFoundComponent }

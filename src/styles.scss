@@ -11,7 +11,7 @@ body {
   }
 }
 
-ul {
+ul, ol {
   &.unstyled {
     list-style: none;
     margin: 0;
@@ -21,4 +21,12 @@ ul {
 
 h1, h2, h3, h4, h5, h6 {
   margin-top: 0;
+}
+
+.float-right {
+  float: right;
+}
+
+video {
+  max-width: 100%;
 }
