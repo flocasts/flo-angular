@@ -27,7 +27,7 @@ npm i @flosportsinc/ng-media-source-extensions
 ```
 
 Import the module into your angular application
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { HlsModule } from '@flosportsinc/ng-media-source-extensions'
 
@@ -49,7 +49,7 @@ npm i @flosportsinc/ng-media-source-extensions
 ```
 
 Import the module into your angular application
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { DashModule } from '@flosportsinc/ng-media-source-extensions'
 
