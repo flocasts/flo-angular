@@ -29,7 +29,8 @@
   </div>
 </form>
 <video *ngIf="config$ | async as config"
-  [floHls]="config?.src"
+  floHls
+  [src]="config?.src"
   [poster]="config?.poster"
   [controls]="config?.controls"
   [autoplay]="config?.autoplay"

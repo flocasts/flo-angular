@@ -10,7 +10,7 @@ import {
   Output
 } from '@angular/core'
 import {
-  SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY, IVideoElementSupportsHlsCheck,
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, IVideoElementSupportsTargetMseCheck,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, IMseInitFunc,
   IMseDestroyFunc, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseSrcChangeFunc
 } from './mse.tokens'
@@ -31,12 +31,12 @@ export interface IMseClientReadyEvent<TMseClient> {
 }
 
 @Directive({
-  selector: 'video[floHls]'
+  selector: 'video[floMse]'
 })
 export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChanges, AfterViewInit {
   constructor(readonly el: ElementRef<HTMLVideoElement>,
-    @Inject(SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: boolean,
-    @Inject(SUPPORTS_HLS_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsHlsCheck,
+    @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: boolean,
+    @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheck,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTask: IMseInitFunc<TMseClient, TMseMessage>,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK) private readonly _mseSourceChangeTask: IMseSrcChangeFunc<TMseClient>,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroyFunc<TMseClient>
@@ -44,15 +44,15 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
   private readonly _ngOnDestroy$ = new Subject<undefined>()
   private readonly _ngAfterViewInit$ = new Subject<undefined>()
-  private readonly _hlsSrcChanges$ = new Subject<string>()
-  private readonly _hlsMseClientSource$ = new Subject<TMseClient>()
-  private readonly _hlsMseClientMessages$ = new Subject<TMseMessage>()
+  private readonly _srcChanges$ = new Subject<string>()
+  private readonly _mseClientSource$ = new Subject<TMseClient>()
+  private readonly _mseClientMessages$ = new Subject<TMseMessage>()
   public readonly videoElement = this.el.nativeElement
 
-  @Input() public readonly floHls?: string
-  @Output() public readonly hlsSrcChange = this._hlsSrcChanges$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
-  @Output() public readonly hlsClient = this._hlsMseClientSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
-  @Output() public readonly hlsClientMessage = this._hlsMseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
+  @Input() public readonly src?: string
+  @Output() public readonly srcChange = this._srcChanges$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
+  @Output() public readonly mseClient = this._mseClientSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
+  @Output() public readonly mseClientMessage = this._mseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
   // @Output() public readonly errors = this._errorSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
 
   public ngAfterViewInit() {
@@ -68,11 +68,11 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   }
 
   public ngOnChanges(changes: SimpleChanges) {
-    maybe(changes.floHls)
+    maybe(changes.src)
       .flatMap(a => a.currentValue === a.previousValue
         ? maybe<string>()
         : maybe<string>(a.currentValue))
-      .tapSome(src => this._hlsSrcChanges$.next(src))
+      .tapSome(src => this._srcChanges$.next(src))
   }
 
   private readonly _mseHlsClientSupported$ = this._ngAfterViewInit$.pipe(
@@ -86,7 +86,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
   private readonly _nativeClientPathSubscription = combineLatest(
     this._hlsClientNative$,
-    this._hlsSrcChanges$
+    this._srcChanges$
   ).pipe(
     map(res => res[1]),
     takeUntil(this._ngOnDestroy$)
@@ -97,8 +97,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
   private readonly _mediaSourceClientPathSourceChangeSubscription = combineLatest(
     this._mseHlsClientSupported$,
-    this._hlsSrcChanges$,
-    this.hlsClient
+    this._srcChanges$,
+    this.mseClient
   ).pipe(
     skip(1),
     map(res => ({ src: res[1], mseClient: res[2] })),
@@ -111,18 +111,18 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     })
   })
 
-  private readonly _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._hlsSrcChanges$)
+  private readonly _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._srcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
       const mseClient = this._mseInitTask({
         src,
         videoElement: this.videoElement,
-        messageSource: this._hlsMseClientMessages$
+        messageSource: this._mseClientMessages$
       })
-      this._hlsMseClientSource$.next(mseClient)
+      this._mseClientSource$.next(mseClient)
     })
 
-  private readonly _destroyPlayerSubscription = combineLatest(this.hlsClient, this._ngOnDestroy$)
+  private readonly _destroyPlayerSubscription = combineLatest(this.mseClient, this._ngOnDestroy$)
     .pipe(take(1), map(a => a[0]))
     .subscribe(clientRef => this._mseDestroyTask({ clientRef, videoElement: this.videoElement }))
 }

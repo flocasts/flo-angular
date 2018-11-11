@@ -4,8 +4,8 @@ import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY } from './mse.tokens'
-import { HlsModule } from '../hls/hlsjs.module'
+import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from './mse.tokens'
+import { HlsModule } from '../hls/hls.module'
 
 const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
@@ -41,11 +41,11 @@ const setTestBed = (supportsMle: boolean) => (native: boolean) => {
     imports: [HlsTestingModule],
     providers: [
       {
-        provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
+        provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
         useValue: supportsMle
       },
       {
-        provide: SUPPORTS_HLS_NATIVELY,
+        provide: SUPPORTS_MSE_TARGET_NATIVELY,
         useValue: () => native
       }
     ]
