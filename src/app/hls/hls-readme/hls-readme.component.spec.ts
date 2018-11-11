@@ -1,25 +1,17 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HlsReadmeComponent } from './hls-readme.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { HlsReadmeComponent } from './hls-readme.component'
+import { SharedTestingModule } from '../../shared.testing.module'
 
 describe('HlsReadmeComponent', () => {
-  let component: HlsReadmeComponent;
-  let fixture: ComponentFixture<HlsReadmeComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [SharedTestingModule],
       declarations: [ HlsReadmeComponent ]
     })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(HlsReadmeComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    .compileComponents()
+  }))
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    expect(TestBed.createComponent(HlsReadmeComponent).componentInstance).toBeTruthy()
+  })
+})
