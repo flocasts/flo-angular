@@ -7,6 +7,7 @@ import { NotFoundComponent } from './not-found/not-found.component'
 import { UniversalServicesComponent } from './universal-services/universal-services.component'
 import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
+import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,7 +16,8 @@ const routes: Routes = [
     component: HlsComponent,
     children: [
       { path: '', component: HlsReadmeComponent },
-      { path: 'demo', component: HlsDemoComponent }
+      { path: 'demo', component: HlsDemoComponent },
+      { path: 'api', component: HlsApiComponent }
     ]
   },
   { path: 'viewport-grid', component: FramerComponent },
