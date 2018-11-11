@@ -15,6 +15,9 @@ import { MarkdownModule } from 'ngx-markdown'
 import { HttpClientModule, HttpClient } from '@angular/common/http'
 import { NotFoundComponent } from './not-found/not-found.component'
 import { UniversalServicesComponent } from './universal-services/universal-services.component'
+import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
+import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
+import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 
 @NgModule({
   declarations: [
@@ -22,6 +25,9 @@ import { UniversalServicesComponent } from './universal-services/universal-servi
     FramerComponent,
     HomeComponent,
     HlsComponent,
+    HlsDemoComponent,
+    HlsReadmeComponent,
+    HlsApiComponent,
     UniversalServicesComponent,
     NotFoundComponent
   ],
