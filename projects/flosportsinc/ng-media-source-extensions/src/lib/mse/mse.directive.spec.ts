@@ -1,11 +1,11 @@
 import { Component, NgModule, Input, SimpleChange } from '@angular/core'
 import { TestBed, async } from '@angular/core/testing'
-import { HlsDirective, emitAndUnsubscribe } from './hls.directive'
+import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY } from './hls.tokens'
-import { HlsJsModule } from './hlsjs.module'
+import { SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY } from './mse.tokens'
+import { HlsModule } from '../hls/hlsjs.module'
 
 const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
@@ -19,7 +19,7 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [HlsJsModule],
+  imports: [HlsModule],
   declarations: [HlsTestComponent],
   exports: [HlsTestComponent]
 })
@@ -28,11 +28,11 @@ export class HlsTestingModule { }
 const createSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
   hoist.autoDetectChanges()
-  const directive = hoist.debugElement.query(By.directive(HlsDirective))
+  const directive = hoist.debugElement.query(By.directive(MseDirective))
   return {
     hoist,
     directive,
-    instance: directive.injector.get(HlsDirective)
+    instance: directive.injector.get(MseDirective)
   }
 }
 
@@ -95,7 +95,7 @@ const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
   expect(spy).not.toHaveBeenCalled()
 }
 
-describe(`${HlsDirective.name} when client supports Media Source Extensions`, () => {
+describe(`${MseDirective.name} when client supports Media Source Extensions`, () => {
   beforeEach(() => setTestBed(true)(false))
   afterEach(() => TestBed.resetTestingModule())
 
@@ -143,7 +143,7 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
   it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 
-describe(`${HlsDirective.name} when client supports HLS natively`, () => {
+describe(`${MseDirective.name} when client supports HLS natively`, () => {
   beforeEach(() => setTestBed(false)(true))
   afterEach(() => TestBed.resetTestingModule())
 

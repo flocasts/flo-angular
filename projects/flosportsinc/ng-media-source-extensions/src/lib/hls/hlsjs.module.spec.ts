@@ -1,15 +1,15 @@
 import {
-  HlsJsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
+  HlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
   defaultMseClientSrcChangeFunction
 } from './hlsjs.module'
 import { TestBed } from '@angular/core/testing'
-import { IMseSrcChangeOptions } from './hls.tokens'
+import { IMseSrcChangeOptions } from '../mse/mse.tokens'
 import * as Hls from 'hls.js'
 
-describe(HlsJsModule.name, () => {
+describe(HlsModule.name, () => {
   it('should construct', () => {
     TestBed.configureTestingModule({
-      imports: [HlsJsModule]
+      imports: [HlsModule]
     })
   })
   describe(`exposed ${defaultHlsSupportedNativelyFunction.name} factory function`, () => {

@@ -24,7 +24,7 @@
     "build.prod": "ng build --prod --service-worker && ts-node --project tsconfig.tools.json tools/compress.ts && ng run flo-angular:node && npm run webpack.server",
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test.ci.hls": "ng test @flosportsinc/ng-hls --watch=false --progress=false --browsers=ChromeHeadlessCI",
+    "test.ci.hls": "ng test @flosportsinc/ng-media-source-extensions --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.services": "ng test @flosportsinc/ng-universal-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",

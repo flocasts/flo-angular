@@ -192,34 +192,34 @@
         }
       }
     },
-    "@flosportsinc/ng-hls": {
-      "root": "projects/flosportsinc/ng-hls",
-      "sourceRoot": "projects/flosportsinc/ng-hls/src",
+    "@flosportsinc/ng-media-source-extensions": {
+      "root": "projects/flosportsinc/ng-media-source-extensions",
+      "sourceRoot": "projects/flosportsinc/ng-media-source-extensions/src",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
           "options": {
-            "tsConfig": "projects/flosportsinc/ng-hls/tsconfig.lib.json",
-            "project": "projects/flosportsinc/ng-hls/ng-package.json"
+            "tsConfig": "projects/flosportsinc/ng-media-source-extensions/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-media-source-extensions/ng-package.json"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/ng-hls/src/test.ts",
-            "tsConfig": "projects/flosportsinc/ng-hls/tsconfig.spec.json",
-            "karmaConfig": "projects/flosportsinc/ng-hls/karma.conf.js"
+            "main": "projects/flosportsinc/ng-media-source-extensions/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-media-source-extensions/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-media-source-extensions/karma.conf.js"
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "projects/flosportsinc/ng-hls/tsconfig.lib.json",
-              "projects/flosportsinc/ng-hls/tsconfig.spec.json"
+              "projects/flosportsinc/ng-media-source-extensions/tsconfig.lib.json",
+              "projects/flosportsinc/ng-media-source-extensions/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

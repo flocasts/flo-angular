@@ -7,9 +7,9 @@ import {
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
   IMseSrcChangeFunc
-} from './hls.tokens'
+} from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
-import { HlsModule } from './hls.module'
+import { MseModule } from '../mse/mse.module'
 import * as Hls from 'hls.js'
 
 export function defaultIsSupportedFactory() {
@@ -59,8 +59,8 @@ export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
 }
 
 @NgModule({
-  imports: [HlsModule],
-  exports: [HlsModule],
+  imports: [MseModule],
+  exports: [MseModule],
   providers: [
     {
       provide: SUPPORTS_HLS_NATIVELY,
@@ -84,4 +84,4 @@ export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
     }
   ]
 })
-export class HlsJsModule { }
+export class HlsModule { }

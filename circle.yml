@@ -95,11 +95,11 @@ jobs:
           name: Test
           command: |
             npm run test.ci.hls
-            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-hls.json coverage/ng-hls/lcov.info
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions.json coverage/ng-media-source-extensions/lcov.info
       - persist_to_workspace:
           root: tmp
           paths:
-            - cc.ng-hls.json
+            - cc.ng-media-source-extensions.json
   test_services:
     <<: *defaults
     steps:

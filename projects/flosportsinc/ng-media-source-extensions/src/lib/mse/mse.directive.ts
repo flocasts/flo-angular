@@ -13,7 +13,7 @@ import {
   SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_HLS_NATIVELY, IVideoElementSupportsHlsCheck,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, IMseInitFunc,
   IMseDestroyFunc, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseSrcChangeFunc
-} from './hls.tokens'
+} from './mse.tokens'
 import { filter, map, takeUntil, take, skip } from 'rxjs/operators'
 import { Subject, combineLatest } from 'rxjs'
 import { maybe } from 'typescript-monads'
@@ -33,7 +33,7 @@ export interface IMseClientReadyEvent<TMseClient> {
 @Directive({
   selector: 'video[floHls]'
 })
-export class HlsDirective<TMseClient, TMseMessage> implements OnDestroy, OnChanges, AfterViewInit {
+export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChanges, AfterViewInit {
   constructor(readonly el: ElementRef<HTMLVideoElement>,
     @Inject(SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: boolean,
     @Inject(SUPPORTS_HLS_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsHlsCheck,

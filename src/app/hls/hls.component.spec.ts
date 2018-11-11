@@ -1,6 +1,6 @@
 import { TestBed, async } from '@angular/core/testing'
 import { HlsComponent } from './hls.component'
-import { HlsJsModule } from '@flosportsinc/ng-hls'
+import { HlsJsModule } from '@flosportsinc/ng-media-source-extensions'
 import { SharedTestingModule } from '../shared.testing.module'
 
 describe('HlsComponent', () => {
