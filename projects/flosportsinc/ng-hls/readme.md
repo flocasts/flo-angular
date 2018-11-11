@@ -5,23 +5,23 @@ The primary goal of this library is to allow `<video>` elements to accept a sour
 
 How this would look in practice:
 
-HLS:
+__HLS:__
 ```html
 <video floHls="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
-DASH
+__DASH__
 ```html
 <video floDash="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
 ## Table of Contents
 
-- [HlsModule](#hls-installation-(hls.js))
-- [DashModule](#dash-installation-(dash.js))
-- [MseModule (for custom implementations)](#advanced-installation)
+- [HlsModule](/hls#hls-installation)
+- [DashModule](/hls#dash-installation)
+- [MseModule (for custom implementations)](/hls#advanced-installation)
 
-## HLS Installation (hls.js)
-Save the library as an application dependency (this will also install the peer dependency hls.js)
+## HLS Installation
+Save the library as an application dependency
 ```bash
 npm i @flosportsinc/ng-media-source-extensions
 ```
@@ -42,8 +42,8 @@ Now you are free to .m3u8 HLS files in all modern browsers.
 <video floHls="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
 
-## DASH Installation (dash.js)
-Save the library as an application dependency (this will also install the peer dependency hls.js)
+## DASH Installation
+Save the library as an application dependency
 ```bash
 npm i @flosportsinc/ng-media-source-extensions
 ```
@@ -66,4 +66,4 @@ Now you are free to .mpd files in all modern browsers.
 
 
 ## Advanced Installation
-WIP
+Work in progress...
