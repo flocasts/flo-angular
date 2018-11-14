@@ -61,23 +61,28 @@ export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
-      useFactory: defaultHlsSupportedNativelyFunction
+      useFactory: defaultHlsSupportedNativelyFunction,
+      multi: true
     },
     {
       provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
-      useFactory: defaultIsSupportedFactory
+      useFactory: defaultIsSupportedFactory,
+      multi: true
     },
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
-      useFactory: defaultMseClientInitFunction
+      useFactory: defaultMseClientInitFunction,
+      multi: true
     },
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-      useFactory: defaultMseClientSrcChangeFunction
+      useFactory: defaultMseClientSrcChangeFunction,
+      multi: true
     },
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
-      useFactory: defaultMseClientDestroyFunction
+      useFactory: defaultMseClientDestroyFunction,
+      multi: true
     }
   ]
 })

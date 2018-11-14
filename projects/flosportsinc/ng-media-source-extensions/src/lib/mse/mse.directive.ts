@@ -42,6 +42,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroyFunc<TMseClient>
   ) { }
 
+  // public
+
   private readonly _ngOnDestroy$ = new Subject<undefined>()
   private readonly _ngAfterViewInit$ = new Subject<undefined>()
   private readonly _srcChanges$ = new Subject<string>()
@@ -114,6 +116,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _mseClientPathInitSubscription = combineLatest(this._mseClientSupported$, this._srcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
+      console.log(this, this._mseInitTask)
       const mseClient = this._mseInitTask({
         src,
         videoElement: this.videoElement,

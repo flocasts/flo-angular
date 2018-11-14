@@ -60,6 +60,7 @@
     "hls.js": "^0.11.0",
     "ngx-markdown": "^7.0.2",
     "rxjs": "^6.3.3",
+    "stream": "0.0.2",
     "typescript-monads": "^3.8.0",
     "zone.js": "~0.8.26"
   },

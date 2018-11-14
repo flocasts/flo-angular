@@ -10,5 +10,4 @@ export interface HlsMessage {
 @Directive({
   selector: 'video[floHls]'
 })
-export class HlsDirective extends MseDirective<Hls, HlsMessage> {
-}
+export class HlsDirective extends MseDirective<Hls, HlsMessage> { }
