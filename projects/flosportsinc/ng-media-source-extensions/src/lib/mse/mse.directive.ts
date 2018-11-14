@@ -63,7 +63,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     emitAndUnsubscribe(this._ngOnDestroy$)
     this._mediaSourceClientPathSourceChangeSubscription.unsubscribe()
     this._nativeClientPathSubscription.unsubscribe()
-    this._mseHlsClientPathInitSubscription.unsubscribe()
+    this._mseClientPathInitSubscription.unsubscribe()
     this._destroyPlayerSubscription.unsubscribe()
   }
 
@@ -75,17 +75,17 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       .tapSome(src => this._srcChanges$.next(src))
   }
 
-  private readonly _mseHlsClientSupported$ = this._ngAfterViewInit$.pipe(
+  private readonly _mseClientSupported$ = this._ngAfterViewInit$.pipe(
     filter(_ => this._isMediaSourceSupported)
   )
 
-  private readonly _hlsClientNative$ = this._ngAfterViewInit$.pipe(
+  private readonly _mseClientNative$ = this._ngAfterViewInit$.pipe(
     filter(_ => !this._isMediaSourceSupported),
     filter(_ => this._nativeSupportCheck(this.videoElement))
   )
 
   private readonly _nativeClientPathSubscription = combineLatest(
-    this._hlsClientNative$,
+    this._mseClientNative$,
     this._srcChanges$
   ).pipe(
     map(res => res[1]),
@@ -96,7 +96,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
 
   private readonly _mediaSourceClientPathSourceChangeSubscription = combineLatest(
-    this._mseHlsClientSupported$,
+    this._mseClientSupported$,
     this._srcChanges$,
     this.mseClient
   ).pipe(
@@ -111,7 +111,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     })
   })
 
-  private readonly _mseHlsClientPathInitSubscription = combineLatest(this._mseHlsClientSupported$, this._srcChanges$)
+  private readonly _mseClientPathInitSubscription = combineLatest(this._mseClientSupported$, this._srcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
       const mseClient = this._mseInitTask({

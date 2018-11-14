@@ -4,14 +4,43 @@ import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from './mse.tokens'
-import { HlsModule } from '../hls/hls.module'
+import {
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, IMseInitFunc
+} from './mse.tokens'
+import { MseModule } from './mse.module'
 
 const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
+export function testMseIsSupportedFactory() {
+  return false
+}
+
+export function testMseSupportedNativelyFunction() {
+  return () => false
+}
+
+export function testMseClientInitFunction() {
+  const lambda: IMseInitFunc<any, any> = initEvent => {
+    initEvent.messageSource.next()
+  }
+  return lambda
+}
+
+export function testMseClientSrcChangeFunction() {
+  const lambda: any = srcChangeEvent => { }
+  return lambda
+}
+
+export function testMseClientDestroyFunction() {
+  const lambda: any = destroyEvent => { }
+  return lambda
+}
+
 @Component({
   selector: 'flo-test-component',
-  template: '<video [floHls]="src"></video>'
+  template: '<video floMse [src]="src"></video>'
 })
 export class HlsTestComponent {
   // tslint:disable-next-line:readonly-keyword
@@ -19,9 +48,31 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [HlsModule],
+  imports: [MseModule],
   declarations: [HlsTestComponent],
-  exports: [HlsTestComponent]
+  exports: [HlsTestComponent],
+  providers: [
+    {
+      provide: SUPPORTS_MSE_TARGET_NATIVELY,
+      useFactory: testMseSupportedNativelyFunction
+    },
+    {
+      provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+      useFactory: testMseIsSupportedFactory
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+      useFactory: testMseClientInitFunction
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
+      useFactory: testMseClientSrcChangeFunction
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
+      useFactory: testMseClientDestroyFunction
+    }
+  ]
 })
 export class HlsTestingModule { }
 
@@ -88,7 +139,7 @@ const shouldCompilerDirective = done => {
 
 const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
   const wrapper = createSut()
-  const spy = spyOn((wrapper.instance as any)._hlsSrcChanges$, 'next')
+  const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
   wrapper.instance.ngOnChanges({
     floHls: sc
   })
@@ -117,7 +168,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
     const wrapper = createSut()
     const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
     wrapper.instance.ngOnChanges({
-      floHls: new SimpleChange(TEST_SRC, 'http://www.test.com', false)
+      src: new SimpleChange(TEST_SRC, 'http://www.test.com', false)
     })
     expect(spy).toHaveBeenCalled()
     done()
@@ -143,7 +194,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 
-describe(`${MseDirective.name} when client supports HLS natively`, () => {
+describe(`${MseDirective.name} when supports mse client natively`, () => {
   beforeEach(() => setTestBed(false)(true))
   afterEach(() => TestBed.resetTestingModule())
 
