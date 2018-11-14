@@ -1,30 +1,26 @@
 import {
-  SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
-  IVideoElementSupportsHlsCheck,
-  SUPPORTS_HLS_NATIVELY,
+  IVideoElementSupportsTargetMseCheck,
+  SUPPORTS_MSE_TARGET_NATIVELY,
   IMseInitFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
   IMseSrcChangeFunc
-} from './hls.tokens'
+} from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
-import { HlsModule } from './hls.module'
+import { MseModule } from '../mse/mse.module'
+import { HlsDirective, HlsMessage } from './hls.directive'
 import * as Hls from 'hls.js'
 
 export function defaultIsSupportedFactory() {
   return Hls.isSupported()
 }
 
-export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsHlsCheck {
-  const lambda: IVideoElementSupportsHlsCheck = ve =>
+export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheck {
+  const lambda: IVideoElementSupportsTargetMseCheck = ve =>
     typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
   return lambda
-}
-
-export interface HlsMessage {
-  readonly key: keyof typeof Hls.Events
-  readonly message: any
 }
 
 export function defaultMseClientInitFunction(): IMseInitFunc<Hls, HlsMessage> {
@@ -59,15 +55,16 @@ export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
 }
 
 @NgModule({
-  imports: [HlsModule],
-  exports: [HlsModule],
+  imports: [MseModule],
+  declarations: [HlsDirective],
+  exports: [MseModule, HlsDirective],
   providers: [
     {
-      provide: SUPPORTS_HLS_NATIVELY,
+      provide: SUPPORTS_MSE_TARGET_NATIVELY,
       useFactory: defaultHlsSupportedNativelyFunction
     },
     {
-      provide: SUPPORTS_HLS_VIA_MEDIA_SOURCE_EXTENSION,
+      provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
       useFactory: defaultIsSupportedFactory
     },
     {
@@ -84,4 +81,4 @@ export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
     }
   ]
 })
-export class HlsJsModule { }
+export class HlsModule { }

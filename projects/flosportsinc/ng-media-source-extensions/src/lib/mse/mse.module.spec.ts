@@ -1,10 +1,10 @@
-import { HlsModule } from './hls.module'
+import { MseModule } from './mse.module'
 import { TestBed } from '@angular/core/testing'
 
-describe(HlsModule.name, () => {
+describe(MseModule.name, () => {
   it('Should construct', () => {
     TestBed.configureTestingModule({
-      imports: [HlsModule]
+      imports: [MseModule]
     })
   })
 })

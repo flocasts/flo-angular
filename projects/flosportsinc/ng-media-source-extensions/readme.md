@@ -7,11 +7,11 @@ How this would look in practice:
 
 __HLS:__
 ```html
-<video floHls="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
+<video floHls src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
 __DASH__
 ```html
-<video floDash="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
+<video floDash src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
 ## Table of Contents
@@ -23,7 +23,7 @@ __DASH__
 ## HLS Installation
 Save the library as an application dependency
 ```bash
-npm i @flosportsinc/ng-media-source-extensions
+npm i @flosportsinc/ng-media-source-extensions @types/hls.js hls.js
 ```
 
 Import the module into your angular application
@@ -39,13 +39,13 @@ export class AppModule { }
 
 Now you are free to .m3u8 HLS files in all modern browsers.
 ```html
-<video floHls="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
+<video floHls src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
 
 ## DASH Installation
 Save the library as an application dependency
 ```bash
-npm i @flosportsinc/ng-media-source-extensions
+npm i @flosportsinc/ng-media-source-extensions dashjs
 ```
 
 Import the module into your angular application
@@ -61,7 +61,7 @@ export class AppModule { }
 
 Now you are free to .mpd files in all modern browsers.
 ```html
-<video floHls="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
+<video floDash src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
 
