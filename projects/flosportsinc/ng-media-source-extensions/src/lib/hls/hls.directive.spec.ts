@@ -11,7 +11,6 @@ import { emitAndUnsubscribe } from '../mse/mse.directive'
 
 const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
-
 @Component({
   selector: 'flo-test-component',
   template: '<video floHls [src]="src"></video>'
@@ -105,27 +104,6 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
   it('should compile the test component', shouldCompileTestComponent)
   it('should compile the directive under test', shouldCompilerDirective)
 
-  it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
-    const testSub = new Subject<any>()
-    testSub.unsubscribe()
-    const spy1 = spyOn(testSub, 'next')
-    const spy2 = spyOn(testSub, 'unsubscribe')
-    emitAndUnsubscribe(testSub)
-    expect(spy1).not.toHaveBeenCalled()
-    expect(spy2).not.toHaveBeenCalled()
-    done()
-  })
-
-  it('should trigger MSE source change', done => {
-    const wrapper = createSut()
-    const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
-    wrapper.instance.ngOnChanges({
-      src: new SimpleChange(TEST_SRC, 'http://www.test.com', false)
-    })
-    expect(spy).toHaveBeenCalled()
-    done()
-  })
-
   it('should not trigger MSE source change when same src string', done => {
     const wrapper = createSut()
     const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
@@ -133,14 +111,6 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
       src: new SimpleChange(TEST_SRC, 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8', false)
     })
     expect(spy).not.toHaveBeenCalled()
-    done()
-  })
-
-  it('should trigger destory function for DI configurations', done => {
-    const wrapper = createSut()
-    const spy = spyOn(wrapper.instance as any, '_mseDestroyTask')
-    wrapper.hoist.destroy()
-    expect(spy).toHaveBeenCalled()
     done()
   })
 

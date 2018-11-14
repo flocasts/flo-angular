@@ -76,7 +76,7 @@ export class HlsTestComponent {
 })
 export class HlsTestingModule { }
 
-const createSut = () => {
+export const createMseSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
   hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(MseDirective))
@@ -87,7 +87,7 @@ const createSut = () => {
   }
 }
 
-const setTestBed = (supportsMle: boolean) => (native: boolean) => {
+export const setMseTestBed = (supportsMle: boolean) => (native: boolean) => {
   TestBed.configureTestingModule({
     imports: [HlsTestingModule],
     providers: [
@@ -104,7 +104,7 @@ const setTestBed = (supportsMle: boolean) => (native: boolean) => {
 }
 
 const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
-  const wrapper = createSut()
+  const wrapper = createMseSut()
   const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
 
   internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
@@ -117,7 +117,7 @@ const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
 })
 
 const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
-  const wrapper = createSut()
+  const wrapper = createMseSut()
   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
 
   expect(() => {
@@ -128,17 +128,17 @@ const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
 })
 
 const shouldCompileTestComponent = done => {
-  expect(createSut().hoist).toBeDefined()
+  expect(createMseSut().hoist).toBeDefined()
   done()
 }
 
 const shouldCompilerDirective = done => {
-  expect(createSut().directive).toBeDefined()
+  expect(createMseSut().directive).toBeDefined()
   done()
 }
 
 const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-  const wrapper = createSut()
+  const wrapper = createMseSut()
   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
   wrapper.instance.ngOnChanges({
     floHls: sc
@@ -147,7 +147,7 @@ const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
 }
 
 describe(`${MseDirective.name} when client supports Media Source Extensions`, () => {
-  beforeEach(() => setTestBed(true)(false))
+  beforeEach(() => setMseTestBed(true)(false))
   afterEach(() => TestBed.resetTestingModule())
 
   it('should compile the test component', shouldCompileTestComponent)
@@ -165,7 +165,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   })
 
   it('should trigger MSE source change', done => {
-    const wrapper = createSut()
+    const wrapper = createMseSut()
     const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
     wrapper.instance.ngOnChanges({
       src: new SimpleChange(TEST_SRC, 'http://www.test.com', false)
@@ -175,7 +175,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   })
 
   it('should trigger destory function for DI configurations', done => {
-    const wrapper = createSut()
+    const wrapper = createMseSut()
     const spy = spyOn(wrapper.instance as any, '_mseDestroyTask')
     wrapper.hoist.destroy()
     expect(spy).toHaveBeenCalled()
@@ -195,7 +195,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
 })
 
 describe(`${MseDirective.name} when supports mse client natively`, () => {
-  beforeEach(() => setTestBed(false)(true))
+  beforeEach(() => setMseTestBed(false)(true))
   afterEach(() => TestBed.resetTestingModule())
 
   it('should compile the test component', shouldCompileTestComponent)
