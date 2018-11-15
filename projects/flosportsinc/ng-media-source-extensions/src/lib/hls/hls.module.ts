@@ -6,12 +6,17 @@ import {
   IMseInitFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-  IMseSrcChangeFunc
+  IMseSrcChangeFunc,
+  IMseDestroy,
+  IMseInit,
+  IMseSrcChange
 } from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
 import { HlsDirective, HlsMessage } from './hls.directive'
 import * as Hls from 'hls.js'
+
+const exectionKey = 'HLS'
 
 export function defaultIsSupportedFactory() {
   return Hls.isSupported()
@@ -23,8 +28,8 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   return lambda
 }
 
-export function defaultMseClientInitFunction(): IMseInitFunc<Hls, HlsMessage> {
-  const lambda: IMseInitFunc<Hls, HlsMessage> = initEvent => {
+export function defaultMseClientInitFunction(): IMseInit<Hls, HlsMessage> {
+  const func: IMseInitFunc<Hls, HlsMessage> = initEvent => {
     const client = new Hls()
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
@@ -33,25 +38,34 @@ export function defaultMseClientInitFunction(): IMseInitFunc<Hls, HlsMessage> {
     })
     return client
   }
-  return lambda
+  return {
+    exectionKey,
+    func
+  }
 }
 
-export function defaultMseClientSrcChangeFunction(): IMseSrcChangeFunc<Hls> {
-  const lambda: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
+export function defaultMseClientSrcChangeFunction(): IMseSrcChange<Hls> {
+  const func: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
     srcChangeEvent.clientRef.detachMedia()
     srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
     srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
   }
-  return lambda
+  return {
+    exectionKey,
+    func
+  }
 }
 
-export function defaultMseClientDestroyFunction(): IMseDestroyFunc<Hls> {
-  const lambda: IMseDestroyFunc<Hls> = destroyEvent => {
+export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
+  const func: IMseDestroyFunc<Hls> = destroyEvent => {
     destroyEvent.clientRef.stopLoad()
     destroyEvent.clientRef.detachMedia()
     destroyEvent.clientRef.destroy()
   }
-  return lambda
+  return {
+    exectionKey,
+    func
+  }
 }
 
 @NgModule({

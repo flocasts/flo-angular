@@ -6,12 +6,17 @@ import {
   IMseInitFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-  IMseSrcChangeFunc
+  IMseSrcChangeFunc,
+  IMseInit,
+  IMseDestroy,
+  IMseSrcChange
 } from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
 import { DashMessage, DashDirective } from './dash.directive'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
+
+const exectionKey = 'DASH'
 
 export function defaultDashIsSupportedFactory() {
   return true // typeof ( window.MediaSource || window.WebKitMediaSource ) === 'function'
@@ -24,8 +29,8 @@ export function defaultDashSupportedNativelyFunction(): IVideoElementSupportsTar
   return dash
 }
 
-export function defaultDashClientInitFunction(): IMseInitFunc<MediaPlayerClass, DashMessage> {
-  const dash: IMseInitFunc<MediaPlayerClass, DashMessage> = initEvent => {
+export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, DashMessage> {
+  const func: IMseInitFunc<MediaPlayerClass, DashMessage> = initEvent => {
     const client = MediaPlayer().create()
     client.initialize(initEvent.videoElement, initEvent.src)
     // client.attachMedia(initEvent.videoElement)
@@ -34,26 +39,35 @@ export function defaultDashClientInitFunction(): IMseInitFunc<MediaPlayerClass, 
     // })
     return client
   }
-  return dash
+  return {
+    exectionKey,
+    func
+  }
 }
 
-export function defaultDashClientSrcChangeFunction(): IMseSrcChangeFunc<MediaPlayerClass> {
-  const dash: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
+export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
+  const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
     srcChangeEvent.clientRef.reset()
     // srcChangeEvent.clientRef.detachMedia()
     // srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
     // srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
   }
-  return dash
+  return {
+    exectionKey,
+    func
+  }
 }
 
-export function defaultDashClientDestroyFunction(): IMseDestroyFunc<MediaPlayerClass> {
-  const dash: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
+export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass> {
+  const func: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
     // destroyEvent.clientRef.stopLoad()
     // destroyEvent.clientRef.detachMedia()
     // destroyEvent.clientRef.destroy()
   }
-  return dash
+  return {
+    exectionKey,
+    func
+  }
 }
 
 @NgModule({
