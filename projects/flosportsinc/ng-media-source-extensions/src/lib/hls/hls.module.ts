@@ -9,7 +9,10 @@ import {
   IMseSrcChangeFunc,
   IMseDestroy,
   IMseInit,
-  IMseSrcChange
+  IMseSrcChange,
+  IMsePatternCheck,
+  IMsePatternCheckFunc,
+  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
 } from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
@@ -46,6 +49,7 @@ export function defaultMseClientInitFunction(): IMseInit<Hls, HlsMessage> {
 
 export function defaultMseClientSrcChangeFunction(): IMseSrcChange<Hls> {
   const func: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
+    console.log(srcChangeEvent.clientRef)
     srcChangeEvent.clientRef.detachMedia()
     srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
     srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
@@ -62,6 +66,14 @@ export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
     destroyEvent.clientRef.detachMedia()
     destroyEvent.clientRef.destroy()
   }
+  return {
+    exectionKey,
+    func
+  }
+}
+
+export function defaultHlsPatternCheck(): IMsePatternCheck {
+  const func: IMsePatternCheckFunc = (videoSource: string) => videoSource.includes('.m3u8')
   return {
     exectionKey,
     func
@@ -96,6 +108,11 @@ export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
       useFactory: defaultMseClientDestroyFunction,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+      useFactory: defaultHlsPatternCheck,
       multi: true
     }
   ]

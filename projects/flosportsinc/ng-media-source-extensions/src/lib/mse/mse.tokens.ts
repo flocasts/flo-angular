@@ -6,6 +6,7 @@ export const SUPPORTS_MSE_TARGET_NATIVELY = new InjectionToken<IVideoElementSupp
 export const MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK = new InjectionToken<IMseInit<any, any>>('flo.mse.lib.init')
 export const MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK = new InjectionToken<IMseSrcChangeFunc<any>>('flo.mse.lib.src.change')
 export const MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK = new InjectionToken<IMseDestroy<any>>('flo.mse.lib.create')
+export const MEDIA_SOURCE_EXTENSION_PATTERN_MATCH = new InjectionToken<IMsePatternCheck>('flo.mse.lib.pattern')
 
 export interface IMseExecutionContext<TFunc> {
   readonly exectionKey: string
@@ -30,10 +31,12 @@ export interface IMseDestroyOptions<TClientRef> {
 }
 
 export type IMseInitFunc<TClientRef, TMessage> = (obj: IMseInitOptions<TMessage>) => TClientRef
-export type IVideoElementSupportsTargetMseCheck = (videoElement: HTMLVideoElement) => boolean
 export type IMseSrcChangeFunc<TClientRef> = (obj: IMseSrcChangeOptions<TClientRef>) => void
 export type IMseDestroyFunc<TClientRef> = (obj: IMseDestroyOptions<TClientRef>) => void
+export type IVideoElementSupportsTargetMseCheck = (videoElement: HTMLVideoElement) => boolean
+export type IMsePatternCheckFunc = (videoSource: string) => boolean
 
+export interface IMsePatternCheck extends IMseExecutionContext<IMsePatternCheckFunc> { }
 export interface IVideoElementSupportsTargetMseCheckContainer extends IMseExecutionContext<IVideoElementSupportsTargetMseCheck> { }
 export interface IMseSrcChange<TClientRef> extends IMseExecutionContext<IMseSrcChangeFunc<TClientRef>> { }
 export interface IMseDestroy<TClientRef> extends IMseExecutionContext<IMseDestroyFunc<TClientRef>> { }

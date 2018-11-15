@@ -12,7 +12,9 @@ import {
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, IVideoElementSupportsTargetMseCheck,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseDestroy, IMseInit, IMseSrcChange
+  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseDestroy, IMseInit, IMseSrcChange, IMsePatternCheck,
+  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+  IMseExecutionContext
 } from './mse.tokens'
 import { filter, map, takeUntil, take, skip } from 'rxjs/operators'
 import { Subject, combineLatest } from 'rxjs'
@@ -40,7 +42,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheck,
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTask: IMseInit<TMseClient, TMseMessage>[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK) private readonly _mseSourceChangeTask: IMseSrcChange<TMseClient>[],
-    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroy<TMseClient>[]
+    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroy<TMseClient>[],
+    @Inject(MEDIA_SOURCE_EXTENSION_PATTERN_MATCH) private readonly _msePatternCheckTask: IMsePatternCheck[]
   ) { }
 
   private readonly _ngOnDestroy$ = new Subject<undefined>()
@@ -54,6 +57,19 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   @Output() public readonly srcChange = this._srcChanges$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
   @Output() public readonly mseClient = this._mseClientSource$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
   @Output() public readonly mseClientMessage = this._mseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
+
+  // tslint:disable-next-line:readonly-keyword
+  executionKey: string
+
+  private readonly extractTaskFromContext =
+    <T>(ctxs: IMseExecutionContext<T>[]) =>
+      maybe(ctxs.find(a => a.exectionKey === this.executionKey))
+
+  private readonly safelyExtractInjectedFunc = <T>(ctxs: IMseExecutionContext<T>[]) =>
+    maybe(this.src)
+      .flatMap(src => this.extractTaskFromContext(this._msePatternCheckTask)
+        .filter(patternCheck => patternCheck.func(src)))
+      .flatMap(() => this.extractTaskFromContext(ctxs).map(b => b.func))
 
   public ngAfterViewInit() {
     emitAndUnsubscribe(this._ngAfterViewInit$)
@@ -84,6 +100,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     filter(_ => this._nativeSupportCheck(this.videoElement))
   )
 
+  private readonly _setSrc = (src: string) => this.videoElement.setAttribute('src', src)
+
   private readonly _nativeClientPathSubscription = combineLatest(
     this._mseClientNative$,
     this._srcChanges$
@@ -91,7 +109,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     map(res => res[1]),
     takeUntil(this._ngOnDestroy$)
   ).subscribe(src => {
-    this.videoElement.setAttribute('src', src)
+    this._setSrc(src)
   })
 
   private readonly _mediaSourceClientPathSourceChangeSubscription = combineLatest(
@@ -103,25 +121,48 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     map(res => ({ src: res[1], mseClient: res[2] })),
     takeUntil(this._ngOnDestroy$)
   ).subscribe(res => {
-    this._mseSourceChangeTask[0].func({
-      clientRef: res.mseClient,
-      src: res.src,
-      videoElement: this.videoElement
-    })
+    this.safelyExtractInjectedFunc(this._mseSourceChangeTask)
+      .tap({
+        some: func => {
+          func({
+            clientRef: res.mseClient,
+            src: res.src,
+            videoElement: this.videoElement
+          })
+        },
+        none: () => {
+          this.safelyExtractInjectedFunc(this._mseDestroyTask)
+            .tap({
+              none: () => this._setSrc(res.src),
+              some: func => {
+                func({ clientRef: res.mseClient, videoElement: this.videoElement })
+                this._setSrc(res.src)
+              }
+            })
+        }
+      })
   })
 
   private readonly _mseClientPathInitSubscription = combineLatest(this._mseClientSupported$, this._srcChanges$)
     .pipe(map(res => res[1]), take(1))
     .subscribe(src => {
-      const mseClient = this._mseInitTask[0].func({
-        src,
-        videoElement: this.videoElement,
-        messageSource: this._mseClientMessages$
-      })
-      this._mseClientSource$.next(mseClient)
+      this.safelyExtractInjectedFunc(this._mseInitTask)
+        .tapSome(func => {
+          const mseClient = func({
+            src,
+            videoElement: this.videoElement,
+            messageSource: this._mseClientMessages$
+          })
+          this._mseClientSource$.next(mseClient)
+        })
     })
 
   private readonly _destroyPlayerSubscription = combineLatest(this.mseClient, this._ngOnDestroy$)
     .pipe(take(1), map(a => a[0]))
-    .subscribe(clientRef => this._mseDestroyTask[0].func({ clientRef, videoElement: this.videoElement }))
+    .subscribe(clientRef => {
+      this.safelyExtractInjectedFunc(this._mseDestroyTask)
+        .tapSome(func => {
+          func({ clientRef, videoElement: this.videoElement })
+        })
+    })
 }

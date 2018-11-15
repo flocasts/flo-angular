@@ -9,4 +9,7 @@ export interface DashMessage {
 @Directive({
   selector: 'video[floDash]'
 })
-export class DashDirective extends MseDirective<Hls, DashMessage> { }
+export class DashDirective extends MseDirective<Hls, DashMessage> {
+  // tslint:disable-next-line:readonly-keyword
+  executionKey = 'DASH'
+}

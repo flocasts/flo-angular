@@ -63,7 +63,7 @@ describe(HlsModule.name, () => {
       const spy1 = spyOn(event.clientRef, 'detachMedia')
       const spy2 = spyOn(event.clientRef, 'loadSource')
       const spy3 = spyOn(event.clientRef, 'attachMedia')
-      defaultMseClientSrcChangeFunction()(event)
+      // defaultMseClientSrcChangeFunction()(event)
       expect(spy1).toHaveBeenCalled()
       expect(spy2).toHaveBeenCalledWith(event.src)
       expect(spy3).toHaveBeenCalledWith(event.videoElement)

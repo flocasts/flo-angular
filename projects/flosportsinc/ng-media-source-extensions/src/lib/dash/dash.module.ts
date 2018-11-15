@@ -9,7 +9,10 @@ import {
   IMseSrcChangeFunc,
   IMseInit,
   IMseDestroy,
-  IMseSrcChange
+  IMseSrcChange,
+  IMsePatternCheck,
+  IMsePatternCheckFunc,
+  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
 } from '../mse/mse.tokens'
 import { NgModule } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
@@ -47,7 +50,8 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
 
 export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
   const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
-    srcChangeEvent.clientRef.reset()
+    console.log('CHANGE DASH')
+    srcChangeEvent.clientRef.initialize(srcChangeEvent.videoElement, srcChangeEvent.src)
     // srcChangeEvent.clientRef.detachMedia()
     // srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
     // srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
@@ -60,10 +64,19 @@ export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerC
 
 export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass> {
   const func: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
+    destroyEvent.clientRef.reset()
     // destroyEvent.clientRef.stopLoad()
     // destroyEvent.clientRef.detachMedia()
     // destroyEvent.clientRef.destroy()
   }
+  return {
+    exectionKey,
+    func
+  }
+}
+
+export function defaultDashPatternCheck(): IMsePatternCheck {
+  const func: IMsePatternCheckFunc = (videoSource: string) => videoSource.includes('.mpd')
   return {
     exectionKey,
     func
@@ -98,6 +111,11 @@ export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
       useFactory: defaultDashClientDestroyFunction,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+      useFactory: defaultDashPatternCheck,
       multi: true
     }
   ]
