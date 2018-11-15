@@ -2,12 +2,19 @@
 <div>
   <label for="preselected_input">Source (pre selected)</label>
   <select id="preselected_input" [formControl]="dropdown">
-    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny (HLS)</option>
-    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica (HLS)</option>
-    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel (HLS)</option>
-    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream (HLS)</option>
-    <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">Bullrun (MP4)</option>
-    <option value="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd">Parkor (DASH)</option>
+    <optgroup label="HLS">
+      <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
+      <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
+      <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel</option>
+      <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream</option>
+    </optgroup>
+    <optgroup label="DASH">
+      <option value="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd">Parkor (DASH)</option>
+      <option value="https://vm2.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd">SegmentTemplate with manifest updates every 30s (DASH)</option>
+    </optgroup>
+    <optgroup label="Static (mp4, webm, etc">
+      <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">Bullrun (MP4)</option>
+    </optgroup>
   </select>
 </div>
 <form [formGroup]="formGroup">

@@ -22,7 +22,7 @@ import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 const exectionKey = 'DASH'
 
 export function defaultDashIsSupportedFactory() {
-  return true // typeof ( window.MediaSource || window.WebKitMediaSource ) === 'function'
+  return typeof ((window as any).MediaSource || (window  as any).WebKitMediaSource) === 'function'
 }
 
 export function defaultDashSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheck {
@@ -36,10 +36,6 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
   const func: IMseInitFunc<MediaPlayerClass, DashMessage> = initEvent => {
     const client = MediaPlayer().create()
     client.initialize(initEvent.videoElement, initEvent.src)
-    // client.attachMedia(initEvent.videoElement)
-    // Object.keys(Hls.Events).forEach(key => {
-    //   client.on(Hls.Events[key], (eventKey: any, b) => initEvent.messageSource.next({ key: eventKey, message: b }))
-    // })
     return client
   }
   return {
@@ -50,11 +46,9 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
 
 export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
   const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
-    console.log('CHANGE DASH')
-    srcChangeEvent.clientRef.initialize(srcChangeEvent.videoElement, srcChangeEvent.src)
-    // srcChangeEvent.clientRef.detachMedia()
-    // srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
-    // srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
+    srcChangeEvent.clientRef.reset()
+    srcChangeEvent.clientRef.attachView(srcChangeEvent.videoElement)
+    srcChangeEvent.clientRef.attachSource(srcChangeEvent.src)
   }
   return {
     exectionKey,
@@ -64,10 +58,9 @@ export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerC
 
 export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass> {
   const func: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
+    const autoPlayeWasEnabled = destroyEvent.videoElement.autoplay
     destroyEvent.clientRef.reset()
-    // destroyEvent.clientRef.stopLoad()
-    // destroyEvent.clientRef.detachMedia()
-    // destroyEvent.clientRef.destroy()
+    autoPlayeWasEnabled && destroyEvent.videoElement.setAttribute('autoplay', 'true')
   }
   return {
     exectionKey,
