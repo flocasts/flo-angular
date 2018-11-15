@@ -2,10 +2,11 @@
 <div>
   <label for="preselected_input">Source (pre selected)</label>
   <select id="preselected_input" [formControl]="dropdown">
-    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream (hls)</option>
+    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny (HLS)</option>
+    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica (HLS)</option>
+    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel (HLS)</option>
+    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream (HLS)</option>
+    <option value="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd">Parkor (DASH)</option>
   </select>
 </div>
 <form [formGroup]="formGroup">
@@ -30,6 +31,7 @@
 </form>
 <video *ngIf="config$ | async as config"
   floHls
+  floDash
   [src]="config?.src"
   [poster]="config?.poster"
   [controls]="config?.controls"
