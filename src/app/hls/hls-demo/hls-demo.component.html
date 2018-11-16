@@ -39,7 +39,6 @@
 </form>
 <video *ngIf="config$ | async as config"
   floHls
-  floDash
   [src]="config?.src"
   [poster]="config?.poster"
   [controls]="config?.controls"
