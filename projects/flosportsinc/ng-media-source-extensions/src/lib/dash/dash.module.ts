@@ -58,6 +58,7 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
 
 export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
   const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
+    console.log('DASH CHANGE')
     srcChangeEvent.clientRef.reset()
     srcChangeEvent.clientRef.attachView(srcChangeEvent.videoElement)
     srcChangeEvent.clientRef.attachSource(srcChangeEvent.src)

@@ -152,13 +152,13 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                 res.src.previous.tapSome(previous => {
                   this.safelyExtractInjectedFunc(this._mseDestroyTask)(previous)
                     .tap({
-                      some: funcc => {
-                        funcc({ clientRef: mseClient, videoElement: this.videoElement })
+                      some: destroyFunc => {
+                        console.log('DESTROY')
+                        destroyFunc({ clientRef: mseClient, videoElement: this.videoElement })
                         this._mseClientSource$.next(undefined)
                         this._setSrc(res.src)
                       },
                       none: () => {
-                        console.log(this._mseInitTask)
                         res.src.current.tapSome(src => {
                           this.safelyExtractInjectedFunc(this._mseInitTask)(src)
                             .tap({
@@ -182,7 +182,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
         },
         none: () => {
           res.src.current.tapSome(currentSource => {
-            this.safelyExtractInjectedFunc(this._mseInitTask)(currentSource)
+            this.extractTaskFromContext(this._mseInitTask)
+              .map(a => a.func)
               .tap({
                 some: initFunc => {
                   setTimeout(() => {
