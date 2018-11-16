@@ -58,7 +58,6 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
 
 export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
   const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
-    console.log('DASH CHANGE')
     srcChangeEvent.clientRef.reset()
     srcChangeEvent.clientRef.attachView(srcChangeEvent.videoElement)
     srcChangeEvent.clientRef.attachSource(srcChangeEvent.src)
@@ -72,6 +71,7 @@ export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerC
 export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass> {
   const func: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
     const hadAutoPlay = destroyEvent.videoElement.autoplay
+    destroyEvent.videoElement.pause()
     destroyEvent.clientRef.reset()
     hadAutoPlay && destroyEvent.videoElement.setAttribute('autoplay', 'true')
   }

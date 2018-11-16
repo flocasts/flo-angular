@@ -58,7 +58,6 @@ export function defaultMseClientInitFunction(): IMseInit<Hls, HlsMessage> {
 
 export function defaultMseClientSrcChangeFunction(): IMseSrcChange<Hls> {
   const func: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
-    console.log('SRC CHANGE!', srcChangeEvent)
     srcChangeEvent.videoElement.pause()
     srcChangeEvent.clientRef.detachMedia()
     srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)

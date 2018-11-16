@@ -141,6 +141,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               some: srcChangeFunc => {
                 // tslint:disable-next-line:no-if-statement
                 if (res.src.previous.valueOrUndefined()) {
+                  this.videoElement.pause()
                   srcChangeFunc({
                     clientRef: mseClient,
                     src: res.src.current.valueOr(''),
@@ -153,27 +154,27 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                   this.safelyExtractInjectedFunc(this._mseDestroyTask)(previous)
                     .tap({
                       some: destroyFunc => {
-                        console.log('DESTROY')
+                        this.videoElement.pause()
                         destroyFunc({ clientRef: mseClient, videoElement: this.videoElement })
                         this._mseClientSource$.next(undefined)
                         this._setSrc(res.src)
                       },
                       none: () => {
-                        res.src.current.tapSome(src => {
-                          this.safelyExtractInjectedFunc(this._mseInitTask)(src)
-                            .tap({
-                              some: initFunc => {
-                                setTimeout(() => {
-                                  const mseClient2 = initFunc({
-                                    src,
-                                    videoElement: this.videoElement,
-                                    messageSource: this._mseClientMessages$
-                                  })
-                                  this._mseClientSource$.next(mseClient2)
-                                })
-                              }
-                            })
-                        })
+                        // res.src.current.tapSome(src => {
+                        //   this.safelyExtractInjectedFunc(this._mseInitTask)(src)
+                        //     .tap({
+                        //       some: initFunc => {
+                        //         setTimeout(() => {
+                        //           const mseClient2 = initFunc({
+                        //             src,
+                        //             videoElement: this.videoElement,
+                        //             messageSource: this._mseClientMessages$
+                        //           })
+                        //           this._mseClientSource$.next(mseClient2)
+                        //         })
+                        //       }
+                        //     })
+                        // })
                       }
                     })
                 })
@@ -182,8 +183,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
         },
         none: () => {
           res.src.current.tapSome(currentSource => {
-            this.extractTaskFromContext(this._mseInitTask)
-              .map(a => a.func)
+            this.safelyExtractInjectedFunc(this._mseInitTask)(currentSource)
               .tap({
                 some: initFunc => {
                   setTimeout(() => {
@@ -193,11 +193,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                       messageSource: this._mseClientMessages$
                     })
                     this._mseClientSource$.next(mseClient)
-                  })
-                },
-                none: () => {
-                  setTimeout(() => {
-                    this._setSrc(res.src)
                   })
                 }
               })
