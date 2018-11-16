@@ -12,23 +12,32 @@ import {
   IMseSrcChange,
   IMsePatternCheck,
   IMsePatternCheckFunc,
-  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
+  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+  IVideoElementSupportsTargetMseCheckContext
 } from '../mse/mse.tokens'
-import { NgModule } from '@angular/core'
+import { NgModule, PLATFORM_ID } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
 import { HlsDirective, HlsMessage } from './hls.directive'
+import { isPlatformBrowser } from '@angular/common'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
 
-export function defaultIsSupportedFactory() {
-  return Hls.isSupported()
+export function defaultIsSupportedFactory(platformId: string) {
+  const func = () => isPlatformBrowser(platformId) && Hls.isSupported()
+  return {
+    exectionKey,
+    func
+  }
 }
 
-export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheck {
-  const lambda: IVideoElementSupportsTargetMseCheck = ve =>
+export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
+  const func: IVideoElementSupportsTargetMseCheck = ve =>
     typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
-  return lambda
+  return {
+    exectionKey,
+    func
+  }
 }
 
 export function defaultMseClientInitFunction(): IMseInit<Hls, HlsMessage> {
@@ -92,6 +101,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     {
       provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
       useFactory: defaultIsSupportedFactory,
+      deps: [PLATFORM_ID],
       multi: true
     },
     {

@@ -16,7 +16,7 @@ describe(HlsModule.name, () => {
     it('when default test environment (no native support)', () => {
       const videElement = window.document.createElement('video')
       const spy = spyOn(videElement, 'canPlayType')
-      const result = defaultHlsSupportedNativelyFunction()(videElement)
+      const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(spy).toHaveBeenCalledWith('application/vnd.apple.mpegurl')
       expect(result).toEqual(false)
     })
@@ -25,7 +25,7 @@ describe(HlsModule.name, () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(true)
       spyOn(Hls, 'isSupported').and.returnValue(true)
-      const result = defaultHlsSupportedNativelyFunction()(videElement)
+      const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(false)
     })
 
@@ -33,7 +33,7 @@ describe(HlsModule.name, () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(false)
       spyOn(Hls, 'isSupported').and.returnValue(true)
-      const result = defaultHlsSupportedNativelyFunction()(videElement)
+      const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(false)
     })
 
@@ -41,18 +41,18 @@ describe(HlsModule.name, () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(true)
       spyOn(Hls, 'isSupported').and.returnValue(false)
-      const result = defaultHlsSupportedNativelyFunction()(videElement)
+      const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(true)
     })
   })
 
   describe(`exposed ${defaultIsSupportedFactory.name} function`, () => {
     it('when default test environment', () => {
-      expect(defaultIsSupportedFactory()).toEqual(true)
+      expect(defaultIsSupportedFactory('browser')).toEqual(true)
     })
     it('when hlsjs not supported', () => {
       spyOn(Hls, 'isSupported').and.returnValue(false)
-      expect(defaultIsSupportedFactory()).toEqual(false)
+      expect(defaultIsSupportedFactory('browser')).toEqual(false)
     })
   })
 

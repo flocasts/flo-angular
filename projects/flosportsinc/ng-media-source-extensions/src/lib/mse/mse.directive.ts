@@ -14,7 +14,9 @@ import {
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseDestroy, IMseInit, IMseSrcChange, IMsePatternCheck,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
-  IMseExecutionContext
+  IMseExecutionContext,
+  IMsePlatformSupportCheck,
+  IVideoElementSupportsTargetMseCheckContext
 } from './mse.tokens'
 import { filter, map, takeUntil, take, skip, startWith } from 'rxjs/operators'
 import { Subject, combineLatest, BehaviorSubject, timer } from 'rxjs'
@@ -43,8 +45,8 @@ interface SourceChangeEvent {
 export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChanges, AfterViewInit {
   // tslint:disable:readonly-array
   constructor(readonly _elementRef: ElementRef<HTMLVideoElement>,
-    @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: boolean,
-    @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheck,
+    @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
+    @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTask: IMseInit<TMseClient, TMseMessage>[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK) private readonly _mseSourceChangeTask: IMseSrcChange<TMseClient>[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroy<TMseClient>[],
@@ -103,12 +105,12 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   }
 
   private readonly _mseClientSupported$ = this._ngAfterViewInit$.pipe(
-    filter(_ => this._isMediaSourceSupported)
+    filter(_ => this.extractTaskFromContext(this._isMediaSourceSupported).map(c => c.func()).valueOr(false))
   )
 
   private readonly _mseClientNative$ = this._ngAfterViewInit$.pipe(
-    filter(_ => !this._isMediaSourceSupported),
-    filter(_ => this._nativeSupportCheck(this.videoElement))
+    filter(_ => !this.extractTaskFromContext(this._isMediaSourceSupported).map(c => c.func()).valueOr(false)),
+    filter(_ => this.extractTaskFromContext(this._nativeSupportCheck).map(c => c.func(this.videoElement)).valueOr(false))
   )
 
   private readonly _setSrc = (evt: SourceChangeEvent) => evt.current.tapSome(src => this.videoElement.setAttribute('src', src))
@@ -149,10 +151,30 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               none: () => {
                 res.src.previous.tapSome(previous => {
                   this.safelyExtractInjectedFunc(this._mseDestroyTask)(previous)
-                    .tapSome(funcc => {
-                      funcc({ clientRef: mseClient, videoElement: this.videoElement })
-                      this._mseClientSource$.next(undefined)
-                      this._setSrc(res.src)
+                    .tap({
+                      some: funcc => {
+                        funcc({ clientRef: mseClient, videoElement: this.videoElement })
+                        this._mseClientSource$.next(undefined)
+                        this._setSrc(res.src)
+                      },
+                      none: () => {
+                        console.log(this._mseInitTask)
+                        res.src.current.tapSome(src => {
+                          this.safelyExtractInjectedFunc(this._mseInitTask)(src)
+                            .tap({
+                              some: initFunc => {
+                                setTimeout(() => {
+                                  const mseClient2 = initFunc({
+                                    src,
+                                    videoElement: this.videoElement,
+                                    messageSource: this._mseClientMessages$
+                                  })
+                                  this._mseClientSource$.next(mseClient2)
+                                })
+                              }
+                            })
+                        })
+                      }
                     })
                 })
               }
@@ -170,6 +192,11 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                       messageSource: this._mseClientMessages$
                     })
                     this._mseClientSource$.next(mseClient)
+                  })
+                },
+                none: () => {
+                  setTimeout(() => {
+                    this._setSrc(res.src)
                   })
                 }
               })

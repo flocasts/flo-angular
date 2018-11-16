@@ -4,7 +4,7 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { FramerComponent } from './viewport-grid/viewport-grid.component'
 import { ViewportGridModule } from '@flosportsinc/ng-viewport-grid'
-import { HlsModule } from '@flosportsinc/ng-media-source-extensions'
+import { HlsModule, DashModule } from '@flosportsinc/ng-media-source-extensions'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
@@ -37,6 +37,7 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
     AppRoutingModule,
     ViewportGridModule,
     HlsModule,
+    DashModule,
     TransferHttpCacheModule,
     BrowserModule.withServerTransition({ appId: 'my-app' }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),

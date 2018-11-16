@@ -12,7 +12,7 @@
       <option value="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd">Parkor (DASH)</option>
       <option value="https://vm2.dashif.org/livesim/mup_30/testpic_2s/Manifest.mpd">SegmentTemplate with manifest updates every 30s (DASH)</option>
     </optgroup>
-    <optgroup label="Static (mp4, webm, etc">
+    <optgroup label="Static (mp4, webm, etc)">
       <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">Bullrun (MP4)</option>
     </optgroup>
   </select>
@@ -39,6 +39,7 @@
 </form>
 <video *ngIf="config$ | async as config"
   floHls
+  floDash
   [src]="config?.src"
   [poster]="config?.poster"
   [controls]="config?.controls"
