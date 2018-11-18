@@ -124,12 +124,12 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     takeUntil(this._ngOnDestroy$)
   ).subscribe(srcChange => {
     // SHOULD WE TRY TO INIT AN MSE CLIENT? DOES THE CURRENT-SRC REQUIRE/SUPPORT AN MSE CLIENT
-    // YES
-    // IS THERE A CURRENT MSE CLIENT, IF SO IS IT THE SAME AS THE CURRENT-SRC REQUIREMENT?
-    // IF SAME, EXECUTE SRC_CHANGE TAKS
-    // IF DIFFERENT, TEARDOWN PREVIOUS-SRC MSE AND INIT CURRENT-SRC MSE
-    // NO
-    // ATTEMPT TO TEAR DOWN PREVIOUS-SRC MSE
+      // YES
+        // IS THERE A CURRENT MSE CLIENT, IF SO IS IT THE SAME AS THE CURRENT-SRC REQUIREMENT?
+        // IF SAME, EXECUTE SRC_CHANGE TAKS
+        // IF DIFFERENT, TEARDOWN PREVIOUS-SRC MSE AND INIT CURRENT-SRC MSE
+      // NO
+        // ATTEMPT TO TEAR DOWN PREVIOUS-SRC MSE
     this._Tt(srcChange.current)(this._mseInitTask)
       .tap({
         // detected MSE client by matching url in source change
@@ -141,7 +141,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
             .tap({
               some: execKey => {
-                // Different MSE clients
                 // destory old
                 // init new
                 this._mseClientSource$.getValue().mseClient
@@ -150,9 +149,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                       maybe(this._mseDestroyTask.find(a => a.exectionKey === execKey))
                         .tapSome(destroyFunc => destroyFunc.func({ clientRef, videoElement: this.videoElement }))
                     },
-                    none: () => {
-                      // TODO
-                    }
+                    none: () => { }
                   })
 
                 const mseClient = ctx.func({
@@ -163,10 +160,9 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                 this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
               },
               none: () => {
-                // Same MSE clients
                 // MSE Client already running?
-                // YES => update source
-                // NO => init
+                  // YES => update source
+                  // NO => init
                 this._mseClientSource$.getValue().mseClient
                   .tap({
                     none: () => {
