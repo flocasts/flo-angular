@@ -1,4 +1,5 @@
 import {
+  MseModule,
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   IVideoElementSupportsTargetMseCheck,
@@ -14,9 +15,8 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext
-} from '../mse/mse.tokens'
+} from '@flosportsinc/ng-media-source-extensions'
 import { NgModule, PLATFORM_ID } from '@angular/core'
-import { MseModule } from '../mse/mse.module'
 import { isPlatformBrowser } from '@angular/common'
 import * as Hls from 'hls.js'
 

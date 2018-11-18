@@ -80,7 +80,7 @@ jobs:
           root: tmp
           paths:
             - cc.ng-viewport-grid.json
-  test_hls:
+  test_media-source-extensions:
     <<: *defaults
     steps:
       - checkout
@@ -94,12 +94,52 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run test.ci.hls
+            npm run test.ci.mse
             /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions.json coverage/ng-media-source-extensions/lcov.info
       - persist_to_workspace:
           root: tmp
           paths:
             - cc.ng-media-source-extensions.json
+  test_media-source-extensions-dash:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.mse-dash
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions-dash.json coverage/ng-media-source-extensions-dash/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.ng-media-source-extensions-dash.json
+  test_media-source-extensions-hls:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: /tmp
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install Dependencies
+          command: npm ci
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.mse-hls
+            /tmp/cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions-hls.json coverage/ng-media-source-extensions-hls/lcov.info
+      - persist_to_workspace:
+          root: tmp
+          paths:
+            - cc.ng-media-source-extensions-hls.json
   test_services:
     <<: *defaults
     steps:
@@ -155,7 +195,13 @@ workflows:
       - test_viewport_grid:
           requires:
             - prep_coverage
-      - test_hls:
+      - test_media-source-extensions:
+          requires:
+            - prep_coverage
+      - test_media-source-extensions-dash:
+          requires:
+            - prep_coverage
+      - test_media-source-extensions-hls:
           requires:
             - prep_coverage
       - test_services:
@@ -165,13 +211,17 @@ workflows:
           requires:
             - test_docs_site
             - test_viewport_grid
-            - test_hls
+            - test_media-source-extensions
+            - test_media-source-extensions-dash
+            - test_media-source-extensions-hls
             - test_services
       - publish:
           requires:
             - test_docs_site
             - test_viewport_grid
-            - test_hls
+            - test_media-source-extensions
+            - test_media-source-extensions-dash
+            - test_media-source-extensions-hls
             - test_services
             - upload_coverage
             - e2e

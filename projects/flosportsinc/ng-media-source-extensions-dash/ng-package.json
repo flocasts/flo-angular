@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/flosportsinc/ng-media-source-extensions-dash",
+  "lib": {
+    "entryFile": "src/public_api.ts"
+  }
+}

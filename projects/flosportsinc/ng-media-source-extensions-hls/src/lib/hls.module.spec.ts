@@ -3,8 +3,8 @@ import {
   defaultMseClientSrcChangeFunction
 } from './hls.module'
 import { TestBed } from '@angular/core/testing'
-import { IMseSrcChangeOptions } from '../mse/mse.tokens'
 import * as Hls from 'hls.js'
+import { IMseSrcChangeOptions } from '@flosportsinc/ng-media-source-extensions'
 
 describe(HlsModule.name, () => {
   it('should construct', () => {

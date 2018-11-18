@@ -4,7 +4,6 @@ import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
 import { FramerComponent } from './viewport-grid/viewport-grid.component'
 import { ViewportGridModule } from '@flosportsinc/ng-viewport-grid'
-import { HlsModule, DashModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
@@ -18,6 +17,7 @@ import { UniversalServicesComponent } from './universal-services/universal-servi
 import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
+import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
   declarations: [
@@ -32,13 +32,11 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
     NotFoundComponent
   ],
   imports: [
+    MseModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     ViewportGridModule,
-    MseModule,
-    HlsModule,
-    DashModule,
     TransferHttpCacheModule,
     BrowserModule.withServerTransition({ appId: 'my-app' }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
