@@ -280,6 +280,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-media-source-extensions-dash/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-media-source-extensions-dash/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-media-source-extensions-dash/karma.conf.js"
@@ -315,6 +316,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-media-source-extensions-hls/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-media-source-extensions-hls/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-media-source-extensions-hls/karma.conf.js"
