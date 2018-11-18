@@ -17,11 +17,15 @@ import {
 } from '../mse/mse.tokens'
 import { NgModule, PLATFORM_ID } from '@angular/core'
 import { MseModule } from '../mse/mse.module'
-import { HlsDirective, HlsMessage } from './hls.directive'
 import { isPlatformBrowser } from '@angular/common'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
+
+export interface HlsMessage {
+  readonly key: keyof typeof Hls.Events
+  readonly message: any
+}
 
 export function defaultIsSupportedFactory(platformId: string) {
   const func = () => isPlatformBrowser(platformId) && Hls.isSupported()
@@ -91,8 +95,6 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 
 @NgModule({
   imports: [MseModule],
-  declarations: [HlsDirective],
-  exports: [MseModule, HlsDirective],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,

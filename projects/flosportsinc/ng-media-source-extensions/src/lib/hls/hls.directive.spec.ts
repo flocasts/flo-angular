@@ -5,9 +5,9 @@ import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
 import { HlsModule } from './hls.module'
-import { HlsDirective } from './hls.directive'
 import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from '../mse/mse.tokens'
-import { emitAndUnsubscribe } from '../mse/mse.directive'
+import { MseDirective } from '../mse/mse.directive'
+// import { emitAndUnsubscribe } from '../mse/mse.directive'
 
 const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
 
@@ -30,11 +30,11 @@ export class HlsTestingModule { }
 const createSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
   hoist.autoDetectChanges()
-  const directive = hoist.debugElement.query(By.directive(HlsDirective))
+  const directive = hoist.debugElement.query(By.directive(MseDirective))
   return {
     hoist,
     directive,
-    instance: directive.injector.get(HlsDirective)
+    instance: directive.injector.get(MseDirective)
   }
 }
 
@@ -97,7 +97,7 @@ const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
   expect(spy).not.toHaveBeenCalled()
 }
 
-describe(`${HlsDirective.name} when client supports Media Source Extensions`, () => {
+describe(`${MseDirective.name} when client supports Media Source Extensions`, () => {
   beforeEach(() => setTestBed(true)(false))
   afterEach(() => TestBed.resetTestingModule())
 
@@ -126,7 +126,7 @@ describe(`${HlsDirective.name} when client supports Media Source Extensions`, ()
   it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 
-describe(`${HlsDirective.name} when supports mse client natively`, () => {
+describe(`${MseDirective.name} when supports mse client natively`, () => {
   beforeEach(() => setTestBed(false)(true))
   afterEach(() => TestBed.resetTestingModule())
 

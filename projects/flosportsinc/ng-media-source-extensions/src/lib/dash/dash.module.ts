@@ -1,5 +1,4 @@
 import { NgModule, PLATFORM_ID } from '@angular/core'
-import { DashDirective } from './dash.directive'
 import { MseModule } from '../mse/mse.module'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
@@ -19,10 +18,14 @@ import {
   IVideoElementSupportsTargetMseCheckContext
 } from '../mse/mse.tokens'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
-import { DashMessage } from './dash.directive'
 import { isPlatformBrowser } from '@angular/common'
 
 const exectionKey = 'DASH'
+
+export interface DashMessage {
+  readonly key: string
+  readonly message: any
+}
 
 export function defaultDashIsSupportedFactory(platformId: string) {
   const func = () => isPlatformBrowser(platformId)
@@ -91,8 +94,6 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
 
 @NgModule({
   imports: [MseModule],
-  declarations: [DashDirective],
-  exports: [MseModule, DashDirective],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,

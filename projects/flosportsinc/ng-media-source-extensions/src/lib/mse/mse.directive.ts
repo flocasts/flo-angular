@@ -130,7 +130,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     // IF DIFFERENT, TEARDOWN PREVIOUS-SRC MSE AND INIT CURRENT-SRC MSE
     // NO
     // ATTEMPT TO TEAR DOWN PREVIOUS-SRC MSE
-
     this._Tt(srcChange.current)(this._mseInitTask)
       .tap({
         // detected MSE client by matching url in source change

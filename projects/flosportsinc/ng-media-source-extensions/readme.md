@@ -7,11 +7,11 @@ How this would look in practice:
 
 __HLS:__
 ```html
-<video floHls src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
+<video floMse src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
 __DASH__
 ```html
-<video floDash src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
+<video floMse src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
 ## Table of Contents
@@ -39,7 +39,7 @@ export class AppModule { }
 
 Now you are free to .m3u8 HLS files in all modern browsers.
 ```html
-<video floHls src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
+<video floMse src="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8"></video>
 ```
 
 ## DASH Installation
@@ -61,7 +61,7 @@ export class AppModule { }
 
 Now you are free to .mpd files in all modern browsers.
 ```html
-<video floDash src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
+<video floMse src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
 
