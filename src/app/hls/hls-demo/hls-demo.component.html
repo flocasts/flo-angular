@@ -44,11 +44,14 @@
     <input id="playsinline" type="checkbox" formControlName="playsinline">
   </div>
 </form>
-<video *ngIf="config$ | async as config"
+<div class="video-responsive-container">
+  <video *ngIf="config$ | async as config"
   floMse
+  class="video-responsive"
   [src]="config?.src"
   [poster]="config?.poster"
   [controls]="config?.controls"
   [autoplay]="config?.autoplay"
   [attr.playsinline]="config?.playsinline">
 </video>
+</div>
