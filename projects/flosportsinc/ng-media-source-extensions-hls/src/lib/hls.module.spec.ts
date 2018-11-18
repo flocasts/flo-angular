@@ -48,11 +48,11 @@ describe(HlsModule.name, () => {
 
   describe(`exposed ${defaultIsSupportedFactory.name} function`, () => {
     it('when default test environment', () => {
-      expect(defaultIsSupportedFactory('browser').func()).toEqual(true)
+      expect(defaultIsSupportedFactory().func()).toEqual(true)
     })
     it('when hlsjs not supported', () => {
       spyOn(Hls, 'isSupported').and.returnValue(false)
-      expect(defaultIsSupportedFactory('browser').func()).toEqual(false)
+      expect(defaultIsSupportedFactory().func()).toEqual(false)
     })
   })
 

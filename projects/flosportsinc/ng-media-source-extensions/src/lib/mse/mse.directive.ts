@@ -117,6 +117,12 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                 exectionKey: ctx.exectionKey,
                 src: s
               }
+            }).filter(ctx => {
+              return maybe(this._isMediaSourceSupported.find(a => a.exectionKey === ctx.exectionKey))
+                .match({
+                  none: () => false,
+                  some: c => c.func()
+                })
             })
         })
 
@@ -143,15 +149,15 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               some: execKey => {
                 // destory old
                 // init new
+                console.log('INIT 1')
                 this._mseClientSource$.getValue().mseClient
                   .tap({
                     some: clientRef => {
                       maybe(this._mseDestroyTask.find(a => a.exectionKey === execKey))
                         .tapSome(destroyFunc => destroyFunc.func({ clientRef, videoElement: this.videoElement }))
-                    },
-                    none: () => { }
+                    }
                   })
-
+                // maybe(this._isMediaSourceSupported.find(a => a.exectionKey === ))
                 const mseClient = ctx.func({
                   src: ctx.src,
                   videoElement: this.videoElement,

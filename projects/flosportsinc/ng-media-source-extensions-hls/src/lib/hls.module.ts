@@ -16,8 +16,7 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext
 } from '@flosportsinc/ng-media-source-extensions'
-import { NgModule, PLATFORM_ID } from '@angular/core'
-import { isPlatformBrowser } from '@angular/common'
+import { NgModule } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
@@ -27,8 +26,8 @@ export interface HlsMessage {
   readonly message: any
 }
 
-export function defaultIsSupportedFactory(platformId: string) {
-  const func = () => isPlatformBrowser(platformId) && Hls.isSupported()
+export function defaultIsSupportedFactory() {
+  const func = () => Hls.isSupported()
   return {
     exectionKey,
     func
@@ -37,7 +36,8 @@ export function defaultIsSupportedFactory(platformId: string) {
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
   const func: IVideoElementSupportsTargetMseCheck = ve =>
-    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') && !Hls.isSupported() ? true : false
+    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') &&
+      !defaultIsSupportedFactory().func() ? true : false
   return {
     exectionKey,
     func
@@ -104,7 +104,6 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     {
       provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
       useFactory: defaultIsSupportedFactory,
-      deps: [PLATFORM_ID],
       multi: true
     },
     {

@@ -27,16 +27,15 @@ export interface DashMessage {
   readonly message: any
 }
 
-export function defaultDashIsSupportedFactory(platformId: string) {
-  const func = () => isPlatformBrowser(platformId)
+export function defaultDashIsSupportedFactory() {
+  const func = () => typeof ((window as any).MediaSource || (window as any).WebKitMediaSource) === 'function'
   return {
     exectionKey,
     func
   }
-  // typeof ( window.MediaSource || window.WebKitMediaSource ) === 'function'
 }
 
-export function defaultDashSupportedNativelyFunction(platformId: string): IVideoElementSupportsTargetMseCheckContext {
+export function defaultDashSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
   const func: IVideoElementSupportsTargetMseCheck = ve => false
   return {
     exectionKey,
@@ -98,13 +97,11 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
       useFactory: defaultDashSupportedNativelyFunction,
-      deps: [PLATFORM_ID],
       multi: true
     },
     {
       provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
       useFactory: defaultDashIsSupportedFactory,
-      deps: [PLATFORM_ID],
       multi: true
     },
     {
