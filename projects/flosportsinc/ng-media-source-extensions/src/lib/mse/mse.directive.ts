@@ -10,7 +10,7 @@ import {
   Output
 } from '@angular/core'
 import {
-  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, IVideoElementSupportsTargetMseCheck,
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, IMseDestroy, IMseInit, IMseSrcChange, IMsePatternCheck,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
@@ -18,8 +18,8 @@ import {
   IMsePlatformSupportCheck,
   IVideoElementSupportsTargetMseCheckContext
 } from './mse.tokens'
-import { filter, map, takeUntil, take, skip, startWith } from 'rxjs/operators'
-import { Subject, combineLatest, BehaviorSubject, timer } from 'rxjs'
+import { map, takeUntil, take, startWith } from 'rxjs/operators'
+import { Subject, combineLatest, BehaviorSubject } from 'rxjs'
 import { maybe, IMaybe } from 'typescript-monads'
 
 export const emitAndUnsubscribe = (subject: Subject<undefined>) => {
@@ -39,6 +39,11 @@ interface SourceChangeEvent {
   readonly current: IMaybe<string>
 }
 
+interface MseClientContext<TMseClient> {
+  readonly mseClient: IMaybe<TMseClient>
+  readonly contextKey: IMaybe<string>
+}
+
 @Directive({
   selector: 'video[floMse]'
 })
@@ -56,7 +61,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _ngOnDestroy$ = new Subject<undefined>()
   private readonly _ngAfterViewInit$ = new Subject<undefined>()
   private readonly _srcChanges$ = new Subject<SourceChangeEvent>()
-  private readonly _mseClientSource$ = new BehaviorSubject<TMseClient | undefined>(undefined)
+  private readonly _mseClientSource$ = new BehaviorSubject<MseClientContext<TMseClient>>({ contextKey: maybe(), mseClient: maybe() })
   private readonly _mseClientMessages$ = new Subject<TMseMessage>()
   public readonly videoElement = this._elementRef.nativeElement
 
@@ -65,21 +70,18 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   @Output() public readonly mseClient = this._mseClientSource$.asObservable().pipe(startWith(undefined), takeUntil(this._ngOnDestroy$))
   @Output() public readonly mseClientMessage = this._mseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
 
-  // tslint:disable-next-line:readonly-keyword
-  protected executionKey: string
-
-  private readonly extractTaskFromContext =
+  private readonly _extractExecutableFromTaskContexts =
     <T>(ctxs: IMseExecutionContext<T>[]) =>
-      maybe(ctxs.find(a => a.exectionKey === this.executionKey))
+      (src?: string) => {
+        return maybe(src)
+          .flatMap(s => maybe(this._msePatternCheckTask.filter(a => a.func(s))[0]))
+          .flatMap(a => maybe(ctxs.find(b => b.exectionKey === a.exectionKey)))
+      }
 
-
-  private readonly safelyExtractInjectedFunc = <T>(ctxs: IMseExecutionContext<T>[]) => (srcString?: string) =>
-    maybe(srcString)
-      .flatMap(src => this.extractTaskFromContext(this._msePatternCheckTask)
-        .filter(patternCheck => {
-          return patternCheck.func(src)
-        }))
-      .flatMap(() => this.extractTaskFromContext(ctxs).map(b => b.func))
+  private readonly _getExecutionKey =
+    (src: string) =>
+      maybe(this._msePatternCheckTask.find(a => a.func(src)))
+        .map(a => a.exectionKey)
 
   public ngAfterViewInit() {
     emitAndUnsubscribe(this._ngAfterViewInit$)
@@ -88,8 +90,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   public ngOnDestroy() {
     emitAndUnsubscribe(this._ngOnDestroy$)
     this._mediaSourceClientPathSourceChangeSubscription.unsubscribe()
-    this._nativeClientPathSubscription.unsubscribe()
-    this._mseClientPathInitSubscription.unsubscribe()
     this._destroyPlayerSubscription.unsubscribe()
   }
 
@@ -104,121 +104,129 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       }))
   }
 
-  private readonly _mseClientSupported$ = this._ngAfterViewInit$.pipe(
-    filter(_ => this.extractTaskFromContext(this._isMediaSourceSupported).map(c => c.func()).valueOr(false))
-  )
-
-  private readonly _mseClientNative$ = this._ngAfterViewInit$.pipe(
-    filter(_ => !this.extractTaskFromContext(this._isMediaSourceSupported).map(c => c.func()).valueOr(false)),
-    filter(_ => this.extractTaskFromContext(this._nativeSupportCheck).map(c => c.func(this.videoElement)).valueOr(false))
-  )
-
   private readonly _setSrc = (evt: SourceChangeEvent) => evt.current.tapSome(src => this.videoElement.setAttribute('src', src))
 
-  private readonly _nativeClientPathSubscription = combineLatest(
-    this._mseClientNative$,
-    this._srcChanges$
-  ).pipe(
-    map(res => res[1]),
-    takeUntil(this._ngOnDestroy$)
-  ).subscribe(src => {
-    this._setSrc(src)
-  })
+  private readonly _Tt =
+    (src: IMaybe<string>) =>
+      <T>(ctxs: IMseExecutionContext<T>[]) =>
+        src.flatMap(s => {
+          return this._extractExecutableFromTaskContexts(ctxs)(s)
+            .map(ctx => {
+              return {
+                func: ctx.func,
+                exectionKey: ctx.exectionKey,
+                src: s
+              }
+            })
+        })
 
-  private readonly _mediaSourceClientPathSourceChangeSubscription = combineLatest(
-    this._mseClientSupported$,
-    this._srcChanges$
-  ).pipe(
-    skip(1),
-    map(res => ({ src: res[1] })),
+  private readonly _mediaSourceClientPathSourceChangeSubscription = this._srcChanges$.pipe(
     takeUntil(this._ngOnDestroy$)
-  ).subscribe(res => {
-    maybe(this._mseClientSource$.getValue())
+  ).subscribe(srcChange => {
+    // SHOULD WE TRY TO INIT AN MSE CLIENT? DOES THE CURRENT-SRC REQUIRE/SUPPORT AN MSE CLIENT
+    // YES
+    // IS THERE A CURRENT MSE CLIENT, IF SO IS IT THE SAME AS THE CURRENT-SRC REQUIREMENT?
+    // IF SAME, EXECUTE SRC_CHANGE TAKS
+    // IF DIFFERENT, TEARDOWN PREVIOUS-SRC MSE AND INIT CURRENT-SRC MSE
+    // NO
+    // ATTEMPT TO TEAR DOWN PREVIOUS-SRC MSE
+
+    this._Tt(srcChange.current)(this._mseInitTask)
       .tap({
-        some: mseClient => {
-          this.safelyExtractInjectedFunc(this._mseSourceChangeTask)(this.src)
+        // detected MSE client by matching url in source change
+        some: ctx => {
+          srcChange.current
+            .flatMap(this._getExecutionKey)
+            .flatMap(currentExecutionKey => srcChange.previous
+              .flatMap(this._getExecutionKey)
+              .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
             .tap({
-              some: srcChangeFunc => {
-                // tslint:disable-next-line:no-if-statement
-                if (res.src.previous.valueOrUndefined()) {
-                  this.videoElement.pause()
-                  srcChangeFunc({
-                    clientRef: mseClient,
-                    src: res.src.current.valueOr(''),
-                    videoElement: this.videoElement
+              some: execKey => {
+                // Different MSE clients
+                // destory old
+                // init new
+                this._mseClientSource$.getValue().mseClient
+                  .tap({
+                    some: clientRef => {
+                      maybe(this._mseDestroyTask.find(a => a.exectionKey === execKey))
+                        .tapSome(destroyFunc => destroyFunc.func({ clientRef, videoElement: this.videoElement }))
+                    },
+                    none: () => {
+                      // TODO
+                    }
                   })
-                }
+
+                const mseClient = ctx.func({
+                  src: ctx.src,
+                  videoElement: this.videoElement,
+                  messageSource: this._mseClientMessages$
+                })
+                this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
               },
               none: () => {
-                res.src.previous.tapSome(previous => {
-                  this.safelyExtractInjectedFunc(this._mseDestroyTask)(previous)
-                    .tap({
-                      some: destroyFunc => {
-                        this.videoElement.pause()
-                        destroyFunc({ clientRef: mseClient, videoElement: this.videoElement })
-                        this._mseClientSource$.next(undefined)
-                        this._setSrc(res.src)
-                      },
-                      none: () => {
-                        // res.src.current.tapSome(src => {
-                        //   this.safelyExtractInjectedFunc(this._mseInitTask)(src)
-                        //     .tap({
-                        //       some: initFunc => {
-                        //         setTimeout(() => {
-                        //           const mseClient2 = initFunc({
-                        //             src,
-                        //             videoElement: this.videoElement,
-                        //             messageSource: this._mseClientMessages$
-                        //           })
-                        //           this._mseClientSource$.next(mseClient2)
-                        //         })
-                        //       }
-                        //     })
-                        // })
-                      }
-                    })
-                })
+                // Same MSE clients
+                // MSE Client already running?
+                // YES => update source
+                // NO => init
+                this._mseClientSource$.getValue().mseClient
+                  .tap({
+                    none: () => {
+                      const mseClient = ctx.func({
+                        src: ctx.src,
+                        videoElement: this.videoElement,
+                        messageSource: this._mseClientMessages$
+                      })
+                      this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
+                    },
+                    some: clientRef => {
+                      this._Tt(srcChange.current)(this._mseSourceChangeTask)
+                        .tapSome(ct => {
+                          ct.func({
+                            clientRef,
+                            src: ct.src,
+                            videoElement: this.videoElement
+                          })
+                        })
+                    }
+                  })
               }
             })
         },
+        // No MSE client associated to this video url, attempt native plaback and cleanup old MSE clients
         none: () => {
-          res.src.current.tapSome(currentSource => {
-            this.safelyExtractInjectedFunc(this._mseInitTask)(currentSource)
-              .tap({
-                some: initFunc => {
-                  setTimeout(() => {
-                    const mseClient = initFunc({
-                      src: currentSource,
-                      videoElement: this.videoElement,
-                      messageSource: this._mseClientMessages$
+          this._Tt(srcChange.previous)(this._mseDestroyTask)
+            .tap({
+              none: () => this._setSrc(srcChange),
+              some: destroy => {
+                this._mseClientSource$.getValue().mseClient
+                  .tapSome(clientRef => {
+                    destroy.func({
+                      clientRef,
+                      videoElement: this.videoElement
                     })
-                    this._mseClientSource$.next(mseClient)
+                    this._mseClientSource$.next({ contextKey: maybe(), mseClient: maybe() })
+                    this._setSrc(srcChange)
                   })
-                }
-              })
-          })
+              }
+            })
         }
       })
   })
 
-  private readonly _mseClientPathInitSubscription = combineLatest(this._mseClientSupported$, this._srcChanges$)
-    .pipe(map(res => res[1]), take(1))
-    .subscribe(src => {
-      this.safelyExtractInjectedFunc(this._mseInitTask)(this.src)
-        .tapSome(func => {
-          const mseClient = func({
-            src: src.current.valueOr(''),
-            videoElement: this.videoElement,
-            messageSource: this._mseClientMessages$
-          })
-          this._mseClientSource$.next(mseClient)
-        })
-    })
-
   private readonly _destroyPlayerSubscription = combineLatest(this.mseClient, this._ngOnDestroy$)
     .pipe(take(1), map(a => a[0]))
-    .subscribe(clientRef => {
-      clientRef && this.safelyExtractInjectedFunc(this._mseDestroyTask)(this.src)
-        .tapSome(func => func({ clientRef, videoElement: this.videoElement }))
-    })
+    .subscribe(clientRef => clientRef.mseClient
+      .flatMap(mseRef => clientRef.contextKey
+        .flatMap(execKey => maybe(this._mseDestroyTask.find(a => a.exectionKey === execKey)))
+        .map(ctx => {
+          return {
+            func: ctx.func,
+            client: mseRef
+          }
+        })).tapSome(ctx => {
+          ctx.func({
+            clientRef: ctx.client,
+            videoElement: this.videoElement
+          })
+        }))
 }
