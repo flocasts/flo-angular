@@ -48,11 +48,11 @@ describe(HlsModule.name, () => {
 
   describe(`exposed ${defaultIsSupportedFactory.name} function`, () => {
     it('when default test environment', () => {
-      expect(defaultIsSupportedFactory('browser')).toEqual(true)
+      expect(defaultIsSupportedFactory('browser').func()).toEqual(true)
     })
     it('when hlsjs not supported', () => {
       spyOn(Hls, 'isSupported').and.returnValue(false)
-      expect(defaultIsSupportedFactory('browser')).toEqual(false)
+      expect(defaultIsSupportedFactory('browser').func()).toEqual(false)
     })
   })
 
@@ -63,7 +63,7 @@ describe(HlsModule.name, () => {
       const spy1 = spyOn(event.clientRef, 'detachMedia')
       const spy2 = spyOn(event.clientRef, 'loadSource')
       const spy3 = spyOn(event.clientRef, 'attachMedia')
-      // defaultMseClientSrcChangeFunction()(event)
+      defaultMseClientSrcChangeFunction().func(event)
       expect(spy1).toHaveBeenCalled()
       expect(spy2).toHaveBeenCalledWith(event.src)
       expect(spy3).toHaveBeenCalledWith(event.videoElement)
