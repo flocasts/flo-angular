@@ -16,7 +16,8 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IMseExecutionContext,
   IMsePlatformSupportCheck,
-  IVideoElementSupportsTargetMseCheckContext
+  IVideoElementSupportsTargetMseCheckContext,
+  IMseInitFunc
 } from './mse.tokens'
 import { map, takeUntil, take, startWith } from 'rxjs/operators'
 import { Subject, combineLatest, BehaviorSubject } from 'rxjs'
@@ -42,6 +43,12 @@ interface SourceChangeEvent {
 interface MseClientContext<TMseClient> {
   readonly mseClient: IMaybe<TMseClient>
   readonly contextKey: IMaybe<string>
+}
+
+interface IntermediateContext<T> {
+  readonly func: T
+  readonly exectionKey: string
+  readonly src: string
 }
 
 @Directive({
@@ -126,6 +133,15 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
             })
         })
 
+  private readonly _executeInit = (ctx: IntermediateContext<IMseInitFunc<TMseClient, TMseMessage>>) => {
+    const mseClient = ctx.func({
+      src: ctx.src,
+      videoElement: this.videoElement,
+      messageSource: this._mseClientMessages$
+    })
+    this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
+  }
+
   private readonly _mediaSourceClientPathSourceChangeSubscription = this._srcChanges$.pipe(
     takeUntil(this._ngOnDestroy$)
   ).subscribe(srcChange => {
@@ -149,7 +165,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               some: execKey => {
                 // destory old
                 // init new
-                console.log('INIT 1')
                 this._mseClientSource$.getValue().mseClient
                   .tap({
                     some: clientRef => {
@@ -157,13 +172,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                         .tapSome(destroyFunc => destroyFunc.func({ clientRef, videoElement: this.videoElement }))
                     }
                   })
-                // maybe(this._isMediaSourceSupported.find(a => a.exectionKey === ))
-                const mseClient = ctx.func({
-                  src: ctx.src,
-                  videoElement: this.videoElement,
-                  messageSource: this._mseClientMessages$
-                })
-                this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
+                this._executeInit(ctx)
               },
               none: () => {
                 // MSE Client already running?
@@ -172,12 +181,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
                 this._mseClientSource$.getValue().mseClient
                   .tap({
                     none: () => {
-                      const mseClient = ctx.func({
-                        src: ctx.src,
-                        videoElement: this.videoElement,
-                        messageSource: this._mseClientMessages$
-                      })
-                      this._mseClientSource$.next({ mseClient: maybe(mseClient), contextKey: maybe(ctx.exectionKey) })
+                      this._executeInit(ctx)
                     },
                     some: clientRef => {
                       this._Tt(srcChange.current)(this._mseSourceChangeTask)
