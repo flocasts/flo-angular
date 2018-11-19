@@ -172,6 +172,40 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       })
   }
 
+  private readonly _srcChangeOnHasInitTask = (srcChange: SourceChangeEvent) =>
+    (ctx: IntermediateContext<IMseInitFunc<TMseClient, TMseMessage>>) => {
+      srcChange.current
+        .flatMap(this._getExecutionKey)
+        .flatMap(currentExecutionKey => srcChange.previous
+          .flatMap(this._getExecutionKey)
+          .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
+        .tap({
+          some: execKey => {
+            this._maybeExecutDestroyTask(execKey) // destory old
+            this._executeInit(ctx) // init new
+          },
+          none: () => {
+            // MSE Client already running?
+            // YES => update source
+            // NO => init
+            this._mseClientSource$.getValue().mseClient
+              .tap({
+                none: () => this._executeInit(ctx),
+                some: clientRef => {
+                  this._Tt(srcChange.current)(this._mseSourceChangeTask)
+                    .tapSome(ct => {
+                      ct.func({
+                        clientRef,
+                        src: ct.src,
+                        videoElement: this.videoElement
+                      })
+                    })
+                }
+              })
+          }
+        })
+    }
+
   // SHOULD WE TRY TO INIT AN MSE CLIENT? DOES THE CURRENT-SRC REQUIRE/SUPPORT AN MSE CLIENT
   // YES
   // IS THERE A CURRENT MSE CLIENT, IF SO IS IT THE SAME AS THE CURRENT-SRC REQUIREMENT?
@@ -184,39 +218,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   ).subscribe(srcChange => {
     this._Tt(srcChange.current)(this._mseInitTask)
       .tap({
-        some: ctx => {
-          srcChange.current
-            .flatMap(this._getExecutionKey)
-            .flatMap(currentExecutionKey => srcChange.previous
-              .flatMap(this._getExecutionKey)
-              .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
-            .tap({
-              some: execKey => {
-                this._maybeExecutDestroyTask(execKey) // destory old
-                this._executeInit(ctx) // init new
-              },
-              none: () => {
-                // MSE Client already running?
-                // YES => update source
-                // NO => init
-                this._mseClientSource$.getValue().mseClient
-                  .tap({
-                    none: () => this._executeInit(ctx),
-                    some: clientRef => {
-                      this._Tt(srcChange.current)(this._mseSourceChangeTask)
-                        .tapSome(ct => {
-                          ct.func({
-                            clientRef,
-                            src: ct.src,
-                            videoElement: this.videoElement
-                          })
-                        })
-                    }
-                  })
-              }
-            })
-        },
-        // No MSE client associated to this video url, attempt native plaback and cleanup old MSE clients
+        some: this._srcChangeOnHasInitTask(srcChange),
         none: () => this._srcChangeOnNoInitTask(srcChange)
       })
   })
