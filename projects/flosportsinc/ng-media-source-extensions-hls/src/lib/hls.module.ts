@@ -95,6 +95,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 
 @NgModule({
   imports: [MseModule],
+  exports: [MseModule],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
