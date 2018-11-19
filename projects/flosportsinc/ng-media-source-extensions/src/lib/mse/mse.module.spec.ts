@@ -1,4 +1,4 @@
-import { MseModule } from './mse.module'
+import { MseModule, falseFunc } from './mse.module'
 import { TestBed } from '@angular/core/testing'
 
 describe(MseModule.name, () => {
@@ -6,5 +6,9 @@ describe(MseModule.name, () => {
     TestBed.configureTestingModule({
       imports: [MseModule]
     })
+  })
+
+  it('Should use false values for default tokens', () => {
+    expect(falseFunc()).toEqual(false)
   })
 })

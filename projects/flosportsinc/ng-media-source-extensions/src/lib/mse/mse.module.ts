@@ -8,12 +8,12 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
 } from './mse.tokens'
 
-export function func() {
+export function falseFunc() {
   return false
 }
 
 const exectionKey = 'server'
-const useValue = { func, exectionKey }
+const useValue = { func: falseFunc, exectionKey }
 
 @NgModule({
   declarations: [MseDirective],
