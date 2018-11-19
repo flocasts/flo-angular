@@ -1,4 +1,4 @@
-import { NgModule, PLATFORM_ID } from '@angular/core'
+import { NgModule } from '@angular/core'
 import {
   MseModule,
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
@@ -18,7 +18,6 @@ import {
   IVideoElementSupportsTargetMseCheckContext
 } from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
-import { isPlatformBrowser } from '@angular/common'
 
 const exectionKey = 'DASH'
 
@@ -93,6 +92,7 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
 
 @NgModule({
   imports: [MseModule],
+  exports: [MseModule],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
