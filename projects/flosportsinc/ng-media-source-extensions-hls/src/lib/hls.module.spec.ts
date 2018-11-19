@@ -61,19 +61,6 @@ const setTestBed = (supportsMle: boolean) => (native: boolean) => {
   })
 }
 
-const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
-  const wrapper = createSut()
-  const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
-
-  internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-    expect(response).toBeUndefined()
-  })
-
-  wrapper.hoist.destroy()
-
-  expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-})
-
 const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
   const wrapper = createSut()
   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
@@ -84,25 +71,6 @@ const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
 
   wrapper.hoist.destroy()
 })
-
-const shouldCompileTestComponent = done => {
-  expect(createSut().hoist).toBeDefined()
-  done()
-}
-
-const shouldCompilerDirective = done => {
-  expect(createSut().directive).toBeDefined()
-  done()
-}
-
-const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-  const wrapper = createSut()
-  const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-  wrapper.instance.ngOnChanges({
-    floHls: sc
-  })
-  expect(spy).not.toHaveBeenCalled()
-}
 
 describe(HlsModule.name, () => {
   it('should construct', () => {
@@ -168,43 +136,9 @@ describe(HlsModule.name, () => {
     })
   })
 
-  describe(`when client supports Media Source Extensions`, () => {
-    beforeEach(() => setTestBed(true)(false))
-    afterEach(() => TestBed.resetTestingModule())
-
-    it('should compile the test component', shouldCompileTestComponent)
-    it('should compile the directive under test', shouldCompilerDirective)
-
-    it('should not trigger MSE source change when same src string', done => {
-      const wrapper = createSut()
-      const spy = spyOn(wrapper.instance as any, '_mseSourceChangeTask')
-      wrapper.instance.ngOnChanges({
-        src: new SimpleChange(TEST_SRC, 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8', false)
-      })
-      expect(spy).not.toHaveBeenCalled()
-      done()
-    })
-
-    it('should skip src change when value is same', () => {
-      skipSrcChangeWhenValueIs(new SimpleChange(TEST_SRC, TEST_SRC, false))
-    })
-
-    it('should skip src change when value is undefined', () => {
-      skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
-    })
-
-    it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
-    it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission',
-      shouldUnsubscribeFromInternalNgAfterViewInit)
-  })
-
   describe(`when supports mse client natively`, () => {
     beforeEach(() => setTestBed(false)(true))
     afterEach(() => TestBed.resetTestingModule())
-
-    it('should compile the test component', shouldCompileTestComponent)
-    it('should compile the directive under test', shouldCompilerDirective)
-    it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
     it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission',
       shouldUnsubscribeFromInternalNgAfterViewInit)
   })
