@@ -135,7 +135,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
   private readonly _clearMseClient = () => this._mseClientSource$.next({ contextKey: maybe(), mseClient: maybe() })
 
-  private readonly _maybeExecutDestroyTask = (execKey: string) => {
+  private readonly _maybeExecuteDestroyTask = (execKey: string) => {
     this._mseClientSource$.getValue().mseClient
       .tap({
         some: clientRef => {
@@ -181,7 +181,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
           .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
         .tap({
           some: execKey => {
-            this._maybeExecutDestroyTask(execKey) // destory old
+            this._maybeExecuteDestroyTask(execKey) // destory old
             this._executeInit(ctx) // init new
           },
           none: () => {

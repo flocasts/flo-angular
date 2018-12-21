@@ -12,7 +12,7 @@ export function falseFunc() {
   return false
 }
 
-const exectionKey = 'server'
+const exectionKey = 'default'
 const useValue = { func: falseFunc, exectionKey }
 
 @NgModule({
