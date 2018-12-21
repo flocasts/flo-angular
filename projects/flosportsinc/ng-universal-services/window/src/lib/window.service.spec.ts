@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { WindowService } from './window.service'
-import { WINDOW } from './tokens'
+import { WINDOW } from './window.tokens'
 
 describe('WindowService', () => {
   afterEach(() => TestBed.resetTestingModule())

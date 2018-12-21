@@ -2,7 +2,7 @@ import { TestBed, async } from '@angular/core/testing'
 import { AppComponent } from './app.component'
 import { SwUpdate } from '@angular/service-worker'
 import { of, EMPTY } from 'rxjs'
-import { WINDOW } from '@flosportsinc/ng-universal-services'
+import { WINDOW } from '@flosportsinc/ng-universal-services/window'
 import { SharedTestingModule } from './shared.testing.module'
 
 describe('AppComponent', () => {

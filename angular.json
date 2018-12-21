@@ -46,7 +46,7 @@
               },
               {
                 "input": "projects/flosportsinc",
-                "glob": "**/*.md",
+                "glob": "**/**/*.md",
                 "output": "./assets/md"
               }
             ],
