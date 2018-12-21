@@ -34,77 +34,77 @@ export class DashTestComponent {
 })
 export class HlsTestingModule { }
 
-const createSut = () => {
-  const hoist = TestBed.createComponent(DashTestComponent)
-  hoist.autoDetectChanges()
-  const directive = hoist.debugElement.query(By.directive(MseDirective))
-  return {
-    hoist,
-    directive,
-    instance: directive.injector.get(MseDirective)
-  }
-}
+// const createSut = () => {
+//   const hoist = TestBed.createComponent(DashTestComponent)
+//   hoist.autoDetectChanges()
+//   const directive = hoist.debugElement.query(By.directive(MseDirective))
+//   return {
+//     hoist,
+//     directive,
+//     instance: directive.injector.get(MseDirective)
+//   }
+// }
 
-const setTestBed = (supportsMle: boolean) => (native: boolean) => {
-  TestBed.configureTestingModule({
-    imports: [HlsTestingModule],
-    providers: [
-      {
-        provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
-        useValue: supportsMle,
-        multi: true
-      },
-      {
-        provide: SUPPORTS_MSE_TARGET_NATIVELY,
-        useValue: () => native,
-        multi: true
-      }
-    ]
-  })
-}
+// const setTestBed = (supportsMle: boolean) => (native: boolean) => {
+//   TestBed.configureTestingModule({
+//     imports: [HlsTestingModule],
+//     providers: [
+//       {
+//         provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+//         useValue: supportsMle,
+//         multi: true
+//       },
+//       {
+//         provide: SUPPORTS_MSE_TARGET_NATIVELY,
+//         useValue: () => native,
+//         multi: true
+//       }
+//     ]
+//   })
+// }
 
-const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
-  const wrapper = createSut()
-  const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
+// const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
+//   const wrapper = createSut()
+//   const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
 
-  internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-    expect(response).toBeUndefined()
-  })
+//   internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
+//     expect(response).toBeUndefined()
+//   })
 
-  wrapper.hoist.destroy()
+//   wrapper.hoist.destroy()
 
-  expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-})
+//   expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
+// })
 
-const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
-  const wrapper = createSut()
-  const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
+// const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
+//   const wrapper = createSut()
+//   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
 
-  expect(() => {
-    internalNgAfterViewInit$.pipe(take(1)).subscribe()
-  }).toThrow(new ObjectUnsubscribedError())
+//   expect(() => {
+//     internalNgAfterViewInit$.pipe(take(1)).subscribe()
+//   }).toThrow(new ObjectUnsubscribedError())
 
-  wrapper.hoist.destroy()
-})
+//   wrapper.hoist.destroy()
+// })
 
-const shouldCompileTestComponent = done => {
-  expect(createSut().hoist).toBeDefined()
-  done()
-}
+// const shouldCompileTestComponent = done => {
+//   expect(createSut().hoist).toBeDefined()
+//   done()
+// }
 
-const shouldCompilerDirective = done => {
-  expect(createSut().directive).toBeDefined()
-  done()
-}
+// const shouldCompilerDirective = done => {
+//   expect(createSut().directive).toBeDefined()
+//   done()
+// }
 
-const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-  const wrapper = createSut()
-  const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-  wrapper.instance.ngOnChanges({
-    floHls: sc
-  })
-  expect(spy).not.toHaveBeenCalled()
-}
+// const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
+//   const wrapper = createSut()
+//   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
+//   wrapper.instance.ngOnChanges({
+//     floHls: sc
+//   })
+//   expect(spy).not.toHaveBeenCalled()
+// }
 
 describe(DashModule.name, () => {
   it('should construct', () => {
