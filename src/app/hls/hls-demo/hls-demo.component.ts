@@ -16,8 +16,7 @@ export class HlsDemoComponent implements OnDestroy {
     src: new FormControl(DEFAULT_SRC),
     controls: new FormControl(true),
     autoplay: new FormControl(true),
-    playsinline: new FormControl(true),
-    poster: new FormControl('')
+    playsinline: new FormControl(true)
   })
 
   public readonly config$ = this.formGroup.valueChanges

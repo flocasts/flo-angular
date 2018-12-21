@@ -2,10 +2,26 @@
 <div>
   <label for="preselected_input">Source (pre selected)</label>
   <select id="preselected_input" [formControl]="dropdown">
-    <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel (hls)</option>
-    <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream (hls)</option>
+    <optgroup label="HLS">
+      <option value="https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8" selected>Big Buck Bunny</option>
+      <option value="https://www.streambox.fr/playlists/x31jrg1/x31jrg1.m3u8">Costa Rica</option>
+      <option value="https://www.streambox.fr/playlists/x212fsj/x212fsj.m3u8">Tears of Steel</option>
+      <option value="https://www.streambox.fr/playlists/x31e0e7/x31e0e7.m3u8">Pipe Dream</option>
+    </optgroup>
+    <optgroup label="DASH">
+      <option value="https://bitmovin-a.akamaihd.net/content/MI201109210084_1/mpds/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.mpd">Parkor</option>
+      <option value="https://storage.googleapis.com/bitmovin-demos/av1/stream_chrome.mpd">Tears of Steel 1080p @ 30FPS (AV1)</option>
+    </optgroup>
+    <optgroup label="WebM">
+      <option value="https://media-streaming.wmflabs.org/clean/transcoded/a/a9/Red-tailed_Hawk_Eating_a_Rodent_1080p_60fps.ogv/Red-tailed_Hawk_Eating_a_Rodent_1080p_60fps.ogv.1080p.webm"> Red-tailed Hawk Eating a Rodent 1080p 60fps (VP8)</option>
+      <option value="https://media-streaming.wmflabs.org/clean/transcoded/a/a9/Red-tailed_Hawk_Eating_a_Rodent_1080p_60fps.ogv/Red-tailed_Hawk_Eating_a_Rodent_1080p_60fps.ogv.1080p.vp9.webm"> Red-tailed Hawk Eating a Rodent 1080p 60fps (VP9)</option>
+      <option value="https://www.elecard.com/storage/video/Stream3_AV3_HD_6.3mbps.webm">Dancing 1080p (AV1)</option>
+      <option value="https://www.elecard.com/storage/video/Stream3_AV1_4K_13.9mbps.webm">Dancing 4K (AV1)</option>
+    </optgroup>
+    <optgroup label="MP4">
+      <option value="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">Bullrun (h.264)</option>
+      <option value="https://www.elecard.com/storage/video/Elecard_about_Tomsk_part1_HEVC_UHD.mp4">Elecard 4K video about Tomsk, part 1 (HEVC)</option>
+    </optgroup>
   </select>
 </div>
 <form [formGroup]="formGroup">
@@ -13,10 +29,6 @@
     <label for="src">Source</label>
     <input id="src" placeholder="paste an hls url" type="text" formControlName="src">
   </div>
-  <div>
-    <label for="poster">Poster</label>
-    <input id="poster" placeholder="poster source url" type="text" formControlName="poster">
-    </div>
   <label for="controls">controls</label>
   <input id="controls" placeholder="paste an hls url" type="checkbox" formControlName="controls">
   <div>
@@ -28,11 +40,13 @@
     <input id="playsinline" type="checkbox" formControlName="playsinline">
   </div>
 </form>
-<video *ngIf="config$ | async as config"
-  floHls
+<div class="video-responsive-container">
+  <video *ngIf="config$ | async as config"
+  floMse
+  class="video-responsive"
   [src]="config?.src"
-  [poster]="config?.poster"
   [controls]="config?.controls"
   [autoplay]="config?.autoplay"
   [attr.playsinline]="config?.playsinline">
 </video>
+</div>

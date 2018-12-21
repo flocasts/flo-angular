@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url('https://fonts.googleapis.com/css?family=Open+Sans:400,600');
+html {
+}
 body {
   font-family: 'Open Sans', sans-serif;
 }
@@ -26,7 +28,40 @@ h1, h2, h3, h4, h5, h6 {
 .float-right {
   float: right;
 }
-
+.video-responsive-container {
+  overflow: hidden;
+  height: 0;
+  padding-top: 56.25%;
+  position: relative;
+  background-color: black;
+}
 video {
   max-width: 100%;
+  &.video-responsive {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+  }
+}
+
+select {
+  max-width: 100%;
+}
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  select:focus,
+  textarea:focus,
+  input:focus {
+    font-size: 16px;
+    background: #eee;
+  }
+}
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+  select,
+  textarea,
+  input {
+    font-size: 16px;
+  }
 }
