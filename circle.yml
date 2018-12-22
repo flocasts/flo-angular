@@ -181,7 +181,7 @@ jobs:
           command: npm ci
       - run:
           name: Semantic Release
-          command: node_modules/.bin/semantic-release --dry-run
+          command: node_modules/.bin/semantic-release
 
 workflows:
   version: 2
