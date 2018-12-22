@@ -18,7 +18,7 @@ maybe(process.argv.find(a => a.includes('ver=')))
             version
           }
           writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
-          exec(`npm publish --dry-run ${path}`)
+          exec(`npm publish ${path}`)
         } catch (err) {
           console.error(err)
           process.exit(1)
