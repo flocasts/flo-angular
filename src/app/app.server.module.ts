@@ -3,7 +3,7 @@ import { ServerModule, ServerTransferStateModule } from '@angular/platform-serve
 import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
-import { WINDOW } from '@flosportsinc/ng-universal-services'
+import { WINDOW } from '@flosportsinc/ng-universal-services/src/window'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
 

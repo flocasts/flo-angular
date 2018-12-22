@@ -29,11 +29,11 @@
 
 | Package       | Description   | Status |
 | ------------- | ------------- | ------ |
+| [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | Work in Progress
 | [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Cross platform HTTP Live Streaming (HLS) in Angular | Work in Progress
 | [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | Work in Progress
 | [ng-video-grid](projects/flosportsinc/ng-video-grid) | Responsive video grid for mutlicamera layouts | Planned
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned
-| [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | Planned
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.
@@ -58,7 +58,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## License
 The MIT License (MIT)  
-Copyright (c) 2018 FloSports, Inc.
+Copyright (c) 2019 FloSports, Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal

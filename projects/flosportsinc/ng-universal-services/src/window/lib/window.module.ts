@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
 import { WindowService } from './window.service'
-import { WINDOW } from './tokens'
+import { WINDOW } from './window.tokens'
 
 @NgModule({
   providers: [

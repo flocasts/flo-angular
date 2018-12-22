@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@angular/core'
-import { WINDOW } from './tokens'
+import { WINDOW } from './window.tokens'
 
 export interface IWindowService {
   window<T>(): Window & T
