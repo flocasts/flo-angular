@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { IAdBlockService } from './ad-block.interface'
-import { isPlatformServer } from '@angular/common'
+import { isPlatformBrowser } from '@angular/common'
 import { catchError, map } from 'rxjs/operators'
 import { AD_BLOCK_PING_URL } from './ad-block.tokens'
 import { of } from 'rxjs'
@@ -18,7 +18,7 @@ export class AdBlockService implements IAdBlockService {
     @Inject(AD_BLOCK_PING_URL) private _pingUrl: string) { }
 
   readonly isAnAdBlockerActive = () =>
-    isPlatformServer(this._platformId)
+    isPlatformBrowser(this._platformId)
       ? this._http
         .get(this._pingUrl)
         .pipe(map(returnFalse), catchError(returnTrusObs))
