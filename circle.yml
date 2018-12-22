@@ -180,6 +180,9 @@ jobs:
           name: Install npm
           command: npm ci
       - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+      - run:
           name: Semantic Release
           command: node_modules/.bin/semantic-release
 
