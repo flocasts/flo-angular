@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
-import { AdBlockService } from '../../../ad-block/src/lib/ad-block.service'
-import { AdBlockModule } from '../../../ad-block/src/lib/ad-block.module'
+import { AdBlockService } from './ad-block.service'
+import { AdBlockModule } from './ad-block.module'
 import { NgModule, PLATFORM_ID } from '@angular/core'
 
 @NgModule({
