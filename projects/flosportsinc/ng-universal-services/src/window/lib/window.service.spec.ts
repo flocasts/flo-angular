@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing'
-import { WindowService } from '../../../window/src/lib/window.service'
-import { WINDOW } from '../../../window/src/lib/window.tokens'
+import { WindowService } from './window.service'
+import { WINDOW } from './window.tokens'
 
-describe('WindowService', () => {
+describe(WindowService.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   it('should be created with default window from test environment', () => {
