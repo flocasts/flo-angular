@@ -34,7 +34,7 @@
 | [ng-media-source-extensions-hls](projects/flosportsinc/ng-media-source-extensions-hls) | HTTP Live Streaming | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions-hls.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions-hls)
 | [ng-media-source-extensions-dash](projects/flosportsinc/ng-media-source-extensions-dash) | DASH Live Streaming | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions-dash.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions-dash)
 | [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-viewport-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-viewport-grid)
-| [ng-video-grid](projects/flosportsinc/ng-video-grid) | Responsive video grid for mutlicamera layouts | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-grid)
+| [ng-video-grid](projects/flosportsinc/ng-video-grid) | Mutlicamera grid layout | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-grid)
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
 
 ## Building ALL libraries
