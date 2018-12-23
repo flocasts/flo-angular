@@ -1,6 +1,14 @@
 {
   "name": "@flosportsinc/ng-media-source-extensions-dash",
-  "version": "0.0.1",
+  "version": "0.0.0-development",
+  "author": "Patrick Michalina <patrickmichalina@mac.com>",
+  "contributors": [],
+  "license": "MIT",
+  "private": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flocasts/flo-angular"
+  },
   "peerDependencies": {
     "@angular/common": "^7.0.0",
     "@angular/core": "^7.0.0"
