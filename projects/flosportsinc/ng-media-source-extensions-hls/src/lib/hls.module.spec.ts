@@ -73,11 +73,6 @@ const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
 })
 
 describe(HlsModule.name, () => {
-  it('should construct', () => {
-    TestBed.configureTestingModule({
-      imports: [HlsModule]
-    })
-  })
   describe(`exposed ${defaultHlsSupportedNativelyFunction.name} factory function`, () => {
     it('when default test environment (no native support)', () => {
       const videElement = window.document.createElement('video')
