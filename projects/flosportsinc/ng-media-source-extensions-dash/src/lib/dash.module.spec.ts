@@ -81,7 +81,9 @@ describe(DashModule.name, () => {
 
     it('when no mse, return false', () => {
       // tslint:disable-next-line:no-object-mutation
-      (window as any).MediaSource = undefined
+      (window as any).MediaSource = undefined;
+      // tslint:disable-next-line:no-object-mutation
+      (window as any).WebKitMediaSource = undefined
       expect(defaultDashIsSupportedFactory().func()).toEqual(false)
     })
 
