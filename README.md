@@ -30,7 +30,7 @@
 | Package       | Description   | Status | Latest |
 | ------------- | ------------- | ------ | -------|
 | [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](@flosportsinc/ng-universal-services)
-| [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Cross platform HTTP Live Streaming (HLS) in Angular | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](@flosportsinc/ng-media-source-extensions)
+| [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Cross platform HTTP Live Streaming (HLS) | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](@flosportsinc/ng-media-source-extensions)
 | [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-viewport-grid.svg)](@flosportsinc/ng-viewport-grid)
 | [ng-video-grid](projects/flosportsinc/ng-video-grid) | Responsive video grid for mutlicamera layouts | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](@flosportsinc/ng-video-grid)
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](@flosportsinc/ng-video-player)
