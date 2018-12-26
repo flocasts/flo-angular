@@ -13,5 +13,6 @@
     "@angular/common": "^7.0.0",
     "@angular/core": "^7.0.0",
     "typescript-monads": "^3.8.0"
-  }
+  },
+  "files": ["README.md"]
 }
