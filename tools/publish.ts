@@ -2,7 +2,7 @@ import { maybe } from 'typescript-monads'
 import { PROJECTS } from './libs'
 import { exec } from 'shelljs'
 import { resolve } from 'path'
-import { readFileSync, writeFileSync } from 'fs'
+import { readFileSync, writeFile } from 'fs'
 
 maybe(process.argv.find(a => a.includes('ver=')))
   .map(a => a.replace('ver=', ''))
@@ -17,8 +17,18 @@ maybe(process.argv.find(a => a.includes('ver=')))
             ...file,
             version
           }
-          writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
-          exec(`npm publish ${path} --access=public`)
+          writeFile(packagePath, JSON.stringify(newFile, undefined, 2), err => {
+            maybe(err)
+              .tap({
+                some: e => {
+                  throw e
+                },
+                none: () => {
+                  exec(`npm publish ${path} --access=public`)
+                }
+              })
+          })
+          // writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
         } catch (err) {
           console.error(err)
           process.exit(1)
