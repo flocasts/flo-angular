@@ -75,10 +75,6 @@ describe(DashModule.name, () => {
   })
 
   describe(`exposed ${defaultDashIsSupportedFactory.name} function`, () => {
-    it('when default test environment', () => {
-      expect(defaultDashIsSupportedFactory().func()).toEqual(true)
-    })
-
     it('when no mse, return false', () => {
       // tslint:disable-next-line:no-object-mutation
       (window as any).MediaSource = undefined;
