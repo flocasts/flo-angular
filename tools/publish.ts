@@ -28,7 +28,6 @@ maybe(process.argv.find(a => a.includes('ver=')))
                 }
               })
           })
-          // writeFileSync(packagePath, JSON.stringify(newFile, undefined, 2), 'utf-8')
         } catch (err) {
           console.error(err)
           process.exit(1)
