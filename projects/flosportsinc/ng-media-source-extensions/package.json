@@ -14,5 +14,6 @@
     "@angular/core": "^7.0.0",
     "typescript-monads": "^3.8.0"
   },
-  "files": ["README.md"]
+  "files": ["README.md"],
+  "keywords": ["angular", "universal", "flosports", "hls", "dash", "streaming", "live", "media source"]
 }
