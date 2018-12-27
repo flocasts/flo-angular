@@ -3,7 +3,7 @@ import { ServerModule, ServerTransferStateModule } from '@angular/platform-serve
 import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
-import { WINDOW } from '@flosportsinc/ng-universal-services/src/window'
+import { WindowServerModule } from '@flosportsinc/ng-universal-services/src/window'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
 
@@ -12,13 +12,10 @@ import { HttpRelativeInterceptor } from './relative'
     AppModule,
     ServerModule,
     ModuleMapLoaderModule,
-    ServerTransferStateModule
+    ServerTransferStateModule,
+    WindowServerModule.withWindowObject()
   ],
   providers: [
-    {
-      provide: WINDOW,
-      useValue: {}
-    },
     {
       multi: true,
       provide: HTTP_INTERCEPTORS,
