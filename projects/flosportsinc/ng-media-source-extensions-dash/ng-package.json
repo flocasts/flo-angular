@@ -7,5 +7,9 @@
       "dashjs": "dashjs",
       "typescript-monads": "typescriptMonads"
     }
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "typescript-monads",
+    "dashjs"
+  ]
 }
