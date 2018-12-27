@@ -26,7 +26,7 @@ export class AdBlockServerTestModule { }
 const getService = () => TestBed.get(AdBlockService) as AdBlockService
 const getHttpMock = () => TestBed.get(HttpTestingController) as HttpTestingController
 
-describe(AdBlockService.name, () => {
+describe('Ad-Block Module', () => {
   afterEach(() => TestBed.resetTestingModule())
 
   describe('when on server platform', () => {
