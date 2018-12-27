@@ -1,18 +1,16 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
-import { HttpClientModule } from '@angular/common/http'
-import { AD_BLOCK_PING_URL } from './ad-block.tokens'
+import { NgModule } from '@angular/core'
+import { AdBlockService } from './ad-block.service'
+import { of } from 'rxjs'
+import { IAdBlockService } from './ad-block.interface'
+
+class AdBlockServerService implements IAdBlockService {
+  readonly isAnAdBlockerActive = () => of(false)
+}
 
 @NgModule({
-  imports: [HttpClientModule],
+  providers: [{
+    provide: AdBlockService,
+    useClass: AdBlockServerService
+  }]
 })
-export class AdBlockModule {
-  static withTestUrl(url: string): ModuleWithProviders {
-    return {
-      ngModule: AdBlockModule,
-      providers: [{
-        provide: AD_BLOCK_PING_URL,
-        useValue: url
-      }]
-    }
-  }
-}
+export class AdBlockServerModule { }

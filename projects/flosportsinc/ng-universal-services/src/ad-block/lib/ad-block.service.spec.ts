@@ -1,17 +1,27 @@
 import { TestBed } from '@angular/core/testing'
 import { AdBlockService } from './ad-block.service'
-import { AdBlockModule } from './ad-block.module'
-import { NgModule, PLATFORM_ID } from '@angular/core'
+import { AdBlockBrowserModule } from './ad-block.browser.module'
+import { AdBlockServerModule } from './ad-block.server.module'
+import { NgModule } from '@angular/core'
 import { take } from 'rxjs/operators'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 
 @NgModule({
   imports: [
     HttpClientTestingModule,
-    AdBlockModule.withTestUrl('http://mysite.com/ads.js')
+    AdBlockBrowserModule.usingUrl('http://mysite.com/ads.js')
   ]
 })
-export class AdBlockTestModule { }
+export class AdBlockBrowserTestModule { }
+
+@NgModule({
+  imports: [
+    HttpClientTestingModule,
+    AdBlockServerModule
+  ]
+})
+export class AdBlockServerTestModule { }
+
 
 const getService = () => TestBed.get(AdBlockService) as AdBlockService
 const getHttpMock = () => TestBed.get(HttpTestingController) as HttpTestingController
@@ -22,11 +32,7 @@ describe(AdBlockService.name, () => {
   describe('when on server platform', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [AdBlockTestModule],
-        providers: [{
-          provide: PLATFORM_ID,
-          useValue: 'server'
-        }]
+        imports: [AdBlockServerTestModule]
       })
     })
     it('should not run GET request and always return false', () => {
@@ -39,11 +45,7 @@ describe(AdBlockService.name, () => {
   describe('when on browser platform', () => {
     beforeEach(() => {
       TestBed.configureTestingModule({
-        imports: [AdBlockTestModule],
-        providers: [{
-          provide: PLATFORM_ID,
-          useValue: 'browser'
-        }]
+        imports: [AdBlockBrowserTestModule]
       })
     })
     it('should return true when http request is blocked', () => {
