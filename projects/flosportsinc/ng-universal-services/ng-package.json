@@ -3,5 +3,8 @@
   "dest": "../../../dist/flosportsinc/ng-universal-services",
   "lib": {
     "entryFile": "src/public_api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "typescript-monads"
+  ]
 }

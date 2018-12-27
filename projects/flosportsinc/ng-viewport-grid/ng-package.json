@@ -3,5 +3,8 @@
   "dest": "../../../dist/flosportsinc/ng-viewport-grid",
   "lib": {
     "entryFile": "src/public_api.ts"
-  }
+  },
+  "whitelistedNonPeerDependencies": [
+    "typescript-monads"
+  ]
 }

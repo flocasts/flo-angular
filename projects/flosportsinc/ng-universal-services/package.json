@@ -2,6 +2,10 @@
   "name": "@flosportsinc/ng-universal-services",
   "version": "0.0.0-development",
   "author": "Patrick Michalina <patrickmichalina@mac.com>",
+  "homepage": "https://flosports-component-library.herokuapp.com",
+  "bugs": {
+    "url": "https://github.com/flocasts/flo-angular/issues"
+  },
   "contributors": [],
   "license": "MIT",
   "private": false,
