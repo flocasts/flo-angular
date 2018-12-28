@@ -46,15 +46,8 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - node_modules
+      - attach_workspace:
+          at: .
       - run:
           name: Exectue Lint
           command: npm run lint
@@ -84,19 +77,14 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: .
       - run:
           name: Test
           command: |
             npm run test.ci.viewport-grid
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-viewport-grid.json coverage/ng-viewport-grid/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-viewport-grid.json ./coverage/ng-viewport-grid/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.ng-viewport-grid.json
   test_mse:
@@ -104,19 +92,14 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: .
       - run:
           name: Test
           command: |
             npm run test.ci.mse
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions.json coverage/ng-media-source-extensions/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions.json ./coverage/ng-media-source-extensions/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.ng-media-source-extensions.json
   test_mse-dash:
@@ -124,19 +107,14 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: .
       - run:
           name: Test
           command: |
             npm run test.ci.mse-dash
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions-dash.json coverage/ng-media-source-extensions-dash/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions-dash.json ./coverage/ng-media-source-extensions-dash/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.ng-media-source-extensions-dash.json
   test_mse-hls:
@@ -144,19 +122,14 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: .
       - run:
           name: Test
           command: |
             npm run test.ci.mse-hls
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-media-source-extensions-hls.json coverage/ng-media-source-extensions-hls/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions-hls.json ./coverage/ng-media-source-extensions-hls/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.ng-media-source-extensions-hls.json
   test_services:
@@ -164,19 +137,14 @@ jobs:
     steps:
       - checkout
       - attach_workspace:
-          at: /
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install Dependencies
-          command: npm ci
+          at: .
       - run:
           name: Test
           command: |
             npm run test.ci.services
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.ng-universal-services.json coverage/ng-universal-services/lcov.info
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-universal-services.json ./coverage/ng-universal-services/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.ng-universal-services.json
   upload_coverage:
@@ -211,28 +179,33 @@ workflows:
     jobs:
       - prep_coverage
       - build
-    #   - e2e:
-    #       requires:
-    #         - build
+      - e2e:
+          requires:
+            - build
       - test_docs_site:
           requires:
             - build
             - prep_coverage
-    #   - test_viewport_grid:
-    #       requires:
-    #         - prep_coverage
-    #   - test_mse:
-    #       requires:
-    #         - prep_coverage
-    #   - test_mse-dash:
-    #       requires:
-    #         - prep_coverage
-    #   - test_mse-hls:
-    #       requires:
-    #         - prep_coverage
-    #   - test_services:
-    #       requires:
-    #         - prep_coverage
+      - test_viewport_grid:
+          requires:
+            - build
+            - prep_coverage
+      - test_mse:
+          requires:
+            - build
+            - prep_coverage
+      - test_mse-dash:
+          requires:
+            - build
+            - prep_coverage
+      - test_mse-hls:
+          requires:
+            - build
+            - prep_coverage
+      - test_services:
+          requires:
+            - build
+            - prep_coverage
     #   - upload_coverage:
     #       requires:
     #         - test_docs_site
