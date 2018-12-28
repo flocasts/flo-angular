@@ -20,6 +20,7 @@
     "start.ssr": "npm run build.ssr && node dist/server.js",
     "start.prod": "npm run build.prod && node dist/server.js",
     "build": "ng build --service-worker",
+    "build.lib": "ts-node --project tsconfig.tools.json tools/build.ts",
     "build.ssr": "ng build && ng run flo-angular:node && npm run webpack.server",
     "build.prod": "ng build --prod && ts-node --project tsconfig.tools.json tools/compress.ts && ng run flo-angular:node && npm run webpack.server",
     "test": "ng test",
@@ -34,7 +35,6 @@
     "e2e.ci": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ci.conf.js",
     "e2e.ssr": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
     "e2e.prod": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ssr.conf.js",
-    "prepare": "ts-node --project tsconfig.tools.json tools/build.ts",
     "heroku-postbuild": "npm run build.prod",
     "webpack.server": "webpack --config webpack.server.config.js --progress --colors"
   },

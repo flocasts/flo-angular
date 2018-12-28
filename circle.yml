@@ -18,8 +18,11 @@ jobs:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - node_modules
+      - run:
+          name: Build Libraries
+          command: npm run build.lib
       - persist_to_workspace:
-          root: /
+          root: .
           paths:
             - dist
       - run:
@@ -29,7 +32,7 @@ jobs:
             curl -L https:/codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
             chmod +x ./cc-test-reporter
       - persist_to_workspace:
-          root: /
+          root: .
           paths:
             - cc-test-reporter
   e2e:
@@ -205,43 +208,43 @@ workflows:
   build:
     jobs:
       - prep_coverage
-      - e2e
+    #   - e2e
       - test_docs_site:
           requires:
             - prep_coverage
-      - test_viewport_grid:
-          requires:
-            - prep_coverage
-      - test_mse:
-          requires:
-            - prep_coverage
-      - test_mse-dash:
-          requires:
-            - prep_coverage
-      - test_mse-hls:
-          requires:
-            - prep_coverage
-      - test_services:
-          requires:
-            - prep_coverage
-      - upload_coverage:
-          requires:
-            - test_docs_site
-            - test_viewport_grid
-            - test_mse
-            - test_mse-dash
-            - test_mse-hls
-            - test_services
-      - publish:
-          requires:
-            - test_docs_site
-            - test_viewport_grid
-            - test_mse
-            - test_mse-dash
-            - test_mse-hls
-            - test_services
-            - upload_coverage
-            - e2e
-          filters:
-            branches:
-              only: master
+    #   - test_viewport_grid:
+    #       requires:
+    #         - prep_coverage
+    #   - test_mse:
+    #       requires:
+    #         - prep_coverage
+    #   - test_mse-dash:
+    #       requires:
+    #         - prep_coverage
+    #   - test_mse-hls:
+    #       requires:
+    #         - prep_coverage
+    #   - test_services:
+    #       requires:
+    #         - prep_coverage
+    #   - upload_coverage:
+    #       requires:
+    #         - test_docs_site
+    #         - test_viewport_grid
+    #         - test_mse
+    #         - test_mse-dash
+    #         - test_mse-hls
+    #         - test_services
+    #   - publish:
+    #       requires:
+    #         - test_docs_site
+    #         - test_viewport_grid
+    #         - test_mse
+    #         - test_mse-dash
+    #         - test_mse-hls
+    #         - test_services
+    #         - upload_coverage
+    #         - e2e
+    #       filters:
+    #         branches:
+    #           only: master
