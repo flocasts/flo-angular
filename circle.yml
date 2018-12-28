@@ -5,7 +5,7 @@ defaults: &defaults
 
 version: 2
 jobs:
-  prep_coverage:
+  build:
     <<: *defaults
     steps:
       - checkout
@@ -29,6 +29,9 @@ jobs:
           root: .
           paths:
             - node_modules
+  prep_coverage:
+    <<: *defaults
+    steps:
       - run:
           name: Download cc-test-reporter
           command: |
@@ -207,9 +210,13 @@ workflows:
   build:
     jobs:
       - prep_coverage
-    #   - e2e
+      - build
+    #   - e2e:
+    #       requires:
+    #         - build
       - test_docs_site:
           requires:
+            - build
             - prep_coverage
     #   - test_viewport_grid:
     #       requires:
