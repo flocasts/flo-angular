@@ -60,9 +60,9 @@ jobs:
   test_docs_site:
     <<: *defaults
     steps:
-    #   - checkout
-    #   - attach_workspace:
-    #       at: /
+      - checkout
+      - attach_workspace:
+          at: .
     #   - restore_cache:
     #       key: dependency-cache-{{ checksum "package.json" }}
     #   - run:
@@ -72,9 +72,9 @@ jobs:
           name: Test
           command: |
             npm run test.ci.app
-            /cc-test-reporter format-coverage -t lcov -o tmp/cc.flo-angular.json coverage/flo-angular/lcov.info
+            /cc-test-reporter format-coverage -t lcov -o /cc.flo-angular.json coverage/flo-angular/lcov.info
       - persist_to_workspace:
-          root: tmp
+          root: .
           paths:
             - cc.flo-angular.json
   test_viewport_grid:
