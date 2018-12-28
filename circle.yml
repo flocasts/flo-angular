@@ -25,6 +25,10 @@ jobs:
           root: .
           paths:
             - dist
+      - persist_to_workspace:
+          root: .
+          paths:
+            - node_modules
       - run:
           name: Download cc-test-reporter
           command: |
