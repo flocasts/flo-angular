@@ -21,6 +21,12 @@ jobs:
       - run:
           name: Build Libraries
           command: npm run build.lib
+      - run:
+          name: Lint
+          command: npm run lint
+      - run:
+          name: Build
+          command: npm run build.prod
       - persist_to_workspace:
           root: .
           paths:
@@ -48,12 +54,6 @@ jobs:
       - checkout
       - attach_workspace:
           at: .
-      - run:
-          name: Exectue Lint
-          command: npm run lint
-      - run:
-          name: Build
-          command: npm run build.prod
       - run:
           name: Exectue E2E
           command: npm run e2e.ci
