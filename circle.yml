@@ -151,21 +151,18 @@ jobs:
     <<: *defaults
     steps:
       - attach_workspace:
-          at: /
+          at: .
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            /cc-test-reporter sum-coverage /cc.*.json -p 6 -o /cc.total.json
-            /cc-test-reporter upload-coverage -i /cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 6 -o ./cc.total.json
+            ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
     steps:
       - checkout
-      - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-      - run:
-          name: Install npm
-          command: npm ci
+      - attach_workspace:
+          at: .
       - run:
           name: Authenticate with registry
           command: echo "/registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
@@ -206,24 +203,24 @@ workflows:
           requires:
             - build
             - prep_coverage
-    #   - upload_coverage:
-    #       requires:
-    #         - test_docs_site
-    #         - test_viewport_grid
-    #         - test_mse
-    #         - test_mse-dash
-    #         - test_mse-hls
-    #         - test_services
-    #   - publish:
-    #       requires:
-    #         - test_docs_site
-    #         - test_viewport_grid
-    #         - test_mse
-    #         - test_mse-dash
-    #         - test_mse-hls
-    #         - test_services
-    #         - upload_coverage
-    #         - e2e
-    #       filters:
-    #         branches:
-    #           only: master
+      - upload_coverage:
+          requires:
+            - test_docs_site
+            - test_viewport_grid
+            - test_mse
+            - test_mse-dash
+            - test_mse-hls
+            - test_services
+      - publish:
+          requires:
+            - test_docs_site
+            - test_viewport_grid
+            - test_mse
+            - test_mse-dash
+            - test_mse-hls
+            - test_services
+            - upload_coverage
+            - e2e
+          filters:
+            branches:
+              only: master
