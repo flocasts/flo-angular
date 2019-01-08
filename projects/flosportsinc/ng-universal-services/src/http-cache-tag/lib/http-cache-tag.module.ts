@@ -1,0 +1,53 @@
+import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core'
+import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
+import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY, ICacheTagConfig, IWriteResponseHeader } from './http-cache-tag.tokens'
+import { HTTP_INTERCEPTORS } from '@angular/common/http'
+
+export const DEFAULT_CACHE_TAG_CONFIGURATION: ICacheTagConfig = {
+  cacheableResponseCodes: [200],
+  headerKey: 'Cache-Tag'
+}
+
+/**
+ * noop, since in theory we can allow more servers than just express.
+ */
+export const DEFAULT_WRITE_HEADER_FACTORY: IWriteResponseHeader<any> = _response => _headerKey => _responseHeader => { }
+
+@NgModule()
+export class HttpCacheTagServerModule {
+  static withConfig(config: Partial<ICacheTagConfig> = {}): ModuleWithProviders {
+    return {
+      ngModule: HttpCacheTagServerModule,
+      providers: [
+        {
+          provide: HttpCacheTagInterceptor,
+          useClass: HttpCacheTagInterceptor,
+          deps: [CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY]
+        },
+        {
+          provide: HTTP_INTERCEPTORS,
+          useExisting: HttpCacheTagInterceptor,
+          multi: true
+        },
+        {
+          provide: CACHE_TAG_WRITE_HEADER_FACTORY,
+          useFactory: DEFAULT_WRITE_HEADER_FACTORY
+        },
+        {
+          provide: CACHE_TAG_CONFIG,
+          useValue: {
+            ...DEFAULT_CACHE_TAG_CONFIGURATION,
+            ...config
+          }
+        }
+      ]
+    }
+  }
+
+  constructor(@Optional() @SkipSelf() parentModule: HttpCacheTagServerModule) {
+    // tslint:disable-next-line:no-if-statement
+    if (parentModule) {
+      throw new Error('HttpCachTageModule already loaded. Import in root module only.')
+    }
+  }
+}
