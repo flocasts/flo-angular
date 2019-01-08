@@ -19,12 +19,6 @@ jobs:
           paths:
             - node_modules
       - run:
-          name: Authenticate with registry
-          command: echo "/registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/./.npmrc
-      - run:
-          name: TEST RUN
-          command: npm publish --dry-run
-      - run:
           name: Build Libraries
           command: npm run build.lib
       - run:
@@ -171,7 +165,7 @@ jobs:
           at: .
       - run:
           name: Authenticate with registry
-          command: echo "/registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+          command: echo "/registry.npmjs.org/:_authToken=$NPM_TOKEN" > ..npmrc
       - run:
           name: Semantic Release
           command: node_modules/.bin/semantic-release
