@@ -16,26 +16,29 @@ export function DEFAULT_WRITE_HEADER_FACTORY(): IWriteResponseHeader {
   return lambda
 }
 
-@NgModule()
+@NgModule({
+  providers: [
+    {
+      provide: HttpCacheTagInterceptor,
+      useClass: HttpCacheTagInterceptor,
+      deps: [CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY]
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useExisting: HttpCacheTagInterceptor,
+      multi: true
+    },
+    {
+      provide: CACHE_TAG_WRITE_HEADER_FACTORY,
+      useFactory: DEFAULT_WRITE_HEADER_FACTORY
+    }
+  ]
+})
 export class HttpCacheTagServerModule {
   static withConfig(config: Partial<ICacheTagConfig> = {}): ModuleWithProviders {
     return {
       ngModule: HttpCacheTagServerModule,
       providers: [
-        {
-          provide: HttpCacheTagInterceptor,
-          useClass: HttpCacheTagInterceptor,
-          deps: [CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY]
-        },
-        {
-          provide: HTTP_INTERCEPTORS,
-          useExisting: HttpCacheTagInterceptor,
-          multi: true
-        },
-        {
-          provide: CACHE_TAG_WRITE_HEADER_FACTORY,
-          useFactory: DEFAULT_WRITE_HEADER_FACTORY
-        },
         {
           provide: CACHE_TAG_CONFIG,
           useValue: {
