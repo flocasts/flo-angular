@@ -1,11 +1,33 @@
-import {
-  HttpHandler,
-  HttpHeaders,
-  HttpInterceptor,
-  HttpRequest,
-  HttpResponse
-} from '@angular/common/http'
-import { async, TestBed } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
+import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
+import { HttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
+import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY } from './http-cache-tag.tokens'
+
+describe(HttpCacheTagExpressServerModule.name, () => {
+  afterEach(TestBed.resetTestingModule)
+
+  it('should construct with default values', () => {
+    TestBed.configureTestingModule({
+      imports: [HttpCacheTagExpressServerModule]
+    })
+    expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
+    // expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(DEFAULT_CACHE_TAG_CONFIGURATION)
+    // expect(TestBed.get(CACHE_TAG_WRITE_HEADER_FACTORY)()()()).toBeUndefined()
+  })
+
+  it('should construct with custom values', () => {
+    const config = {
+      headerKey: 'X-Cache',
+      cacheableResponseCodes: [100]
+    }
+    TestBed.configureTestingModule({
+      imports: [HttpCacheTagExpressServerModule.withConfig(config)]
+    })
+    expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
+    expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(config)
+  })
+})
+
 
 // describe(HttpXCacheInterceptor.name, () => {
 //   let interceptor: HttpInterceptor

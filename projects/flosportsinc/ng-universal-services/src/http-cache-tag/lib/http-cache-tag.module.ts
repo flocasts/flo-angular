@@ -31,6 +31,10 @@ export function DEFAULT_WRITE_HEADER_FACTORY(): IWriteResponseHeader {
     {
       provide: CACHE_TAG_WRITE_HEADER_FACTORY,
       useFactory: DEFAULT_WRITE_HEADER_FACTORY
+    },
+    {
+      provide: CACHE_TAG_CONFIG,
+      useValue: DEFAULT_CACHE_TAG_CONFIGURATION
     }
   ]
 })
@@ -47,13 +51,6 @@ export class HttpCacheTagServerModule {
           }
         }
       ]
-    }
-  }
-
-  constructor(@Optional() @SkipSelf() parentModule: HttpCacheTagServerModule) {
-    // tslint:disable-next-line:no-if-statement
-    if (parentModule) {
-      throw new Error('HttpCachTageModule already loaded. Import in root module only.')
     }
   }
 }
