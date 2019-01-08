@@ -60,7 +60,7 @@ To get more help on the Angular CLI use `ng help` or go check out the [Angular C
 
 ## License
 The MIT License (MIT)  
-Copyright (c) 2019 FloSports, Inc.
+Copyright (c) 2019 FloSports
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
