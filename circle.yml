@@ -161,11 +161,14 @@ jobs:
     <<: *defaults
     steps:
       - checkout
-      - attach_workspace:
-          at: .
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install npm
+          command: npm ci
       - run:
           name: Authenticate with registry
-          command: echo "/registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/./.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > ~/.npmrc
       - run:
           name: Semantic Release
           command: node_modules/.bin/semantic-release
