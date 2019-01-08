@@ -11,7 +11,10 @@ export const DEFAULT_CACHE_TAG_CONFIGURATION: ICacheTagConfig = {
 /**
  * noop, since in theory we can allow more servers than just express.
  */
-export const DEFAULT_WRITE_HEADER_FACTORY: IWriteResponseHeader<any> = _response => _headerKey => _responseHeader => { }
+export function DEFAULT_WRITE_HEADER_FACTORY(): IWriteResponseHeader {
+  const lambda: IWriteResponseHeader = _response => _headerKey => _responseHeader => { }
+  return lambda
+}
 
 @NgModule()
 export class HttpCacheTagServerModule {

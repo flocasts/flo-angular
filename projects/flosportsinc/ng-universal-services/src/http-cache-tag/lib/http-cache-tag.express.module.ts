@@ -14,10 +14,13 @@ const appendResponseHeader = (response: Response) => (key: string) => (value: st
   response.header(key, newValue)
 }
 
-export const DEFAULT_EXPRESS_WRITE_HEADER_FACTORY: IWriteResponseHeader<Response> = response =>
-  headerKey =>
-    httpClientResponseCacheTag =>
-      appendResponseHeader(response)(headerKey)(httpClientResponseCacheTag)()
+export function DEFAULT_EXPRESS_WRITE_HEADER_FACTORY(response: Response): IWriteResponseHeader {
+  const lambda: IWriteResponseHeader =
+    headerKey =>
+      httpClientResponseCacheTag =>
+        appendResponseHeader(response)(headerKey)(httpClientResponseCacheTag)()
+  return lambda
+}
 
 @NgModule({
   imports: [HttpCacheTagServerModule]

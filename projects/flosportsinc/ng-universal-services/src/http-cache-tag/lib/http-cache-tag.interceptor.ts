@@ -15,7 +15,7 @@ import {
 export class HttpCacheTagInterceptor implements HttpInterceptor {
   constructor(
     @Inject(CACHE_TAG_CONFIG) private config: ICacheTagConfig,
-    @Inject(CACHE_TAG_WRITE_HEADER_FACTORY) private factory: IWriteResponseHeader<any>
+    @Inject(CACHE_TAG_WRITE_HEADER_FACTORY) private factory: IWriteResponseHeader
   ) {
     if (!config.headerKey) { throw new Error('missing config.headerKey') }
     if (!config.cacheableResponseCodes) { throw new Error('missing config.cacheableResponseCodes') }
@@ -33,7 +33,8 @@ export class HttpCacheTagInterceptor implements HttpInterceptor {
 
   readonly writeResponseHeaders =
     <T>(response: HttpResponse<T>) => {
-      return this.factory(response)('')('')
+      const cacheHeader = response.headers.get(this.config.headerKey) || ''
+      return this.factory(this.config.headerKey)(cacheHeader)
     }
 
   intercept<T>(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<T>> {
