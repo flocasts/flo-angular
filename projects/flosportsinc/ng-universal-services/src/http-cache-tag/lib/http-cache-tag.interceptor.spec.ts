@@ -135,7 +135,8 @@ describe(HttpCacheTagInterceptor.name, () => {
 
     helpers.http.get(url, { observe: 'response' }).subscribe(
       res => {
-        expect(res.headers.get(headerKey)).toBeNull()
+        const header = res.headers.get(headerKey)
+        expect(header).toBeNull()
         expect(responseSpy).not.toHaveBeenCalled()
       },
       _err => expect(false).toEqual(true)
