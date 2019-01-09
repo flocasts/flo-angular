@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
 import { HttpCacheTagServerModule, DEFAULT_CACHE_TAG_CONFIGURATION } from './http-cache-tag.module'
-import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY } from './http-cache-tag.tokens'
+import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY, ICacheTagConfig } from './http-cache-tag.tokens'
 
 describe(HttpCacheTagServerModule.name, () => {
   afterEach(TestBed.resetTestingModule)
@@ -24,7 +24,7 @@ describe(HttpCacheTagServerModule.name, () => {
   })
 
   it('should construct with custom values', () => {
-    const config = {
+    const config: Partial<ICacheTagConfig> = {
       headerKey: 'X-Cache',
       cacheableResponseCodes: [100]
     }
@@ -32,7 +32,10 @@ describe(HttpCacheTagServerModule.name, () => {
       imports: [HttpCacheTagServerModule.withConfig(config)]
     })
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
-    expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(config)
+    expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual({
+      ...DEFAULT_CACHE_TAG_CONFIGURATION,
+      ...config
+    })
   })
 })
 

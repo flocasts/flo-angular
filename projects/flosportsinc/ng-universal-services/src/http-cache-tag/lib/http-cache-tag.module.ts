@@ -5,14 +5,15 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http'
 
 export const DEFAULT_CACHE_TAG_CONFIGURATION: ICacheTagConfig = {
   cacheableResponseCodes: [200],
-  headerKey: 'Cache-Tag'
+  headerKey: 'Cache-Tag',
+  delimiter: ','
 }
 
 /**
  * noop, since in theory we can allow more servers than just express.
  */
 export function DEFAULT_WRITE_HEADER_FACTORY(): IWriteResponseHeader {
-  const lambda: IWriteResponseHeader = _response => _headerKey => _responseHeader => { }
+  const lambda: IWriteResponseHeader = _response => _headerKey => _delimiter => { }
   return lambda
 }
 
