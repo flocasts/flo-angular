@@ -33,7 +33,10 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   })
 
   it('should construct withConfig empty', () => {
-    setupStandardTestBed()
+    TestBed.configureTestingModule({
+      imports: [HttpCacheTagExpressServerModule.withConfig()],
+      providers: [RESPONSE_PROVIDER]
+    })
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(DEFAULT_CACHE_TAG_CONFIGURATION)
   })
