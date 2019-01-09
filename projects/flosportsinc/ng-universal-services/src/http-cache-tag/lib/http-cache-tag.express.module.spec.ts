@@ -8,6 +8,11 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens'
 describe(HttpCacheTagExpressServerModule.name, () => {
   afterEach(TestBed.resetTestingModule)
 
+  const setupStandardTestBed = (config = {}) => TestBed.configureTestingModule({
+    imports: [HttpCacheTagExpressServerModule.withConfig(config)],
+    providers: [RESPONSE_PROVIDER]
+  })
+
   const RESPONSE_PROVIDER = {
     provide: RESPONSE,
     useValue: {
@@ -22,19 +27,13 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   }
 
   it('should construct with default values', () => {
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule],
-      providers: [RESPONSE_PROVIDER]
-    })
+    setupStandardTestBed()
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(DEFAULT_CACHE_TAG_CONFIGURATION)
   })
 
   it('should construct withConfig empty', () => {
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule.withConfig()],
-      providers: [RESPONSE_PROVIDER]
-    })
+    setupStandardTestBed()
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(DEFAULT_CACHE_TAG_CONFIGURATION)
   })
@@ -44,10 +43,8 @@ describe(HttpCacheTagExpressServerModule.name, () => {
       headerKey: 'E-Cache',
       cacheableResponseCodes: [202, 204]
     }
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule.withConfig(config)],
-      providers: [RESPONSE_PROVIDER]
-    })
+
+    setupStandardTestBed(config)
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual({
       ...DEFAULT_CACHE_TAG_CONFIGURATION,
@@ -56,10 +53,8 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   })
 
   it('should get express response header correcly', () => {
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule],
-      providers: [RESPONSE_PROVIDER]
-    })
+    setupStandardTestBed()
+
     const config = TestBed.get(CACHE_TAG_CONFIG) as ICacheTagConfig
     const res = TestBed.get(RESPONSE)
     const spy = spyOn(res, 'header')
@@ -71,10 +66,7 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   })
 
   it('should set express response headers', () => {
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule],
-      providers: [RESPONSE_PROVIDER]
-    })
+    setupStandardTestBed()
 
     const config = TestBed.get(CACHE_TAG_CONFIG) as ICacheTagConfig
     const res = TestBed.get(RESPONSE)
@@ -86,10 +78,7 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   })
 
   it('should set express response headers', () => {
-    TestBed.configureTestingModule({
-      imports: [HttpCacheTagExpressServerModule],
-      providers: [RESPONSE_PROVIDER]
-    })
+    setupStandardTestBed()
 
     const config = TestBed.get(CACHE_TAG_CONFIG) as ICacheTagConfig
     const res = TestBed.get(RESPONSE)

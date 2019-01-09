@@ -1,163 +1,109 @@
-// import { TestBed } from '@angular/core/testing'
-// import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
-// import { HttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
-// import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY } from './http-cache-tag.tokens'
-
-// describe(HttpCacheTagExpressServerModule.name, () => {
-//   afterEach(TestBed.resetTestingModule)
-
-//   it('should construct with default values', () => {
-//     TestBed.configureTestingModule({
-//       imports: [HttpCacheTagExpressServerModule]
-//     })
-//     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
-//     // expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(DEFAULT_CACHE_TAG_CONFIGURATION)
-//     // expect(TestBed.get(CACHE_TAG_WRITE_HEADER_FACTORY)()()()).toBeUndefined()
-//   })
-
-//   it('should construct with custom values', () => {
-//     const config = {
-//       headerKey: 'X-Cache',
-//       cacheableResponseCodes: [100]
-//     }
-//     TestBed.configureTestingModule({
-//       imports: [HttpCacheTagExpressServerModule.withConfig(config)]
-//     })
-//     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
-//     expect(TestBed.get(CACHE_TAG_CONFIG)).toEqual(config)
-//   })
-// })
+import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
+import { TestBed } from '@angular/core/testing'
+import { HttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
+import { DEFAULT_CACHE_TAG_CONFIGURATION } from './http-cache-tag.module'
+import { RESPONSE } from '@nguniversal/express-engine/tokens'
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpErrorResponse,
+  HttpInterceptor,
+  HttpClientModule
+} from '@angular/common/http'
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
+import { ICacheTagConfig } from './http-cache-tag.tokens'
 
 
-// // describe(HttpXCacheInterceptor.name, () => {
-// //   let interceptor: HttpInterceptor
+describe(HttpCacheTagInterceptor.name, () => {
+  afterEach(TestBed.resetTestingModule)
 
-// //   beforeEach(() => {
-// //     TestBed.configureTestingModule({
-// //       imports: [AppTestingModule.forRoot()],
-// //       providers: [
-// //         HttpXCacheInterceptor,
-// //         { provide: HttpHandler, useValue: new MockHttpHandler() },
-// //         {
-// //           provide: ServerResponseService,
-// //           useValue: new MockServerResponseService()
-// //         }
-// //       ]
-// //     })
-// //   })
+  const RESPONSE_PROVIDER = {
+    provide: RESPONSE,
+    useValue: {
+      getHeader: (key: string) => {
+        const dict = {
+          [DEFAULT_CACHE_TAG_CONFIGURATION.headerKey]: 'Video-1'
+        }
+        return dict[key]
+      },
+      header: () => { }
+    }
+  }
 
-// //   beforeEach(() => {
-// //     interceptor = TestBed.get(HttpXCacheInterceptor)
-// //   })
+  const setupStandardTestBed = (config: Partial<ICacheTagConfig> = {}) => TestBed.configureTestingModule({
+    imports: [
+      HttpClientModule,
+      HttpClientTestingModule,
+      HttpCacheTagExpressServerModule.withConfig(config)
+    ],
+    providers: [RESPONSE_PROVIDER]
+  })
 
-// //   afterEach(() => {
-// //     TestBed.resetTestingModule()
-// //   })
+  const httpTestHelpers = () => {
+    return {
+      http: TestBed.get(HttpClient) as HttpClient,
+      httpMock: TestBed.get(HttpTestingController) as HttpTestingController
+    }
+  }
 
-// //   it('should construct', async(() => {
-// //     expect(interceptor).toBeDefined()
-// //   }))
+  it('should throw exceptions on bad config ', () => {
+    setupStandardTestBed({
+      headerKey: undefined
+    })
+  })
 
-// //   it('should append cache headers when GET response status code is 200 and header exists', async(() => {
-// //     const req = new HttpRequest('GET', 'articles')
-// //     const handler = TestBed.get(HttpHandler) as HttpHandler
-// //     const spy = jest.spyOn(
-// //       TestBed.get(ServerResponseService) as IServerResponseService,
-// //       'appendHeader'
-// //     )
-// //     interceptor.intercept(req, handler).subscribe(next => {
-// //       expect(spy).toHaveBeenCalledTimes(1)
-// //     })
-// //   }))
+  it('should... ', () => {
+    setupStandardTestBed()
 
-// //   it('should not append cache headers when wrong header exists', async(() => {
-// //     const req = new HttpRequest('GET', 'articles')
-// //     const handler = TestBed.get(HttpHandler) as MockHttpHandler
-// //     handler.headers = { 'X-Cache-Wrong-Key': 'Article-123' }
-// //     const spy = jest.spyOn(
-// //       TestBed.get(ServerResponseService) as IServerResponseService,
-// //       'appendHeader'
-// //     )
-// //     interceptor.intercept(req, handler as any).subscribe(next => {
-// //       expect(spy).not.toHaveBeenCalled()
-// //     })
-// //   }))
+    const helpers = httpTestHelpers()
+    const response = TestBed.get(RESPONSE)
+    const responseSpy = spyOn(response, 'header')
 
-// //   it('should not append cache headers when no headers exists', async(() => {
-// //     const req = new HttpRequest('GET', 'articles')
-// //     const handler = TestBed.get(HttpHandler) as MockHttpHandler
-// //     handler.headers = undefined
-// //     const spy = jest.spyOn(
-// //       TestBed.get(ServerResponseService) as IServerResponseService,
-// //       'appendHeader'
-// //     )
-// //     interceptor.intercept(req, handler as any).subscribe(next => {
-// //       expect(spy).not.toHaveBeenCalled()
-// //     })
-// //   }))
+    const url = 'http://some-cool-app/api/video/1'
+    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
+    const sampleResponse = { headers: { [headerKey]: 'Video-1' }, status: 200, statusText: 'success' }
 
-// //   it('should not append during http status codes other than 200', async(() => {
-// //     const req = new HttpRequest('GET', 'articles')
-// //     const handler = TestBed.get(HttpHandler) as MockHttpHandler
-// //     handler.status = 400
-// //     const spy = jest.spyOn(
-// //       TestBed.get(ServerResponseService) as IServerResponseService,
-// //       'appendHeader'
-// //     )
-// //     interceptor.intercept(req, handler as any).subscribe(next => {
-// //       expect(spy).not.toHaveBeenCalled()
-// //     })
-// //   }))
-// // })
+    helpers.http.get(url, { observe: 'response' }).subscribe(
+      res => {
+        expect(res.headers.get(headerKey)).toEqual('Video-1')
+        expect(responseSpy).toHaveBeenCalledWith('Cache-Tag', 'Video-1')
+      },
+      _err => expect(false).toEqual(true)
+    )
 
-// // class MockHttpHandler {
-// //   headers: { [key: string]: string } | undefined = {
-// //     'X-Cache-Tags': 'Article-123'
-// //   }
-// //   status = 200
-// //   handle(obs: Observable<any>) {
-// //     return of(
-// //       new HttpResponse({
-// //         status: this.status,
-// //         headers: new HttpHeaders(this.headers)
-// //       })
-// //     )
-// //   }
-// // }
+    helpers.httpMock
+      .expectOne(r => r.url === url)
+      .flush(sampleResponseBody, sampleResponse)
 
-// // class MockServerResponseService implements IServerResponseService {
-// //   returnJson(obj: any): void {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   setRedirect(location: string): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   removeHeader(key: string): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   appendHeader(
-// //     key: string,
-// //     value: string,
-// //     delimiter?: string | undefined
-// //   ): this {
-// //     return this
-// //   }
-// //   getHeader(key: string): string {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   setHeader(key: string, value: string): this {
-// //     return this
-// //   }
-// //   setHeaders(dictionary: { [key: string]: string }): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   setStatus(code: number, message?: string | undefined): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   setNotFound(message?: string | undefined): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// //   setError(message?: string | undefined): this {
-// //     throw new Error('Method not implemented.')
-// //   }
-// // }
+    helpers.httpMock.verify()
+  })
+
+  it('should not set cache headers when status code is out of range ', () => {
+    setupStandardTestBed()
+
+    const helpers = httpTestHelpers()
+    const response = TestBed.get(RESPONSE)
+    const responseSpy = spyOn(response, 'header')
+
+    const url = 'http://some-cool-app/api/video/1'
+    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
+    const sampleResponse = { headers: { [headerKey]: 'Video-1' }, status: 202, statusText: 'success' }
+
+    helpers.http.get(url, { observe: 'response' }).subscribe(
+      res => {
+        expect(res.headers.get(headerKey)).toEqual('Video-1')
+        expect(responseSpy).not.toHaveBeenCalled()
+      },
+      _err => expect(false).toEqual(true)
+    )
+
+    helpers.httpMock
+      .expectOne(r => r.url === url)
+      .flush(sampleResponseBody, sampleResponse)
+
+    helpers.httpMock.verify()
+  })
+})
+

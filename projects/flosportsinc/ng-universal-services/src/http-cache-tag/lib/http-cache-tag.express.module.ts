@@ -16,7 +16,6 @@ export const immutableAppend =
 export const appendResponseHeader = (response: Response) => (key: string) => (value: string) => (delimiter = ',') => {
   const current = (response.getHeader(key) || '').toString()
   const newValue = immutableAppend(current)(delimiter)(value)
-
   response.header(key, newValue)
 }
 

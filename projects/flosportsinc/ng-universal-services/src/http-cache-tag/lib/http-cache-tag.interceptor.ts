@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@angular/core'
-import { filter, tap } from 'rxjs/operators'
-import { Observable, merge } from 'rxjs'
+import { filter, tap, mergeAll, share } from 'rxjs/operators'
+import { Observable, merge, race } from 'rxjs'
 import { CACHE_TAG_CONFIG, ICacheTagConfig, CACHE_TAG_WRITE_HEADER_FACTORY, IWriteResponseHeader } from './http-cache-tag.tokens'
 import {
   HttpHandler,
@@ -18,10 +18,9 @@ export class HttpCacheTagInterceptor implements HttpInterceptor {
     @Inject(CACHE_TAG_WRITE_HEADER_FACTORY) private factory: IWriteResponseHeader
   ) {
     if (!config.headerKey) { throw new Error('missing config.headerKey') }
-    if (!config.cacheableResponseCodes) { throw new Error('missing config.cacheableResponseCodes') }
   }
 
-  readonly isCacheableResponseCode = (code: number) => this.config.cacheableResponseCodes.find(a => a === code) ? true : false
+  readonly isCacheableResponseCode = (code: number) => (this.config.cacheableResponseCodes || []).find(a => a === code) ? true : false
 
   readonly isHttpResponseEvent =
     <T>(httpEvent: HttpEvent<T>) =>
@@ -34,12 +33,13 @@ export class HttpCacheTagInterceptor implements HttpInterceptor {
   readonly writeResponseHeaders =
     <T>(response: HttpResponse<T>) => {
       const cacheHeader = response.headers.get(this.config.headerKey) || ''
-      return this.factory(this.config.headerKey)(cacheHeader)
+      return this.factory(this.config.headerKey)(cacheHeader)(this.config.delimiter)
     }
 
   intercept<T>(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<T>> {
-    const httpResponseEvents$ = next.handle(req).pipe(filter<HttpResponse<T>>(this.isHttpResponseEvent))
-    const otherHttpEvents$ = next.handle(req).pipe(filter<HttpEvent<T>>(e => !this.isHttpResponseEvent(e)))
+    const next$ = next.handle(req).pipe(share())
+    const httpResponseEvents$ = next$.pipe(filter<HttpResponse<T>>(this.isHttpResponseEvent))
+    const otherHttpEvents$ = next$.pipe(filter<HttpEvent<T>>(e => !this.isHttpResponseEvent(e)))
     const nonCacheable$ = httpResponseEvents$.pipe(filter(res => !this.isCacheableResponse(res)))
     const cacheable$ = httpResponseEvents$.pipe(filter(this.isCacheableResponse), tap(this.writeResponseHeaders))
 
