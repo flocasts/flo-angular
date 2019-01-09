@@ -8,11 +8,6 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens'
 describe(HttpCacheTagExpressServerModule.name, () => {
   afterEach(TestBed.resetTestingModule)
 
-  const setupStandardTestBed = (config = {}) => TestBed.configureTestingModule({
-    imports: [HttpCacheTagExpressServerModule.withConfig(config)],
-    providers: [RESPONSE_PROVIDER]
-  })
-
   const RESPONSE_PROVIDER = {
     provide: RESPONSE,
     useValue: {
@@ -25,6 +20,11 @@ describe(HttpCacheTagExpressServerModule.name, () => {
       header: () => { }
     }
   }
+
+  const setupStandardTestBed = (config = {}) => TestBed.configureTestingModule({
+    imports: [HttpCacheTagExpressServerModule.withConfig(config)],
+    providers: [RESPONSE_PROVIDER]
+  })
 
   it('should construct with default values', () => {
     setupStandardTestBed()
