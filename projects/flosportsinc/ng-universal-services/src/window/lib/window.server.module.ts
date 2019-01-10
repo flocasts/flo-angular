@@ -4,7 +4,11 @@ import { WINDOW } from './window.tokens'
 
 @NgModule({
   providers: [
-    WindowService
+    WindowService,
+    {
+      provide: WINDOW,
+      useValue: {}
+    }
   ]
 })
 export class WindowServerModule {
@@ -13,7 +17,7 @@ export class WindowServerModule {
       ngModule: WindowServerModule,
       providers: [{
         provide: WINDOW,
-        useValue: windowObject || {}
+        useValue: windowObject
       }]
     }
   }
