@@ -161,13 +161,13 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
   public readonly maybeGetSelectedElementItem =
     <TElement extends HTMLElement>(): IMaybe<TElement> =>
       this._maybeChildren()
-        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+        .flatMapAuto(a => a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>)
         .flatMap(a => a.maybePanelItemElement())
 
   public readonly maybeGetSelectedElementItems =
     <TElement extends HTMLElement>(): IMaybe<ReadonlyArray<TElement>> =>
       this._maybeChildren()
-        .flatMap(a => maybe(a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>))
+        .flatMapAuto(a => a.find(c => c.isSelected()) as ViewportGridBoxComponent<TElement>)
         .flatMap(a => a.maybePanelItemElements())
 
   private readonly _setGridStyles =

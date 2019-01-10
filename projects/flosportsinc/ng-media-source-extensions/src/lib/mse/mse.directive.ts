@@ -81,8 +81,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     <T>(ctxs: IMseExecutionContext<T>[]) =>
       (src?: string) => {
         return maybe(src)
-          .flatMap(s => maybe(this._msePatternCheckTask.filter(a => a.func(s))[0]))
-          .flatMap(a => maybe(ctxs.find(b => b.exectionKey === a.exectionKey)))
+          .flatMapAuto(s => this._msePatternCheckTask.filter(a => a.func(s))[0])
+          .flatMapAuto(a => ctxs.find(b => b.exectionKey === a.exectionKey))
       }
 
   private readonly _getExecutionKey =
@@ -227,7 +227,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     .pipe(take(1), map(a => a[0]))
     .subscribe(clientRef => clientRef.mseClient
       .flatMap(mseRef => clientRef.contextKey
-        .flatMap(execKey => maybe(this._mseDestroyTask.find(a => a.exectionKey === execKey)))
+        .flatMapAuto(execKey => this._mseDestroyTask.find(a => a.exectionKey === execKey))
         .map(ctx => {
           return {
             func: ctx.func,
