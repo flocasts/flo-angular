@@ -4,7 +4,11 @@ import { WINDOW } from './window.tokens'
 
 @NgModule({
   providers: [
-    WindowService
+    WindowService,
+    {
+      provide: WINDOW,
+      useValue: window
+    }
   ]
 })
 export class WindowBrowserModule {
@@ -13,7 +17,7 @@ export class WindowBrowserModule {
       ngModule: WindowBrowserModule,
       providers: [{
         provide: WINDOW,
-        useValue: windowObject || window
+        useValue: windowObject
       }]
     }
   }
