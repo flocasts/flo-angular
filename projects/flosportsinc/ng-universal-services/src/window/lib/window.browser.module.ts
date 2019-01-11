@@ -7,7 +7,7 @@ import { WINDOW } from './window.tokens'
     WindowService,
     {
       provide: WINDOW,
-      useValue: window
+      useValue: typeof window !== 'undefined' ? window : {}
     }
   ]
 })
