@@ -16,7 +16,7 @@ const compressFile =
     })
 
 
-glob('dist/flo-angular/**/*!(*.br|*.gz).{js,css,html,txt,json}', (err, matches) => {
+glob('dist/flo-angular/**/*!(*.br|*.gz).{js,css,html,txt,json}', (_error, matches) => {
   matches.forEach(match => {
     compressFile(match, createGzip, 'gz')
     compressFile(match, compressStream, 'br')

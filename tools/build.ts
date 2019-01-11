@@ -12,6 +12,5 @@ printMessage(PROJECTS)
 PROJECTS
   .map(createCommand)
   .forEach(commandPath => {
-    console.log(commandPath)
     console.log(execSync(commandPath, {}).toString())
   })

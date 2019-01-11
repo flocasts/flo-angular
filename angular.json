@@ -335,6 +335,42 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-icons": {
+      "root": "projects/flosportsinc/ng-icons",
+      "sourceRoot": "projects/flosportsinc/ng-icons/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-icons/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-icons/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-icons/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-icons/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-icons/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-icons/tsconfig.lib.json",
+              "projects/flosportsinc/ng-icons/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"

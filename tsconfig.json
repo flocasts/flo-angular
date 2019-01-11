@@ -49,6 +49,12 @@
       ],
       "@flosportsinc/ng-media-source-extensions-hls/*": [
         "dist/flosportsinc/ng-media-source-extensions-hls/*"
+      ],
+      "@flosportsinc/ng-icons": [
+        "dist/flosportsinc/ng-icons"
+      ],
+      "@flosportsinc/ng-icons/*": [
+        "dist/flosportsinc/ng-icons/*"
       ]
     }
   }
