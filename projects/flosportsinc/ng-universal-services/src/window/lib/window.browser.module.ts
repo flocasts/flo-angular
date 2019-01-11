@@ -11,14 +11,4 @@ import { WINDOW } from './window.tokens'
     }
   ]
 })
-export class WindowBrowserModule {
-  static withWindowObject(windowObject?: any): ModuleWithProviders {
-    return {
-      ngModule: WindowBrowserModule,
-      providers: [{
-        provide: WINDOW,
-        useValue: windowObject
-      }]
-    }
-  }
-}
+export class WindowBrowserModule { }
