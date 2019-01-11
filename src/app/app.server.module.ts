@@ -7,6 +7,7 @@ import { WindowServerModule } from '@flosportsinc/ng-universal-services/src/wind
 import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/src/ad-block'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
+import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/src/node-env-transfer'
 
 @NgModule({
   imports: [
@@ -14,8 +15,9 @@ import { HttpRelativeInterceptor } from './relative'
     ServerModule,
     ModuleMapLoaderModule,
     ServerTransferStateModule,
-    WindowServerModule.withWindowObject(),
-    AdBlockServerModule
+    WindowServerModule,
+    AdBlockServerModule,
+    NodeEnvTransferServerModule
   ],
   providers: [
     {

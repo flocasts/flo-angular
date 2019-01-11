@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { NodeEnvTransferService } from '@flosportsinc/ng-universal-services/src/node-env-transfer'
 
 @Component({
   selector: 'app-home',
@@ -7,4 +8,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
+  constructor(private ns: NodeEnvTransferService) {
+    console.log(ns.env)
+  }
+
+  readonly thing = this.ns.env
 }

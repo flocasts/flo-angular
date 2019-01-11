@@ -5,7 +5,8 @@ import { AppComponent } from './app.component'
 import { DashModule } from '@flosportsinc/ng-media-source-extensions-dash'
 import { HlsModule } from '@flosportsinc/ng-media-source-extensions-hls'
 import { WindowBrowserModule } from '@flosportsinc/ng-universal-services/src/window'
-import { AdBlockBrowserModule, AdBlockService } from '@flosportsinc/ng-universal-services/src/ad-block'
+import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/src/ad-block'
+import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/src/node-env-transfer'
 
 @NgModule({
   imports: [
@@ -13,7 +14,8 @@ import { AdBlockBrowserModule, AdBlockService } from '@flosportsinc/ng-universal
     DashModule,
     AppModule,
     AdBlockBrowserModule.usingUrl('/assets/ads.js'),
-    WindowBrowserModule
+    WindowBrowserModule,
+    NodeEnvTransferBrowserModule
   ],
   providers: [
     PwaService
