@@ -147,6 +147,21 @@ jobs:
           root: .
           paths:
             - cc.ng-universal-services.json
+  test_icons:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.icons
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-icons.json ./coverage/ng-icons/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-icons.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -203,6 +218,10 @@ workflows:
           requires:
             - build
             - prep_coverage
+      - test_icons:
+          requires:
+            - build
+            - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -211,6 +230,7 @@ workflows:
             - test_mse-dash
             - test_mse-hls
             - test_services
+            - test_icons
       - publish:
           requires:
             - test_docs_site
@@ -219,6 +239,7 @@ workflows:
             - test_mse-dash
             - test_mse-hls
             - test_services
+            - test_icons
             - upload_coverage
             - e2e
           filters:

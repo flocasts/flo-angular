@@ -29,6 +29,7 @@
 
 | Package       | Description   | Status | Latest |
 | ------------- | ------------- | ------ | -------|
+| [ng-icons](projects/flosportsinc/ng-icons) | Icon Pack | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-icons.svg)](https://www.npmjs.com/package/@flosportsinc/ng-icons)
 | [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](https://www.npmjs.com/package/@flosportsinc/ng-universal-services)
 | [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Media Source Extension helpers | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions)
 | [ng-media-source-extensions-hls](projects/flosportsinc/ng-media-source-extensions-hls) | HTTP Live Streaming | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions-hls.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions-hls)
