@@ -12,7 +12,7 @@ import { WINDOW } from './window.tokens'
   ]
 })
 export class WindowServerModule {
-  static withWindowObject(windowObject?: any): ModuleWithProviders {
+  static withWindowObject(windowObject = {}): ModuleWithProviders {
     return {
       ngModule: WindowServerModule,
       providers: [{
