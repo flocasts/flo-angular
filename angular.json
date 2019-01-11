@@ -352,6 +352,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-icons/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-icons/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-icons/karma.conf.js"
