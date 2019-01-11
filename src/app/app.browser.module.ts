@@ -13,7 +13,7 @@ import { AdBlockBrowserModule, AdBlockService } from '@flosportsinc/ng-universal
     DashModule,
     AppModule,
     AdBlockBrowserModule.usingUrl('/assets/ads.js'),
-    WindowBrowserModule.withWindowObject()
+    WindowBrowserModule
   ],
   providers: [
     PwaService
