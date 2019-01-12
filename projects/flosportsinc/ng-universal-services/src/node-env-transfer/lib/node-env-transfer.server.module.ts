@@ -1,54 +1,59 @@
-import { NgModule, APP_BOOTSTRAP_LISTENER, ApplicationRef } from '@angular/core'
+import { NgModule, APP_BOOTSTRAP_LISTENER, ApplicationRef, ModuleWithProviders } from '@angular/core'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { filter, first, take } from 'rxjs/operators'
-// import { REQUEST } from '@nguniversal/express-engine/tokens'
-import { NodeEnvTransferService } from './node-env-transfer.service'
-import { ENV_CONFIG } from './node-env-transfer.tokens'
+import { ENV_CONFIG, ENV_CONFIG_TS_KEY, ENV_CONFIG_FILTER_KEYS } from './node-env-transfer.tokens'
+import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
 
-// IF ENV CONTAINS SERVER_, remove from object
-function removeServerSpecific(obj: { readonly [key: string]: string }, filterKey = 'SERVER_') {
-  return Object.keys(obj)
-    .filter(key => !key.includes(filterKey))
+export function serverEnvConfigFactory(filterKeys: ReadonlyArray<string>) {
+  const lamb = Object
+    .keys(process.env || {})
+    .filter(key => filterKeys.includes(key))
     .reduce((acc, curr) => {
       return {
         ...acc,
-        [curr]: obj[curr]
+        [curr]: process.env[curr]
       }
     }, {})
+  return lamb
 }
 
-export function serverEnvConfigFactory() {
-  return JSON.parse('{}')
-}
-
-export function onBootstrap(appRef: ApplicationRef, ts: TransferState, env: any) {
-  console.log(env)
-  return () => {
-    appRef.isStable
-      .pipe(filter(Boolean), first(), take(1))
-      .subscribe(() => {
-        ts.set<any>(
-          makeStateKey('123'),
-          { test: 1 } as any
-          // removeServerSpecific()
-        )
-      })
-  }
+export function onBootstrap(appRef: ApplicationRef, ts: TransferState, env: any, stateKey: string) {
+  const lambda = () => appRef.isStable
+    .pipe(filter(Boolean), first(), take(1))
+    .subscribe(() => ts.set(makeStateKey(stateKey), env))
+  return lambda
 }
 
 @NgModule({
+  imports: [NodeEnvTransferCommonModule],
   providers: [
-    NodeEnvTransferService,
+    {
+      provide: ENV_CONFIG_FILTER_KEYS,
+      useValue: []
+    },
     {
       provide: ENV_CONFIG,
-      useFactory: serverEnvConfigFactory
+      useFactory: serverEnvConfigFactory,
+      deps: [ENV_CONFIG_FILTER_KEYS]
     },
     {
       provide: APP_BOOTSTRAP_LISTENER,
       useFactory: onBootstrap,
-      deps: [ApplicationRef, TransferState, ENV_CONFIG],
+      deps: [ApplicationRef, TransferState, ENV_CONFIG, ENV_CONFIG_TS_KEY],
       multi: true
     }
   ]
 })
-export class NodeEnvTransferServerModule { }
+export class NodeEnvTransferServerModule {
+  static withSelectedKeys(keys: ReadonlyArray<string> = []): ModuleWithProviders {
+    return {
+      ngModule: NodeEnvTransferServerModule,
+      providers: [
+        {
+          provide: ENV_CONFIG_FILTER_KEYS,
+          useValue: keys
+        }
+      ]
+    }
+  }
+}
