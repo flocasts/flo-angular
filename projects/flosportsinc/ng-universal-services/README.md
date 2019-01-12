@@ -12,6 +12,7 @@ Utility services for Angular Universal applications.
 | [Server-Response](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/src/server-response) | Server response server responses other than 200
 | [Server-SVG](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/src/server-svg)           | Sync server-side and external SVG's with client
 | [HTTP-Cache-Tag](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/src/http-cache-tag)   | HTTP cache busting
+| [Node-Env-Transfer](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/src/node-env-transfer) | Easily transfer node environment variables to the browser
 
 ## Installation
 ```sh
