@@ -6,7 +6,7 @@ import { DashModule } from '@flosportsinc/ng-media-source-extensions-dash'
 import { HlsModule } from '@flosportsinc/ng-media-source-extensions-hls'
 import { WindowBrowserModule } from '@flosportsinc/ng-universal-services/src/window'
 import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/src/ad-block'
-import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/src/node-env-transfer'
+import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/node-env-transfer/browser'
 
 @NgModule({
   imports: [

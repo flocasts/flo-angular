@@ -11,7 +11,7 @@ Inside your `BrowserModule` install `NodeEnvTransferBrowserModule` like so:
 
 ```ts
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/src/node-env-transfer'
+import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/node-env-transfer/browser'
 
 @NgModule({
   imports: [
@@ -25,7 +25,7 @@ Inside your `ServerModule` install `NodeEnvTransferServerModule` like so:
 
 ```ts
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/src/env-transfer'
+import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/env-transfer/server'
 
 @NgModule({
   imports: [

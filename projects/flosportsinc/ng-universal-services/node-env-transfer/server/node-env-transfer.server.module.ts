@@ -1,8 +1,8 @@
 import { NgModule, APP_BOOTSTRAP_LISTENER, ApplicationRef, ModuleWithProviders } from '@angular/core'
-import { ENV_CONFIG, ENV_CONFIG_TS_KEY, ENV_CONFIG_FILTER_KEYS, NODE_ENV } from './node-env-transfer.tokens'
-import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
 import { ServerTransferStateModule } from '@angular/platform-server'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
+import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
+import { NODE_ENV, ENV_CONFIG_FILTER_KEYS, ENV_CONFIG, ENV_CONFIG_TS_KEY } from './node-env-transfer.tokens'
 import { filter, first, take } from 'rxjs/operators'
 
 export function serverEnvConfigFactory(nodeEnv = {}, filterKeys: ReadonlyArray<string>) {
