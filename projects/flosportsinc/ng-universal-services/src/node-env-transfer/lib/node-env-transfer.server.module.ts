@@ -1,19 +1,15 @@
 import { NgModule, APP_BOOTSTRAP_LISTENER, ApplicationRef, ModuleWithProviders } from '@angular/core'
+import { ENV_CONFIG, ENV_CONFIG_TS_KEY, ENV_CONFIG_FILTER_KEYS, NODE_ENV } from './node-env-transfer.tokens'
+import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
+import { ServerTransferStateModule } from '@angular/platform-server'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { filter, first, take } from 'rxjs/operators'
-import { ENV_CONFIG, ENV_CONFIG_TS_KEY, ENV_CONFIG_FILTER_KEYS } from './node-env-transfer.tokens'
-import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
 
-export function serverEnvConfigFactory(filterKeys: ReadonlyArray<string>) {
+export function serverEnvConfigFactory(nodeEnv = {}, filterKeys: ReadonlyArray<string>) {
   const lamb = Object
-    .keys(process.env || {})
+    .keys(nodeEnv)
     .filter(key => filterKeys.includes(key))
-    .reduce((acc, curr) => {
-      return {
-        ...acc,
-        [curr]: process.env[curr]
-      }
-    }, {})
+    .reduce((acc, curr) => ({ ...acc, [curr]: nodeEnv[curr] }), {})
   return lamb
 }
 
@@ -25,16 +21,23 @@ export function onBootstrap(appRef: ApplicationRef, ts: TransferState, env: any,
 }
 
 @NgModule({
-  imports: [NodeEnvTransferCommonModule],
+  imports: [
+    ServerTransferStateModule,
+    NodeEnvTransferCommonModule
+  ],
   providers: [
     {
       provide: ENV_CONFIG_FILTER_KEYS,
       useValue: []
     },
     {
+      provide: NODE_ENV,
+      useValue: process.env
+    },
+    {
       provide: ENV_CONFIG,
       useFactory: serverEnvConfigFactory,
-      deps: [ENV_CONFIG_FILTER_KEYS]
+      deps: [NODE_ENV, ENV_CONFIG_FILTER_KEYS]
     },
     {
       provide: APP_BOOTSTRAP_LISTENER,
