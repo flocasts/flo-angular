@@ -20,6 +20,10 @@ export function onBootstrap(appRef: ApplicationRef, ts: TransferState, env: any,
   return lambda
 }
 
+export function nodeEnvFactory() {
+  return process.env
+}
+
 @NgModule({
   imports: [
     ServerTransferStateModule,
@@ -32,7 +36,7 @@ export function onBootstrap(appRef: ApplicationRef, ts: TransferState, env: any,
     },
     {
       provide: NODE_ENV,
-      useValue: process.env
+      useFactory: nodeEnvFactory
     },
     {
       provide: ENV_CONFIG,
