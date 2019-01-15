@@ -11,7 +11,7 @@ Inside your `BrowserModule` (or `AppModule` if you are not using a universal ser
 
 ```ts
 import { NgModule } from '@angular/core'
-import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/src/ad-block'
+import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/ad-block'
 
 @NgModule({
   imports: [
@@ -27,7 +27,7 @@ If you have a Universal app you will need to include the `AdBlockServerModule` i
 
 ```ts
 import { NgModule } from '@angular/core'
-import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/src/ad-block'
+import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/ad-block'
 
 @NgModule({
   imports: [
