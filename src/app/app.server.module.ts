@@ -12,19 +12,15 @@ import { WINDOW } from '@flosportsinc/ng-universal-services/window'
 
 @NgModule({
   imports: [
-    WindowServerModule,
     ServerModule,
     ModuleMapLoaderModule,
     ServerTransferStateModule,
     AdBlockServerModule,
     NodeEnvTransferServerModule,
-    AppModule
+    AppModule,
+    WindowServerModule,
   ],
   providers: [
-    // {
-    //   provide: WINDOW,
-    //   useValue: {}
-    // },
     {
       multi: true,
       provide: HTTP_INTERCEPTORS,

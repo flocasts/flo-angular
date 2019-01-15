@@ -1,10 +1,9 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { WINDOW } from './window.tokens'
-import { WindowCommonModule } from './window.common.module'
+import { WindowModule } from './window.common.module'
 
 @NgModule({
-  imports: [WindowCommonModule],
-  exports: [WindowCommonModule]
+  imports: [WindowModule]
 })
 export class WindowServerModule {
   static withWindowObject(windowObject = {}): ModuleWithProviders {
