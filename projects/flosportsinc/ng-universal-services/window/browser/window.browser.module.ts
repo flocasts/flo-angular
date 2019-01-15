@@ -1,6 +1,6 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
-import { WindowService } from './window.service'
+import { NgModule } from '@angular/core'
 import { WINDOW } from './window.tokens'
+import { WindowCommonModule } from './window.common.module'
 
 // for handling bundlers that might not have access to window object globally.
 export function winFactory() {
@@ -8,8 +8,8 @@ export function winFactory() {
 }
 
 @NgModule({
+  imports: [WindowCommonModule],
   providers: [
-    WindowService,
     {
       provide: WINDOW,
       useFactory: winFactory
