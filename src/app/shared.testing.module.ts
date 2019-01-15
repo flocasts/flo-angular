@@ -4,9 +4,11 @@ import { MarkdownModule } from 'ngx-markdown'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/node-env-transfer/browser'
+import { WindowModule } from '@flosportsinc/ng-universal-services/window'
 
 @NgModule({
   imports: [
+    WindowModule,
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
@@ -17,6 +19,7 @@ import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-service
     })
   ],
   exports: [
+    WindowModule,
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule,
