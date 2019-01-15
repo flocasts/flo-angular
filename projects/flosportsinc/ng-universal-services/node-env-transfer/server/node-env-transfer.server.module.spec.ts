@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { ENV_CONFIG_FILTER_KEYS, NODE_ENV, ENV_CONFIG } from './node-env-transfer.tokens'
-import { NodeEnvTransferServerModule, serverEnvConfigFactory } from './node-env-transfer.server.module'
+import { NodeEnvTransferServerModule, serverEnvConfigFactory, nodeEnvFactory } from './node-env-transfer.server.module'
 import { APP_BOOTSTRAP_LISTENER } from '@angular/core'
 import { TransferState } from '@angular/platform-browser'
 
@@ -59,5 +59,7 @@ describe(NodeEnvTransferServerModule.name, () => {
 
   it('handle default filter case', () => {
     expect(serverEnvConfigFactory(undefined, [])).toEqual({})
+
+    expect(nodeEnvFactory()).toEqual(process.env)
   })
 })
