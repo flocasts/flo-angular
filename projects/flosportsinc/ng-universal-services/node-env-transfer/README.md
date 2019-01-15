@@ -25,7 +25,7 @@ Inside your `ServerModule` install `NodeEnvTransferServerModule` like so:
 
 ```ts
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/env-transfer/server'
+import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/node-env-transfer/server'
 
 @NgModule({
   imports: [
