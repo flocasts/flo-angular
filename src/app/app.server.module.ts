@@ -4,11 +4,10 @@ import { ModuleMapLoaderModule } from '@nguniversal/module-map-ngfactory-loader'
 import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
 import { WindowServerModule } from '@flosportsinc/ng-universal-services/window/server'
-import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/ad-block'
+import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/ad-block/server'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
 import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/node-env-transfer/server'
-import { WINDOW } from '@flosportsinc/ng-universal-services/window'
 
 @NgModule({
   imports: [
@@ -18,7 +17,7 @@ import { WINDOW } from '@flosportsinc/ng-universal-services/window'
     AdBlockServerModule,
     NodeEnvTransferServerModule,
     AppModule,
-    WindowServerModule,
+    WindowServerModule
   ],
   providers: [
     {
