@@ -18,12 +18,6 @@ describe('Window Module', () => {
     expect(service).toBeTruthy()
   })
 
-  it('should be created with default window from test environment', () => {
-    setupTb()
-    const service: WindowService = TestBed.get(WindowService)
-    expect(service).toBeTruthy()
-  })
-
   it('should be created with window token', () => {
     TestBed.configureTestingModule({
       providers: [
