@@ -230,7 +230,7 @@
     },
     "@flosportsinc/ng-universal-services": {
       "root": "projects/flosportsinc/ng-universal-services",
-      "sourceRoot": "projects/flosportsinc/ng-universal-services/src",
+      "sourceRoot": "projects/flosportsinc/ng-universal-services",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -245,7 +245,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/ng-universal-services/src/test.ts",
+            "main": "projects/flosportsinc/ng-universal-services/test.ts",
             "tsConfig": "projects/flosportsinc/ng-universal-services/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-universal-services/karma.conf.js"
           }

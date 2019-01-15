@@ -1,4 +1,5 @@
 module.exports = function (dir) {
+  console.log(require('path').join(__dirname, dir))
   return {
     dir: require('path').join(__dirname, dir),
     reports: ['html', 'lcovonly', 'text-summary'],

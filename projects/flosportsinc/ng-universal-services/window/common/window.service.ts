@@ -5,9 +5,7 @@ export interface IWindowService {
   window<T>(): Window & T
 }
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class WindowService {
   constructor(@Inject(WINDOW) private _window: any) { }
 

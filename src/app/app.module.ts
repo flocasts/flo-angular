@@ -18,20 +18,11 @@ import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { MseModule } from '@flosportsinc/ng-media-source-extensions'
+import { WindowModule } from '@flosportsinc/ng-universal-services/window'
 
 @NgModule({
-  declarations: [
-    AppComponent,
-    FramerComponent,
-    HomeComponent,
-    HlsComponent,
-    HlsDemoComponent,
-    HlsReadmeComponent,
-    HlsApiComponent,
-    UniversalServicesComponent,
-    NotFoundComponent
-  ],
   imports: [
+    WindowModule,
     MseModule,
     FormsModule,
     ReactiveFormsModule,
@@ -42,6 +33,17 @@ import { MseModule } from '@flosportsinc/ng-media-source-extensions'
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     HttpClientModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
+  ],
+  declarations: [
+    AppComponent,
+    FramerComponent,
+    HomeComponent,
+    HlsComponent,
+    HlsDemoComponent,
+    HlsReadmeComponent,
+    HlsApiComponent,
+    UniversalServicesComponent,
+    NotFoundComponent
   ]
 })
 export class AppModule { }
