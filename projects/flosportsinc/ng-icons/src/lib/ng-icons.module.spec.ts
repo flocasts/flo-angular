@@ -11,6 +11,6 @@ describe('Icons Module', () => {
   })
 
   it('should enum', () => {
-    expect(Icon.CHECK).toEqual('check')
+    expect(Icon.FA_YOUTUBE).toEqual('youtube')
   })
 })
