@@ -94,7 +94,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.4",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
-    "ng-packagr": "^4.5.0",
+    "ng-packagr": "^4.6.0",
     "protractor": "^5.4.2",
     "semantic-release": "^15.13.3",
     "shelljs": "^0.8.3",
@@ -103,7 +103,7 @@
     "tsickle": "^0.34.0",
     "tslib": "^1.9.3",
     "tslint": "^5.12.1",
-    "tslint-immutable": "^5.0.1",
+    "tslint-immutable": "^5.1.0",
     "typescript": "^3.2.2",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.1.14"
