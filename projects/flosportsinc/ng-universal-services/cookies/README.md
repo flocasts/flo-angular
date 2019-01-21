@@ -8,7 +8,8 @@ npm i @flosportsinc/ng-universal-services
 ``` 
 
 ### Browser
-You will also need to install `js-cookie`
+You will also need to `npm i js-cookie`.
+
 Inside your `BrowserModule` install `CookieBrowserModule` like so:
 
 ```ts
@@ -24,7 +25,6 @@ export class AppBrowserModule { }
 ```
 
 ### Server
-You will also need to install `cookie-parse`
 Inside your `ServerModule` install `CookieServerModule` like so:
 
 ```ts
@@ -39,7 +39,7 @@ import { CookieServerModule } from '@flosportsinc/ng-universal-services/cookies/
 export class AppServerModule { }
 ```
 
-Inside your express server be sure to user `cookie-parser`.
+Inside your express server be sure setup `cookie-parser`.
 ```ts
 import * as express from 'express'
 import * as cookies from 'cookie-parser'
@@ -55,7 +55,7 @@ import { COOKIE_SERVICE, ICookieService } from '@flosportsinc/ng-universal-servi
 
 export class SomeThingComponent {
   constructor(@Inject(COOKIE_SERVICE) cs: ICookieService) {
-    cs.set('mycookie', 1)
+    cs.set('mycookie', 'my awesome cookie value')
   }
 }
 ```
