@@ -1,4 +1,4 @@
-import { empty } from 'rxjs'
+import { EMPTY } from 'rxjs'
 import { REQUEST } from '@nguniversal/express-engine/tokens'
 import { Inject, Injectable } from '@angular/core'
 import { ICookieService } from './cookie.interfaces'
@@ -6,12 +6,12 @@ import * as express from 'express'
 
 @Injectable()
 export class CookieServerService implements ICookieService {
-  public readonly valueChange = empty() // noop on server
-  public readonly valueChanges = empty() // noop on server
+  public readonly valueChange = EMPTY // noop on server
+  public readonly valueChanges = EMPTY // noop on server
 
   constructor(@Inject(REQUEST) private req: express.Request) { }
 
-  public readonly targetValueChange = () => empty() // noop on server
+  public readonly targetValueChange = () => EMPTY // noop on server
 
   public get(name: string): any {
     try {
