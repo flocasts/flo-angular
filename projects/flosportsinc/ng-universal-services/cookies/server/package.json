@@ -1,9 +1,9 @@
 {
   "name": "@flosportsinc/ng-universal-services",
   "peerDependencies": {
-    "js-cookie": "^2.2.0"
+    "cookie-parser": "^1.4.3"
   },
   "devDependencies": {
-    "@types/js-cookie": "2.2.0"
+    "@types/cookie-parser": "^1.4.1"
   }
 }

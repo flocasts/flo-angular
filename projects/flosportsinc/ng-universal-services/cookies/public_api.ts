@@ -1,6 +1,3 @@
-/*
- * Public API Surface of ng-universal-services
- */
-
-export * from './lib/cookie.service'
-export * from './lib/cookie.module'
+export * from './common/cookie.interfaces'
+export * from './common/cookie.tokens'
+export * from './browser/cookie.browser.service'
