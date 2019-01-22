@@ -16,7 +16,7 @@ export function standardServerReqPatternFactory(dir: string) {
     },
     {
       provide: SVG_SERVER_REQUEST_PATTERN,
-      useValue: standardServerReqPatternFactory,
+      useFactory: standardServerReqPatternFactory,
       deps: [SVG_SERVER_REQUEST_PATTERN_BASE]
     }
   ]

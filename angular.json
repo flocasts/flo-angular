@@ -48,6 +48,11 @@
                 "input": "projects/flosportsinc",
                 "glob": "**/**/*.md",
                 "output": "./assets/md"
+              },
+              {
+                "input": "dist/flosportsinc/ng-icons/svg",
+                "glob": "**/**/*.svg",
+                "output": "./assets/svg"
               }
             ],
             "styles": [
