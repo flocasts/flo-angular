@@ -8,8 +8,8 @@ import { resolve } from 'path'
 import { enableProdMode } from '@angular/core'
 import { ngExpressEngine } from '@nguniversal/express-engine'
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader'
-// import { SOME_TOKEN } from 'src/app/tokens'
 import * as express from 'express'
+import * as cookies from 'cookie-parser'
 
 enableProdMode()
 
@@ -18,6 +18,7 @@ const expressStaticGzip = require('express-static-gzip')
 const baseDirectory = resolve('dist/flo-angular/browser')
 const { AppServerModuleNgFactory, LAZY_MODULE_MAP, SOME_TOKEN } = require('./dist/flo-angular/server/main')
 
+app.use(cookies())
 app.engine('html', ngExpressEngine({
   bootstrap: AppServerModuleNgFactory,
   providers: [
