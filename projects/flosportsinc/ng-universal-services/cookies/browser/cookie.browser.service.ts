@@ -12,26 +12,22 @@ export class CookieBrowserService implements ICookieService {
   public readonly valueChange = this._changeSource.asObservable()
   public readonly valueChanges = this._cookieSource.asObservable()
 
-  targetValueChange(key: string) {
-    return this.valueChange.pipe(filter(a => a && a.key === key))
-  }
+  public readonly targetValueChange = (key: string) => this.valueChange.pipe(filter(a => a && a.key === key))
 
-  public set(name: string, value: any, opts?: CookieAttributes): void {
-    set(name, value, opts)
+  public readonly set = <T>(name: string, value: T, opts?: CookieAttributes) => {
+    set(name, value as any, opts)
     this.updateSource()
     this.broadcastChange(name)
   }
 
-  public remove(name: string, opts?: CookieAttributes): void {
+  public readonly remove = (name: string, opts?: CookieAttributes) => {
     remove(name, opts)
     this.updateSource()
     this.broadcastChange(name)
   }
 
   public readonly get = <T>(name: string) => getJSON(name) as T
-
-  public readonly getAll = () => getJSON()
-
+  public readonly getAll = <T>() => getJSON() as Partial<T>
   private readonly updateSource = () => this._cookieSource.next(this.getAll())
 
   private broadcastChange(key: string) {

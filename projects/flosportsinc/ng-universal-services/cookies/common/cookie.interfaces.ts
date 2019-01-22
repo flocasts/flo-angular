@@ -14,8 +14,8 @@ export interface ICookieService {
   readonly valueChange: Observable<KeyValue>
   readonly valueChanges: Observable<StringDict>
   readonly targetValueChange: (key: string) => Observable<KeyValue>
-  readonly getAll: () => any
-  readonly get: (name: string) => any
-  readonly set: (name: string, value: any, options?: CookieAttributes) => void
+  readonly getAll: <T>() => Partial<T>
+  readonly get: <T>(name: string) => T | undefined
+  readonly set: <T>(name: string, value: T, options?: CookieAttributes) => void
   readonly remove: (name: string, options?: CookieAttributes) => void
 }
