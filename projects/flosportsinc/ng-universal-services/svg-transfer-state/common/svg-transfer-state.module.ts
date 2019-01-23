@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { NgModule, ModuleWithProviders } from '@angular/core'
 import { SvgTransferStateDirective } from './svg-transfer-state.directive'
 import { ISvgLoaderErrorReturnValueStreamFunc, ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
 import { HttpErrorResponse, HttpClient } from '@angular/common/http'
@@ -31,19 +31,30 @@ export function defaultHttpFactory(http: HttpClient, reqPattern: ISvgRequestPatt
   return lambda
 }
 
+export const DEFAULT_STYLES = { height: '24px' }
+export const DEFAULT_PARENT_STYLE_KEYS: ReadonlyArray<string> = ['height', 'width']
+
+export interface ISvgTransferStateModuleConfigParams {
+  readonly parentStyleKeys: ReadonlyArray<string>
+  readonly styles: Object
+}
+
+const DEFAULT_CONFIG: ISvgTransferStateModuleConfigParams = {
+  styles: DEFAULT_STYLES,
+  parentStyleKeys: DEFAULT_PARENT_STYLE_KEYS
+}
+
 @NgModule({
   declarations: [SvgTransferStateDirective],
   exports: [SvgTransferStateDirective],
   providers: [
     {
       provide: SVG_DIRECTIVE_DEFAULT_STYLES,
-      useValue: {
-        height: '24px'
-      }
+      useValue: DEFAULT_STYLES
     },
     {
       provide: SVG_DIRECTIVE_PARENT_STYLE_KEYS,
-      useValue: ['height', 'width']
+      useValue: DEFAULT_PARENT_STYLE_KEYS
     },
     {
       provide: SVG_REQUEST_PATTERN,
@@ -61,4 +72,22 @@ export function defaultHttpFactory(http: HttpClient, reqPattern: ISvgRequestPatt
     }
   ]
 })
-export class SvgTransferStateModule { }
+export class SvgTransferStateModule {
+  static config(config: Partial<ISvgTransferStateModuleConfigParams> = {}): ModuleWithProviders {
+    const _config = { ...DEFAULT_CONFIG, ...config }
+
+    return {
+      ngModule: SvgTransferStateModule,
+      providers: [
+        {
+          provide: SVG_DIRECTIVE_DEFAULT_STYLES,
+          useValue: _config.styles
+        },
+        {
+          provide: SVG_DIRECTIVE_PARENT_STYLE_KEYS,
+          useValue: _config.parentStyleKeys
+        }
+      ]
+    }
+  }
+}
