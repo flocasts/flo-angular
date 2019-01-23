@@ -27,7 +27,7 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-
     SvgTransferStateModule, // for default configuration { styles: { height: '18px' }, parentStyleKeys: ['height', 'width'] }
     SvgTransferStateModule.config({ // or use your own custom settings
       styles: { height: '48px', fill: 'green' },
-      parentStyleKeys: ['height']
+      parentStyleKeys: ['height'] // the container element (ex: <i>, <span>, etc) will also get these styles applied to it.
     })
   ]
 })
@@ -44,7 +44,7 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-servic
 @NgModule({
   imports: [
     SvgTransferStateBrowserModule, // with default root (defaults to "assets/svg")
-    SvgTransferStateBrowserModule.withSvgAssetRoot('') // with custom root
+    SvgTransferStateBrowserModule.withSvgAssetRoot('public/assets/svg') // with custom root
   ]
 })
 export class AppBrowserModule { }

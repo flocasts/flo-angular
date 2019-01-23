@@ -10,4 +10,7 @@ import { Icon } from '@flosportsinc/ng-icons'
 export class IconsComponent {
   public readonly icons = Object.keys(Icon).map(a => Icon[a])
 
+  trackBy(_index: number, item: string) {
+    return item
+  }
 }
