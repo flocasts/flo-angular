@@ -12,6 +12,7 @@ npm i @flosportsinc/ng-universal-services
 - [App Setup](#app)
 - [Browser Setup](#browser)
 - [Server Setup](#server)
+- [Caching Setup](#caching)
 - [Usage](#usage)
 - [Customization](#customization)
 
@@ -68,6 +69,41 @@ import { SvgTransferStateServerModule } from '@flosportsinc/ng-universal-service
 })
 export class AppServerModule { }
 ```
+
+## Caching
+Both the server and client can cache http and file lookup requests. This is especially important on the client-side so as not to make an http request every page change.
+
+### Server Caching
+```ts
+// server.ts (your node.js express server)
+
+// this example uses the npm package "lru-cache"
+// npm install lru-cache @types/lru-cache
+
+import { ngExpressEngine } from '@nguniversal/express-engine'
+import { SVG_SERVER_CACHE } from '@flosportsinc/ng-universal-services/svg-transfer-state'
+import * as lru from 'lru-cache' // it is not required to use this specific package
+
+// it is imperative that the DI token for the cache is injected in the node server itself
+// not from within the angular application. Otherwise a new cache would be spawned each time
+// and the values would not be shared globally accross requests - defeating the purpose
+
+// By providing a cache object, both externally fetched SVGs and local file svgs will be cached
+// this should dramatically reduce server load time as no network or readFile requests are made if the
+// svg is cached.
+
+app.engine('html', ngExpressEngine({
+  bootstrap: AppServerModuleNgFactory,
+  providers: [
+    {
+      provide: SVG_SERVER_CACHE,
+      useValue: new lru({ maxAge: 1000 * 60 * 60 }) // cache is bypassed if the last cache write has expired.
+    }
+  ]
+}))
+```
+
+### Client Caching
 
 ## Usage
 
