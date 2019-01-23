@@ -41,7 +41,7 @@ export class SvgTransferStateDirective implements OnInit {
         const styleKeysForParent = styleKeys.filter(b => this._applyStylesToParent.includes(b))
 
         styleSetter(styleKeysForParent)(this._el.nativeElement)
-        styleSetter(styleKeys)(this._el.nativeElement.firstChild)
+        styleSetter(styleKeys)(this._el.nativeElement.firstElementChild)
       })
   }
 }

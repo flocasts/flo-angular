@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core'
 import { SvgTransferStateDirective } from './svg-transfer-state.directive'
+import { ISvgLoaderErrorReturnValueStreamFunc, ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
+import { HttpErrorResponse, HttpClient } from '@angular/common/http'
+import { catchError } from 'rxjs/operators'
+import { of } from 'rxjs'
 import {
   SVG_DIRECTIVE_DEFAULT_STYLES, SVG_DIRECTIVE_PARENT_STYLE_KEYS,
-  SVG_REQUEST_PATTERN, SVG_REQUEST_PATTERN_BASE, SVG_LOADER_ERROR_RETURN_OPERATOR
+  SVG_REQUEST_PATTERN, SVG_REQUEST_PATTERN_BASE, SVG_LOADER_ERROR_RETURN_OPERATOR, SVG_LOADER_HTTP_REQUEST
 } from './svg-transfer-state.tokens'
-import { ISvgLoaderErrorReturnValueStreamFunc } from './svg-transfer-state.interfaces'
-import { of } from 'rxjs'
-import { HttpErrorResponse } from '@angular/common/http'
 
-export function standardServerReqPatternFactory(dir: string) {
-  const lambda = (svgKey: string) => `${dir}/${svgKey}.svg`
+export function standardServerReqPatternFactory(dir: string): ISvgRequestPatternFunc {
+  const lambda = (svgKey: string) => svgKey.includes('://')
+    ? svgKey
+    : `${dir}/${svgKey}.svg`
   return lambda
 }
 
@@ -18,6 +21,13 @@ export function standardErrorValReturnFactory(): ISvgLoaderErrorReturnValueStrea
     console.log(_err.message)
     return of(undefined)
   }
+  return lambda
+}
+
+export function defaultHttpFactory(http: HttpClient, reqPattern: ISvgRequestPatternFunc, errHandler: ISvgLoaderErrorReturnValueStreamFunc) {
+  const lambda = (svgKey: string) => http.get(reqPattern(svgKey), { responseType: 'text', withCredentials: false }).pipe(
+    catchError(err => errHandler(err))
+  )
   return lambda
 }
 
@@ -43,6 +53,11 @@ export function standardErrorValReturnFactory(): ISvgLoaderErrorReturnValueStrea
     {
       provide: SVG_LOADER_ERROR_RETURN_OPERATOR,
       useFactory: standardErrorValReturnFactory
+    },
+    {
+      provide: SVG_LOADER_HTTP_REQUEST,
+      useFactory: defaultHttpFactory,
+      deps: [HttpClient, SVG_REQUEST_PATTERN, SVG_LOADER_ERROR_RETURN_OPERATOR]
     }
   ]
 })

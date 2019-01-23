@@ -1,24 +1,22 @@
 import { Injectable, Inject } from '@angular/core'
 import { bindNodeCallback } from 'rxjs'
-import { HttpClient } from '@angular/common/http'
-import { tap, map, catchError } from 'rxjs/operators'
+import { tap, map } from 'rxjs/operators'
 import { readFile } from 'fs'
-import { SVG_TRANSFER_KEY, SVG_LOADER_ERROR_RETURN_OPERATOR } from './svg-transfer-state.tokens'
-import { ISvgLoaderService, ISvgLoaderErrorReturnValueStreamFunc } from './svg-transfer-state.interfaces'
+import { SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST } from './svg-transfer-state.tokens'
+import { ISvgLoaderService, ISvgLoaderHttpFunc } from './svg-transfer-state.interfaces'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { SVG_REQUEST_PATTERN } from './svg-transfer-state.tokens'
 import { ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
 
 @Injectable()
 export class SvgServerLoaderService implements ISvgLoaderService {
-  constructor(private _ts: TransferState, private _http: HttpClient,
+  constructor(private _ts: TransferState,
     @Inject(SVG_REQUEST_PATTERN) private _reqPattern: ISvgRequestPatternFunc,
-    @Inject(SVG_LOADER_ERROR_RETURN_OPERATOR) private _catchHandler: ISvgLoaderErrorReturnValueStreamFunc) { }
+    @Inject(SVG_LOADER_HTTP_REQUEST) private _httpRequest: ISvgLoaderHttpFunc) { }
 
   readonly load = (svgKey: string) =>
-    svgKey.includes('http://') || svgKey.includes('https://')
-      ? this._http.get(svgKey, { responseType: 'text', withCredentials: false }).pipe(
-        catchError(err => this._catchHandler(err)))
+    svgKey.includes('://')
+      ? this._httpRequest(svgKey)
       : bindNodeCallback(readFile)(this._reqPattern(svgKey))
         .pipe(
           map(a => a.toString()),
