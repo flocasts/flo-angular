@@ -8,8 +8,14 @@ import { resolve } from 'path'
 import { enableProdMode } from '@angular/core'
 import { ngExpressEngine } from '@nguniversal/express-engine'
 import { provideModuleMap } from '@nguniversal/module-map-ngfactory-loader'
+import { SVG_SERVER_CACHE } from './dist/flosportsinc/ng-universal-services/svg-transfer-state'
 import * as express from 'express'
 import * as cookies from 'cookie-parser'
+import * as lru from 'lru-cache'
+
+const cache = new lru({
+  maxAge: 1000 * 60 * 60
+})
 
 enableProdMode()
 
@@ -26,6 +32,10 @@ app.engine('html', ngExpressEngine({
     {
       provide: SOME_TOKEN,
       useValue: baseDirectory
+    },
+    {
+      provide: SVG_SERVER_CACHE,
+      useValue: cache
     }
   ]
 }))
