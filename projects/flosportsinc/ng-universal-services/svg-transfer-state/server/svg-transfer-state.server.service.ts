@@ -33,7 +33,6 @@ export class SvgServerLoaderService implements ISvgLoaderService {
     return svg_.pipe(tap(this.cacheForBrowserReflow(svgKey)))
   }
 
-
   readonly cacheForBrowserReflow = (svgKey: string) => (svg: string) => {
     const stateKey = makeStateKey(SVG_TRANSFER_KEY)
     const current = this._ts.get(stateKey, {})
