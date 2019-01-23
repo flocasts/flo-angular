@@ -37,6 +37,12 @@
       ],
       "@flosportsinc/ng-universal-services/*": [
         "../dist/flosportsinc/ng-universal-services/*"
+      ],
+      "@flosportsinc/ng-icons": [
+        "../dist/flosportsinc/ng-icons"
+      ],
+      "@flosportsinc/ng-icons/*": [
+        "../dist/flosportsinc/ng-icons/*"
       ]
     }
   },

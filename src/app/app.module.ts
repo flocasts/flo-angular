@@ -20,6 +20,7 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-universal-services/window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-transfer-state'
+import { IconsComponent } from './icons/icons.component'
 
 @NgModule({
   imports: [
@@ -40,6 +41,7 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-
     AppComponent,
     FramerComponent,
     HomeComponent,
+    IconsComponent,
     HlsComponent,
     HlsDemoComponent,
     HlsReadmeComponent,
