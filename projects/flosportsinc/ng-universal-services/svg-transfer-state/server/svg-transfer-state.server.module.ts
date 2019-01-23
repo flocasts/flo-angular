@@ -1,12 +1,8 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
-import { SVG_LOADER } from './svg-transfer-state.tokens'
+import { SVG_LOADER, SVG_REQUEST_PATTERN_BASE } from './svg-transfer-state.tokens'
 import { SvgServerLoaderService } from './svg-transfer-state.server.service'
-import { SVG_SERVER_REQUEST_PATTERN, SVG_SERVER_REQUEST_PATTERN_BASE } from './svg-transfer-state.server.tokens'
 
-export function standardServerReqPatternFactory(dir: string) {
-  const lambda = (svgKey: string) => `${dir}/${svgKey}.svg`
-  return lambda
-}
+const DEFAULT_PATH = './dist/assets/svg'
 
 @NgModule({
   providers: [
@@ -15,20 +11,19 @@ export function standardServerReqPatternFactory(dir: string) {
       useClass: SvgServerLoaderService
     },
     {
-      provide: SVG_SERVER_REQUEST_PATTERN,
-      useFactory: standardServerReqPatternFactory,
-      deps: [SVG_SERVER_REQUEST_PATTERN_BASE]
+      provide: SVG_REQUEST_PATTERN_BASE,
+      useValue: DEFAULT_PATH
     }
   ]
 })
 export class SvgTransferStateServerModule {
-  static withAssetDirectory(directory?: string): ModuleWithProviders {
+  static withSvgAssetRoot(dir?: string): ModuleWithProviders {
     return {
       ngModule: SvgTransferStateServerModule,
       providers: [
         {
-          provide: SVG_SERVER_REQUEST_PATTERN_BASE,
-          useValue: directory || './dist/assets/svg'
+          provide: SVG_REQUEST_PATTERN_BASE,
+          useValue: dir || DEFAULT_PATH
         }
       ]
     }

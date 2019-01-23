@@ -21,7 +21,7 @@ import { SvgTransferStateServerModule } from '@flosportsinc/ng-universal-service
     AppModule,
     WindowServerModule,
     CookieServerModule,
-    SvgTransferStateServerModule.withAssetDirectory('dist/flo-angular/browser/assets/svg')
+    SvgTransferStateServerModule.withSvgAssetRoot('dist/flo-angular/browser/assets/svg')
   ],
   providers: [
     {

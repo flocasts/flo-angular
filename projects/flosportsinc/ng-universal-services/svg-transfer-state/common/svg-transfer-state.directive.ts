@@ -1,7 +1,7 @@
 import { Directive, ElementRef, Input, OnInit, Inject, Renderer2 } from '@angular/core'
 import { SVG_LOADER, SVG_DIRECTIVE_DEFAULT_STYLES, SVG_DIRECTIVE_PARENT_STYLE_KEYS } from './svg-transfer-state.tokens'
 import { ISvgLoaderService } from './svg-transfer-state.interfaces'
-import { take } from 'rxjs/operators'
+import { take, filter } from 'rxjs/operators'
 
 // tslint:disable:no-object-mutation
 const insertSvg =
@@ -32,7 +32,7 @@ export class SvgTransferStateDirective implements OnInit {
   ngOnInit() {
     this._svgLoader
       .load(this.floSvg)
-      .pipe(take(1))
+      .pipe(take(1), filter(Boolean))
       .subscribe(svgXml => {
         insertSvg(this._el.nativeElement)(svgXml)
         const styles = { ...this.defaultStyles, ...this.floSvgStyles }

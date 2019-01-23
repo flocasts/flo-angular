@@ -2,14 +2,18 @@ import { of } from 'rxjs'
 import { Injectable, Inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
-import { ISvgLoaderService, StringDict } from './svg-transfer-state.interfaces'
-import { SVG_TRANSFER_KEY } from './svg-transfer-state.tokens'
-// import { SVG_SERVER_REQUEST_PATTERN } from './svg-transfer-state.server.tokens'
-// import { SvgServerDirectorPattern } from './svg-transfer-state.server.interfaces'
+import { SVG_TRANSFER_KEY, SVG_REQUEST_PATTERN, SVG_LOADER_ERROR_RETURN_OPERATOR } from './svg-transfer-state.tokens'
+import {
+  ISvgLoaderService, StringDict, ISvgRequestPatternFunc,
+  ISvgLoaderErrorReturnValueStreamFunc
+} from './svg-transfer-state.interfaces'
+import { catchError } from 'rxjs/operators'
 
 @Injectable()
 export class SvgBrowserLoaderService implements ISvgLoaderService {
-  constructor(private _ts: TransferState, private _http: HttpClient) { }
+  constructor(private _ts: TransferState, private _http: HttpClient,
+    @Inject(SVG_REQUEST_PATTERN) private _reqPattern: ISvgRequestPatternFunc,
+    @Inject(SVG_LOADER_ERROR_RETURN_OPERATOR) private _catchHandler: ISvgLoaderErrorReturnValueStreamFunc) { }
 
   private readonly _getFromTransferCache =
     (svgKey: string): string | undefined =>
@@ -20,6 +24,8 @@ export class SvgBrowserLoaderService implements ISvgLoaderService {
 
     return fromServerTransferCache
       ? of(fromServerTransferCache)
-      : of(svgKey)
+      : this._http.get(this._reqPattern(svgKey), { responseType: 'text', withCredentials: false }).pipe(
+        catchError(err => this._catchHandler(err))
+      )
   }
 }
