@@ -13,3 +13,8 @@ export interface ISvgLoaderService {
 export interface StringDict {
   readonly [key: string]: string
 }
+
+export interface ISvgServerCache {
+  readonly set: (key: string, value: string) => void
+  readonly get: (key: string) => string
+}
