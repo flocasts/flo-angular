@@ -71,7 +71,7 @@ export class AppServerModule { }
 ```
 
 ## Caching
-Both the server and client can cache http and file lookup requests. This is especially important on the client-side so as not to make an http request every page change.
+Both the server and client can cache http and file lookup requests.
 
 ### Server Caching
 ```ts
