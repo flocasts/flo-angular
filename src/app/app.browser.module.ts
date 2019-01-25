@@ -17,7 +17,7 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-servic
     HlsModule,
     DashModule,
     AppModule,
-    SvgTransferStateBrowserModule.withConfig({ cacheMaxAge: 1000 * 60 * 60 * 24 * 7 })
+    SvgTransferStateBrowserModule
   ],
   providers: [
     PwaService
