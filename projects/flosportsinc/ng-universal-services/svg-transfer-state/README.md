@@ -45,7 +45,10 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-servic
 @NgModule({
   imports: [
     SvgTransferStateBrowserModule, // with default root (defaults to "assets/svg")
-    SvgTransferStateBrowserModule.withSvgAssetRoot('public/assets/svg') // with custom root
+    SvgTransferStateBrowserModule.withConfig({
+      dir: 'public/assets/svg', // with custom root
+      cacheMaxAge: 1000 * 60 * 60 * 24 * 7 // will cache in user's localstorage for 7 days, by default cache is only per session.
+    }) 
   ]
 })
 export class AppBrowserModule { }

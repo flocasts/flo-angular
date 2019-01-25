@@ -10,6 +10,11 @@ export interface ISvgLoaderService {
   readonly load: (svgKey: string) => Observable<ISvgLoaderReturnValue>
 }
 
+export interface ISvgLoaderBrowserCacheService {
+  readonly get: (svgKey: string) => string | undefined
+  readonly set: (svgKey: string, value: string) => void
+}
+
 export interface StringDict {
   readonly [key: string]: string
 }
