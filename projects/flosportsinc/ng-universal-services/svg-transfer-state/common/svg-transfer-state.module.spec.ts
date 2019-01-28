@@ -11,7 +11,6 @@ import {
 } from './svg-transfer-state.module'
 import { ISvgRequestPatternFunc, ISvgLoaderErrorReturnValueStreamFunc } from './svg-transfer-state.interfaces'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
-import { HttpClientModule } from '@angular/common/http'
 
 const getHttpMock = () => TestBed.get(HttpTestingController) as HttpTestingController
 
@@ -24,7 +23,6 @@ const setupTb = (config?: Partial<ISvgTransferStateModuleConfigParams>) => {
       }
     ],
     imports: [
-      HttpClientModule,
       HttpClientTestingModule,
       SvgTransferStateModule.config(config)
     ]

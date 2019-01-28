@@ -1,7 +1,7 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { SvgTransferStateDirective } from './svg-transfer-state.directive'
 import { ISvgLoaderErrorReturnValueStreamFunc, ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
-import { HttpErrorResponse, HttpClient } from '@angular/common/http'
+import { HttpErrorResponse, HttpClient, HttpClientModule } from '@angular/common/http'
 import { catchError } from 'rxjs/operators'
 import { of } from 'rxjs'
 import {
@@ -45,6 +45,7 @@ const DEFAULT_CONFIG: ISvgTransferStateModuleConfigParams = {
 }
 
 @NgModule({
+  imports: [HttpClientModule],
   declarations: [SvgTransferStateDirective],
   exports: [SvgTransferStateDirective],
   providers: [
