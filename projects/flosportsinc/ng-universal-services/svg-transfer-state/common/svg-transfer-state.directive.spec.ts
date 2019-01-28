@@ -8,6 +8,12 @@ import { By } from '@angular/platform-browser'
 
 const sampleSvg = `<svg><circle cx="50" cy="50" r="40" /></svg> `
 
+@Component({
+  template: `<i floSvg="icon.svg"></i>`,
+  selector: `flo-test-host-component`
+})
+class TestHostComponent { }
+
 const setupTb = () => {
   TestBed.configureTestingModule({
     declarations: [TestHostComponent],
@@ -33,12 +39,6 @@ const setupTb = () => {
     ]
   })
 }
-
-@Component({
-  template: `<i floSvg="icon.svg"></i>`,
-  selector: `flo-test-host-component`
-})
-class TestHostComponent { }
 
 describe(SvgTransferStateDirective.name, () => {
   afterEach(() => TestBed.resetTestingModule())
