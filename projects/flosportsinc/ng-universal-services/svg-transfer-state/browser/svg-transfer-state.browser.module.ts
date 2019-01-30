@@ -5,20 +5,22 @@ import {
   SVG_LOADER, SVG_REQUEST_PATTERN_BASE, SVG_LOADER_BROWSER_CACHE,
   SVG_LOADER_BROWSER_CACHE_MAX_AGE
 } from './svg-transfer-state.tokens'
+import { BrowserTransferStateModule } from '@angular/platform-browser'
 
-const DEFAULT_PATH = 'assets/svg'
+export const DEFAULT_PATH = 'assets/svg'
 
 export interface SvgTransferStateBrowserModuleConfig {
   readonly dir?: string
   readonly cacheMaxAge?: number
 }
 
-const DEFAULT_CONFIG: SvgTransferStateBrowserModuleConfig = {
+export const DEFAULT_CONFIG: SvgTransferStateBrowserModuleConfig = {
   dir: DEFAULT_PATH,
   cacheMaxAge: 0
 }
 
 @NgModule({
+  imports: [BrowserTransferStateModule],
   providers: [
     {
       provide: SVG_LOADER,

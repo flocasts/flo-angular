@@ -1,3 +1,5 @@
+declare var fs: any
+
 import { SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_ERROR_RETURN_OPERATOR, SVG_SERVER_CACHE } from './svg-transfer-state.tokens'
 import {
   ISvgLoaderService, ISvgLoaderHttpFunc, ISvgLoaderErrorReturnValueStreamFunc,

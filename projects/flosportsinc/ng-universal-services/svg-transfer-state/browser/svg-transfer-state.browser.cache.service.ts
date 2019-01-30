@@ -40,7 +40,7 @@ export class SvgBrowserLoaderCacheService implements ISvgLoaderBrowserCacheServi
   localGet(key: string) {
     try {
       const obj = JSON.parse(localStorage.getItem(key) || '{}')
-      const expired = obj.ts < Date.now() - (this._maxAge || 0)
+      const expired = obj.ts < Date.now() - (this._maxAge as number)
       return expired ? undefined : obj.value
     } catch {
       return undefined
