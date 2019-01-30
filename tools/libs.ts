@@ -10,6 +10,8 @@ const FONT_AWESOME_TO_EXTRACT = Object.keys(Icon)
   .map(a => Icon[a])
 
 export const PROJECT_ASSET_COPY_DICT = {
-  [`node_modules/@fortawesome/fontawesome-free/svgs/**/*(${FONT_AWESOME_TO_EXTRACT.join('|')}).*`]: 'dist/flosportsinc/ng-icons/svg',
+  // tslint:disable-next-line:max-line-length
+  [`node_modules/@fortawesome/fontawesome-free/svgs/solid/**/*(${FONT_AWESOME_TO_EXTRACT.join('|')}).*`]: 'dist/flosportsinc/ng-icons/svg',
+  [`node_modules/@fortawesome/fontawesome-free/svgs/brands/**/*(${FONT_AWESOME_TO_EXTRACT.join('|')}).*`]: 'dist/flosportsinc/ng-icons/svg',
   'projects/flosportsinc/ng-icons/src/lib/svg/**/*.*': 'dist/flosportsinc/ng-icons/svg'
 }

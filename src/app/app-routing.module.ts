@@ -8,6 +8,7 @@ import { UniversalServicesComponent } from './universal-services/universal-servi
 import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
+import { IconsComponent } from './icons/icons.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -22,6 +23,7 @@ const routes: Routes = [
   },
   { path: 'viewport-grid', component: FramerComponent },
   { path: 'universal-services', component: UniversalServicesComponent },
+  { path: 'icons', component: IconsComponent },
   { path: '**', component: NotFoundComponent }
 ]
 

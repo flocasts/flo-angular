@@ -19,6 +19,8 @@ import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-universal-services/window'
+import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-transfer-state'
+import { IconsComponent } from './icons/icons.component'
 
 @NgModule({
   imports: [
@@ -29,15 +31,17 @@ import { WindowModule } from '@flosportsinc/ng-universal-services/window'
     AppRoutingModule,
     ViewportGridModule,
     TransferHttpCacheModule,
-    BrowserModule.withServerTransition({ appId: 'my-app' }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
     HttpClientModule,
+    SvgTransferStateModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
+    BrowserModule.withServerTransition({ appId: 'my-app' }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   declarations: [
     AppComponent,
     FramerComponent,
     HomeComponent,
+    IconsComponent,
     HlsComponent,
     HlsDemoComponent,
     HlsReadmeComponent,

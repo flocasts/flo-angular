@@ -7,6 +7,7 @@ import { HlsModule } from '@flosportsinc/ng-media-source-extensions-hls'
 import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/node-env-transfer/browser'
 import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/ad-block/browser'
 import { CookieBrowserModule } from '@flosportsinc/ng-universal-services/cookies/browser'
+import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/browser'
 
 @NgModule({
   imports: [
@@ -15,7 +16,8 @@ import { CookieBrowserModule } from '@flosportsinc/ng-universal-services/cookies
     CookieBrowserModule,
     HlsModule,
     DashModule,
-    AppModule
+    AppModule,
+    SvgTransferStateBrowserModule
   ],
   providers: [
     PwaService

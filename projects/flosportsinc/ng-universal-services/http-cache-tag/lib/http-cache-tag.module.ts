@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders, Optional, SkipSelf } from '@angular/core'
+import { NgModule, ModuleWithProviders } from '@angular/core'
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
 import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY, ICacheTagConfig, IWriteResponseHeader } from './http-cache-tag.tokens'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'

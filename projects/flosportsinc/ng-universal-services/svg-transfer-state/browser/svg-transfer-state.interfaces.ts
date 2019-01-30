@@ -1,0 +1,1 @@
+../common/svg-transfer-state.interfaces.ts
