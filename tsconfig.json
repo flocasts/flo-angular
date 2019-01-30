@@ -55,6 +55,12 @@
       ],
       "@flosportsinc/ng-icons/*": [
         "dist/flosportsinc/ng-icons/*"
+      ],
+      "@flosportsinc/ng-svg-transfer-state": [
+        "dist/flosportsinc/ng-svg-transfer-state"
+      ],
+      "@flosportsinc/ng-svg-transfer-state/*": [
+        "dist/flosportsinc/ng-svg-transfer-state/*"
       ]
     }
   }
