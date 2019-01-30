@@ -32,6 +32,7 @@
     "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.services": "ng test @flosportsinc/ng-universal-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.icons": "ng test @flosportsinc/ng-icons --watch=false --progress=false --browsers=ChromeHeadlessCI",
+    "test.ci.ng-svg-transfer-state": "ng test @flosportsinc/ng-svg-transfer-state --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "lint": "ts-node --project tsconfig.tools.json node_modules/.bin/ng lint",
     "e2e": "ng e2e",
     "e2e.ci": "ng e2e --dev-server-target= --protractor-config=./e2e/protractor-ci.conf.js",
