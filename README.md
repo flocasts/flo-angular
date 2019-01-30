@@ -30,6 +30,7 @@
 | Package       | Description   | Status | Latest |
 | ------------- | ------------- | ------ | -------|
 | [ng-icons](projects/flosportsinc/ng-icons) | Icon Pack | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-icons.svg)](https://www.npmjs.com/package/@flosportsinc/ng-icons)
+| [ng-ad-block](projects/flosportsinc/ng-ad-block) | For detecting ad blockers | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ad-block.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ad-block)
 | [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](https://www.npmjs.com/package/@flosportsinc/ng-universal-services)
 | [ng-svg-transfer-state](projects/flosportsinc/ng-svg-transfer-state) | Sync SVGs between server and browser | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-svg-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-svg-transfer-state)
 | [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Media Source Extension helpers | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions)

@@ -4,7 +4,6 @@ Utility services for Angular Universal applications.
 ## Modules
 | Name                                             | Description   |
 | ------------------------------------------------ | ------------- |
-| [Ad-Block](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/ad-block)               | Detect the use of ad-blockers to safely handle control flow around them |
 | [Cookies](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/cookies)                 | Interact with cookies on both server and client in the same way |
 | [Window](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/window)                   | Expose a `window` object to the server environment if needed. Mostly for unit testing |
 | [Firebase](https://github.com/flocasts/flo-angular/tree/master/projects/flosportsinc/ng-universal-services/firebase)               | Extends firebase library for better server-side rendering support |
