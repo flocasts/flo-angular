@@ -1,10 +1,9 @@
 # Ad-Block Detection Service
-Provides a way to detect if an ad-blocker is in use.
+Provides a service to detect if an ad-blocker is in use.
 
 ## Installation
-This module lives alongside others in our `ng-universal-services` package. If you haven't already done so, install it:
 ```sh
-npm i @flosportsinc/ng-universal-services
+npm i @flosportsinc/ng-ad-block
 ```
 
 Inside your `BrowserModule` (or `AppModule` if you are not using a universal server) install `AdBlockBrowserModule` like so:

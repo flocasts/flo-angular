@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/flosportsinc/ng-http-cache-tags",
+  "lib": {
+    "entryFile": "public_api.ts"
+  }
+}

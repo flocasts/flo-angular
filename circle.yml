@@ -177,6 +177,36 @@ jobs:
           root: .
           paths:
             - cc.ng-svg-transfer-state.json
+  test_ad-block:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.ad-block
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-ad-block.json ./coverage/ng-ad-block/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-ad-block.json
+  test_http-cache-tags:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.http-cache-tags
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-http-cache-tags.json ./coverage/ng-http-cache-tags/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-http-cache-tags.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -185,7 +215,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter sum-coverage ./cc.*.json -p 8 -o ./cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 10 -o ./cc.total.json
             ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
@@ -241,6 +271,14 @@ workflows:
           requires:
             - build
             - prep_coverage
+      - test_ad-block:
+          requires:
+            - build
+            - prep_coverage
+      - test_http-cache-tags:
+          requires:
+            - build
+            - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -251,6 +289,8 @@ workflows:
             - test_services
             - test_icons
             - test_svg-transfer-state
+            - test_ad-block
+            - test_http-cache-tags
       - publish:
           requires:
             - test_docs_site
@@ -261,6 +301,8 @@ workflows:
             - test_services
             - test_icons
             - test_svg-transfer-state
+            - test_ad-block
+            - test_http-cache-tags
             - upload_coverage
             - e2e
           filters:

@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
-import { HttpCacheTagExpressServerModule, DEFAULT_EXPRESS_WRITE_HEADER_FACTORY, immutableAppend } from './http-cache-tag.express.module'
+import { HttpCacheTagExpressServerModule, immutableAppend } from './http-cache-tag.express.module'
 import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY, IWriteResponseHeader, ICacheTagConfig } from './http-cache-tag.tokens'
 import { DEFAULT_CACHE_TAG_CONFIGURATION } from './http-cache-tag.module'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'

@@ -61,6 +61,18 @@
       ],
       "@flosportsinc/ng-svg-transfer-state/*": [
         "dist/flosportsinc/ng-svg-transfer-state/*"
+      ],
+      "@flosportsinc/ng-ad-block": [
+        "dist/flosportsinc/ng-ad-block"
+      ],
+      "@flosportsinc/ng-ad-block/*": [
+        "dist/flosportsinc/ng-ad-block/*"
+      ],
+      "@flosportsinc/ng-http-cache-tags": [
+        "dist/flosportsinc/ng-http-cache-tags"
+      ],
+      "@flosportsinc/ng-http-cache-tags/*": [
+        "dist/flosportsinc/ng-http-cache-tags/*"
       ]
     }
   }
