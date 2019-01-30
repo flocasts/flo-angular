@@ -448,6 +448,42 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-http-cache-tags": {
+      "root": "projects/flosportsinc/ng-http-cache-tags",
+      "sourceRoot": "projects/flosportsinc/ng-http-cache-tags",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-http-cache-tags/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-http-cache-tags/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-http-cache-tags/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-http-cache-tags/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-http-cache-tags/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-http-cache-tags/tsconfig.lib.json",
+              "projects/flosportsinc/ng-http-cache-tags/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"
