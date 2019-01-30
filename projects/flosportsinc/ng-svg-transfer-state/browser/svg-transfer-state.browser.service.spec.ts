@@ -59,6 +59,8 @@ describe(SvgBrowserLoaderCacheService.name, () => {
 
     const http = TestBed.get(HttpTestingController) as HttpTestingController
 
+    spyOn((sut as any)._cache, 'get').and.returnValue('<svg></svg>')
+
     sut.load('file').subscribe(val => {
       expect(val).toEqual('<svg></svg>')
     })
