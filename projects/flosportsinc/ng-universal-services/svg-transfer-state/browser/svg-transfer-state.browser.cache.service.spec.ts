@@ -1,20 +1,8 @@
 import { TestBed } from '@angular/core/testing'
 import { SVG_LOADER_BROWSER_CACHE } from './svg-transfer-state.tokens'
-import { HttpClientTestingModule } from '@angular/common/http/testing'
-import { SvgTransferStateBrowserModule, SvgTransferStateBrowserModuleConfig } from './svg-transfer-state.browser.module'
 import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache.service'
 import { ISvgLoaderBrowserCacheService } from './svg-transfer-state.interfaces'
-
-const setupTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
-  TestBed.configureTestingModule({
-    providers: [
-    ],
-    imports: [
-      HttpClientTestingModule,
-      SvgTransferStateBrowserModule.withConfig(config)
-    ]
-  })
-}
+import { setupCommonSvgTb } from './svg-transfer-state.browser.service.spec'
 
 const getSut = () => TestBed.get(SVG_LOADER_BROWSER_CACHE) as ISvgLoaderBrowserCacheService
 
@@ -22,7 +10,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   describe('session cache', () => {
-    beforeEach(() => setupTb())
+    beforeEach(() => setupCommonSvgTb())
 
     it('should construct', () => {
       expect(getSut()).toBeDefined()
@@ -55,7 +43,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   })
 
   describe('local cache', () => {
-    beforeEach(() => setupTb({ cacheMaxAge: 1 }))
+    beforeEach(() => setupCommonSvgTb({ cacheMaxAge: 1 }))
 
     it('should construct', () => {
       expect(getSut()).toBeDefined()

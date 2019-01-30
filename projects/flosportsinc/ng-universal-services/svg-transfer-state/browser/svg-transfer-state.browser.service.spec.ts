@@ -6,7 +6,7 @@ import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache
 import { ISvgLoaderService } from './svg-transfer-state.interfaces'
 import { SvgTransferStateModule } from '../common/svg-transfer-state.module'
 
-const setupTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
+export const setupCommonSvgTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
   TestBed.configureTestingModule({
     imports: [
       HttpClientTestingModule,
@@ -19,7 +19,7 @@ const setupTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
 const getSut = () => TestBed.get(SVG_LOADER) as ISvgLoaderService
 
 describe(SvgBrowserLoaderCacheService.name, () => {
-  beforeEach(() => setupTb())
+  beforeEach(() => setupCommonSvgTb())
   afterEach(() => TestBed.resetTestingModule())
 
   it('should construct', () => {
