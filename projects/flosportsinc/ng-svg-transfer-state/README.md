@@ -2,9 +2,8 @@
 Seamlessly transfer SVG data from server to browser.
 
 ## Installation
-This module lives alongside others in our `ng-universal-services` package. If you haven't already done so, install it:
 ```sh
-npm i @flosportsinc/ng-universal-services
+npm i @flosportsinc/ng-svg-transfer-state
 ```
 
 ## Table of Contents
