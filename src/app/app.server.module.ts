@@ -9,7 +9,7 @@ import { WindowServerModule } from '@flosportsinc/ng-universal-services/window/s
 import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/ad-block/server'
 import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/node-env-transfer/server'
 import { CookieServerModule } from '@flosportsinc/ng-universal-services/cookies/server'
-import { SvgTransferStateServerModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/server'
+import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-state/server'
 
 @NgModule({
   imports: [
