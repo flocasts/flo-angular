@@ -8,7 +8,7 @@ npm i @flosportsinc/ng-env-transfer-state
 
 Inside your `BrowserModule` install `NodeEnvTransferBrowserModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 
@@ -22,7 +22,7 @@ export class AppBrowserModule { }
 
 Inside your `ServerModule` install `NodeEnvTransferServerModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 
