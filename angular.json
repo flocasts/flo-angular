@@ -10,7 +10,8 @@
       "prefix": "app",
       "schematics": {
         "@schematics/angular:component": {
-          "styleext": "scss"
+          "styleext": "scss",
+          "changeDetection": "OnPush"
         }
       },
       "targets": {
@@ -59,9 +60,7 @@
               "src/styles.scss",
               "node_modules/prismjs/themes/prism-okaidia.css"
             ],
-            "scripts": [
-              "node_modules/prismjs/prism.js"
-            ]
+            "scripts": ["node_modules/prismjs/prism.js"]
           },
           "configurations": {
             "production": {
@@ -109,27 +108,16 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": ["src/styles.scss"],
             "scripts": [],
-            "assets": [
-              "src/favicon.ico",
-              "src/assets",
-              "src/manifest.json"
-            ]
+            "assets": ["src/favicon.ico", "src/assets", "src/manifest.json"]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -154,9 +142,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -165,7 +151,13 @@
       "root": "projects/flosportsinc/ng-viewport-grid",
       "sourceRoot": "projects/flosportsinc/ng-viewport-grid/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "targets": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -190,9 +182,7 @@
               "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
               "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -201,7 +191,13 @@
       "root": "projects/flosportsinc/ng-media-source-extensions",
       "sourceRoot": "projects/flosportsinc/ng-media-source-extensions/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -226,9 +222,7 @@
               "projects/flosportsinc/ng-media-source-extensions/tsconfig.lib.json",
               "projects/flosportsinc/ng-media-source-extensions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -237,7 +231,13 @@
       "root": "projects/flosportsinc/ng-universal-services",
       "sourceRoot": "projects/flosportsinc/ng-universal-services",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -262,9 +262,7 @@
               "projects/flosportsinc/ng-universal-services/tsconfig.lib.json",
               "projects/flosportsinc/ng-universal-services/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -273,7 +271,13 @@
       "root": "projects/flosportsinc/ng-media-source-extensions-dash",
       "sourceRoot": "projects/flosportsinc/ng-media-source-extensions-dash/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -298,9 +302,7 @@
               "projects/flosportsinc/ng-media-source-extensions-dash/tsconfig.lib.json",
               "projects/flosportsinc/ng-media-source-extensions-dash/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -309,7 +311,13 @@
       "root": "projects/flosportsinc/ng-media-source-extensions-hls",
       "sourceRoot": "projects/flosportsinc/ng-media-source-extensions-hls/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -334,9 +342,7 @@
               "projects/flosportsinc/ng-media-source-extensions-hls/tsconfig.lib.json",
               "projects/flosportsinc/ng-media-source-extensions-hls/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -345,7 +351,13 @@
       "root": "projects/flosportsinc/ng-icons",
       "sourceRoot": "projects/flosportsinc/ng-icons/src",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -370,9 +382,7 @@
               "projects/flosportsinc/ng-icons/tsconfig.lib.json",
               "projects/flosportsinc/ng-icons/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -381,7 +391,13 @@
       "root": "projects/flosportsinc/ng-svg-transfer-state",
       "sourceRoot": "projects/flosportsinc/ng-svg-transfer-state",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -406,9 +422,7 @@
               "projects/flosportsinc/ng-svg-transfer-state/tsconfig.lib.json",
               "projects/flosportsinc/ng-svg-transfer-state/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -417,7 +431,13 @@
       "root": "projects/flosportsinc/ng-ad-block",
       "sourceRoot": "projects/flosportsinc/ng-ad-block",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -442,9 +462,7 @@
               "projects/flosportsinc/ng-ad-block/tsconfig.lib.json",
               "projects/flosportsinc/ng-ad-block/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -453,7 +471,13 @@
       "root": "projects/flosportsinc/ng-http-cache-tags",
       "sourceRoot": "projects/flosportsinc/ng-http-cache-tags",
       "projectType": "library",
-      "prefix": "lib",
+      "prefix": "flo",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -478,9 +502,7 @@
               "projects/flosportsinc/ng-http-cache-tags/tsconfig.lib.json",
               "projects/flosportsinc/ng-http-cache-tags/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
