@@ -1,0 +1,18 @@
+{
+  "extends": "../../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../out-tsc/spec",
+    "types": [
+      "jasmine",
+      "node"
+    ]
+  },
+  "files": [
+    "test.ts"
+  ],
+  "include": [
+    "../*.spec.ts", // your spec file location parent of src or ../yourpath/
+    "**/*.spec.ts",
+    "**/*.d.ts"
+  ]
+}
