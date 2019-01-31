@@ -520,6 +520,42 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-env-transfer-state": {
+      "root": "projects/flosportsinc/ng-env-transfer-state",
+      "sourceRoot": "projects/flosportsinc/ng-env-transfer-state",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-env-transfer-state/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-env-transfer-state/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-env-transfer-state/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-env-transfer-state/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-env-transfer-state/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-env-transfer-state/tsconfig.lib.json",
+              "projects/flosportsinc/ng-env-transfer-state/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"

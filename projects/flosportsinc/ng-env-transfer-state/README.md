@@ -2,16 +2,15 @@
 Transfer server side environment variables to use as configuration values throughout the application.
 
 ## Installation
-This module lives alongside others in our `ng-universal-services` package. If you haven't already done so, install it:
 ```sh
-npm i @flosportsinc/ng-universal-services
+npm i @flosportsinc/ng-env-transfer-state
 ```
 
 Inside your `BrowserModule` install `NodeEnvTransferBrowserModule` like so:
 
 ```ts
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-universal-services/node-env-transfer/browser'
+import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 
 @NgModule({
   imports: [
@@ -25,7 +24,7 @@ Inside your `ServerModule` install `NodeEnvTransferServerModule` like so:
 
 ```ts
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferServerModule } from '@flosportsinc/ng-universal-services/node-env-transfer/server'
+import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 
 @NgModule({
   imports: [
