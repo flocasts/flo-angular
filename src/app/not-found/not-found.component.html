@@ -1,1 +1,6 @@
-<h2>Page not found</h2>
+<ng-container *ngIf="view$ | async as view">
+  <ng-container [ngSwitch]="view.showReadme">
+    <h2 *ngSwitchCase="false">Page not found</h2>
+    <markdown *ngSwitchCase="true" [src]="view.readmeLink"></markdown>
+  </ng-container>
+</ng-container>

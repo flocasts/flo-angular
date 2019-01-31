@@ -8,7 +8,7 @@ npm i @flosportsinc/ng-svg-transfer-state
 
 ## Table of Contents
 
-- [App Setup](#app)
+- [App Setup](/projects/flosportsinc/ng-svg-transfer-state#app)
 - [Browser Setup](#browser)
 - [Server Setup](#server)
 - [Caching Setup](#caching)
@@ -18,7 +18,7 @@ npm i @flosportsinc/ng-svg-transfer-state
 ### App
 Inside your `AppModule` install `SvgTransferStateModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-transfer-state'
 
@@ -37,7 +37,7 @@ export class AppBrowserModule { }
 ### Browser
 Inside your `BrowserModule` (or `AppModule` if you are not using a universal server) install `SvgTransferStateBrowserModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/browser'
 
@@ -56,7 +56,7 @@ export class AppBrowserModule { }
 ### Server
 If you have a Universal app you will need to include the `SvgTransferStateServerModule` in `AppServerModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { SvgTransferStateServerModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/server'
 
@@ -76,7 +76,7 @@ export class AppServerModule { }
 Both the server and client can cache http and file lookup requests.
 
 ### Server Caching
-```ts
+```js
 // server.ts (your node.js express server)
 
 // this example uses the npm package "lru-cache"
