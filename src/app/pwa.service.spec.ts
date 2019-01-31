@@ -8,7 +8,7 @@ describe('PwaService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
       WindowModule,
-      ServiceWorkerModule.register('')
+      ServiceWorkerModule.register('', { enabled: false })
     ],
     providers: [
       {
