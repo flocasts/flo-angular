@@ -61,6 +61,18 @@
       ],
       "@flosportsinc/ng-http-cache-tags/*": [
         "../dist/flosportsinc/ng-http-cache-tags/*"
+      ],
+      "@flosportsinc/ng-window": [
+        "../dist/flosportsinc/ng-window"
+      ],
+      "@flosportsinc/ng-window/*": [
+        "../dist/flosportsinc/ng-window/*"
+      ],
+      "@flosportsinc/ng-env-transfer-state": [
+        "../dist/flosportsinc/ng-env-transfer-state"
+      ],
+      "@flosportsinc/ng-env-transfer-state/*": [
+        "../dist/flosportsinc/ng-env-transfer-state/*"
       ]
     }
   },

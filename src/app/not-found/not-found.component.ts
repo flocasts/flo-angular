@@ -13,7 +13,8 @@ export class NotFoundComponent {
     'ng-svg-transfer-state',
     'ng-ad-block',
     'ng-http-cache-tags',
-    'ng-media-source-externsion'
+    'ng-media-source-externsion',
+    'ng-env-transfer-state'
   ]
 
   constructor(private ar: ActivatedRoute) { }
