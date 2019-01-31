@@ -8,7 +8,7 @@ npm i @flosportsinc/ng-ad-block
 
 Inside your `BrowserModule` (or `AppModule` if you are not using a universal server) install `AdBlockBrowserModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { AdBlockBrowserModule } from '@flosportsinc/ng-universal-services/ad-block'
 
@@ -24,7 +24,7 @@ You will need to provide an API endpoint that return a simple 200 response objec
 
 If you have a Universal app you will need to include the `AdBlockServerModule` in `AppServerModule` like so:
 
-```ts
+```js
 import { NgModule } from '@angular/core'
 import { AdBlockServerModule } from '@flosportsinc/ng-universal-services/ad-block'
 
