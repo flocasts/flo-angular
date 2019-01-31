@@ -69,10 +69,10 @@
         "../dist/flosportsinc/ng-window/*"
       ],
       "@flosportsinc/ng-env-transfer-state": [
-        "dist/flosportsinc/ng-env-transfer-state"
+        "../dist/flosportsinc/ng-env-transfer-state"
       ],
       "@flosportsinc/ng-env-transfer-state/*": [
-        "dist/flosportsinc/ng-env-transfer-state/*"
+        "../dist/flosportsinc/ng-env-transfer-state/*"
       ]
     }
   },
