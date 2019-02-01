@@ -8,7 +8,12 @@ import { Icon } from '@flosportsinc/ng-icons'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IconsComponent {
-  public readonly icons = Object.keys(Icon).map(a => Icon[a])
+  public readonly icons = Object.keys(Icon).map(a => {
+    return {
+      enumKey: a,
+      locKey: Icon[a]
+    }
+  })
 
   trackBy(_index: number, item: string) {
     return item

@@ -1,5 +1,12 @@
 :host {
   .cont {
     display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-auto-rows: 100px;
+    div {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
   }
 }
