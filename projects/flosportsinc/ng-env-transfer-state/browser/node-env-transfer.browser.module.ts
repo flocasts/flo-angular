@@ -4,7 +4,7 @@ import { NodeEnvTransferModule } from './node-env-transfer.common.module'
 import { BrowserTransferStateModule } from '@angular/platform-browser'
 import { ENV, ENV_CONFIG_TS_KEY, ENV_CONFIG_DEFAULT } from './node-env-transfer.tokens'
 
-export function defaultBrowserFactory(ts: TransferState, stateKey: string, merge = {}) {
+export function defaultBrowserFactory(ts: TransferState, stateKey: string, merge: Object) {
   return {
     ...ts.get(makeStateKey(stateKey), {}),
     ...merge
@@ -19,6 +19,8 @@ export interface INodeEnvTransferBrowserModuleConfig {
   readonly mergeWithServer?: INodeEnvTransferBrowserModuleConfigDict
 }
 
+export const NODE_ENV_CONFIG_DEFAULT = {}
+
 @NgModule({
   imports: [
     BrowserTransferStateModule,
@@ -27,7 +29,7 @@ export interface INodeEnvTransferBrowserModuleConfig {
   providers: [
     {
       provide: ENV_CONFIG_DEFAULT,
-      useValue: {}
+      useValue: NODE_ENV_CONFIG_DEFAULT
     },
     {
       provide: ENV,
@@ -43,7 +45,7 @@ export class NodeEnvTransferBrowserModule {
       providers: [
         {
           provide: ENV_CONFIG_DEFAULT,
-          useValue: config.mergeWithServer || {}
+          useValue: config.mergeWithServer || NODE_ENV_CONFIG_DEFAULT
         }
       ]
     }
