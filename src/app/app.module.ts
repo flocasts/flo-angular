@@ -21,9 +21,11 @@ import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
+import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 
 @NgModule({
   imports: [
+    NodeEnvTransferModule,
     WindowModule,
     MseModule,
     FormsModule,
@@ -50,4 +52,8 @@ import { IconsComponent } from './icons/icons.component'
     NotFoundComponent
   ]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(env: NodeEnvTransferService) {
+    console.log(env.env)
+  }
+}

@@ -11,4 +11,4 @@ import { NodeEnvTransferService } from './node-env-transfer.service'
     }
   ]
 })
-export class NodeEnvTransferCommonModule { }
+export class NodeEnvTransferModule { }

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { ENV_CONFIG_FILTER_KEYS, NODE_ENV, ENV_CONFIG } from './node-env-transfer.tokens'
+import { ENV_CONFIG_FILTER_KEYS, NODE_ENV, ENV } from './node-env-transfer.tokens'
 import { NodeEnvTransferServerModule, serverEnvConfigFactory, nodeEnvFactory } from './node-env-transfer.server.module'
 import { APP_BOOTSTRAP_LISTENER } from '@angular/core'
 import { TransferState } from '@angular/platform-browser'
@@ -38,7 +38,7 @@ describe(NodeEnvTransferServerModule.name, () => {
   it('should pluck keys', () => {
     setupTestBed()(['cool_key'])
     const toPluck = TestBed.get(ENV_CONFIG_FILTER_KEYS)
-    const env = TestBed.get(ENV_CONFIG)
+    const env = TestBed.get(ENV)
 
     expect(toPluck.length).toEqual(1)
     expect(toPluck).toContain('cool_key')

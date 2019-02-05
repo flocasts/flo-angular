@@ -12,11 +12,15 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
 @NgModule({
   imports: [
     AdBlockBrowserModule.usingUrl('/assets/ads.js'),
-    NodeEnvTransferBrowserModule,
     CookieBrowserModule,
     HlsModule,
     DashModule,
     AppModule,
+    NodeEnvTransferBrowserModule.config({
+      mergeWithServer: {
+        test: 'ok'
+      }
+    }),
     SvgTransferStateBrowserModule
   ],
   providers: [
