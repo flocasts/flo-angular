@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core'
 
 @Component({
   selector: 'app-home',
@@ -6,6 +6,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent {
-
-}
+export class HomeComponent { }

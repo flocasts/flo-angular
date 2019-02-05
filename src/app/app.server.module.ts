@@ -17,10 +17,10 @@ import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-stat
     ModuleMapLoaderModule,
     ServerTransferStateModule,
     AdBlockServerModule,
-    NodeEnvTransferServerModule,
     AppModule,
     WindowServerModule,
     CookieServerModule,
+    NodeEnvTransferServerModule,
     SvgTransferStateServerModule.withSvgAssetRoot('dist/flo-angular/browser/assets/svg')
   ],
   providers: [

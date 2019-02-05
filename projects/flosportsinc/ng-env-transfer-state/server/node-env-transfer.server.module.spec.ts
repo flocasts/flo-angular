@@ -1,19 +1,19 @@
 import { TestBed } from '@angular/core/testing'
-import { ENV_CONFIG_FILTER_KEYS, NODE_ENV, ENV_CONFIG } from './node-env-transfer.tokens'
-import { NodeEnvTransferServerModule, serverEnvConfigFactory, nodeEnvFactory } from './node-env-transfer.server.module'
+import { NODE_ENV, ENV, ENV_CONFIG_SERVER } from './node-env-transfer.tokens'
 import { APP_BOOTSTRAP_LISTENER } from '@angular/core'
 import { TransferState } from '@angular/platform-browser'
+import { NodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory } from './node-env-transfer.server.module'
+
+const defNode = { cool_key: 'cool value!' }
 
 const setupTestBed =
-  (nodeProcess = { cool_key: 'cool value!' }) =>
-    (pluckKeys?: ReadonlyArray<string>) => {
-      const mod = pluckKeys
-        ? pluckKeys.length
-          ? NodeEnvTransferServerModule.withSelectedKeys(pluckKeys)
-          : NodeEnvTransferServerModule.withSelectedKeys()
+  (nodeProcess?: Object) =>
+    (config?: Partial<INodeEnvTransferServerModuleConfig>) => {
+      const ServerModule = config
+        ? NodeEnvTransferServerModule.config(config)
         : NodeEnvTransferServerModule
       TestBed.configureTestingModule({
-        imports: [mod],
+        imports: [ServerModule],
         providers: [{
           provide: NODE_ENV,
           useValue: nodeProcess
@@ -26,19 +26,19 @@ describe(NodeEnvTransferServerModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   it('should pluck none by default A', () => {
-    setupTestBed()([])
-    expect(TestBed.get(ENV_CONFIG_FILTER_KEYS).length).toEqual(0)
+    setupTestBed(defNode)({})
+    expect(TestBed.get(ENV_CONFIG_SERVER).selectKeys.length).toEqual(0)
   })
 
   it('should pluck nonde by default B', () => {
-    setupTestBed()()
-    expect(TestBed.get(ENV_CONFIG_FILTER_KEYS).length).toEqual(0)
+    setupTestBed(defNode)()
+    expect(TestBed.get(ENV_CONFIG_SERVER).selectKeys.length).toEqual(0)
   })
 
   it('should pluck keys', () => {
-    setupTestBed()(['cool_key'])
-    const toPluck = TestBed.get(ENV_CONFIG_FILTER_KEYS)
-    const env = TestBed.get(ENV_CONFIG)
+    setupTestBed(defNode)({ selectKeys: ['cool_key'] })
+    const toPluck = TestBed.get(ENV_CONFIG_SERVER).selectKeys
+    const env = TestBed.get(ENV)
 
     expect(toPluck.length).toEqual(1)
     expect(toPluck).toContain('cool_key')
@@ -46,7 +46,7 @@ describe(NodeEnvTransferServerModule.name, () => {
   })
 
   it('should bootstrap and set transfer state', () => {
-    setupTestBed()(['cool_key'])
+    setupTestBed(defNode)({ selectKeys: ['cool_key'] })
 
     const factory = TestBed.get(APP_BOOTSTRAP_LISTENER)[0]
     const ts = TestBed.get(TransferState) as TransferState
@@ -58,8 +58,62 @@ describe(NodeEnvTransferServerModule.name, () => {
   })
 
   it('handle default filter case', () => {
-    expect(serverEnvConfigFactory(undefined, [])).toEqual({})
+    setupTestBed()()
+    expect(TestBed.get(ENV_CONFIG_SERVER)).toBeTruthy()
+  })
 
-    expect(nodeEnvFactory()).toEqual(process.env)
+  it('handle default filter case', () => {
+    expect(nodeEnvFactory()).toEqual({})
+  })
+
+  it('should selecte by pattern', () => {
+    setupTestBed({
+      NODE_ENV_VAR: 'SOMETHING',
+      FLO_SERVER_API: 'https://url.ref',
+      FLO_SERVER_API2: 'https://url.ref2'
+    })({
+      extractor: new RegExp('FLO_')
+    })
+
+    const env = TestBed.get(ENV)
+
+    expect(Object.keys(env).length).toEqual(2)
+    expect(env.FLO_SERVER_API).toEqual('https://url.ref')
+    expect(env.FLO_SERVER_API2).toEqual('https://url.ref2')
+  })
+
+  it('should selecte by pattern and rename key', () => {
+    setupTestBed({
+      NODE_ENV_VAR: 'SOMETHING',
+      FLO_SERVER_API: 'https://url.ref',
+      FLO_SERVER_API2: 'https://url.ref2'
+    })({
+      extractor: new RegExp('FLO_'),
+      keyReplacer: key => key.replace('FLO_', '')
+    })
+
+    const env = TestBed.get(ENV)
+
+    expect(Object.keys(env).length).toEqual(2)
+    expect(env.SERVER_API).toEqual('https://url.ref')
+    expect(env.SERVER_API2).toEqual('https://url.ref2')
+  })
+
+
+  it('should handle combination of selectedKeys + extractor pattern', () => {
+    const testEnv = { NODE_ENV_VAR: 'SOMETHING', FLO_SERVER_API: 'https://url.ref' }
+    setupTestBed(testEnv)({
+      selectKeys: ['NODE_ENV_VAR'],
+      extractor: new RegExp('FLO_')
+    })
+
+    const env = TestBed.get(ENV)
+    expect(env).toEqual(testEnv)
+  })
+
+  it('should have default regex pattern matcher of undefined', () => {
+    setupTestBed()()
+
+    expect(TestBed.get(ENV_CONFIG_SERVER).extractor).toBeUndefined()
   })
 })

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 import { NodeEnvTransferService } from './node-env-transfer.service'
-import { NodeEnvTransferCommonModule } from './node-env-transfer.common.module'
-import { ENV_CONFIG } from './node-env-transfer.tokens'
+import { NodeEnvTransferModule } from './node-env-transfer.common.module'
+import { ENV } from './node-env-transfer.tokens'
 
 interface OurConfig {
   readonly someProperty: number
@@ -12,10 +12,10 @@ describe(NodeEnvTransferService.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferCommonModule],
+      imports: [NodeEnvTransferModule],
       providers: [
         {
-          provide: ENV_CONFIG,
+          provide: ENV,
           useValue: {
             someProperty: 123
           }
