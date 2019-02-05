@@ -17,7 +17,6 @@ import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-stat
     ModuleMapLoaderModule,
     ServerTransferStateModule,
     AdBlockServerModule,
-    NodeEnvTransferServerModule,
     AppModule,
     WindowServerModule,
     CookieServerModule,

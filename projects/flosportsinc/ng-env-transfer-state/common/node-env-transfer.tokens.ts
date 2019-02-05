@@ -1,5 +1,5 @@
 export const ENV = 'flo.node-env-transfer.config'
 export const ENV_CONFIG_DEFAULT = 'flo.node-env-transfer.config-browser-default'
 export const ENV_CONFIG_TS_KEY = 'flo.node-env-transfer.config-ts-key'
-export const ENV_CONFIG_FILTER_KEYS = 'flo.node-env-transfer.config-filter-keys'
+export const ENV_CONFIG_SERVER = 'flo.node-env-transfer.config-server'
 export const NODE_ENV = 'flo.node-env-transfer.node-env'
