@@ -49,11 +49,16 @@ import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state
 
 @NgModule({
   imports: [
-    NodeEnvTransferServerModule.withSelectedKeys([
-      'my_awesome_env_variable1',
-      'my_awesome_env_variable2',
-      'npm_config_path'
-    ])
+    NodeEnvTransferServerModule, // defaul module passes nothing to the browser
+    NodeEnvTransferServerModule.config({
+      selectKeys: [ // pass all variables listed here if they exist (is merged with pattern matched values from extractor property)
+        'my_awesome_env_variable1',
+        'my_awesome_env_variable2',
+        'npm_config_path'
+      ],
+      extractor: new RegExp('MY_PREFIX_'), // a regexp to pick the values you want passed to the browser (is merged with pattern matched values from selectKeys property)
+      keyReplacer: (key: string) => key.replace('MY_PREFIX_', '') // a function to rename keys. ex: MY_PREFIX_VAR1 => VAR1
+    })
   ]
 })
 export class AppServerModule { }
