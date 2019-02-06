@@ -27,21 +27,19 @@
   </a>
 </p>
 
-| Package       | Description   | Status | Latest |
-| ------------- | ------------- | ------ | -------|
-| [ng-icons](projects/flosportsinc/ng-icons) | Icon Pack | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-icons.svg)](https://www.npmjs.com/package/@flosportsinc/ng-icons)
-| [ng-window](projects/flosportsinc/ng-window) | Window object for Node and testing | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-window.svg)](https://www.npmjs.com/package/@flosportsinc/ng-window)
-| [ng-ad-block](projects/flosportsinc/ng-ad-block) | For detecting ad blockers | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ad-block.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ad-block)
-| [ng-http-cache-tags](projects/flosportsinc/ng-http-cache-tags) | HTTP tag caching | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-http-cache-tags.svg)](https://www.npmjs.com/package/@flosportsinc/ng-http-cache-tags)
-| [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](https://www.npmjs.com/package/@flosportsinc/ng-universal-services)
-| [ng-svg-transfer-state](projects/flosportsinc/ng-svg-transfer-state) | Sync SVGs between server and browser | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-svg-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-svg-transfer-state)
-| [ng-env-transfer-state](projects/flosportsinc/ng-env-transfer-state) | Transfer Node Environment variables | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-env-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-env-transfer-state)
-| [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Media Source Extension helpers | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions)
-| [ng-media-source-extensions-hls](projects/flosportsinc/ng-media-source-extensions-hls) | HTTP Live Streaming | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions-hls.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions-hls)
-| [ng-media-source-extensions-dash](projects/flosportsinc/ng-media-source-extensions-dash) | DASH Live Streaming | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions-dash.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions-dash)
-| [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | WIP | [![](https://img.shields.io/npm/v/@flosportsinc/ng-viewport-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-viewport-grid)
-| [ng-video-grid](projects/flosportsinc/ng-video-grid) | Mutlicamera grid layout | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-grid)
-| [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | Planned | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
+| Package       | Description   | Latest |
+| ------------- | ------------- | -------|
+| [ng-icons](projects/flosportsinc/ng-icons) | FloSports Icon Pack | [![](https://img.shields.io/npm/v/@flosportsinc/ng-icons.svg)](https://www.npmjs.com/package/@flosportsinc/ng-icons)
+| [ng-window](projects/flosportsinc/ng-window) | Window object for Node and unit testing | [![](https://img.shields.io/npm/v/@flosportsinc/ng-window.svg)](https://www.npmjs.com/package/@flosportsinc/ng-window)
+| [ng-ad-block](projects/flosportsinc/ng-ad-block) | For detecting ad blockers | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ad-block.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ad-block)
+| [ng-http-cache-tags](projects/flosportsinc/ng-http-cache-tags) | HTTP tag caching | [![](https://img.shields.io/npm/v/@flosportsinc/ng-http-cache-tags.svg)](https://www.npmjs.com/package/@flosportsinc/ng-http-cache-tags)
+| [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](https://www.npmjs.com/package/@flosportsinc/ng-universal-services)
+| [ng-svg-transfer-state](projects/flosportsinc/ng-svg-transfer-state) | Sync SVGs between server and browser | [![](https://img.shields.io/npm/v/@flosportsinc/ng-svg-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-svg-transfer-state)
+| [ng-env-transfer-state](projects/flosportsinc/ng-env-transfer-state) | Transfer Node Environment variables | [![](https://img.shields.io/npm/v/@flosportsinc/ng-env-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-env-transfer-state)
+| [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Media Source Extensions for HLS/DASH | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions)
+| [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | [![](https://img.shields.io/npm/v/@flosportsinc/ng-viewport-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-viewport-grid)
+| [ng-video-grid](projects/flosportsinc/ng-video-grid) | Mutlicamera grid layout | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-grid)
+| [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.
