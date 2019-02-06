@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core'
 import {
-  MseModule,
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, IMseDestroyFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   IVideoElementSupportsTargetMseCheck,
@@ -16,7 +15,8 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext
-} from '@flosportsinc/ng-media-source-extensions'
+} from './mse.tokens'
+import { MseModule } from './mse.module'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
 const exectionKey = 'DASH'
