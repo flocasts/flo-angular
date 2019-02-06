@@ -22,21 +22,41 @@ __DASH__
 - [DashModule](/hls#dash-installation)
 - [MseModule (for custom implementations)](/hls#advanced-installation)
 
-## HLS Installation
+## MSE Installation (required for any of the supported extensions)
 Save the library as an application dependency
 ```bash
-npm i @flosportsinc/ng-media-source-extensions @types/hls.js hls.js
+npm i @flosportsinc/ng-media-source-extensions
 ```
 
 Import the module into your angular application
 ```js
 import { NgModule } from '@angular/core'
-import { HlsModule } from '@flosportsinc/ng-media-source-extensions'
+import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
-  imports: [HlsModule]
+  imports: [MseModule]
 })
 export class AppModule { }
+```
+
+## HLS Installation
+Save the library as an application dependency
+```bash
+npm i @types/hls.js hls.js
+```
+
+Import the module into your angular application
+```js
+import { NgModule } from '@angular/core'
+import { HlsModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
+
+@NgModule({
+  imports: [
+    MseModule,
+    HlsModule
+  ]
+})
+export class AppModule { } // If you are using Angular Universal, this MUST be in your AppBrowserModule
 ```
 
 Now you are free to .m3u8 HLS files in all modern browsers.
@@ -47,18 +67,21 @@ Now you are free to .m3u8 HLS files in all modern browsers.
 ## DASH Installation
 Save the library as an application dependency
 ```bash
-npm i @flosportsinc/ng-media-source-extensions dashjs
+npm i dashjs
 ```
 
 Import the module into your angular application
 ```js
 import { NgModule } from '@angular/core'
-import { DashModule } from '@flosportsinc/ng-media-source-extensions'
+import { DashModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
-  imports: [DashModule]
+  imports: [
+    MseModule,
+    DashModule
+  ]
 })
-export class AppModule { }
+export class AppModule { } // If you are using Angular Universal, this MUST be in your AppBrowserModule
 ```
 
 Now you are free to .mpd files in all modern browsers.
@@ -66,6 +89,49 @@ Now you are free to .mpd files in all modern browsers.
 <video floMse src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd"></video>
 ```
 
+## Usage
+The `floMse` directive emits 3 keys events `srcChange, mseClient, mseClientMessage`
+
+- (srcChange): whenever a video elements src property changes, this event fires.
+- (mseClient): when the video's MSE client (for example hls.js) loads, this event fires and send the reference to the mse client.
+- (mseClientMessage): the clients usually have a way to log messages, this event forwards those message through the directive.
+
+```html
+<video floMse 
+  (srcChange)="sourceChanged($event)" 
+  (mseClient)="clientReady($event)" 
+  (mseClientMessage)="message($event)" 
+  src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd">
+</video>
+```
+
+```js
+import { NgModule } from '@angular/core'
+
+@NgModule({
+  imports: [
+    MseModule,
+    DashModule
+  ]
+})
+export class MyComponent {
+
+  sourceChanged(evt: string) {
+    // do something with the url
+  }
+
+  clientReady(evt: MseClientContext<TMseClient>) {
+    evt.contextKey.tapSome(console.log) // if exists, will print "hls"
+    evt.mseClient.tapSome(client => {
+      client.performLibraryMagic // this would be the hls.js instance with associated video already setup.
+    })
+  }
+
+  mseClientMessage(evt: any) {
+    // do something with the messages
+  }
+}
+```
 
 ## Advanced Installation
 Work in progress...

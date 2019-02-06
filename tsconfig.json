@@ -38,18 +38,6 @@
       "@flosportsinc/ng-universal-services/*": [
         "dist/flosportsinc/ng-universal-services/*"
       ],
-      "@flosportsinc/ng-media-source-extensions-dash": [
-        "dist/flosportsinc/ng-media-source-extensions-dash"
-      ],
-      "@flosportsinc/ng-media-source-extensions-dash/*": [
-        "dist/flosportsinc/ng-media-source-extensions-dash/*"
-      ],
-      "@flosportsinc/ng-media-source-extensions-hls": [
-        "dist/flosportsinc/ng-media-source-extensions-hls"
-      ],
-      "@flosportsinc/ng-media-source-extensions-hls/*": [
-        "dist/flosportsinc/ng-media-source-extensions-hls/*"
-      ],
       "@flosportsinc/ng-icons": [
         "dist/flosportsinc/ng-icons"
       ],

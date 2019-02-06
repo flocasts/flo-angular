@@ -102,36 +102,6 @@ jobs:
           root: .
           paths:
             - cc.ng-media-source-extensions.json
-  test_mse-dash:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Test
-          command: |
-            npm run test.ci.mse-dash
-            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions-dash.json ./coverage/ng-media-source-extensions-dash/lcov.info
-      - persist_to_workspace:
-          root: .
-          paths:
-            - cc.ng-media-source-extensions-dash.json
-  test_mse-hls:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Test
-          command: |
-            npm run test.ci.mse-hls
-            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions-hls.json ./coverage/ng-media-source-extensions-hls/lcov.info
-      - persist_to_workspace:
-          root: .
-          paths:
-            - cc.ng-media-source-extensions-hls.json
   test_services:
     <<: *defaults
     steps:
@@ -215,7 +185,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter sum-coverage ./cc.*.json -p 10 -o ./cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 8 -o ./cc.total.json
             ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
@@ -251,14 +221,6 @@ workflows:
           requires:
             - build
             - prep_coverage
-      - test_mse-dash:
-          requires:
-            - build
-            - prep_coverage
-      - test_mse-hls:
-          requires:
-            - build
-            - prep_coverage
       - test_services:
           requires:
             - build
@@ -284,8 +246,6 @@ workflows:
             - test_docs_site
             - test_viewport_grid
             - test_mse
-            - test_mse-dash
-            - test_mse-hls
             - test_services
             - test_icons
             - test_svg-transfer-state
@@ -296,8 +256,6 @@ workflows:
             - test_docs_site
             - test_viewport_grid
             - test_mse
-            - test_mse-dash
-            - test_mse-hls
             - test_services
             - test_icons
             - test_svg-transfer-state

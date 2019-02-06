@@ -3,7 +3,7 @@ import {
   IMseSrcChangeOptions,
   IMseInitOptions,
   IMseDestroyOptions
-} from '@flosportsinc/ng-media-source-extensions'
+} from './mse.tokens'
 import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
 import {

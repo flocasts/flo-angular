@@ -27,8 +27,6 @@
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.mse": "ng test @flosportsinc/ng-media-source-extensions --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test.ci.mse-dash": "ng test @flosportsinc/ng-media-source-extensions-dash --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test.ci.mse-hls": "ng test @flosportsinc/ng-media-source-extensions-hls --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.services": "ng test @flosportsinc/ng-universal-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.icons": "ng test @flosportsinc/ng-icons --watch=false --progress=false --browsers=ChromeHeadlessCI",
@@ -53,7 +51,7 @@
     "@angular/platform-browser": "^8.0.0-beta.2",
     "@angular/platform-browser-dynamic": "^8.0.0-beta.2",
     "@angular/platform-server": "^8.0.0-beta.2",
-    "@angular/pwa": "^0.12.4",
+    "@angular/pwa": "^0.13.0",
     "@angular/router": "^8.0.0-beta.2",
     "@angular/service-worker": "^8.0.0-beta.2",
     "@nguniversal/common": "^7.1.0",
@@ -75,8 +73,8 @@
     "zone.js": "^0.8.29"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^0.12.4",
-    "@angular-devkit/build-ng-packagr": "^0.12.4",
+    "@angular-devkit/build-angular": "^0.13.0",
+    "@angular-devkit/build-ng-packagr": "^0.13.0",
     "@angular/cli": "^7.3.0",
     "@angular/compiler-cli": "^8.0.0-beta.2",
     "@fortawesome/fontawesome-free": "^5.7.1",
