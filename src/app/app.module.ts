@@ -22,7 +22,6 @@ import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
-import { FloImaDirective } from './flo-ima.directive'
 
 @NgModule({
   imports: [
@@ -50,8 +49,7 @@ import { FloImaDirective } from './flo-ima.directive'
     HlsReadmeComponent,
     HlsApiComponent,
     UniversalServicesComponent,
-    NotFoundComponent,
-    FloImaDirective
+    NotFoundComponent
   ]
 })
 export class AppModule {
