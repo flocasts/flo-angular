@@ -1,7 +1,7 @@
 {
-  "name": "flo-angular",
-  "short_name": "flo-angular",
-  "theme_color": "#1976d2",
+  "name": "FloSports",
+  "short_name": "FloSports",
+  "theme_color": "#ff7d00",
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "/",
