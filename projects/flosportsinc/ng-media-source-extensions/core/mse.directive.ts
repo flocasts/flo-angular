@@ -181,6 +181,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
           .filter(previousExecutionKey => previousExecutionKey !== currentExecutionKey))
         .tap({
           some: execKey => {
+            console.log(execKey)
             this._maybeExecuteDestroyTask(execKey) // destory old
             this._executeInit(ctx) // init new
           },
