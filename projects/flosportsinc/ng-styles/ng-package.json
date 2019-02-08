@@ -1,0 +1,7 @@
+{
+  "$schema": "../../../node_modules/ng-packagr/ng-package.schema.json",
+  "dest": "../../../dist/flosportsinc/ng-styles",
+  "lib": {
+    "entryFile": "public_api.ts"
+  }
+}
