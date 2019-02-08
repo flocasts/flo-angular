@@ -2,7 +2,8 @@ import { TestBed } from '@angular/core/testing'
 import {
   IMseSrcChangeOptions,
   IMseInitOptions,
-  IMseDestroyOptions
+  IMseDestroyOptions,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
 } from './mse.tokens'
 import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
@@ -12,8 +13,9 @@ import {
   DashMessage, defaultDashClientInitFunction, defaultDashClientDestroyFunction
 } from './dash.module'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
+import { TEST_SOURCES } from '../core/mse.directive.spec'
 
-const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.mpd'
+const TEST_SRC = TEST_SOURCES.DASH.PARKOR
 
 @Component({
   selector: 'flo-test-component',
@@ -34,18 +36,21 @@ export class HlsTestingModule { }
 describe(DashModule.name, () => {
   it('should construct', () => {
     TestBed.configureTestingModule({
-      imports: [DashModule]
+      imports: [HlsTestingModule]
     })
+    expect(TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK).length).toEqual(2)
   })
 
-  it('should init correcltly', () => {
+  it('should init correctly', () => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({ imports: [HlsTestingModule] })
     const videoElement = document.createElement('video')
     const event: IMseInitOptions<DashMessage> = {
       videoElement,
-      src: 'http://www.video.com',
+      src: TEST_SRC,
       messageSource: new Subject()
     }
-    defaultDashClientInitFunction().func(event)
+    expect(TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK)[1].func(event)).toBeTruthy()
   })
 
   describe(`exposed ${defaultDashSupportedNativelyFunction.name} factory function`, () => {

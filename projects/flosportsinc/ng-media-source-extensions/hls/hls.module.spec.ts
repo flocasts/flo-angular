@@ -9,12 +9,13 @@ import {
   SUPPORTS_MSE_TARGET_NATIVELY
 } from './mse.tokens'
 import { MseDirective } from './mse.directive'
-import { SimpleChange, Component, Input, NgModule } from '@angular/core'
+import { Component, Input, NgModule } from '@angular/core'
 import { take } from 'rxjs/operators'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { By } from '@angular/platform-browser'
+import { TEST_SOURCES } from '../core/mse.directive.spec'
 
-const TEST_SRC = 'http://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
+const TEST_SRC = TEST_SOURCES.HLS.TINY
 
 @Component({
   selector: 'flo-test-component',
@@ -108,7 +109,8 @@ describe(HlsModule.name, () => {
   })
 
   describe(`exposed ${defaultIsSupportedFactory.name} function`, () => {
-    it('when default test environment', () => {
+    it('when hlsjs supported', () => {
+      spyOn(Hls, 'isSupported').and.returnValue(true)
       expect(defaultIsSupportedFactory().func()).toEqual(true)
     })
     it('when hlsjs not supported', () => {

@@ -1,2 +1,2 @@
 const config = require('../../../src/karma.conf.shared')
-module.exports = config('../coverage/ng-viewport-grid')
+module.exports = config('../coverage/ng-viewport-grid')()()

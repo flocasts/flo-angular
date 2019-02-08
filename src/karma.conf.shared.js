@@ -1,7 +1,7 @@
 const plugins = require('./karma.config.plugins')
 const coverageIstanbulReporter = require('./karma.config.istanbul')
 
-const sharedKarmaConfig = (dir) => (config) => {
+const sharedKarmaConfig = (dir) => (files) => (cov) => (config) => {
   config.set({
     basePath: '',
     frameworks: ['jasmine', '@angular-devkit/build-angular'],
@@ -9,7 +9,7 @@ const sharedKarmaConfig = (dir) => (config) => {
     client: {
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
-    coverageIstanbulReporter: coverageIstanbulReporter(dir),
+    coverageIstanbulReporter: coverageIstanbulReporter(dir)(cov),
     reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
@@ -22,7 +22,8 @@ const sharedKarmaConfig = (dir) => (config) => {
         flags: ['--no-sandbox', '--disable-gpu']
       }
     },
-    singleRun: false
+    singleRun: false,
+    files: files || []
   });
 }
 
