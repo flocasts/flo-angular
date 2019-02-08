@@ -1,10 +1,7 @@
 {
   "compileOnSave": false,
   "exclude": [
-    "projects",
-    "dist",
-    "coverage",
-    "tools"
+    "projects/flosportsinc/ng-media-source-extensions/test"
   ],
   "compilerOptions": {
     "resolveJsonModule": true,
