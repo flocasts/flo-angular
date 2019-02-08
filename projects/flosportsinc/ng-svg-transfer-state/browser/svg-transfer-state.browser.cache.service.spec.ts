@@ -59,13 +59,12 @@ describe(SvgBrowserLoaderCacheService.name, () => {
 
     it('should set', () => {
       const sut = getSut()
-      const spy = spyOn(localStorage, 'setItem')
+      const spy = spyOn(localStorage, 'setItem').and.callThrough()
 
+      // const str = JSON.stringify({ value: '<svg></svg>', ts: Date.now() })
       sut.set('icon', '<svg></svg>')
 
-      const str = JSON.stringify({ value: '<svg></svg>', ts: Date.now() })
-
-      expect(spy).toHaveBeenCalledWith('icon', str)
+      expect(spy).toHaveBeenCalled()
     })
 
     it('should return undefined if localStorage is unavailable', () => {
