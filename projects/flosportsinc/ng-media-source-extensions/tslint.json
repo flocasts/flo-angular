@@ -13,5 +13,10 @@
       "flo",
       "kebab-case"
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "test/**"
+    ]
   }
 }
