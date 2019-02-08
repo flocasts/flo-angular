@@ -132,6 +132,8 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   it('should compile the directive under test', shouldCompilerDirective)
 
   it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
+    TestBed.resetTestingModule()
+    setMseTestBed(true)(false)
     const testSub = new Subject<any>()
     testSub.unsubscribe()
     const spy1 = spyOn(testSub, 'next')
@@ -143,9 +145,11 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   })
 
   it('should trigger source change task when MSE client is the same type', done => {
+    TestBed.resetTestingModule()
+    setMseTestBed(true)(false)
     const wrapper = createMseSut()
     const task = (wrapper.instance as any)._mseSourceChangeTask[1]
-    const spy = spyOn(task, 'func');
+    const spy = spyOn(task, 'func').and.callThrough();
     // tslint:disable-next-line:no-object-mutation
     (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
     wrapper.hoist.detectChanges()
@@ -158,7 +162,7 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
     setMseTestBed(true)(false)
     const wrapper = createMseSut()
     const task = (wrapper.instance as any)._mseInitTask[2]
-    const spy = spyOn(task, 'func');
+    const spy = spyOn(task, 'func').and.callThrough();
     // tslint:disable-next-line:no-object-mutation
     (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
     wrapper.hoist.detectChanges()

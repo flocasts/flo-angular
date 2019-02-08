@@ -1,5 +1,11 @@
 {
   "compileOnSave": false,
+  "exclude": [
+    "projects",
+    "dist",
+    "coverage",
+    "tools"
+  ],
   "compilerOptions": {
     "resolveJsonModule": true,
     "baseUrl": "./",
