@@ -76,6 +76,12 @@
       ],
       "@flosportsinc/ng-env-transfer-state/*": [
         "dist/flosportsinc/ng-env-transfer-state/*"
+      ],
+      "@flosportsinc/ng-styles": [
+        "dist/flosportsinc/ng-styles"
+      ],
+      "@flosportsinc/ng-styles/*": [
+        "dist/flosportsinc/ng-styles/*"
       ]
     }
   }

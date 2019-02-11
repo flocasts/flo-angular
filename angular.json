@@ -58,9 +58,12 @@
             ],
             "styles": [
               "src/styles.scss",
+              "projects/flosportsinc/ng-styles/common/styles/main.scss",
               "node_modules/prismjs/themes/prism-okaidia.css"
             ],
-            "scripts": ["node_modules/prismjs/prism.js"]
+            "scripts": [
+              "node_modules/prismjs/prism.js"
+            ]
           },
           "configurations": {
             "production": {
@@ -108,16 +111,27 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "src/tsconfig.spec.json",
             "karmaConfig": "src/karma.conf.js",
-            "styles": ["src/styles.scss"],
+            "styles": [
+              "src/styles.scss"
+            ],
             "scripts": [],
-            "assets": ["src/favicon.ico", "src/assets", "src/manifest.json"]
+            "assets": [
+              "src/favicon.ico",
+              "src/assets",
+              "src/manifest.json"
+            ]
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": ["src/tsconfig.app.json", "src/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
+            "tsConfig": [
+              "src/tsconfig.app.json",
+              "src/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -142,7 +156,9 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -182,7 +198,9 @@
               "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
               "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -222,7 +240,9 @@
               "projects/flosportsinc/ng-media-source-extensions/tsconfig.lib.json",
               "projects/flosportsinc/ng-media-source-extensions/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -262,7 +282,9 @@
               "projects/flosportsinc/ng-universal-services/tsconfig.lib.json",
               "projects/flosportsinc/ng-universal-services/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -302,7 +324,9 @@
               "projects/flosportsinc/ng-icons/tsconfig.lib.json",
               "projects/flosportsinc/ng-icons/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -342,7 +366,9 @@
               "projects/flosportsinc/ng-svg-transfer-state/tsconfig.lib.json",
               "projects/flosportsinc/ng-svg-transfer-state/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -382,7 +408,9 @@
               "projects/flosportsinc/ng-ad-block/tsconfig.lib.json",
               "projects/flosportsinc/ng-ad-block/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -422,7 +450,9 @@
               "projects/flosportsinc/ng-http-cache-tags/tsconfig.lib.json",
               "projects/flosportsinc/ng-http-cache-tags/tsconfig.spec.json"
             ],
-            "exclude": ["**/node_modules/**"]
+            "exclude": [
+              "**/node_modules/**"
+            ]
           }
         }
       }
@@ -491,6 +521,42 @@
             "tsConfig": [
               "projects/flosportsinc/ng-env-transfer-state/tsconfig.lib.json",
               "projects/flosportsinc/ng-env-transfer-state/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@flosportsinc/ng-styles": {
+      "root": "projects/flosportsinc/ng-styles",
+      "sourceRoot": "projects/flosportsinc/ng-styles",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-styles/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-styles/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-styles/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-styles/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-styles/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-styles/tsconfig.lib.json",
+              "projects/flosportsinc/ng-styles/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

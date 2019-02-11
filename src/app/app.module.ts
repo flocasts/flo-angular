@@ -22,6 +22,7 @@ import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
+import { StylesComponent } from './styles/styles.component'
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-
     HlsReadmeComponent,
     HlsApiComponent,
     UniversalServicesComponent,
+    StylesComponent,
     NotFoundComponent
   ]
 })
