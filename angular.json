@@ -545,6 +545,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-styles/test.ts",
             "tsConfig": "projects/flosportsinc/ng-styles/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-styles/karma.conf.js"

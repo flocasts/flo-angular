@@ -16,3 +16,16 @@ The FloSports web styles
 ## SASS Installation
 ```html
 ```
+
+## Angular CLI Installation
+```json
+// angular.json
+{
+  ...,
+   "styles": [
+     "src/styles.scss",
+     "node_modules/@flosportsinc/ng-styles/scss/main.scss"
+  ]
+  ...
+}
+```
