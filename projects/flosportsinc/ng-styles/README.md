@@ -14,7 +14,9 @@ The FloSports web styles
 ```
 
 ## SASS Installation
-```html
+```scss
+/* Your project's SCSS file */
+@import 'node_modules/@flosportsinc/ng-styles/scss/main.scss';
 ```
 
 ## Angular CLI Installation
