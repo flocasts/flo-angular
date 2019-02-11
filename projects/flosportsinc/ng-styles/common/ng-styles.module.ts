@@ -2,4 +2,4 @@ import { NgModule } from '@angular/core'
 
 @NgModule({
 })
-export class NgStylesModule { }
+export class StylesModule { }
