@@ -132,6 +132,21 @@ jobs:
           root: .
           paths:
             - cc.ng-icons.json
+  test_styles:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.styles
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-styles.json ./coverage/ng-styles/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-styles.json
   test_svg-transfer-state:
     <<: *defaults
     steps:
@@ -185,7 +200,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter sum-coverage ./cc.*.json -p 8 -o ./cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 9 -o ./cc.total.json
             ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
@@ -229,6 +244,10 @@ workflows:
           requires:
             - build
             - prep_coverage
+      - test_styles:
+          requires:
+            - build
+            - prep_coverage
       - test_svg-transfer-state:
           requires:
             - build
@@ -248,6 +267,7 @@ workflows:
             - test_mse
             - test_services
             - test_icons
+            - test_styles
             - test_svg-transfer-state
             - test_ad-block
             - test_http-cache-tags
@@ -258,6 +278,7 @@ workflows:
             - test_mse
             - test_services
             - test_icons
+            - test_styles
             - test_svg-transfer-state
             - test_ad-block
             - test_http-cache-tags
