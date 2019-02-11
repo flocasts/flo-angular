@@ -13,5 +13,7 @@ export const PROJECT_ASSET_COPY_DICT = {
   // tslint:disable-next-line:max-line-length
   [`node_modules/@fortawesome/fontawesome-free/svgs/solid/**/*(${FONT_AWESOME_TO_EXTRACT.join('|')}).*`]: 'dist/flosportsinc/ng-icons/svg',
   [`node_modules/@fortawesome/fontawesome-free/svgs/brands/**/*(${FONT_AWESOME_TO_EXTRACT.join('|')}).*`]: 'dist/flosportsinc/ng-icons/svg',
-  'projects/flosportsinc/ng-icons/src/lib/svg/**/*.*': 'dist/flosportsinc/ng-icons/svg'
+  'projects/flosportsinc/ng-icons/src/lib/svg/**/*.*': 'dist/flosportsinc/ng-icons/svg',
+  'projects/flosportsinc/ng-styles/common/fonts/**/*.*': 'dist/flosportsinc/ng-styles/fonts',
+  'projects/flosportsinc/ng-styles/common/styles/**/*.scss': 'dist/flosportsinc/ng-styles/scss'
 }

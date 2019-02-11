@@ -58,6 +58,7 @@
             ],
             "styles": [
               "src/styles.scss",
+              "projects/flosportsinc/ng-styles/common/styles/main.scss",
               "node_modules/prismjs/themes/prism-okaidia.css"
             ],
             "scripts": [
