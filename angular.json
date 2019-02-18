@@ -462,6 +462,12 @@
       "sourceRoot": "projects/flosportsinc/ng-window",
       "projectType": "library",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -498,6 +504,12 @@
       "sourceRoot": "projects/flosportsinc/ng-env-transfer-state",
       "projectType": "library",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
@@ -534,6 +546,12 @@
       "sourceRoot": "projects/flosportsinc/ng-styles",
       "projectType": "library",
       "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-ng-packagr:build",
