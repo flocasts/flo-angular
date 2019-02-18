@@ -2,7 +2,7 @@ import { IconsModule } from './ng-icons.module'
 import { TestBed } from '@angular/core/testing'
 import { Icon } from './icons'
 
-describe('Icons Module', () => {
+describe(IconsModule.name, () => {
   it('should import module ', () => {
     TestBed.configureTestingModule({
       imports: [IconsModule]
