@@ -162,7 +162,7 @@ describe('rewrite these... problems', () => {
     // tslint:disable-next-line:no-object-mutation
     (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
     wrapper.hoist.detectChanges()
-    // expect(spy).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalled()
   })
 
   it('should trigger destroy function for DI configurations', () => {
@@ -222,7 +222,7 @@ describe('rewrite these... problems', () => {
     setMseTestBed(false)(false)
     const sut = createMseSut();
     // tslint:disable-next-line:no-object-mutation
-    (sut.hoist.componentInstance.src as any) = 'TEST_SOURCES.DASH.PARKOR'
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
     sut.hoist.detectChanges()
   })
 })
