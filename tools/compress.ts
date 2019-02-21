@@ -1,6 +1,5 @@
-import { createGzip } from 'zlib'
+const zlib = require('zlib') // brotli types not provided yet
 import { createReadStream, createWriteStream } from 'fs'
-import { compressStream } from 'iltorb'
 import * as glob from 'glob'
 
 const compressFile =
@@ -18,7 +17,7 @@ const compressFile =
 
 glob('dist/flo-angular/**/*!(*.br|*.gz).{js,css,html,txt,json}', (_error, matches) => {
   matches.forEach(match => {
-    compressFile(match, createGzip, 'gz')
-    compressFile(match, compressStream, 'br')
+    compressFile(match, zlib.createGzip, 'gz')
+    compressFile(match, zlib.createBrotliCompress, 'br')
   })
 })
