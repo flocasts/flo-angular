@@ -168,28 +168,28 @@ describe('rewrite these... problems', () => {
   //   expect(spy).toHaveBeenCalled()
   // })
 
-  it('should trigger destroy function for DI configurations', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._mseDestroyTask[1]
-    const spy = spyOn(task, 'func').and.callThrough()
-    sut.hoist.detectChanges()
-    sut.hoist.destroy()
-    expect(spy).toHaveBeenCalled()
-  })
+  // it('should trigger destroy function for DI configurations', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._mseDestroyTask[1]
+  //   const spy = spyOn(task, 'func').and.callThrough()
+  //   sut.hoist.detectChanges()
+  //   sut.hoist.destroy()
+  //   expect(spy).toHaveBeenCalled()
+  // })
 
-  it('should set src', () => {
-    const wrapper = createMseSut()
-    const instance = wrapper.instance as any
-    const task = (wrapper.instance as any)
-    const spy = spyOn(task, '_setSrc').and.callThrough()
-    const spy2 = spyOn(instance, '_executeInit').and.callThrough();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-    wrapper.hoist.detectChanges();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-    wrapper.hoist.detectChanges()
-    // expect(spy).toHaveBeenCalled()
-    // expect(spy2).toHaveBeenCalled()
-  })
+  // it('should set src', () => {
+  //   const wrapper = createMseSut()
+  //   const instance = wrapper.instance as any
+  //   const task = (wrapper.instance as any)
+  //   const spy = spyOn(task, '_setSrc').and.callThrough()
+  //   const spy2 = spyOn(instance, '_executeInit').and.callThrough();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+  //   wrapper.hoist.detectChanges();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+  //   wrapper.hoist.detectChanges()
+  //   // expect(spy).toHaveBeenCalled()
+  //   // expect(spy2).toHaveBeenCalled()
+  // })
 
   // it('should take path when no init task provided', () => {
   //   const sut = createMseSut()
