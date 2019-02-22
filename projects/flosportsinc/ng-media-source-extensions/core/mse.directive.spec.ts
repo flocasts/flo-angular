@@ -54,7 +54,7 @@ export class MseTestingModule { }
 
 export const createMseSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
-  hoist.autoDetectChanges()
+  // hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(MseDirective))
   return {
     hoist,
@@ -96,6 +96,7 @@ const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
 
 const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
   const wrapper = createMseSut()
+  wrapper.hoist.detectChanges()
   const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
 
   expect(() => {
@@ -140,6 +141,7 @@ describe('rewrite these... problems', () => {
 
   it('should trigger source change task when MSE client is the same type', () => {
     const sut = createMseSut()
+    sut.hoist.detectChanges()
     sut.instance.srcChange.subscribe(srcChange => {
       srcChange.current.tap({
         none: () => expect(true).toEqual(false),
@@ -157,20 +159,22 @@ describe('rewrite these... problems', () => {
 
   it('should trigger source change task when MSE client is the diff type', () => {
     const wrapper = createMseSut()
+    wrapper.hoist.detectChanges()
     const task = (wrapper.instance as any)._mseInitTask[2]
     const spy = spyOn(task, 'func').and.callThrough();
     // tslint:disable-next-line:no-object-mutation
     (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
     wrapper.hoist.detectChanges()
-    // expect(spy).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalled()
   })
 
   it('should trigger destroy function for DI configurations', () => {
     const sut = createMseSut()
+    sut.hoist.detectChanges()
     const task = (sut.instance as any)._mseDestroyTask[1]
     const spy = spyOn(task, 'func').and.callThrough()
     sut.hoist.destroy()
-    // expect(spy).toHaveBeenCalled()
+    expect(spy).toHaveBeenCalled()
   })
 
   it('should set src', () => {
@@ -187,23 +191,25 @@ describe('rewrite these... problems', () => {
     // expect(spy2).toHaveBeenCalled()
   })
 
-  it('should take path when no init task provided', () => {
-    const sut = createMseSut()
-    const instance = sut.instance as any
-    const spy2 = spyOn(instance, '_executeInit');
-    (sut.hoist.componentInstance.src as any) = 'noinit1.file'
-    sut.hoist.detectChanges();
-    (sut.hoist.componentInstance.src as any) = 'noinit2.file'
-    sut.hoist.detectChanges()
-    // expect(spy2).toHaveBeenCalled()
-  })
+  // it('should take path when no init task provided', () => {
+  //   const sut = createMseSut()
+  //   sut.hoist.detectChanges()
+  //   const instance = sut.instance as any
+  //   const spy2 = spyOn(instance, '_executeInit');
+  //   (sut.hoist.componentInstance.src as any) = 'noinit1.file';
+  //   // sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = 'noinit2.file'
+  //   // sut.hoist.detectChanges()
+  //   expect(spy2).toHaveBeenCalled()
+  // })
 
   it('should not push src change when same src value during ngOnChanges', () => {
     const sut = createMseSut()
+    sut.hoist.detectChanges()
     const internalSrcChangeRef = (sut.instance as any)._srcChanges$
     const spy = spyOn(internalSrcChangeRef, 'next')
     sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
-    // expect(spy).not.toHaveBeenCalled()
+    expect(spy).not.toHaveBeenCalled()
   })
 
   it('not call isMediaSource supported when other checks do not exist', () => {
