@@ -4,13 +4,7 @@ import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import {
-  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, IMseInitFunc, IVideoElementSupportsTargetMseCheckContext,
-  IVideoElementSupportsTargetMseCheck, IMseInit, IMseSrcChange, IMseSrcChangeFunc, IMseDestroy, IMseDestroyFunc,
-  IMsePatternCheck, IMsePatternCheckFunc, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
-} from './mse.tokens'
+import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from './mse.tokens'
 import { MseModule } from './mse.module'
 import { HlsModule } from '../hls/hls.module'
 import { DashModule } from '../dash/dash.module'
@@ -54,7 +48,7 @@ export class MseTestingModule { }
 
 export const createMseSut = () => {
   const hoist = TestBed.createComponent(HlsTestComponent)
-  // hoist.autoDetectChanges()
+  hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(MseDirective))
   return {
     hoist,
@@ -141,7 +135,6 @@ describe('rewrite these... problems', () => {
 
   it('should trigger source change task when MSE client is the same type', () => {
     const sut = createMseSut()
-    sut.hoist.detectChanges()
     sut.instance.srcChange.subscribe(srcChange => {
       srcChange.current.tap({
         none: () => expect(true).toEqual(false),
@@ -157,39 +150,37 @@ describe('rewrite these... problems', () => {
     sut.hoist.detectChanges()
   })
 
-  // it('should trigger source change task when MSE client is the diff type', () => {
-  //   const wrapper = createMseSut()
-  //   wrapper.hoist.detectChanges()
-  //   const task = (wrapper.instance as any)._mseInitTask[2]
-  //   const spy = spyOn(task, 'func').and.callThrough();
-  //   // tslint:disable-next-line:no-object-mutation
-  //   (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
-  //   wrapper.hoist.detectChanges()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should trigger source change task when MSE client is the diff type', () => {
+    const wrapper = createMseSut()
+    const task = (wrapper.instance as any)._mseInitTask[2]
+    const spy = spyOn(task, 'func').and.callThrough();
+    (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
+    wrapper.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
 
-  // it('should trigger destroy function for DI configurations', () => {
-  //   const sut = createMseSut()
-  //   const task = (sut.instance as any)._mseDestroyTask[1]
-  //   const spy = spyOn(task, 'func').and.callThrough()
-  //   sut.hoist.detectChanges()
-  //   sut.hoist.destroy()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should trigger destroy function for DI configurations', () => {
+    const sut = createMseSut()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.hoist.detectChanges()
+    sut.hoist.destroy()
+    expect(spy).toHaveBeenCalled()
+  })
 
-  // it('should set src', () => {
-  //   const wrapper = createMseSut()
-  //   const instance = wrapper.instance as any
-  //   const task = (wrapper.instance as any)
-  //   const spy = spyOn(task, '_setSrc').and.callThrough()
-  //   const spy2 = spyOn(instance, '_executeInit').and.callThrough();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-  //   wrapper.hoist.detectChanges();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   wrapper.hoist.detectChanges()
-  //   // expect(spy).toHaveBeenCalled()
-  //   // expect(spy2).toHaveBeenCalled()
-  // })
+  it('should set src', () => {
+    const wrapper = createMseSut()
+    const instance = wrapper.instance as any
+    const task = (wrapper.instance as any)
+    const spy = spyOn(task, '_setSrc').and.callThrough()
+    const spy2 = spyOn(instance, '_executeInit').and.callThrough();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+    wrapper.hoist.detectChanges();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+    wrapper.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+    // expect(spy2).toHaveBeenCalled()
+  })
 
   // it('should take path when no init task provided', () => {
   //   const sut = createMseSut()
@@ -205,7 +196,6 @@ describe('rewrite these... problems', () => {
 
   it('should not push src change when same src value during ngOnChanges', () => {
     const sut = createMseSut()
-    sut.hoist.detectChanges()
     const internalSrcChangeRef = (sut.instance as any)._srcChanges$
     const spy = spyOn(internalSrcChangeRef, 'next')
     sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
@@ -220,14 +210,13 @@ describe('rewrite these... problems', () => {
     sut.hoist.detectChanges();
     (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
     sut.hoist.detectChanges()
-    // expect(spy).not.toHaveBeenCalled()
+    expect(spy).not.toHaveBeenCalled()
   })
 
   it('not', () => {
     TestBed.resetTestingModule()
     setMseTestBed(false)(false)
     const sut = createMseSut();
-    // tslint:disable-next-line:no-object-mutation
     (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
     sut.hoist.detectChanges()
   })
