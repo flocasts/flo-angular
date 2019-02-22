@@ -5,7 +5,7 @@ import { takeUntil, map, distinctUntilChanged, debounceTime } from 'rxjs/operato
 import { IMaybe } from 'typescript-monads/interfaces'
 import {
   Component, ContentChildren, ElementRef, QueryList, Renderer2,
-  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output, OnDestroy
+  AfterContentInit, ViewChild, Input, ChangeDetectionStrategy, OnChanges, Output, OnDestroy, ChangeDetectorRef
 } from '@angular/core'
 
 export interface ViewportGridBoxSelectedEvent<TElement = HTMLElement> {
@@ -46,16 +46,6 @@ const applyGridStyles =
         (length: number) =>
           renderer.setStyle(element, style, getGridTemplateColumns(computeColumns(length)))
 
-const resetSelected =
-  (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
-    arr.forEach(c => c.setSelected(false))
-
-const setSelected =
-  (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
-    (selectedViewport: ViewportGridBoxComponent) => {
-      resetSelected(arr)
-      selectedViewport.setSelected(true)
-    }
 
 const combineSelectionViews =
   (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
@@ -76,18 +66,6 @@ const combineSelectionViews =
           }
         }
       }
-
-const emit =
-  (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
-    (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
-      (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
-        (selectedIndex: number) =>
-          (selectedViewport: ViewportGridBoxComponent) => {
-            setSelected(arr)(selectedViewport)
-            const grouped = combineSelectionViews(arr)(selectedViewport)(selectedIndex)
-            paneSelectedSource.next(grouped.containerView)
-            paneElementSelectedSource.next(grouped.elementView)
-          }
 
 const getPreSelectedIndex =
   (supposedIndex: number) =>
@@ -233,7 +211,30 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
     this.ngDestroy$.complete()
   }
 
-  private readonly _push = emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
+  readonly resetSelected =
+    (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
+      arr.forEach(c => c.setSelected(false))
+
+  readonly setSelected =
+    (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
+      (selectedViewport: ViewportGridBoxComponent) => {
+        this.resetSelected(arr)
+        selectedViewport.setSelected(true)
+      }
+
+  readonly emit =
+    (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
+      (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
+        (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
+          (selectedIndex: number) =>
+            (selectedViewport: ViewportGridBoxComponent) => {
+              this.setSelected(arr)(selectedViewport)
+              const grouped = combineSelectionViews(arr)(selectedViewport)(selectedIndex)
+              paneSelectedSource.next(grouped.containerView)
+              paneElementSelectedSource.next(grouped.elementView)
+            }
+
+  private readonly _push = this.emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
 
   private readonly _updateOnChanges = (combined: CombinedView) => {
     combined.children.changes
