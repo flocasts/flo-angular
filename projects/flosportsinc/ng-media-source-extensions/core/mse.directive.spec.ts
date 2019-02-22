@@ -168,14 +168,14 @@ describe('rewrite these... problems', () => {
   //   expect(spy).toHaveBeenCalled()
   // })
 
-  // it('should trigger destroy function for DI configurations', () => {
-  //   const sut = createMseSut()
-  //   sut.hoist.detectChanges()
-  //   const task = (sut.instance as any)._mseDestroyTask[1]
-  //   const spy = spyOn(task, 'func').and.callThrough()
-  //   sut.hoist.destroy()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should trigger destroy function for DI configurations', () => {
+    const sut = createMseSut()
+    sut.hoist.detectChanges()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.hoist.destroy()
+    expect(spy).toHaveBeenCalled()
+  })
 
   it('should set src', () => {
     const wrapper = createMseSut()
