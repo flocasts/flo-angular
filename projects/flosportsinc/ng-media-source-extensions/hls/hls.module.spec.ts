@@ -86,7 +86,7 @@ describe(HlsModule.name, () => {
     it('when both are supported, default to MSE library over native', () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(true)
-      spyOn(Hls, 'isSupported').and.returnValue(true)
+      spyOn(Hls, 'isSupported').and.callFake(() => true)
       const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(false)
     })
@@ -94,7 +94,7 @@ describe(HlsModule.name, () => {
     it('when environment supports media source extensions only', () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(false)
-      spyOn(Hls, 'isSupported').and.returnValue(true)
+      spyOn(Hls, 'isSupported').and.callFake(() => true)
       const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(false)
     })
@@ -102,7 +102,7 @@ describe(HlsModule.name, () => {
     it('when environment only supports native (iOS safari, for example)', () => {
       const videElement = window.document.createElement('video')
       spyOn(videElement, 'canPlayType').and.returnValue(true)
-      spyOn(Hls, 'isSupported').and.returnValue(false)
+      spyOn(Hls, 'isSupported').and.callFake(() => false)
       const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(true)
     })
@@ -110,11 +110,11 @@ describe(HlsModule.name, () => {
 
   describe(`exposed ${defaultIsSupportedFactory.name} function`, () => {
     it('when hlsjs supported', () => {
-      spyOn(Hls, 'isSupported').and.returnValue(true)
+      spyOn(Hls, 'isSupported').and.callFake(() => true)
       expect(defaultIsSupportedFactory().func()).toEqual(true)
     })
     it('when hlsjs not supported', () => {
-      spyOn(Hls, 'isSupported').and.returnValue(false)
+      spyOn(Hls, 'isSupported').and.callFake(() => false)
       expect(defaultIsSupportedFactory().func()).toEqual(false)
     })
   })
@@ -122,7 +122,11 @@ describe(HlsModule.name, () => {
   describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
     it('should reset HLS client with new source', () => {
       const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<Hls> = { clientRef: new Hls(), src: '/new-url', videoElement }
+      const event: IMseSrcChangeOptions<Hls> = { clientRef:  {
+        loadSource: () => {},
+        detachMedia: () => {},
+        attachMedia: () => {}
+       } as any, src: '/new-url', videoElement }
       const spy1 = spyOn(event.clientRef, 'detachMedia')
       const spy2 = spyOn(event.clientRef, 'loadSource')
       const spy3 = spyOn(event.clientRef, 'attachMedia')
