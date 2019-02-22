@@ -167,7 +167,7 @@ describe(ViewportGridComponent.name, () => {
     })
   })
 
-  it('should switch selecetions', () => {
+  it('should switch selection', () => {
     const sut = createSut()
     sut.hoist.componentInstance.setItems(6)
     sut.hoist.detectChanges()
@@ -178,6 +178,16 @@ describe(ViewportGridComponent.name, () => {
         some: a => expect(a.guid).toEqual(thirdBox.nativeElement.id),
         none: () => expect(true).toEqual(false)
       })
+  })
+
+  it('should emit selectedIndex', () => {
+    const sut = createSut()
+    sut.hoist.componentInstance.setItems(6)
+    sut.hoist.detectChanges()
+    sut.instance.itemElementSelected$.subscribe(evt => expect(evt.selectedIndex).toEqual(2))
+    sut.instance.itemSelected$.subscribe(evt => expect(evt.selectedIndex).toEqual(2))
+    const thirdBox = sut.directive.children[0].children[2]
+    thirdBox.nativeElement.click()
   })
 
   it('should always have a selection', () => {
