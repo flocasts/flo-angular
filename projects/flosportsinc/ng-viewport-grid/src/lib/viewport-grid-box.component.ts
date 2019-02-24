@@ -1,7 +1,8 @@
 import { maybe } from 'typescript-monads'
-import { Subject } from 'rxjs'
+import { Subject, Observable } from 'rxjs'
 import { shortGuid } from './util'
 import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
+import { debounceTime, filter, map } from 'rxjs/operators'
 import {
   Component, ChangeDetectionStrategy, ElementRef, ViewChild, Renderer2,
   Output, HostListener, QueryList, ContentChildren, ContentChild, HostBinding, Input
@@ -13,6 +14,14 @@ const DEFAULT_BOX = 'inset 0px 0px 0px 3px white;'
 const computeFadeStyle = (style: number) => `box-shadow ${style.toString()}ms`
 
 export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
+
+export type ViewportGridBoxComponentSelectedEvent<TElement = HTMLElement> = ViewportGridBoxComponent<TElement>
+interface ViewportGridBoxComponentSelectedEventWrapper<TElement = HTMLElement> {
+  readonly isSelected: boolean
+  readonly gridbox: ViewportGridBoxComponent<TElement>
+}
+
+const stopRace = <T>(source: Observable<T>) => source.pipe(debounceTime(1))
 
 @Component({
   selector: GRID_BOX_SELECTOR_NAME,
@@ -41,10 +50,13 @@ export const GRID_BOX_SELECTOR_NAME = 'flo-viewport-grid-box'
 export class ViewportGridBoxComponent<TElement = HTMLElement> {
   constructor(private _renderer: Renderer2, public elementRef: ElementRef<TElement>) { }
 
+  private readonly isSelectedSource = new Subject<ViewportGridBoxComponentSelectedEventWrapper<TElement>>()
+
   @Input() public readonly floViewportGridBoxShowSelectionBox = true
   @Input() public readonly floViewportGridBoxShowSelectionBoxFadeTimeMs = 400
 
-  @Output() public readonly isSelected$ = new Subject<boolean>()
+  @Output() public readonly isSelected$ = this.isSelectedSource.pipe(stopRace, filter(a => a.isSelected === true), map(a => a.gridbox))
+  @Output() public readonly isNotSelected$ = this.isSelectedSource.pipe(stopRace, filter(a => a.isSelected === false), map(a => a.gridbox))
   @Output() public readonly clicked$ = new Subject<ViewportGridBoxComponent<TElement>>()
 
   @ContentChild(ViewportGridBoxItemDirective) private readonly _panelItem?: ViewportGridBoxItemDirective<TElement>
@@ -52,7 +64,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
   @ViewChild('selectionContainer') private readonly _selectionContainer?: ElementRef<HTMLDivElement>
 
   @HostBinding('attr.id') public readonly guid = shortGuid()
-  @HostListener('click', ['$event.target']) public readonly _onClick = _ => this.clicked$.next(this)
+  @HostListener('click') public readonly _onClick = () => this.clicked$.next(this)
 
   private readonly _maybeSlectionContainer = () => maybe(this._selectionContainer).map(a => a.nativeElement)
 
@@ -86,7 +98,7 @@ export class ViewportGridBoxComponent<TElement = HTMLElement> {
               this.floViewportGridBoxShowSelectionBox && canShowGranular && isSelected
                 ? this._addBorderClass(el)(SELECTION_CLASS)
                 : this._removeBorderClass(el)(SELECTION_CLASS)
-              this.isSelected$.next(isSelected)
+              this.isSelectedSource.next({ isSelected, gridbox: this })
             })
         })
 
