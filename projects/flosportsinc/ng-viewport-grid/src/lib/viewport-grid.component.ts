@@ -104,15 +104,17 @@ const getPreSelectedIndex =
 export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDestroy {
   constructor(private _renderer: Renderer2) { }
 
-  private readonly itemSelectedSource$ = new Subject<ViewportGridBoxSelectedEvent>()
-  private readonly itemElementSelectedSource$ = new Subject<ViewportGridBoxSelectedElementEvent>()
+  private readonly itemSource = new Subject<ReadonlyArray<ViewportGridBoxComponent>>()
+  private readonly itemSelectedSource = new Subject<ViewportGridBoxSelectedEvent>()
+  private readonly itemElementSelectedSource = new Subject<ViewportGridBoxSelectedElementEvent>()
   private readonly ngDestroy$ = new Subject<ViewportGridBoxSelectedElementEvent>()
 
   @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
   @Input() public readonly startingSelectedIndex = 0
 
-  @Output() public readonly itemSelected$ = this.itemSelectedSource$.pipe(debounceTime(1), distinctUntilChanged(compareWrappedGuids))
-  @Output() public readonly itemElementSelected$ = this.itemElementSelectedSource$.pipe(debounceTime(1), distinctUntilChanged(compareGuids))
+  @Output() public readonly items$ = this.itemSource.asObservable()
+  @Output() public readonly itemSelected$ = this.itemSelectedSource.pipe(debounceTime(1), distinctUntilChanged(compareWrappedGuids))
+  @Output() public readonly itemElementSelected$ = this.itemElementSelectedSource.pipe(debounceTime(1), distinctUntilChanged(compareGuids))
 
   @ViewChild('gridContainer') private readonly _gridContainer?: ElementRef<HTMLDivElement>
   @ContentChildren(ViewportGridBoxComponent) private readonly _windowPanes?: QueryList<ViewportGridBoxComponent>
@@ -223,18 +225,20 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
       }
 
   readonly emit =
-    (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
-      (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
-        (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
-          (selectedIndex: number) =>
-            (selectedViewport: ViewportGridBoxComponent) => {
-              this.setSelected(arr)(selectedViewport)
-              const grouped = combineSelectionViews(arr)(selectedViewport)(selectedIndex)
-              paneSelectedSource.next(grouped.containerView)
-              paneElementSelectedSource.next(grouped.elementView)
-            }
+    (itemSource: Subject<ReadonlyArray<ViewportGridBoxComponent>>) =>
+      (paneSelectedSource: Subject<ViewportGridBoxSelectedEvent>) =>
+        (paneElementSelectedSource: Subject<ViewportGridBoxSelectedElementEvent>) =>
+          (arr: ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>) =>
+            (selectedIndex: number) =>
+              (selectedViewport: ViewportGridBoxComponent) => {
+                this.setSelected(arr)(selectedViewport)
+                const grouped = combineSelectionViews(arr)(selectedViewport)(selectedIndex)
+                paneSelectedSource.next(grouped.containerView)
+                paneElementSelectedSource.next(grouped.elementView)
+                itemSource.next(arr)
+              }
 
-  private readonly _push = this.emit(this.itemSelectedSource$)(this.itemElementSelectedSource$)
+  private readonly _push = this.emit(this.itemSource)(this.itemSelectedSource)(this.itemElementSelectedSource)
 
   private readonly _updateOnChanges = (combined: CombinedView) => {
     combined.children.changes
@@ -243,14 +247,22 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         map<any, ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>>(a => a.toArray())
       )
       .subscribe(viewports => {
-        viewports.forEach((z, idx) => z.clicked$
-          .pipe(takeUntil(combined.children.changes))
-          .subscribe(this._push(viewports)(idx)))
-
         // tslint:disable-next-line:no-if-statement
         if (!viewports.some(z => z.isSelected())) {
           maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
         }
+
+        viewports.forEach((z, idx) => z.clicked$
+          .pipe(takeUntil(combined.children.changes))
+          .subscribe(this._push(viewports)(idx)))
+
+        maybe(viewports.find(a => a.isSelected()))
+          .map(viewport => {
+            return {
+              index: viewports.findIndex(b => b.guid === viewport.guid),
+              viewport
+            }
+          }).tapSome(res => this._push(viewports)(res.index)(res.viewport))
 
         this._setGridStyles(combined)
       })
@@ -267,7 +279,10 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         })
 
         const index = getPreSelectedIndex(+this.startingSelectedIndex)(obj.children.length)
-        maybe(arr[index]).tapSome(dd => dd.setSelected(true))
+        maybe(arr[index]).tapSome(dd => {
+          dd.setSelected(true)
+          this._push(arr)(index)(dd)
+        })
 
         this._setGridStyles(obj)
         this._updateOnChanges(obj)

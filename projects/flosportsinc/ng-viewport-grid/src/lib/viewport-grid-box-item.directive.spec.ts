@@ -2,21 +2,17 @@ import { async, TestBed } from '@angular/core/testing'
 import { ViewportGridBoxItemDirective } from './viewport-grid-box-item.directive'
 import { Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
+import { ViewportGridModule } from './viewport-grid.module'
 
 @Component({
   selector: 'flo-test-component',
-  template: `
-  <div
-    floViewportGridBoxItem>
-  </div>`
+  template: `<div [floViewportGridBoxItem]="{ test: 1 }"></div>`
 })
-export class TestComponent {
-  // tslint:disable-next-line:readonly-keyword
-  // @Input() public src?: string = TEST_SRC
-}
+export class TestComponent { }
 
 @NgModule({
-  declarations: [TestComponent, ViewportGridBoxItemDirective],
+  imports: [ViewportGridModule],
+  declarations: [TestComponent],
   exports: [TestComponent]
 })
 export class TestingModule { }
@@ -49,5 +45,13 @@ describe(ViewportGridBoxItemDirective.name, () => {
 
   it('should assign guid to element id', () => {
     expect(createSut().directive.nativeElement.id.length).toEqual(12)
+  })
+
+  it('should pass meta object', () => {
+    expect(createSut().instance.floViewportGridBoxItem).toEqual({ test: 1 })
+  })
+
+  it('should provide maybe wrapper for meta data access', () => {
+    expect(createSut().instance.maybeFloViewportGridBoxItem().valueOrUndefined()).toEqual({ test: 1 })
   })
 })
