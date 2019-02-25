@@ -192,6 +192,22 @@ jobs:
           root: .
           paths:
             - cc.ng-http-cache-tags.json
+  test_ima:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.ima
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-ima.json ./coverage/ng-ima/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-ima.json
+
   upload_coverage:
     <<: *defaults
     steps:
@@ -260,6 +276,10 @@ workflows:
           requires:
             - build
             - prep_coverage
+      - test_ima:
+          requires:
+            - build
+            - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -271,6 +291,7 @@ workflows:
             - test_svg-transfer-state
             - test_ad-block
             - test_http-cache-tags
+            - test_ima
       - publish:
           requires:
             - test_docs_site
@@ -282,6 +303,7 @@ workflows:
             - test_svg-transfer-state
             - test_ad-block
             - test_http-cache-tags
+            - test_ima
             - upload_coverage
             - e2e
           filters:

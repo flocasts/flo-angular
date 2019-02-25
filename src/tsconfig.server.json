@@ -67,6 +67,12 @@
       ],
       "@flosportsinc/ng-styles/*": [
         "../dist/flosportsinc/ng-styles/*"
+      ],
+      "@flosportsinc/ng-ima": [
+        "../dist/flosportsinc/ng-ima"
+      ],
+      "@flosportsinc/ng-ima/*": [
+        "../dist/flosportsinc/ng-ima/*"
       ]
     }
   },
