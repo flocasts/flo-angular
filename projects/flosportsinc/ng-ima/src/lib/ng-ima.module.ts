@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core'
+import { FloImaDirective } from './ng-ima.directive'
 
 @NgModule({
-  declarations: [],
-  imports: []
+  declarations: [FloImaDirective],
+  exports: [FloImaDirective]
 })
 export class NgImaModule { }
