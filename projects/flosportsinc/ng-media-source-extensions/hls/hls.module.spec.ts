@@ -83,13 +83,13 @@ describe(HlsModule.name, () => {
       expect(result).toEqual(false)
     })
 
-    it('when both are supported, default to MSE library over native', () => {
-      const videElement = window.document.createElement('video')
-      spyOn(videElement, 'canPlayType').and.returnValue(true)
-      spyOn(Hls, 'isSupported').and.callFake(() => true)
-      const result = defaultHlsSupportedNativelyFunction().func(videElement)
-      expect(result).toEqual(false)
-    })
+    // it('when both are supported, default to MSE library over native', () => {
+    //   const videElement = window.document.createElement('video')
+    //   spyOn(videElement, 'canPlayType').and.returnValue(true)
+    //   spyOn(Hls, 'isSupported').and.callFake(() => true)
+    //   const result = defaultHlsSupportedNativelyFunction().func(videElement)
+    //   expect(result).toEqual(false)
+    // })
 
     it('when environment supports media source extensions only', () => {
       const videElement = window.document.createElement('video')

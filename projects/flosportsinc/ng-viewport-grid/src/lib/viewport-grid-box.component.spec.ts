@@ -109,18 +109,18 @@ describe(ViewportGridBoxComponent.name, () => {
     const sut = createSut()
 
     sut.instance.isSelected$.pipe(take(1)).subscribe(evt => {
-      expect(evt).toEqual(true)
+      expect(evt).toBeTruthy()
       done()
     })
 
     sut.instance.setSelected(true)
   })
 
-  it('should emit isSelected$ event when deselected', done => {
+  it('should emit isNotSelected$ event when deselected', done => {
     const sut = createSut()
 
-    sut.instance.isSelected$.pipe(take(1)).subscribe(evt => {
-      expect(evt).toEqual(false)
+    sut.instance.isNotSelected$.pipe(take(1)).subscribe(evt => {
+      expect(evt).toBeTruthy()
       done()
     })
 
