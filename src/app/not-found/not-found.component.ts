@@ -14,7 +14,9 @@ export class NotFoundComponent {
     'ng-ad-block',
     'ng-http-cache-tags',
     'ng-media-source-externsion',
-    'ng-env-transfer-state'
+    'ng-env-transfer-state',
+    'ng-ima',
+    'ng-tabs'
   ]
 
   constructor(private ar: ActivatedRoute) { }

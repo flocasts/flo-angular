@@ -67,6 +67,18 @@
       ],
       "@flosportsinc/ng-styles/*": [
         "../dist/flosportsinc/ng-styles/*"
+      ],
+      "@flosportsinc/ng-ima": [
+        "../dist/flosportsinc/ng-ima"
+      ],
+      "@flosportsinc/ng-ima/*": [
+        "../dist/flosportsinc/ng-ima/*"
+      ],
+      "@flosportsinc/ng-tabs": [
+        "../dist/flosportsinc/ng-tabs"
+      ],
+      "@flosportsinc/ng-tabs/*": [
+        "../dist/flosportsinc/ng-tabs/*"
       ]
     }
   },
