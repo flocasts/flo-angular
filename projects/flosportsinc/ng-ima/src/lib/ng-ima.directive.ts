@@ -1,14 +1,26 @@
-import { Directive, ElementRef, Input, Renderer2, ChangeDetectorRef, OnInit, OnDestroy, ApplicationRef } from '@angular/core'
-import { share, map, filter, tap, throttleTime, takeUntil, startWith, take, shareReplay, flatMap } from 'rxjs/operators'
-import { Subject, fromEvent, combineLatest, ReplaySubject, EMPTY, fromEventPattern } from 'rxjs'
+import { Directive, ElementRef, Input, Renderer2, OnInit, OnDestroy, ApplicationRef } from '@angular/core'
+import { share, map, filter, tap, takeUntil, startWith, take, shareReplay, flatMap } from 'rxjs/operators'
+import { Subject, fromEvent, combineLatest, EMPTY, fromEventPattern } from 'rxjs'
 
 declare const google: any
+
+// check autoplay works with audio
+// check if a muted autoplay works
+// render button to start playback
 
 @Directive({
   selector: 'video[floIma]'
 })
 export class FloImaDirective implements OnInit, OnDestroy {
-  constructor(public elementRef: ElementRef<HTMLVideoElement>, private rd: Renderer2, private appRef: ApplicationRef) { }
+  constructor(public elementRef: ElementRef<HTMLVideoElement>, private rd: Renderer2,
+    private appRef: ApplicationRef) {
+    elementRef.nativeElement.play()
+      .catch(error => {
+        console.log('Auto-play failed')
+      }).then(() => {
+        console.log('Auto-play started')
+      })
+  }
 
   private readonly adLibIsLoaded = () => typeof google !== 'undefined' && typeof google.ima !== 'undefined'
   private readonly videoElement = this.elementRef.nativeElement
@@ -35,12 +47,14 @@ export class FloImaDirective implements OnInit, OnDestroy {
     map(displayContainer => new google.ima.AdsLoader(displayContainer))
   )
 
+  /** Google's ad manager */
   private readonly adManager = this.adLoader.pipe(
     tap(adLoader => {
       const adsRequest = new google.ima.AdsRequest()
-      // tslint:disable:max-line-length
       // tslint:disable-next-line:no-object-mutation
-      adsRequest.adTagUrl = 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/ad_rule_samples&ciu_szs=300x250&ad_rule=1&impl=s&gdfp_req=1&env=vp&output=vmap&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ar%3Dpreonly&cmsid=496&vid=short_onecue&correlator='
+      adsRequest.adTagUrl = this.floIma
+      adsRequest.setAdWillAutoPlay(false) // TODO: determine what we can do!
+      adsRequest.setAdWillPlayMuted(true) // TODO: determine what we can do!
       adLoader.requestAds(adsRequest)
     }),
     flatMap(adLoader => fromEventPattern(
@@ -65,7 +79,7 @@ export class FloImaDirective implements OnInit, OnDestroy {
     this.adManager.subscribe(adManager => {
       try {
         console.log('INITTING')
-        window.scroll(0, 1)
+        // window.scroll(0, 1)
         adManager.init(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
         adManager.start()
       } catch (adError) {
@@ -73,7 +87,33 @@ export class FloImaDirective implements OnInit, OnDestroy {
         adManager.play()
       }
     })
-    // this.adLoader.subscribe(adsLoader => {
+
+    this.onInitSource.next()
+    this.onInitSource.complete()
+
+    const isStable = this.appRef.isStable.pipe(take(1))
+    const resize = fromEvent(window, 'resize').pipe(startWith(EMPTY))
+    // const load = fromEvent(window, 'load').pipe(take(1))
+
+    combineLatest(isStable, resize, this.adManager, this.adContainerElement).pipe(
+      // throttleTime(60),
+      takeUntil(this.onDestroy)
+    ).subscribe(([_stable, _win, adManager, adContainerElement]) => {
+      adContainerElement.style.width = `${this.videoElement.clientWidth}px`
+      adContainerElement.style.height = `${this.videoElement.clientHeight}px`
+      adManager.resize(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
+    })
+  }
+
+  ngOnDestroy() {
+    this.onDestroySource.next()
+    this.onDestroySource.complete()
+  }
+
+  @Input() public readonly floIma?: any
+}
+
+ // this.adLoader.subscribe(adsLoader => {
     //   adsLoader.addEventListener(
     //     google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
     //     (a) => {
@@ -94,28 +134,3 @@ export class FloImaDirective implements OnInit, OnDestroy {
     //       }
     //     }, false)
     // })
-    this.onInitSource.next()
-    this.onInitSource.complete()
-
-    const isStable = this.appRef.isStable.pipe(take(1))
-    const resize = fromEvent(window, 'resize').pipe(startWith(EMPTY))
-    const load = fromEvent(window, 'load').pipe(take(1))
-
-
-    combineLatest(isStable, resize, this.adManager, this.adContainerElement).pipe(
-      // throttleTime(60),
-      takeUntil(this.onDestroy)
-    ).subscribe(([_stable, _win, adManager, adContainerElement]) => {
-      adContainerElement.style.width = `${this.videoElement.clientWidth}px`
-      adContainerElement.style.height = `${this.videoElement.clientHeight}px`
-      adManager.resize(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
-    })
-  }
-
-  ngOnDestroy() {
-    this.onDestroySource.next()
-    this.onDestroySource.complete()
-  }
-
-  @Input() public readonly floIma?: any
-}
