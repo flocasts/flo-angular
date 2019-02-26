@@ -1,25 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ImaComponent } from './ima.component';
+import { async, TestBed } from '@angular/core/testing'
+import { ImaComponent } from './ima.component'
 
 describe('ImaComponent', () => {
-  let component: ImaComponent;
-  let fixture: ComponentFixture<ImaComponent>;
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ImaComponent ]
     })
-    .compileComponents();
-  }));
-
-  beforeEach(() => {
-    fixture = TestBed.createComponent(ImaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    .compileComponents()
+  }))
 
   it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-});
+    const fixture = TestBed.createComponent(ImaComponent)
+    const component = fixture.componentInstance
+    fixture.detectChanges()
+    expect(component).toBeTruthy()
+  })
+})

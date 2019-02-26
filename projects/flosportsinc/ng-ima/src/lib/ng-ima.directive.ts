@@ -10,14 +10,14 @@ declare const google: any
 export class FloImaDirective implements OnInit, OnDestroy {
   constructor(public elementRef: ElementRef<HTMLVideoElement>, private rd: Renderer2, private appRef: ApplicationRef) { }
 
-  private readonly adLibIsLoaded = () => typeof google !== 'undefined'
+  private readonly adLibIsLoaded = () => typeof google !== 'undefined' && typeof google.ima !== 'undefined'
   private readonly videoElement = this.elementRef.nativeElement
   private readonly onInitSource = new Subject()
   private readonly onDestroySource = new Subject()
   private readonly onInit = this.onInitSource.pipe(share())
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
-  /** The <div> element reference we created above the <video> element this directive is assigned to. */
+  /** The <div> element reference created above the <video> element this directive is assigned to. */
   private readonly adContainerElement = this.onInit.pipe(
     filter(() => this.adLibIsLoaded()),
     map(() => this.createAdContainerElement()),
