@@ -5,4 +5,4 @@ import { FloImaDirective } from './ng-ima.directive'
   declarations: [FloImaDirective],
   exports: [FloImaDirective]
 })
-export class NgImaModule { }
+export class ImaModule { }

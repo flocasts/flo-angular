@@ -23,9 +23,12 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
+import { ImaComponent } from './ima/ima.component'
+import { ImaModule } from '@flosportsinc/ng-ima'
 
 @NgModule({
   imports: [
+    ImaModule,
     NodeEnvTransferModule,
     WindowModule,
     MseModule,
@@ -51,6 +54,7 @@ import { StylesComponent } from './styles/styles.component'
     HlsApiComponent,
     UniversalServicesComponent,
     StylesComponent,
+    ImaComponent,
     NotFoundComponent
   ]
 })

@@ -11,7 +11,9 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "types": [],
+    "types": [
+      "google.d.ts"
+    ],
     "lib": [
       "dom",
       "es2018"
