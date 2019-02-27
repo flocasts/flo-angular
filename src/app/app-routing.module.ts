@@ -10,6 +10,7 @@ import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
+import { AutoplayComponent } from './autoplay/autoplay.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -26,6 +27,7 @@ const routes: Routes = [
   { path: 'universal-services', component: UniversalServicesComponent },
   { path: 'icons', component: IconsComponent },
   { path: 'styles', component: StylesComponent },
+  { path: 'autoplay', component: AutoplayComponent },
   { path: '**', component: NotFoundComponent }
 ]
 

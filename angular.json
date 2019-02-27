@@ -654,6 +654,41 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-video-autoplay": {
+      "root": "projects/flosportsinc/ng-video-autoplay",
+      "sourceRoot": "projects/flosportsinc/ng-video-autoplay/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-video-autoplay/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-video-autoplay/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/flosportsinc/ng-video-autoplay/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-video-autoplay/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-video-autoplay/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-video-autoplay/tsconfig.lib.json",
+              "projects/flosportsinc/ng-video-autoplay/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"

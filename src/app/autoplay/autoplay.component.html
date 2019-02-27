@@ -1,0 +1,14 @@
+<h2>Video Autoplay</h2>
+<button (click)="setVideo(1)">Video 1</button>
+<button (click)="setVideo(2)">Video 2</button>
+<hr>
+
+<div style="position: relative">
+  <button #unmute>Click to unmute</button>
+  <video [floAutoplay]="unmute" [src]="videoSrc" width="600" playsinline></video>
+</div>
+
+<div style="position: relative">
+  <button #unmute>Click to unmute</button>
+  <video [floAutoplay]="unmute" [src]="videoSrc" width="600" playsinline></video>
+</div>
