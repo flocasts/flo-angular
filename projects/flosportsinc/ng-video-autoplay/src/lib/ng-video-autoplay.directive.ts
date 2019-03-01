@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, Renderer2, OnDestroy, OnInit } from '@angular/core'
-import { share, takeUntil, map, flatMap, filter, tap } from 'rxjs/operators'
+import { share, takeUntil, map, flatMap, filter, tap, shareReplay } from 'rxjs/operators'
 import { fromEvent, Subject, Observable } from 'rxjs'
 import { maybe } from 'typescript-monads'
 
@@ -42,22 +42,28 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
   private readonly videoElement = this.elmRef.nativeElement
   private readonly maybeActionRef = () => maybe(this.floVideoAutoplay)
 
+  private readonly hideRef = (ref: HTMLElement) => {
+    this.rd.setStyle(ref, 'display', 'none')
+  }
+
+  private readonly showRef = (ref: HTMLElement) => {
+    this.rd.setStyle(ref, 'display', 'block')
+  }
+
+  private readonly volumeChange = fromEvent(this.videoElement, 'volumechange', { passive: true }).pipe(
+    map(evt => evt.target as HTMLVideoElement),
+    share(),
+    takeUntil(this.onDestroy))
+
   constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) {
     this.videoElement.setAttribute('autoplay', 'true')
+
+    this.volumeChange.pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.maybeActionRef().tapSome(this.hideRef))
+    this.volumeChange.pipe(filter(v => v.muted || v.volume <= 0)).subscribe(() => this.maybeActionRef().tapSome(this.showRef))
 
     fromEvent(this.videoElement, 'loadstart').pipe(
       map(evt => evt.target as HTMLVideoElement),
       tryPlayVideoAsIs,
-      tap(() => {
-        this.maybeActionRef().tapSome(ref => {
-          this.rd.setStyle(ref, 'display', 'block')
-          fromEvent(ref, 'click').subscribe(() => {
-            this.videoElement.muted = false
-            this.videoElement.volume = 1
-            this.rd.setStyle(ref, 'display', 'none')
-          })
-        })
-      }),
       tryPlayVideoMuted,
       takeUntil(this.onDestroy)
     ).subscribe(() => {
@@ -66,8 +72,12 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.maybeActionRef().tapSome(this.hideRef)
     this.maybeActionRef().tapSome(ref => {
-      this.rd.setStyle(ref, 'display', 'none')
+      fromEvent(ref, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
+        this.videoElement.muted = false
+        this.videoElement.volume = 1
+      })
     })
   }
 
