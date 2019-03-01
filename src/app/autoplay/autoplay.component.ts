@@ -7,15 +7,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AutoplayComponent {
-  // tslint:disable:readonly-keyword
-  // tslint:disable:readonly-array
-  public urls = [
+  public readonly urls: ReadonlyArray<any> = [
     'http://techslides.com/demos/sample-videos/small.mp4',
     'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4'
   ]
-
-  setVideo() {
-    // tslint:disable-next-line:no-object-mutation
-    this.urls = this.urls.reverse()
-  }
 }
