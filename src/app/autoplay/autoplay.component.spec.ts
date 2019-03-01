@@ -1,12 +1,13 @@
 import { async, TestBed } from '@angular/core/testing'
 import { AutoplayComponent } from './autoplay.component'
+import { SharedTestingModule } from '../shared.testing.module'
 
 describe('AutoplayComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AutoplayComponent ]
-    })
-    .compileComponents()
+      imports: [SharedTestingModule],
+      declarations: [AutoplayComponent]
+    }).compileComponents()
   }))
 
   it('should create', () => {
