@@ -1,24 +1,33 @@
-# NgVideoAutoplay
+# FloVideoAutoplay
+Simple way to ensure videos autoplay even if they need to be muted first.
 
-This library was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.2.0.
+## Installation
+```sh
+npm i @flosportsinc/ng-video-autoplay
+```
 
-## Code scaffolding
+```js
+import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 
-Run `ng generate component component-name --project ng-video-autoplay` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module --project ng-video-autoplay`.
-> Note: Don't forget to add `--project ng-video-autoplay` or else it will be added to the default project in your `angular.json` file. 
+@NgModule({
+  imports: [
+    ...
+    FloVideoAutoplayModule,
+    ...
+  ]
+})
+export class AppModule { }
+```
 
-## Build
 
-Run `ng build ng-video-autoplay` to build the project. The build artifacts will be stored in the `dist/` directory.
+## Usage
+`floVideoAutoplay` expects an element reference. The directive will automatically bind to its click events and show and hide the element if the video is muted.
+This minimal approach allows for full customization. In future version there will likley be classes that are applied instead the current on/off approach in order to support animations
 
-## Publishing
+```html
 
-After building your library with `ng build ng-video-autoplay`, go to the dist folder `cd dist/ng-video-autoplay` and run `npm publish`.
-
-## Running unit tests
-
-Run `ng test ng-video-autoplay` to execute the unit tests via [Karma](https://karma-runner.github.io).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+<div>
+  <button #unmute>Click to unmute</button>
+  <video [floVideoAutoplay]="unmute" src="http://techslides.com/demos/sample-videos/small.mp4" width="600" playsinline></video>
+</div>
+```
