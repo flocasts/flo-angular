@@ -58,9 +58,6 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
   constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) {
     this.videoElement.setAttribute('autoplay', 'true')
 
-    this.volumeChange.pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.maybeActionRef().tapSome(this.hideRef))
-    this.volumeChange.pipe(filter(v => v.muted || v.volume <= 0)).subscribe(() => this.maybeActionRef().tapSome(this.showRef))
-
     fromEvent(this.videoElement, 'loadstart').pipe(
       map(evt => evt.target as HTMLVideoElement),
       tryPlayVideoAsIs,
@@ -71,12 +68,16 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.maybeActionRef().tapSome(this.hideRef)
     this.maybeActionRef().tapSome(ref => {
+      this.hideRef(ref)
+
       fromEvent(ref, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
         this.videoElement.muted = false
         this.videoElement.volume = 1
       })
+
+      this.volumeChange.pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.hideRef(ref))
+      this.volumeChange.pipe(filter(v => v.muted || v.volume <= 0)).subscribe(() => this.showRef(ref))
     })
   }
 

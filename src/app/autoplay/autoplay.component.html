@@ -1,6 +1,12 @@
 <h2>Video Autoplay</h2>
+
+<h3>With Element Reference</h3>
 <div>
   <button #unmute>Click to unmute</button>
   <div></div>
   <video [floVideoAutoplay]="unmute" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
 </div> 
+
+<h3>Without Element Reference</h3>
+<video floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
+

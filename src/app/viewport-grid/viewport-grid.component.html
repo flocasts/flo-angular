@@ -31,7 +31,7 @@
 <ng-container *ngIf="view_ | async as view">
   <flo-viewport-grid [maxHeight]="view.maxHeight" startingSelectedIndex="1">
     <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-      <video floViewportGridBoxItem playsinline controls muted>
+      <video floViewportGridBoxItem playsinline controls floVideoAutoplay>
         <source [src]="vid.src" type="video/mp4">
       </video>
     </flo-viewport-grid-box>
