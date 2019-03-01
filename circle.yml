@@ -313,7 +313,7 @@ workflows:
           requires:
             - build
             - prep_coverage
-      - test_video:
+      - test_video-autoplay:
           requires:
             - build
             - prep_coverage
