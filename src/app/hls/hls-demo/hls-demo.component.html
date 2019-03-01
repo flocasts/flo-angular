@@ -40,11 +40,13 @@
     <input id="playsinline" type="checkbox" formControlName="playsinline">
   </div>
 </form>
+<button #unmute>Unmute video</button>
 <div class="video-responsive-container">
   <video *ngIf="config$ | async as config"
   floMse
   class="video-responsive"
   [src]="config?.src"
+  [floVideoAutoplay]="unmute"
   [controls]="config?.controls"
   [autoplay]="config?.autoplay"
   [attr.playsinline]="config?.playsinline">

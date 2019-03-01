@@ -39,8 +39,9 @@
 | [ng-env-transfer-state](projects/flosportsinc/ng-env-transfer-state) | Transfer Node Environment variables | [![](https://img.shields.io/npm/v/@flosportsinc/ng-env-transfer-state.svg)](https://www.npmjs.com/package/@flosportsinc/ng-env-transfer-state)
 | [ng-media-source-extensions](projects/flosportsinc/ng-media-source-extensions) | Media Source Extensions for HLS/DASH | [![](https://img.shields.io/npm/v/@flosportsinc/ng-media-source-extensions.svg)](https://www.npmjs.com/package/@flosportsinc/ng-media-source-extensions)
 | [ng-viewport-grid](projects/flosportsinc/ng-viewport-grid) | Responsive grid for Angular Universal | [![](https://img.shields.io/npm/v/@flosportsinc/ng-viewport-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-viewport-grid)
-| [ng-ima](projects/flosportsinc/ng-ima) | Goolge IMA adapter for Angular | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ima.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ima)
 | [ng-tabs](projects/flosportsinc/ng-tabs) | Tabs | [![](https://img.shields.io/npm/v/@flosportsinc/ng-tabs.svg)](https://www.npmjs.com/package/@flosportsinc/ng-tabs)
+| [ng-ima](projects/flosportsinc/ng-ima) | Goolge IMA adapter for Angular | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ima.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ima)
+| [ng-video-autoplay](projects/flosportsinc/ng-video-autoplay) | Video Autoplay | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-autoplay.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-autoplay)
 | [ng-video-grid](projects/flosportsinc/ng-video-grid) | Mutlicamera grid layout | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-grid.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-grid)
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
 

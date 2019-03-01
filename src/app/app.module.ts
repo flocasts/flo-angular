@@ -23,9 +23,12 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
+import { AutoplayComponent } from './autoplay/autoplay.component'
+import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 
 @NgModule({
   imports: [
+    FloVideoAutoplayModule,
     NodeEnvTransferModule,
     WindowModule,
     MseModule,
@@ -51,6 +54,7 @@ import { StylesComponent } from './styles/styles.component'
     HlsApiComponent,
     UniversalServicesComponent,
     StylesComponent,
+    AutoplayComponent,
     NotFoundComponent
   ]
 })
