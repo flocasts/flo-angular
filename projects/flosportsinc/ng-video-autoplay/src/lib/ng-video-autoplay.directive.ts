@@ -40,7 +40,7 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
   private readonly videoElement = this.elmRef.nativeElement
-  private readonly maybeActionRef = () => maybe(this.floVideoAutoplay)
+  private readonly maybeActionRef = () => maybe(this.floVideoAutoplay).filter(a => a as any !== '')
 
   private readonly hideRef = (ref: HTMLElement) => {
     this.rd.setStyle(ref, 'display', 'none')
@@ -66,9 +66,8 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
       tryPlayVideoAsIs,
       tryPlayVideoMuted,
       takeUntil(this.onDestroy)
-    ).subscribe(() => {
-      // TODO: if we got here, we were stopped from autoplaying with volume
-    })
+    ).subscribe()
+    // TODO: if we got here, we were stopped from autoplaying with volume
   }
 
   ngOnInit() {
