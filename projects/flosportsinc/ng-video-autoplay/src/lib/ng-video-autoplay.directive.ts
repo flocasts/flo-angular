@@ -1,6 +1,6 @@
 import { Directive, ElementRef, Input, Renderer2, OnDestroy, OnInit } from '@angular/core'
-import { fromEvent, Subject, from, Observable } from 'rxjs'
 import { share, takeUntil, map, flatMap, filter, tap } from 'rxjs/operators'
+import { fromEvent, Subject, Observable } from 'rxjs'
 import { maybe } from 'typescript-monads'
 
 interface VideoHaltStatus {
@@ -15,17 +15,10 @@ const filterHalted =
 
 const tryPlayVideoAsIs =
   (source: Observable<HTMLVideoElement>) =>
-    source.pipe(flatMap(ve => ve.play().then(() => {
-      return {
-        halted: false,
-        videoElement: ve
-      }
-    }).catch(() => {
-      return {
-        halted: true,
-        videoElement: ve
-      }
-    })), filterHalted)
+    source.pipe(flatMap(videoElement => videoElement.play()
+      .then(() => ({ videoElement, halted: false }))
+      .catch(() => ({ videoElement, halted: true }))
+    ), filterHalted)
 
 const tryPlayVideoMuted =
   (source: Observable<VideoHaltStatus>) =>
@@ -36,18 +29,18 @@ const tryPlayVideoMuted =
     }), tryPlayVideoAsIs)
 
 // 1) attempt to play as-is (including autoplay + unmuted)
-// 2) attempt to play muted
+// 2) attempt to play muted, showing unmite button
 // 3) show click to play
 @Directive({
-  selector: 'video[floAutoplay]'
+  selector: 'video[floVideoAutoplay]'
 })
-export class VideoAutoplayDirective implements OnInit, OnDestroy {
-  @Input() public readonly floAutoplay?: HTMLElement
+export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
+  @Input() public readonly floVideoAutoplay?: HTMLElement
 
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
   private readonly videoElement = this.elmRef.nativeElement
-  private readonly maybeActionButton = () => maybe(this.floAutoplay)
+  private readonly maybeActionRef = () => maybe(this.floVideoAutoplay)
 
   constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) {
     this.videoElement.setAttribute('autoplay', 'true')
@@ -56,27 +49,25 @@ export class VideoAutoplayDirective implements OnInit, OnDestroy {
       map(evt => evt.target as HTMLVideoElement),
       tryPlayVideoAsIs,
       tap(() => {
-        this.maybeActionButton().tapSome(btn => {
-          this.rd.setStyle(btn, 'display', 'block')
-          fromEvent(btn, 'click').subscribe(() => {
+        this.maybeActionRef().tapSome(ref => {
+          this.rd.setStyle(ref, 'display', 'block')
+          fromEvent(ref, 'click').subscribe(() => {
             this.videoElement.muted = false
             this.videoElement.volume = 1
-            this.videoElement.play()
-            this.rd.setStyle(btn, 'display', 'none')
+            this.rd.setStyle(ref, 'display', 'none')
           })
         })
       }),
       tryPlayVideoMuted,
       takeUntil(this.onDestroy)
-    ).subscribe(d => {
-      // if we got here, we were stopped from autoplaying with volume
-      console.log(d)
+    ).subscribe(() => {
+      // TODO: if we got here, we were stopped from autoplaying with volume
     })
   }
 
   ngOnInit() {
-    this.maybeActionButton().tapSome(btn => {
-      this.rd.setStyle(btn, 'display', 'none')
+    this.maybeActionRef().tapSome(ref => {
+      this.rd.setStyle(ref, 'display', 'none')
     })
   }
 

@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core'
-import { VideoAutoplayDirective } from './ng-video-autoplay.directive'
-import { VideoAutoplayContainerDirective } from './ng-video-autoplay-container.directive'
+import { FloVideoAutoplayDirective } from './ng-video-autoplay.directive'
 
 @NgModule({
-  imports: [],
-  declarations: [VideoAutoplayDirective, VideoAutoplayContainerDirective],
-  exports: [VideoAutoplayDirective, VideoAutoplayContainerDirective]
+  declarations: [
+    FloVideoAutoplayDirective
+  ],
+  exports: [
+    FloVideoAutoplayDirective
+  ]
 })
 export class FloVideoAutoplayModule { }

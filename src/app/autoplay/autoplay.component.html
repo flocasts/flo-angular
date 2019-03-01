@@ -1,24 +1,5 @@
 <h2>Video Autoplay</h2>
-<button (click)="setVideo(1)">Video 1</button>
-<button (click)="setVideo(2)">Video 2</button>
-<hr>
-
-<!-- <div style="position: relative">
+<div>
   <button #unmute>Click to unmute</button>
-  <video [floAutoplay]="unmute" [src]="videoSrc" width="600" playsinline></video>
-</div> -->
-
-<div style="position: relative" floAutoplayContainer>
-  <button #unmute>Click to unmute</button>
-  <video floAutoplay [floAutoplay]="unmute" [src]="videoSrc" width="600" playsinline></video>
+  <video [floVideoAutoplay]="unmute" src="http://techslides.com/demos/sample-videos/small.mp4" width="600" playsinline></video>
 </div>
-
-<div style="position: relative" floAutoplayContainer>
-  <button #unmute>Click to unmute</button>
-  <video floAutoplay [floAutoplay]="unmute" [src]="videoSrc" width="600" playsinline></video>
-</div>
-
-<!-- <flo-autoplay>
-  <button floAutoplayUnmute>unmute</button>
-  <video [src]="videoSrc" width="600" playsinline></video>
-</flo-autoplay> -->
