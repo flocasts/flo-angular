@@ -70,7 +70,7 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
 
   constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) { }
 
-  private readonly runSequence = (actionRef: HTMLElement) => (runOnce = false) => (videoElement: HTMLVideoElement) => {
+  private readonly runSequence = (actionRef: HTMLElement) => (runOnce: boolean) => (videoElement: HTMLVideoElement) => {
     videoElement.setAttribute('autoplay', 'true')
     fromEvent(actionRef, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
       videoElement.muted = false

@@ -1,6 +1,6 @@
 import { FloVideoAutoplayDirective } from './ng-video-autoplay.directive'
 import { TestBed, async } from '@angular/core/testing'
-import { FloVideoAutoplayTestModule, createSut } from './ng-video-autoplay.module.spec'
+import { FloVideoAutoplayTestModule, createSut, FloVideoAutoplayMultiTestComponent } from './ng-video-autoplay.module.spec'
 import { By } from '@angular/platform-browser'
 
 describe(FloVideoAutoplayDirective.name, () => {
@@ -40,5 +40,10 @@ describe(FloVideoAutoplayDirective.name, () => {
     const video = sut.hoist.debugElement.query(By.css('video')).nativeElement as HTMLVideoElement
 
     spyOn(video, 'play').and.returnValue(Promise.resolve())
+  }))
+
+  it('should compile multi-video autoplay', async(() => {
+    const sut = createSut(FloVideoAutoplayMultiTestComponent)
+    expect(sut.instance).toBeTruthy()
   }))
 })

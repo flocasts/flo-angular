@@ -11,15 +11,28 @@ import { FloVideoAutoplayDirective } from './ng-video-autoplay.directive'
 })
 export class FloVideoAutoplayTestComponent { }
 
+@Component({
+  selector: 'flo-mutli-test-component',
+  template: `
+  <div [floVideoAutoplay]="unmute">
+    <button #unmute>click to unmute</button>
+    <video #floVideoAutoplay src="http://techslides.com/demos/sample-videos/small.mp4"></video>
+    <video #floVideoAutoplay src="http://techslides.com/demos/sample-videos/small.mp4"></video>
+  </div>
+`
+})
+export class FloVideoAutoplayMultiTestComponent { }
+
+
 @NgModule({
   imports: [FloVideoAutoplayModule],
   exports: [FloVideoAutoplayModule],
-  declarations: [FloVideoAutoplayTestComponent]
+  declarations: [FloVideoAutoplayTestComponent, FloVideoAutoplayMultiTestComponent]
 })
 export class FloVideoAutoplayTestModule { }
 
-export const createSut = () => {
-  const hoist = TestBed.createComponent(FloVideoAutoplayTestComponent)
+export const createSut = (comp = FloVideoAutoplayTestComponent) => {
+  const hoist = TestBed.createComponent(comp)
   hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(FloVideoAutoplayDirective))
   return {
