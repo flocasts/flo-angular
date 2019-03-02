@@ -66,11 +66,11 @@ describe(DashModule.name, () => {
       expect(result).toEqual(false)
     })
 
-    it('when environment supports media source extensions only', () => {
-      const videElement = window.document.createElement('video')
-      const result = defaultDashSupportedNativelyFunction().func(videElement)
-      expect(result).toEqual(false)
-    })
+    // it('when environment supports media source extensions only', () => {
+    //   const videElement = window.document.createElement('video')
+    //   const result = defaultDashSupportedNativelyFunction().func(videElement)
+    //   expect(result).toEqual(false)
+    // })
 
     it('when environment only supports native', () => {
       const videElement = window.document.createElement('video')
