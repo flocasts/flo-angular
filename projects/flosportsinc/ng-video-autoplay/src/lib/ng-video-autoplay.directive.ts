@@ -1,7 +1,7 @@
-import { Directive, ElementRef, Input, Renderer2, OnDestroy, OnInit } from '@angular/core'
-import { share, takeUntil, map, flatMap, filter, tap, shareReplay } from 'rxjs/operators'
+import { Directive, ElementRef, Input, Renderer2, OnDestroy, AfterContentInit, ContentChildren, QueryList } from '@angular/core'
+import { share, takeUntil, map, flatMap, filter, tap, take } from 'rxjs/operators'
 import { fromEvent, Subject, Observable } from 'rxjs'
-import { maybe } from 'typescript-monads'
+import { maybe, either } from 'typescript-monads'
 
 interface VideoHaltStatus {
   readonly videoElement: HTMLVideoElement
@@ -32,14 +32,17 @@ const tryPlayVideoMuted =
 // 2) attempt to play muted, showing unmite button
 // 3) show click to play
 @Directive({
-  selector: 'video[floVideoAutoplay]'
+  selector: '[floVideoAutoplay]'
 })
-export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
+export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
   @Input() public readonly floVideoAutoplay?: HTMLElement
+  @Input() public readonly floVideoAutoplayIndex = 0
+
+  @ContentChildren('floVideoAutoplay', { descendants: true }) public readonly videos: QueryList<ElementRef<HTMLVideoElement>>
 
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
-  private readonly videoElement = this.elmRef.nativeElement
+  private readonly maybeVideoElement = () => maybe(this.elmRef.nativeElement).filter(e => e.nodeName === 'VIDEO')
   private readonly maybeActionRef = () => maybe(this.floVideoAutoplay).filter(a => a as any !== '')
 
   private readonly hideRef = (ref: HTMLElement) => {
@@ -50,34 +53,48 @@ export class FloVideoAutoplayDirective implements OnInit, OnDestroy {
     this.rd.setStyle(ref, 'display', 'block')
   }
 
-  private readonly volumeChange = fromEvent(this.videoElement, 'volumechange', { passive: true }).pipe(
-    map(evt => evt.target as HTMLVideoElement),
-    share(),
-    takeUntil(this.onDestroy))
+  private readonly volumeChange = (videoElement: HTMLVideoElement) =>
+    fromEvent(videoElement, 'volumechange', { passive: true }).pipe(
+      map(evt => evt.target as HTMLVideoElement),
+      share(),
+      takeUntil(this.onDestroy))
 
-  constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) {
-    this.videoElement.setAttribute('autoplay', 'true')
-
-    fromEvent(this.videoElement, 'loadstart').pipe(
+  private readonly initOnVideo = (videoElement: HTMLVideoElement) =>
+    fromEvent(videoElement, 'loadstart').pipe(
+      tap(() => videoElement.setAttribute('autoplay', 'true')),
       map(evt => evt.target as HTMLVideoElement),
       tryPlayVideoAsIs,
       tryPlayVideoMuted,
       takeUntil(this.onDestroy)
     ).subscribe()
-    // TODO: if we got here, we were stopped from autoplaying with volume
+
+  constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) { }
+
+  private readonly runSequence = (actionRef: HTMLElement) => (runOnce = false) => (videoElement: HTMLVideoElement) => {
+    videoElement.setAttribute('autoplay', 'true')
+    fromEvent(actionRef, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
+      videoElement.muted = false
+      videoElement.volume = 1
+    })
+
+    this.volumeChange(videoElement).pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.hideRef(actionRef))
+    const showRef = this.volumeChange(videoElement).pipe(filter(v => v.muted || v.volume <= 0));
+    (runOnce ? showRef.pipe(take(1)) : showRef).subscribe(() => this.showRef(actionRef))
   }
 
-  ngOnInit() {
+  ngAfterContentInit() {
+    this.maybeVideoElement().tapSome(this.initOnVideo)
+    this.videos.map(a => a.nativeElement).forEach(this.initOnVideo)
+
     this.maybeActionRef().tapSome(ref => {
       this.hideRef(ref)
 
-      fromEvent(ref, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
-        this.videoElement.muted = false
-        this.videoElement.volume = 1
-      })
-
-      this.volumeChange.pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.hideRef(ref))
-      this.volumeChange.pipe(filter(v => v.muted || v.volume <= 0)).subscribe(() => this.showRef(ref))
+      either(this.maybeVideoElement().valueOrUndefined(),
+        maybe(this.videos.toArray()[this.floVideoAutoplayIndex]).map(a => a.nativeElement).valueOrUndefined())
+        .tap({
+          left: this.runSequence(ref)(false),
+          right: this.runSequence(ref)(true)
+        })
     })
   }
 

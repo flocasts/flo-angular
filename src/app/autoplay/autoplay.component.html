@@ -1,12 +1,25 @@
 <h2>Video Autoplay</h2>
 
-<h3>With Element Reference</h3>
-<div>
-  <button #unmute>Click to unmute</button>
-  <div></div>
-  <video [floVideoAutoplay]="unmute" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
-</div> 
-
-<h3>Without Element Reference</h3>
+<h3>Single Video</h3>
 <video floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
 
+<h3>Single Video with clickable element reference</h3>
+<div>
+  <button #unmute1>Click to unmute</button>
+  <div></div>
+  <video [floVideoAutoplay]="unmute1" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
+</div> 
+
+<h3>Multiple Video</h3>
+<div floVideoAutoplay>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+</div> 
+
+<h3>Multiple Video with clickable element reference</h3>
+<div [floVideoAutoplay]="unmute2">
+  <button #unmute2>Click to unmute</button>
+  <div></div>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+</div> 
