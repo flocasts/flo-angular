@@ -20,15 +20,16 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
+import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { IconsComponent } from './icons/icons.component'
 import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
+import { AutoplayComponent } from './autoplay/autoplay.component'
 import { ImaComponent } from './ima/ima.component'
-import { ImaModule } from '@flosportsinc/ng-ima'
 
 @NgModule({
   imports: [
-    ImaModule,
+    FloVideoAutoplayModule,
     NodeEnvTransferModule,
     WindowModule,
     MseModule,
@@ -55,6 +56,7 @@ import { ImaModule } from '@flosportsinc/ng-ima'
     UniversalServicesComponent,
     StylesComponent,
     ImaComponent,
+    AutoplayComponent,
     NotFoundComponent
   ]
 })

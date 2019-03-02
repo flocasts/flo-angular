@@ -1,5 +1,6 @@
-import { execSync } from 'child_process'
+import { exec } from 'child_process'
 import { PROJECTS } from './libs'
+import { bindNodeCallback, forkJoin } from 'rxjs'
 
 const createCommand = (str: string) => `node_modules/.bin/ng build ${str}`
 const printMessage = (refs: ReadonlyArray<string>) => {
@@ -9,8 +10,14 @@ const printMessage = (refs: ReadonlyArray<string>) => {
 
 printMessage(PROJECTS)
 
-PROJECTS
+const obs = PROJECTS
   .map(createCommand)
-  .forEach(commandPath => {
-    console.log(execSync(commandPath, {}).toString())
+  .map(commandPath => bindNodeCallback(exec)(commandPath))
+
+forkJoin(obs)
+  .subscribe(res => {
+    console.log('Libraries Built!')
+  }, err => {
+    console.error(err)
+    process.exit(1)
   })

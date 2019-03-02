@@ -5,9 +5,11 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 import { WindowModule } from '@flosportsinc/ng-window'
+import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 
 @NgModule({
   imports: [
+    FloVideoAutoplayModule,
     WindowModule,
     FormsModule,
     HttpClientModule,
@@ -19,6 +21,7 @@ import { WindowModule } from '@flosportsinc/ng-window'
     })
   ],
   exports: [
+    FloVideoAutoplayModule,
     WindowModule,
     FormsModule,
     HttpClientModule,

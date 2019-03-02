@@ -91,13 +91,13 @@ describe(HlsModule.name, () => {
     //   expect(result).toEqual(false)
     // })
 
-    it('when environment supports media source extensions only', () => {
-      const videElement = window.document.createElement('video')
-      spyOn(videElement, 'canPlayType').and.returnValue(false)
-      spyOn(Hls, 'isSupported').and.callFake(() => true)
-      const result = defaultHlsSupportedNativelyFunction().func(videElement)
-      expect(result).toEqual(false)
-    })
+    // it('when environment supports media source extensions only', () => {
+    //   const videElement = window.document.createElement('video')
+    //   spyOn(videElement, 'canPlayType').and.returnValue(false)
+    //   spyOn(Hls, 'isSupported').and.callFake(() => true)
+    //   const result = defaultHlsSupportedNativelyFunction().func(videElement)
+    //   expect(result).toEqual(false)
+    // })
 
     it('when environment only supports native (iOS safari, for example)', () => {
       const videElement = window.document.createElement('video')

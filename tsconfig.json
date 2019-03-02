@@ -94,6 +94,12 @@
       ],
       "@flosportsinc/ng-tabs/*": [
         "dist/flosportsinc/ng-tabs/*"
+      ],
+      "@flosportsinc/ng-video-autoplay": [
+        "dist/flosportsinc/ng-video-autoplay"
+      ],
+      "@flosportsinc/ng-video-autoplay/*": [
+        "dist/flosportsinc/ng-video-autoplay/*"
       ]
     }
   }

@@ -20,7 +20,7 @@
       true,
       "attribute",
       "flo",
-      "camelCase"
+      "kebab-case"
     ],
     "component-selector": [
       true,

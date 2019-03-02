@@ -11,6 +11,7 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
 import { ImaComponent } from './ima/ima.component'
+import { AutoplayComponent } from './autoplay/autoplay.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'icons', component: IconsComponent },
   { path: 'styles', component: StylesComponent },
   { path: 'ima', component: ImaComponent },
+  { path: 'autoplay', component: AutoplayComponent },
   { path: '**', component: NotFoundComponent }
 ]
 
