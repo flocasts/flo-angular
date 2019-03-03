@@ -1,4 +1,4 @@
-import { Component } from '@angular/core'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
   selector: 'flo-ng-video-events',
@@ -7,6 +7,7 @@ import { Component } from '@angular/core'
       ng-video-events works!
     </p>
   `,
-  styles: []
+  styles: [],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NgVideoEventsComponent { }
