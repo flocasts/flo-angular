@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core'
 
 @Component({
-  selector: 'lib-ng-video-events',
+  selector: 'flo-ng-video-events',
   template: `
     <p>
       ng-video-events works!
@@ -9,11 +9,4 @@ import { Component, OnInit } from '@angular/core';
   `,
   styles: []
 })
-export class NgVideoEventsComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class NgVideoEventsComponent { }
