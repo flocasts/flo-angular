@@ -690,6 +690,41 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-chromecast": {
+      "root": "projects/flosportsinc/ng-chromecast",
+      "sourceRoot": "projects/flosportsinc/ng-chromecast/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-chromecast/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-chromecast/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/flosportsinc/ng-chromecast/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-chromecast/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-chromecast/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-chromecast/tsconfig.lib.json",
+              "projects/flosportsinc/ng-chromecast/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"
