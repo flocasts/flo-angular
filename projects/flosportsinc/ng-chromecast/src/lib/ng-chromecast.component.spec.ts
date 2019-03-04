@@ -1,17 +1,17 @@
 import { async, TestBed } from '@angular/core/testing'
-import { NgChromecastComponent } from './ng-chromecast.component'
+import { FloChromecastComponent } from './ng-chromecast.component'
 
-describe('NgChromecastComponent', () => {
+describe(FloChromecastComponent.name, () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [NgChromecastComponent]
+      declarations: [FloChromecastComponent]
     })
       .compileComponents()
   }))
 
   it('should create', () => {
-    const fixture = TestBed.createComponent(NgChromecastComponent)
+    const fixture = TestBed.createComponent(FloChromecastComponent)
     const component = fixture.componentInstance
     fixture.detectChanges()
     expect(component).toBeTruthy()

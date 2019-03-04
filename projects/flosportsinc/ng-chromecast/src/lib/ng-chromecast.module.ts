@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core'
-import { NgChromecastComponent } from './ng-chromecast.component'
+import { FloChromecastComponent } from './ng-chromecast.component'
 
 @NgModule({
   imports: [],
-  declarations: [NgChromecastComponent],
-  exports: [NgChromecastComponent]
+  declarations: [FloChromecastComponent],
+  exports: [FloChromecastComponent]
 })
-export class NgChromecastModule { }
+export class FloChromecastModule { }

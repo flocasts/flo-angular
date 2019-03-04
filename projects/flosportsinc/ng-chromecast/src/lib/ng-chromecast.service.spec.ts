@@ -1,11 +1,11 @@
 import { TestBed } from '@angular/core/testing'
-import { NgChromecastService } from './ng-chromecast.service'
+import { FloChromecastService } from './ng-chromecast.service'
 
-describe('NgChromecastService', () => {
+describe(FloChromecastService.name, () => {
   beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: NgChromecastService = TestBed.get(NgChromecastService)
+    const service: FloChromecastService = TestBed.get(FloChromecastService)
     expect(service).toBeTruthy()
   })
 })
