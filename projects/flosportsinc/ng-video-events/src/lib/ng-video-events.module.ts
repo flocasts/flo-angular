@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core'
-import { NgVideoEventsComponent } from './ng-video-events.component'
+import { FloVideoEventsDirective } from './ng-video-events.directive'
 
 @NgModule({
-  declarations: [NgVideoEventsComponent],
-  imports: [
-  ],
-  exports: [NgVideoEventsComponent]
+  imports: [],
+  declarations: [FloVideoEventsDirective],
+  exports: [FloVideoEventsDirective]
 })
-export class NgVideoEventsModule { }
+export class FloVideoEventsModule { }
