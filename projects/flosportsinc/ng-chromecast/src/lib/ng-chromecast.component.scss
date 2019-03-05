@@ -1,0 +1,7 @@
+:host {
+  display: inline-block;
+  width: 25px;
+  &:hover {
+    cursor: pointer;
+  }
+}

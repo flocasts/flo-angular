@@ -25,9 +25,11 @@ import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
+import { FloChromecastModule } from '@flosportsinc/ng-chromecast'
 
 @NgModule({
   imports: [
+    FloChromecastModule,
     FloVideoAutoplayModule,
     NodeEnvTransferModule,
     WindowModule,
