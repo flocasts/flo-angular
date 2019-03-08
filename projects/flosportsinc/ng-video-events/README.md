@@ -1,3 +1,2 @@
 # FloVideoEvents
-Use Angular Dependency Injection with video player events
-
+Use Dependency Injection to bind to arbitrary video player events for extending video elements

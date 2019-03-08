@@ -1,8 +1,16 @@
 export const NATIVE_PLAYER_EVENTS: ReadonlyArray<string> = [
   'abort',
-  'durationchange',
   'canplay',
+  'canplaythrough',
+  'durationchange',
+  'emptied',
   'ended',
+  'error',
+  'interruptbegin',
+  'interruptend',
+  'loadeddata',
+  'loadedmetadata',
+  'loadstart',
   'pause',
   'play',
   'playing',
@@ -12,12 +20,13 @@ export const NATIVE_PLAYER_EVENTS: ReadonlyArray<string> = [
   'seeking',
   'stalled',
   'suspend',
+  'timeupdate',
   'volumechange',
   'waiting'
 ]
 
-export type FloVideoEventHandler<TEvent = Event> = (
-  evt: TEvent,
+export type FloVideoEventHandler = (
+  videoEvent: Event,
   videoElement: HTMLVideoElement,
   videoInstanceId: string,
   videoGroupId: string,
@@ -25,11 +34,26 @@ export type FloVideoEventHandler<TEvent = Event> = (
   eventEmitterFn: (code: number, message?: string, cta?: Function) => void
 ) => void
 
- // tslint:disable:readonly-keyword
+// tslint:disable:readonly-keyword
 export interface ListenerDictionary {
+  [key: string]: FloVideoEventHandler | undefined
 
   /** Sent when playback is aborted; for example, if the media is playing and is restarted from the beginning, this event is sent. */
   abort?: FloVideoEventHandler
+
+  /**
+   * Sent when enough data is available that the media can be played, at least for a couple of frames.
+   * This corresponds to the HAVE_ENOUGH_DATA readyState.'
+   */
+  canplay?: FloVideoEventHandler
+
+  /**
+   * Sent when the ready state changes to CAN_PLAY_THROUGH, indicating that the entire media can be played without interruption,
+   * assuming the download rate remains at least at the current level. It will also be fired when playback is toggled between paused
+   * and playing. Note: Manually setting the currentTime will eventually fire a canplaythrough event in firefox.
+   * Other browsers might not fire this event.
+   */
+  canplaythrough?: FloVideoEventHandler
 
   /**
    * The metadata has loaded or changed, indicating a change in duration of the media.
@@ -38,13 +62,38 @@ export interface ListenerDictionary {
   durationchange?: FloVideoEventHandler
 
   /**
-   * Sent when enough data is available that the media can be played, at least for a couple of frames.
-   * This corresponds to the HAVE_ENOUGH_DATA readyState.'
+   * The media has become empty; for example, this event is sent if the media has already been loaded 
+   * (or partially loaded), and the load() method is called to reload it.
    */
-  canplay?: FloVideoEventHandler
+  emptied?: FloVideoEventHandler
 
   /** Sent when playback completes. */
   ended?: FloVideoEventHandler
+
+  /** Sent when an error occurs. */
+  error?: FloVideoEventHandler
+
+  /**
+   * Sent when audio playing on a Firefox OS device is interrupted, either because the app playing the audio is sent to the background,
+   * or audio in a higher priority audio channel begins to play. See Using the AudioChannels API for more details.
+   */
+  interruptbegin?: FloVideoEventHandler
+
+  /**
+   * Sent when previously interrupted audio on a Firefox OS device commences playing again — when the interruption ends.
+   * This is when the associated app comes back to the foreground, or when the higher priority audio finished playing.
+   * See Using the AudioChannels API for more details.
+   */
+  interruptend?: FloVideoEventHandler
+
+  /** The first frame of the media has finished loading. */
+  loadeddata?: FloVideoEventHandler
+
+  /** The media's metadata has finished loading; all attributes now contain as much useful information as they're going to. */
+  loadedmetadata?: FloVideoEventHandler
+
+  /** Sent when loading of the media begins. */
+  loadstart?: FloVideoEventHandler
 
   /** Sent when the playback state is changed to paused (paused property is true). */
   pause?: FloVideoEventHandler
@@ -83,14 +132,13 @@ export interface ListenerDictionary {
    */
   suspend?: FloVideoEventHandler
 
+  /** The time indicated by the element's currentTime attribute has changed. */
+  timeupdate?: FloVideoEventHandler
+
   /** Sent when the audio volume changes (both when the volume is set and when the muted attribute is changed). */
   volumechange?: FloVideoEventHandler
 
   /** Sent when the requested operation (such as playback) is delayed pending the completion of another operation (such as a seek). */
   waiting?: FloVideoEventHandler
-
-  mute?: FloVideoEventHandler
-
-  error?: FloVideoEventHandler
 }
 
