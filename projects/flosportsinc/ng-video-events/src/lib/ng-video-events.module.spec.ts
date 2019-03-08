@@ -45,7 +45,7 @@ describe(FloVideoEventsModule.name, () => {
     sut.hoist.detectChanges()
     expect(sut.hoist).toBeTruthy()
     expect(sut.instances.length).toEqual(2)
-  })) 
+  }))
 
   it('should default to empty event bindings', async(() => {
     const sut = createSut()

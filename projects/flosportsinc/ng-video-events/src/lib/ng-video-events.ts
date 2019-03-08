@@ -62,7 +62,7 @@ export interface ListenerDictionary {
   durationchange?: FloVideoEventHandler
 
   /**
-   * The media has become empty; for example, this event is sent if the media has already been loaded 
+   * The media has become empty; for example, this event is sent if the media has already been loaded
    * (or partially loaded), and the load() method is called to reload it.
    */
   emptied?: FloVideoEventHandler
