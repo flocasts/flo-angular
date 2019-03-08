@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Renderer2, Inject, OnInit, PLATFORM_ID } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Renderer2, Inject, OnInit, PLATFORM_ID, Input } from '@angular/core'
 import { DOCUMENT, isPlatformBrowser } from '@angular/common'
 
 declare const cast: any
@@ -11,6 +11,7 @@ declare const chrome: any
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloChromecastComponent implements OnInit {
+  @Input() public readonly videoRef: HTMLVideoElement
   constructor(private rd: Renderer2, @Inject(DOCUMENT) private doc: any, @Inject(PLATFORM_ID) private platformId: string) { }
 
   private readonly canRun = () => isPlatformBrowser(this.platformId)
@@ -32,7 +33,12 @@ export class FloChromecastComponent implements OnInit {
     }
   }
 
+  ngOnChanges(c) {
+
+  }
+
   ngOnInit() {
+    console.log(this.videoRef)
     // tslint:disable-next-line:no-object-mutation
     window['__onGCastApiAvailable'] = (isAvailable: boolean) => {
       // tslint:disable-next-line:no-if-statement

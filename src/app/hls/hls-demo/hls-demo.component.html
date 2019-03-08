@@ -1,6 +1,4 @@
 <h1>Demo</h1>
-<flo-chromecast></flo-chromecast>
-
 <div>
   <label for="preselected_input">Source (pre selected)</label>
   <select id="preselected_input" [formControl]="dropdown">
@@ -43,14 +41,11 @@
   </div>
 </form>
 <button #unmute>Unmute video</button>
-<div class="video-responsive-container">
-  <video *ngIf="config$ | async as config"
-  floMse
-  class="video-responsive"
-  [src]="config?.src"
-  [floVideoAutoplay]="unmute"
-  [controls]="config?.controls"
-  [autoplay]="config?.autoplay"
-  [attr.playsinline]="config?.playsinline">
-</video>
-</div>
+<ng-container *ngIf="config$ | async as config">
+  <flo-chromecast [videoRef]="vidRef"></flo-chromecast>
+  <div class="video-responsive-container">
+    <video #vidRef floMse class="video-responsive" [src]="config?.src" [floVideoAutoplay]="unmute"
+      [controls]="config?.controls" [autoplay]="config?.autoplay" [attr.playsinline]="config?.playsinline">
+    </video>
+  </div>
+</ng-container>
