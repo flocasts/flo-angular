@@ -5,7 +5,6 @@ import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent } from '@flosportsinc/ng-viewport-grid'
-import { test } from 'shelljs';
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
