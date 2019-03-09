@@ -41,11 +41,15 @@
   </div>
 </form>
 <button #unmute>Unmute video</button>
-<ng-container *ngIf="config$ | async as config">
-  <flo-chromecast [videoRef]="vidRef"></flo-chromecast>
-  <div class="video-responsive-container">
-    <video #vidRef floMse class="video-responsive" [src]="config?.src" [floVideoAutoplay]="unmute"
-      [controls]="config?.controls" [autoplay]="config?.autoplay" [attr.playsinline]="config?.playsinline">
-    </video>
-  </div>
-</ng-container>
+<div class="video-responsive-container">
+  <video *ngIf="config$ | async as config"
+  floMse
+  class="video-responsive"
+  floVideoEvents
+  [src]="config?.src"
+  [floVideoAutoplay]="unmute"
+  [controls]="config?.controls"
+  [autoplay]="config?.autoplay"
+  [attr.playsinline]="config?.playsinline">
+</video>
+</div>

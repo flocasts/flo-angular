@@ -691,6 +691,42 @@
         }
       }
     },
+    "@flosportsinc/ng-video-events": {
+      "root": "projects/flosportsinc/ng-video-events",
+      "sourceRoot": "projects/flosportsinc/ng-video-events/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-video-events/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-video-events/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-video-events/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-video-events/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-video-events/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-video-events/tsconfig.lib.json",
+              "projects/flosportsinc/ng-video-events/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
     "@flosportsinc/ng-chromecast": {
       "root": "projects/flosportsinc/ng-chromecast",
       "sourceRoot": "projects/flosportsinc/ng-chromecast/src",
@@ -707,6 +743,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-chromecast/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-chromecast/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-chromecast/karma.conf.js"
