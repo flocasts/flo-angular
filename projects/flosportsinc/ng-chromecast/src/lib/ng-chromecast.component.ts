@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Renderer2, Inject, OnInit, PLATFORM_ID, Input } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Renderer2, Inject, OnInit, PLATFORM_ID, Input, OnChanges } from '@angular/core'
 import { DOCUMENT, isPlatformBrowser } from '@angular/common'
 
 declare const cast: any
@@ -10,7 +10,7 @@ declare const chrome: any
   styleUrls: ['ng-chromecast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloChromecastComponent implements OnInit {
+export class FloChromecastComponent implements OnInit, OnChanges {
   @Input() public readonly videoRef: HTMLVideoElement
   constructor(private rd: Renderer2, @Inject(DOCUMENT) private doc: any, @Inject(PLATFORM_ID) private platformId: string) { }
 
