@@ -45,6 +45,7 @@
   <video *ngIf="config$ | async as config"
   floMse
   class="video-responsive"
+  floVideoEvents
   [src]="config?.src"
   [floVideoAutoplay]="unmute"
   [controls]="config?.controls"
