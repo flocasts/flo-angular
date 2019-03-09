@@ -16,7 +16,8 @@ export class NotFoundComponent {
     'ng-media-source-externsion',
     'ng-env-transfer-state',
     'ng-ima',
-    'ng-tabs'
+    'ng-tabs',
+    'ng-video-events'
   ]
 
   constructor(private ar: ActivatedRoute) { }
