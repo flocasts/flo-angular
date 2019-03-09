@@ -85,6 +85,12 @@
       ],
       "@flosportsinc/ng-video-autoplay/*": [
         "../dist/flosportsinc/ng-video-autoplay/*"
+      ],
+      "@flosportsinc/ng-video-events": [
+        "../dist/flosportsinc/ng-video-events"
+      ],
+      "@flosportsinc/ng-video-events/*": [
+        "../dist/flosportsinc/ng-video-events/*"
       ]
     }
   },
