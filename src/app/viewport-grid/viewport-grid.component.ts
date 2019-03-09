@@ -45,8 +45,4 @@ export class FramerComponent {
   )
 
   readonly trackByVideoId = (_: number, item: any) => item.id
-
-  test(e: any) {
-    console.log(e)
-  }
 }
