@@ -32,7 +32,7 @@
   <button #unmute>Click to unmute</button>
   <flo-viewport-grid [maxHeight]="view.maxHeight" startingSelectedIndex="1" [floVideoAutoplay]="unmute" floVideoAutoplayIndex="1">
     <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-      <video floViewportGridBoxItem playsinline controls #floVideoAutoplay [src]="vid.src"></video>
+      <video floViewportGridBoxItem [floVideoEvents]="{ meta: 1}" (floVideoEventMessage)="test($event)" playsinline controls #floVideoAutoplay [src]="vid.src"></video>
     </flo-viewport-grid-box>
   </flo-viewport-grid>
 </ng-container>

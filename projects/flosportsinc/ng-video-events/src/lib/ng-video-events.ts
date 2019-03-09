@@ -1,37 +1,13 @@
-export const NATIVE_PLAYER_EVENTS: ReadonlyArray<string> = [
-  'abort',
-  'canplay',
-  'canplaythrough',
-  'durationchange',
-  'emptied',
-  'ended',
-  'error',
-  'interruptbegin',
-  'interruptend',
-  'loadeddata',
-  'loadedmetadata',
-  'loadstart',
-  'pause',
-  'play',
-  'playing',
-  'progress',
-  'ratechange',
-  'seeked',
-  'seeking',
-  'stalled',
-  'suspend',
-  'timeupdate',
-  'volumechange',
-  'waiting'
-]
+import { Observable } from 'rxjs'
 
-export type FloVideoEventHandler = (
+export type FloVideoEventHandler<TMeta = any, TMessage = any> = (
   videoEvent: Event,
   videoElement: HTMLVideoElement,
   videoInstanceId: string,
   videoGroupId: string,
-  // meta: TMeta,
-  eventEmitterFn: (code: number, message?: string, cta?: Function) => void
+  metadata: TMeta,
+  emitFunc: (msg: TMessage) => void,
+  onDestroy: Observable<any>
 ) => void
 
 // tslint:disable:readonly-keyword

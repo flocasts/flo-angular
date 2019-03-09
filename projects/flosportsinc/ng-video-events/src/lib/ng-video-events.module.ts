@@ -48,6 +48,7 @@ export function defaultTabIdGenerator(platformId: string): VideoPlayerEventsIdTa
     },
     {
       provide: VIDEO_PLAYER_EVENT_BINDINGS,
+      multi: true,
       useValue: {}
     }
   ]

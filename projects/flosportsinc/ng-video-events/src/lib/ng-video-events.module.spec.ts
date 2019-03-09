@@ -50,7 +50,7 @@ describe(FloVideoEventsModule.name, () => {
   it('should default to empty event bindings', async(() => {
     const sut = createSut()
     sut.hoist.detectChanges()
-    expect(TestBed.get(VIDEO_PLAYER_EVENT_BINDINGS)).toEqual({})
+    expect(TestBed.get(VIDEO_PLAYER_EVENT_BINDINGS)).toEqual([{}])
   }))
 
   it('should have default uuid gen', async(() => {

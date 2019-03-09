@@ -1,17 +1,37 @@
-import { Directive, ElementRef, Inject } from '@angular/core'
+import { Directive, ElementRef, Inject, OnInit, OnDestroy, Input, Output, EventEmitter } from '@angular/core'
 import { ListenerDictionary, FloVideoEventHandler } from './ng-video-events'
+import { Subject } from 'rxjs'
 import {
   VIDEO_PLAYER_EVENT_BINDINGS, VIDEO_PLAYER_EVENT_UUID_GENERATOR,
   VideoPlayerEventsIdGeneratorFunc, VideoPlayerEventsIdTabGeneratorFunc,
   VIDEO_PLAYER_EVENT_UUID_TAB_GENERATOR
 } from './ng-video-events.tokens'
 
-// const objPropIsFunction = (obj: any) => (b: string) => typeof obj[b] === 'function'
+const objPropIsFunction = (obj: any) => (b: string) => typeof obj[b] === 'function'
+
+interface IEventHandler {
+  readonly [key: string]: { readonly func: FloVideoEventHandler, readonly event: string }
+}
+
+const combineListenerDicitonaries =
+  (dicts: ReadonlyArray<ListenerDictionary>): IEventHandler =>
+    dicts
+      .reduce((acc, curr, idx) => {
+        return {
+          ...acc,
+          ...Object.keys(curr).reduce((a, c) => {
+            return objPropIsFunction(curr[c])
+              ? { ...a, [`${idx}_${c}`]: { event: c, func: curr[c] } }
+              : a
+          }, {} as { readonly func: FloVideoEventHandler, readonly event: string })
+        }
+      }, {})
 
 @Directive({
   selector: 'video[floVideoEvents]'
 })
-export class FloVideoEventsDirective {
+export class FloVideoEventsDirective<TMeta, TMessage> implements OnInit, OnDestroy {
+
   constructor(private elementRef: ElementRef<HTMLVideoElement>,
     @Inject(VIDEO_PLAYER_EVENT_UUID_GENERATOR) private uniqueIdGenerator: VideoPlayerEventsIdGeneratorFunc,
     @Inject(VIDEO_PLAYER_EVENT_UUID_TAB_GENERATOR) private uniqueIdTabGenerator: VideoPlayerEventsIdTabGeneratorFunc,
@@ -19,106 +39,43 @@ export class FloVideoEventsDirective {
     @Inject(VIDEO_PLAYER_EVENT_BINDINGS) private videoEventBindings: ListenerDictionary[]) {
   }
 
+  @Input() public readonly floVideoEvents?: TMeta
+  @Output() public readonly floVideoEventMessage = new EventEmitter<TMessage>()
+
   // tslint:disable-next-line: readonly-keyword
-  private handlerDictionary: { readonly [key: string]: FloVideoEventHandler } = {}
+  private handlerReferences: { [key: string]: any } = {}
+
+  private readonly onDestroy = new Subject()
+  private readonly onDestroy$ = this.onDestroy.asObservable()
+  private readonly handlers = combineListenerDicitonaries(this.videoEventBindings)
 
   public readonly videoElement = this.elementRef.nativeElement
   public readonly uniqueId = this.uniqueIdGenerator()
   public readonly windowId = this.uniqueIdTabGenerator()
 
-  // dispatchCustomEventSafely(type: string, detail?: any) {
-  //   this.maybeVideoElement().tap({
-  //     none: () => undefined,
-  //     some: el => dispatchCustomEvent(type, el, detail)
-  //   })
-  // }
+  private readonly emitMessage = (msg: TMessage) => this.floVideoEventMessage.next(msg)
 
-  // prepareAndAddListeners<T>(hlsFactoryMeta?: T) {
-  //   this.doIfMarkedVideoElementIsReady(ve => {
-  //     this.addListeners(
-  //       ve,
-  //       this.id,
-  //       this.groupId,
-  //       this.listeners,
-  //       this.listRefMap,
-  //       this.maybeHlsInstance()
-  //         .match({
-  //           none: () => this.eventMeta,
-  //           some: hlsInstance => ({ hlsInstance, ...this.eventMeta })
-  //         }),
-  //       hlsFactoryMeta
-  //     )
-  //   })
-  // }
+  ngOnInit() {
+    Object.keys(this.handlers)
+      .forEach(k => {
+        const val = this.handlers[k]
+        const listener =
+          (evt: Event) =>
+            val.func(evt, this.videoElement, this.uniqueId, this.windowId,
+              this.floVideoEvents, this.emitMessage.bind(this), this.onDestroy$)
 
-  // prepareAndRemoveListeners() {
-  //   this.doIfMarkedVideoElementIsReady(ve => {
-  //     this.unloadListeners(ve, this.listeners, this.listRefMap)
-  //   })
-  // }
+        // tslint:disable-next-line: no-object-mutation
+        this.handlerReferences[k] = listener
+        this.videoElement.addEventListener(val.event, this.handlerReferences[k], { passive: true })
+      })
+  }
 
-  // errorEmitterFn(code: number, message?: string) {
-  //   this.errorSource.next({
-  //     message,
-  //     code
-  //   })
-  // }
-
-  // addListeners(videoElement: HTMLVideoElement,
-  //   videoPlayerInstanceId: string,
-  //   videoGroupId: string,
-  //   listeners: ListenerDictionary,
-  //   listenerRefs: any,
-  //   eventMeta?: Object) {
-  //   const merged: ReadonlyArray<ListenerDictionary> = [
-  //     ...(this.videoEventBindings || []),
-  //     listeners
-  //   ]
-
-  //   merged.forEach((a: any, idx) => {
-  //     Object.keys(a)
-  //       .filter(objPropIsFunction)
-  //       .forEach(key => {
-  //         const refKey = `${key}_${idx}`
-  //         const listener: FloVideoEventHandler = (evt: Event) =>
-  //           ((ve: HTMLVideoElement,
-  //             playerId: string,
-  //             playerGroupId: string,
-  //             meta: any,
-  //             emitErrorFn) => {
-  //             a[key](
-  //               evt,
-  //               ve,
-  //               playerId,
-  //               playerGroupId,
-  //               meta,
-  //               emitErrorFn
-  //             )
-  //           })(
-  //             videoElement,
-  //             videoPlayerInstanceId,
-  //             videoGroupId,
-  //             eventMeta,
-  //           )
-  //         // tslint:disable-next-line:no-object-mutation
-  //         listenerRefs[refKey] = listener
-  //         videoElement.addEventListener(key, listener as any, { passive: true })
-  //       })
-  //   })
-  // }
-
-  // unloadListeners(videoElement: HTMLVideoElement, listeners: ListenerDictionary, listenerRefs: any) {
-  //   const merged: ReadonlyArray<ListenerDictionary> = [
-  //     ...(this.videoEventBindings || []),
-  //     listeners
-  //   ]
-  //   // TODO: this should only have 1 side-effect iterator fn
-  //   merged.forEach((a, idx) => {
-  //     Object.keys(a)
-  //       .filter(objPropIsFunction)
-  //       .forEach(key => {
-  //         videoElement.removeEventListener(key, listenerRefs[`${key}_${idx}`])
-  //       })
-  //   })
-  // }
+  ngOnDestroy() {
+    this.onDestroy.next()
+    Object.keys(this.handlers)
+      .filter(k => this.handlers[k])
+      .forEach(k => {
+        this.videoElement.removeEventListener((this.handlers[k] as any).event, this.handlerReferences[k], false)
+      })
+  }
 }
