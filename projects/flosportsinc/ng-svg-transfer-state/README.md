@@ -20,7 +20,7 @@ Inside your `AppModule` install `SvgTransferStateModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { SvgTransferStateModule } from '@flosportsinc/ng-universal-services/svg-transfer-state'
+import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 
 @NgModule({
   imports: [
@@ -39,7 +39,7 @@ Inside your `BrowserModule` (or `AppModule` if you are not using a universal ser
 
 ```js
 import { NgModule } from '@angular/core'
-import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/browser'
+import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-state/browser'
 
 @NgModule({
   imports: [
@@ -58,7 +58,7 @@ If you have a Universal app you will need to include the `SvgTransferStateServer
 
 ```js
 import { NgModule } from '@angular/core'
-import { SvgTransferStateServerModule } from '@flosportsinc/ng-universal-services/svg-transfer-state/server'
+import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-state/server'
 
 // To customize the director where your SVG assets live on the node server use .withSvgAssetRoot()
 // By default it sets the root directory to "./dist/assets/svg"
@@ -83,7 +83,7 @@ Both the server and client can cache http and file lookup requests.
 // npm install lru-cache @types/lru-cache
 
 import { ngExpressEngine } from '@nguniversal/express-engine'
-import { SVG_SERVER_CACHE } from '@flosportsinc/ng-universal-services/svg-transfer-state'
+import { SVG_SERVER_CACHE } from '@flosportsinc/ng-svg-transfer-state'
 import * as lru from 'lru-cache' // it is not required to use this specific package
 
 // it is imperative that the DI token for the cache is injected in the node server itself
