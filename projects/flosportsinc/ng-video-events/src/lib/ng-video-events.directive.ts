@@ -7,8 +7,6 @@ import {
   VIDEO_PLAYER_EVENT_UUID_TAB_GENERATOR
 } from './ng-video-events.tokens'
 
-const objPropIsFunction = (obj: any) => (b: string) => typeof obj[b] === 'function'
-
 interface IEventHandler {
   readonly [key: string]: { readonly func: FloVideoEventHandler, readonly event: string }
 }
@@ -20,7 +18,7 @@ const combineListenerDicitonaries =
         return {
           ...acc,
           ...Object.keys(curr).reduce((a, c) => {
-            return objPropIsFunction(curr[c])
+            return typeof curr[c] === 'function'
               ? { ...a, [`${idx}_${c}`]: { event: c, func: curr[c] } }
               : a
           }, {} as { readonly func: FloVideoEventHandler, readonly event: string })
