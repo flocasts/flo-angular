@@ -1,5 +1,5 @@
 import { Directive, ElementRef, Input, Renderer2, OnInit, OnDestroy, ApplicationRef } from '@angular/core'
-import { share, map, filter, tap, takeUntil, startWith, take, shareReplay, flatMap } from 'rxjs/operators'
+import { share, map, filter, tap, takeUntil, startWith, take, shareReplay, flatMap, throttleTime } from 'rxjs/operators'
 import { Subject, fromEvent, combineLatest, EMPTY, fromEventPattern } from 'rxjs'
 
 declare const google: any
@@ -7,39 +7,42 @@ declare const google: any
 // check autoplay works with audio
 // check if a muted autoplay works
 // render button to start playback
-
 @Directive({
   selector: 'video[floIma]'
 })
 export class FloImaDirective implements OnInit, OnDestroy {
-  constructor(public elementRef: ElementRef<HTMLVideoElement>, private rd: Renderer2,
-    private appRef: ApplicationRef) {
-    elementRef.nativeElement.play()
-      .catch(error => {
-        console.log('Auto-play failed')
-      }).then(() => {
-        console.log('Auto-play started')
-      })
-  }
+  constructor(public elementRef: ElementRef<HTMLVideoElement>, private rd: Renderer2, private appRef: ApplicationRef) { }
 
+  @Input() public readonly floIma?: any
+
+  private readonly originalSrc = this.elementRef.nativeElement.src
   private readonly adLibIsLoaded = () => typeof google !== 'undefined' && typeof google.ima !== 'undefined'
   private readonly videoElement = this.elementRef.nativeElement
   private readonly onInitSource = new Subject()
+  private readonly canAutoplaySource = new Subject()
   private readonly onDestroySource = new Subject()
-  private readonly onInit = this.onInitSource.pipe(share())
+  private readonly onInit = this.onInitSource.pipe(take(1), share())
   private readonly onDestroy = this.onDestroySource.pipe(share())
+  private readonly canAutoplay = this.canAutoplaySource.pipe(take(1), share())
 
   /** The <div> element reference created above the <video> element this directive is assigned to. */
-  private readonly adContainerElement = this.onInit.pipe(
+  private readonly adContainerElement = combineLatest(this.canAutoplay, this.onInit).pipe(
     filter(() => this.adLibIsLoaded()),
-    map(() => this.createAdContainerElement()),
+    map(() => {
+      console.log('CREATING AD CONTAINER')
+      return this.createAdContainerElement()
+    }),
     shareReplay(1)
   )
 
   /** Google's container element that contains the iframe and video element. */
   private readonly adDisplayContainer = this.adContainerElement.pipe(
     map(containerElement => new google.ima.AdDisplayContainer(containerElement, this.videoElement)),
-    tap(adDisplayContainer => adDisplayContainer.initialize()),
+    tap(adDisplayContainer => {
+      console.log('ASDASD')
+      this.elementRef.nativeElement.load()
+      adDisplayContainer.initialize()
+    })
   )
 
   /** Google's container element that contains the iframe and video element. */
@@ -53,7 +56,7 @@ export class FloImaDirective implements OnInit, OnDestroy {
       const adsRequest = new google.ima.AdsRequest()
       // tslint:disable-next-line:no-object-mutation
       adsRequest.adTagUrl = this.floIma
-      adsRequest.setAdWillAutoPlay(false) // TODO: determine what we can do!
+      adsRequest.setAdWillAutoPlay(true) // TODO: determine what we can do!
       adsRequest.setAdWillPlayMuted(true) // TODO: determine what we can do!
       adLoader.requestAds(adsRequest)
     }),
@@ -75,16 +78,46 @@ export class FloImaDirective implements OnInit, OnDestroy {
     return adContainerElement
   }
 
+  // replace this with autoplay directive package
+  ngAfterViewInit() {
+    if (!this.adLibIsLoaded()) return;
+    fromEvent(this.elementRef.nativeElement, 'loadstart').pipe(
+      take(1),
+      map(e => e.target as HTMLVideoElement))
+      .subscribe(ve => {
+        ve.play()
+          .catch(() => {
+            ve.muted = true
+            ve.volume = 0
+            ve.pause()
+            this.canAutoplaySource.next()
+          }).then(() => {
+            ve.pause()
+            this.canAutoplaySource.next()
+          })
+      })
+  }
+
   ngOnInit() {
+
     this.adManager.subscribe(adManager => {
       try {
-        console.log('INITTING')
-        // window.scroll(0, 1)
+        adManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, () => {
+          this.videoElement.play()
+          adManager.destroy()
+        })
+        adManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, console.log)
+        adManager.addEventListener(google.ima.AdEvent.Type.COMPLETE, () => {
+          adManager.destroy()
+          this.videoElement.src = this.originalSrc
+          this.videoElement.play()
+        })
+
         adManager.init(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
         adManager.start()
       } catch (adError) {
         console.log(adError)
-        adManager.play()
+        this.videoElement.play()
       }
     })
 
@@ -93,12 +126,13 @@ export class FloImaDirective implements OnInit, OnDestroy {
 
     const isStable = this.appRef.isStable.pipe(take(1))
     const resize = fromEvent(window, 'resize').pipe(startWith(EMPTY))
-    // const load = fromEvent(window, 'load').pipe(take(1))
 
     combineLatest(isStable, resize, this.adManager, this.adContainerElement).pipe(
-      // throttleTime(60),
+      throttleTime(30),
       takeUntil(this.onDestroy)
     ).subscribe(([_stable, _win, adManager, adContainerElement]) => {
+      console.log(this.videoElement.clientWidth) // TODO: fix for safari
+      window.scroll(0, 1)
       adContainerElement.style.width = `${this.videoElement.clientWidth}px`
       adContainerElement.style.height = `${this.videoElement.clientHeight}px`
       adManager.resize(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
@@ -109,28 +143,4 @@ export class FloImaDirective implements OnInit, OnDestroy {
     this.onDestroySource.next()
     this.onDestroySource.complete()
   }
-
-  @Input() public readonly floIma?: any
 }
-
- // this.adLoader.subscribe(adsLoader => {
-    //   adsLoader.addEventListener(
-    //     google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-    //     (a) => {
-    //       const adsManager = a.getAdsManager(this.videoElement)
-    //       console.log(adsManager)
-    //       adsManager.addEventListener(
-    //         google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED,
-    //         () => {
-    //           // this.videoElement.removeEventListener('ended', contentEndedListener)
-    //           this.videoElement.pause()
-    //         })
-    //       try {
-    //         adsManager.init(this.videoElement.clientWidth, this.videoElement.clientHeight, google.ima.ViewMode.NORMAL)
-    //         adsManager.start()
-    //       } catch (adError) {
-    //         // console.log(adError)
-    //         adsManager.play()
-    //       }
-    //     }, false)
-    // })

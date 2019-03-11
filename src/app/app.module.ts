@@ -25,39 +25,15 @@ import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
-import { FloVideoEventsModule, VIDEO_PLAYER_EVENT_BINDINGS, ListenerDictionary } from '@flosportsinc/ng-video-events'
-import { interval } from 'rxjs'
-import { takeUntil } from 'rxjs/operators'
+import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
+import { FloImaModule } from '@flosportsinc/ng-ima'
 import { ImaComponent } from './ima/ima.component'
-
-export const fact1: ListenerDictionary = {
-  pause: (a, b, c, d) => {
-    // console.log(a, b, c, d)
-  },
-  play: (a, b, c, d, e, f, onDestroy) => {
-    f(e)
-  },
-  canplay: (a, b, c, d, e, f, onDestroy) => {
-    interval(1000).pipe(takeUntil(onDestroy)).subscribe(console.log)
-  }
-}
-
-// export const fact2 = {
-//   pause: (a, b, c, d) => {
-//     console.log(a, b, c, d)
-//   },
-//   play: (a, b, c, d) => {
-//     console.log(a, b, c, d)
-//   },
-//   canplay: (a, b, c, d) => {
-//     console.log(a, b, c, d)
-//   }
-// }
 
 @NgModule({
   imports: [
     FloVideoEventsModule,
     FloVideoAutoplayModule,
+    FloImaModule,
     NodeEnvTransferModule,
     WindowModule,
     MseModule,
@@ -86,18 +62,6 @@ export const fact1: ListenerDictionary = {
     ImaComponent,
     AutoplayComponent,
     NotFoundComponent
-  ],
-  providers: [
-    {
-      provide: VIDEO_PLAYER_EVENT_BINDINGS,
-      useValue: fact1,
-      multi: true
-    },
-    // {
-    //   provide: VIDEO_PLAYER_EVENT_BINDINGS,
-    //   useValue: fact2,
-    //   multi: true
-    // }
   ]
 })
 export class AppModule {
