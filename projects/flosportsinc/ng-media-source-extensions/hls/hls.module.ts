@@ -36,7 +36,7 @@ export interface IHlsModuleConfig {
   readonly hlsConfig: Partial<Hls.Config>
 }
 
-const DEFAULT_MODULE_CONFIG: IHlsModuleConfig = {
+export const DEFAULT_MODULE_CONFIG: IHlsModuleConfig = {
   floConfig: {
     selfHeal: true
   },
@@ -61,6 +61,28 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   }
 }
 
+// tslint:disable: no-if-statement
+export const selfHealFunc = (client: Hls) => {
+  client.on(Hls.Events.ERROR, (_, data) => {
+    if (data.fatal) {
+      switch (data.type) {
+        case Hls.ErrorTypes.NETWORK_ERROR:
+          console.log('Fatal network error encountered, trying to recover')
+          client.startLoad()
+          break
+        case Hls.ErrorTypes.MEDIA_ERROR:
+          console.log('Fatal media error encountered, trying to recover')
+          client.recoverMediaError()
+          break
+        default:
+          console.log('Fatal error, hls client destroyed')
+          client.destroy()
+          break
+      }
+    }
+  })
+}
+
 // TODO: if another Media Error is raised 'quickly' after this first Media Error,
 // TODO: first call hls.swapAudioCodec(), then call hls.recoverMediaError().
 export function defaultMseClientInitFunction(config: IHlsModuleConfig): IMseInit<Hls, HlsMessage> {
@@ -69,27 +91,10 @@ export function defaultMseClientInitFunction(config: IHlsModuleConfig): IMseInit
     Object.keys(Hls.Events).forEach(k => {
       client.on(Hls.Events[k], (key: any, message) => initEvent.messageSource.next({ key, message }))
     })
-    // tslint:disable: no-if-statement
-    if (config.floConfig.selfHeal) {
-      client.on(Hls.Events.ERROR, (_, data) => {
-        if (data.fatal) {
-          switch (data.type) {
-            case Hls.ErrorTypes.NETWORK_ERROR:
-              console.log('Fatal network error encountered, trying to recover')
-              client.startLoad()
-              break
-            case Hls.ErrorTypes.MEDIA_ERROR:
-              console.log('Fatal media error encountered, trying to recover')
-              client.recoverMediaError()
-              break
-            default:
-              console.log('Fatal error, hls client destroyed')
-              client.destroy()
-              break
-          }
-        }
-      })
-    }
+
+    // setup fatal error recovery if selfHeal = true
+    config.floConfig.selfHeal && selfHealFunc(client)
+
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
     return client

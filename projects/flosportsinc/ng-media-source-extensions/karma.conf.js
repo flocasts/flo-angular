@@ -4,6 +4,6 @@ module.exports = config('../coverage')([
 ])({
   statements: 80,
   lines: 80,
-  branches: 100,
+  branches: 80,
   functions: 80
 })
