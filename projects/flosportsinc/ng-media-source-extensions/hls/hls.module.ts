@@ -181,23 +181,21 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 })
 export class HlsModule {
   static config(config: Partial<IHlsModuleConfig> = DEFAULT_MODULE_CONFIG): ModuleWithProviders {
-    const _config: IHlsModuleConfig = {
-      floConfig: {
-        ...DEFAULT_MODULE_CONFIG.floConfig,
-        ...config.floConfig
-      },
-      hlsConfig: {
-        ...DEFAULT_MODULE_CONFIG.hlsConfig,
-        ...config.hlsConfig
-      }
-    }
-
     return {
       ngModule: HlsModule,
       providers: [
         {
           provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-          useValue: _config
+          useValue: {
+            floConfig: {
+              ...DEFAULT_MODULE_CONFIG.floConfig,
+              ...config.floConfig
+            },
+            hlsConfig: {
+              ...DEFAULT_MODULE_CONFIG.hlsConfig,
+              ...config.hlsConfig
+            }
+          }
         }
       ]
     }
