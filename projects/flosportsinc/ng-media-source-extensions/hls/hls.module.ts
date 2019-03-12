@@ -16,14 +16,31 @@ import {
   IVideoElementSupportsTargetMseCheckContext
 } from './mse.tokens'
 import { MseModule } from './mse.module'
-import { NgModule } from '@angular/core'
+import { NgModule, ModuleWithProviders } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
+export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'flo.mse.lib.hls.init.config'
 
 export interface HlsMessage {
   readonly key: keyof typeof Hls.Events
   readonly message: any
+}
+
+export interface IFloHlsModuleConfig {
+  readonly selfHeal: boolean
+}
+
+export interface IHlsModuleConfig {
+  readonly floConfig: Partial<IFloHlsModuleConfig>
+  readonly hlsConfig: Partial<Hls.Config>
+}
+
+const DEFAULT_MODULE_CONFIG: IHlsModuleConfig = {
+  floConfig: {
+    selfHeal: true
+  },
+  hlsConfig: {}
 }
 
 export function defaultIsSupportedFactory() {
@@ -44,14 +61,37 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   }
 }
 
-export function defaultMseClientInitFunction(): IMseInit<Hls, HlsMessage> {
+// TODO: if another Media Error is raised 'quickly' after this first Media Error,
+// TODO: first call hls.swapAudioCodec(), then call hls.recoverMediaError().
+export function defaultMseClientInitFunction(config: IHlsModuleConfig): IMseInit<Hls, HlsMessage> {
   const func: IMseInitFunc<Hls, HlsMessage> = initEvent => {
-    const client = new Hls()
+    const client = new Hls(config.hlsConfig)
+    Object.keys(Hls.Events).forEach(k => {
+      client.on(Hls.Events[k], (key: any, message) => initEvent.messageSource.next({ key, message }))
+    })
+    // tslint:disable: no-if-statement
+    if (config.floConfig.selfHeal) {
+      client.on(Hls.Events.ERROR, (_, data) => {
+        if (data.fatal) {
+          switch (data.type) {
+            case Hls.ErrorTypes.NETWORK_ERROR:
+              console.log('Fatal network error encountered, trying to recover')
+              client.startLoad()
+              break
+            case Hls.ErrorTypes.MEDIA_ERROR:
+              console.log('Fatal media error encountered, trying to recover')
+              client.recoverMediaError()
+              break
+            default:
+              console.log('Fatal error, hls client destroyed')
+              client.destroy()
+              break
+          }
+        }
+      })
+    }
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
-    Object.keys(Hls.Events).forEach(key => {
-      client.on(Hls.Events[key], (eventKey: any, b) => initEvent.messageSource.next({ key: eventKey, message: b }))
-    })
     return client
   }
   return {
@@ -98,6 +138,10 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
   exports: [MseModule],
   providers: [
     {
+      provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
+      useValue: DEFAULT_MODULE_CONFIG
+    },
+    {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
       useFactory: defaultHlsSupportedNativelyFunction,
       multi: true
@@ -110,6 +154,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction,
+      deps: [MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG],
       multi: true
     },
     {
@@ -129,4 +174,27 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     }
   ]
 })
-export class HlsModule { }
+export class HlsModule {
+  static config(config: Partial<IHlsModuleConfig> = DEFAULT_MODULE_CONFIG): ModuleWithProviders {
+    const _config: IHlsModuleConfig = {
+      floConfig: {
+        ...DEFAULT_MODULE_CONFIG.floConfig,
+        ...config.floConfig
+      },
+      hlsConfig: {
+        ...DEFAULT_MODULE_CONFIG.hlsConfig,
+        ...config.hlsConfig
+      }
+    }
+
+    return {
+      ngModule: HlsModule,
+      providers: [
+        {
+          provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
+          useValue: _config
+        }
+      ]
+    }
+  }
+}
