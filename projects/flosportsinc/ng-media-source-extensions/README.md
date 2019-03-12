@@ -53,7 +53,13 @@ import { HlsModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
 @NgModule({
   imports: [
     MseModule,
-    HlsModule
+    HlsModule, // without config overrides
+    HLsModule.config({
+      floConfig: {
+        selfHeal: true // attempts to fix errors automatically
+      },
+      hlsConfig: {} // See: https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning
+    })
   ]
 })
 export class AppModule { } // If you are using Angular Universal, this MUST be in your AppBrowserModule
