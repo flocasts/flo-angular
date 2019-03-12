@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core'
 import { FormGroup, FormControl } from '@angular/forms'
 import { startWith } from 'rxjs/operators'
 
-const DEFAULT_SRC = 'https://www.streambox.fr/playlists/x36xhzz/x36xhzz.m3u8'
+const DEFAULT_SRC = 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8'
 
 @Component({
   selector: 'app-hls-demo',
