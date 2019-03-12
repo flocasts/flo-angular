@@ -15,7 +15,11 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
     CookieBrowserModule,
     AppModule,
     DashModule,
-    HlsModule,
+    HlsModule.config({
+      hlsConfig: {
+        liveSyncDurationCount: 6
+      }
+    }),
     NodeEnvTransferBrowserModule.config({
       mergeWithServer: {
         test: 'ok'
