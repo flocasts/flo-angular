@@ -1,14 +1,14 @@
 <h2>Video Autoplay</h2>
 
 <h3>Single Video</h3>
-<video floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
+<video floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls type="video/mp4"></video>
 
 <h3>Single Video with clickable element reference</h3>
 <div>
   <button #unmuteRef1>Click to <strong>unmute</strong></button>
   <button #playRef1>Click to <strong>Play</strong></button>
   <div></div>
-  <video playsinline controls width="600" 
+  <video playsinline controls width="600" type="video/mp4"
     floVideoAutoplay
     [floVideoAutoplayClickUnmuteRef]="unmuteRef1"
     [floVideoAutoplayClickPlayRef]="playRef1"
@@ -18,14 +18,15 @@
 
 <h3>Multiple Video</h3>
 <div floVideoAutoplay>
-  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
-  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" type="video/mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" type="video/mp4" width="300" playsinline controls></video>
 </div> 
 
 <h3>Multiple Video with clickable element reference</h3>
-<div floVideoAutoplay [floVideoAutoplayClickUnmuteRef]="unmute2">
-  <button #unmute2>Click to unmute</button>
+<div floVideoAutoplay [floVideoAutoplayClickUnmuteRef]="unmuteRef2">
+  <button #unmuteRef2>Click to <strong>unmute</strong></button>
+  <button #playRef2>Click to <strong>Play</strong></button>
   <div></div>
-  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
-  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" type="video/mp4" width="300" playsinline controls></video>
+  <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" type="video/mp4" width="300" playsinline controls></video>
 </div> 
