@@ -5,9 +5,15 @@
 
 <h3>Single Video with clickable element reference</h3>
 <div>
-  <button #unmute1>Click to unmute</button>
+  <button #unmuteRef1>Click to <strong>unmute</strong></button>
+  <button #playRef1>Click to <strong>Play</strong></button>
   <div></div>
-  <video [floVideoAutoplay]="unmute1" src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600" playsinline controls></video>
+  <video playsinline controls width="600" 
+    floVideoAutoplay
+    [floVideoAutoplayClickUnmuteRef]="unmuteRef1"
+    [floVideoAutoplayClickPlayRef]="playRef1"
+    src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">
+  </video>
 </div> 
 
 <h3>Multiple Video</h3>
@@ -17,7 +23,7 @@
 </div> 
 
 <h3>Multiple Video with clickable element reference</h3>
-<div [floVideoAutoplay]="unmute2">
+<div floVideoAutoplay [floVideoAutoplayClickUnmuteRef]="unmute2">
   <button #unmute2>Click to unmute</button>
   <div></div>
   <video #floVideoAutoplay src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="300" playsinline controls></video>
