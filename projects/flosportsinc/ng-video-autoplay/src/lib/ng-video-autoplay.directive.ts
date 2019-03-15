@@ -70,9 +70,10 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
       tryPlayVideoAsIs,
       tryPlayVideoMuted,
       take(1)
-    ).subscribe(res => {
-      // could not autoplay, must click to play
+    ).subscribe(res => { // could not autoplay, must click to play
       res.videoElement.preload = 'none'
+      res.videoElement.muted = false
+      res.videoElement.volume = 1
       this.maybePlayActionRef().tapSome(this.showRef)
     })
 
@@ -108,11 +109,12 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
         })
     })
 
-    this.maybePlayActionRef().tapSome(ref => {
-      this.hideRef(ref)
+    this.maybePlayActionRef().tapSome(actionRef => {
+      this.hideRef(actionRef)
 
-      fromEvent(ref, 'click').toPromise().then(() => {
-        this.hideRef(ref)
+      fromEvent(actionRef, 'click').toPromise().then(() => {
+        this.hideRef(actionRef)
+        this.maybeVideoElement().tapSome(v => v.play())
       })
     })
   }
