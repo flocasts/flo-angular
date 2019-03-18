@@ -3,7 +3,9 @@
   "version": "0.0.0-development",
   "private": false,
   "author": "Patrick Michalina <patrickmichalina@mac.com>",
-  "contributors": [],
+  "contributors": [
+    "Mattthew Elliott <matthew.elliott@flosports.tv>"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/flocasts/flo-angular"

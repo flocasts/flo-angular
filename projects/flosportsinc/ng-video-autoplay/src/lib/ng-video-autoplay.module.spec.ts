@@ -7,15 +7,21 @@ import { FloVideoAutoplayDirective } from './ng-video-autoplay.directive'
 @Component({
   selector: 'flo-test-component',
   template: `<button #unmute>click to unmute</button>
-  <video [floVideoAutoplay]="unmute" src="http://techslides.com/demos/sample-videos/small.mp4"></video>`
+  <button #play>click to play</button>
+  <video floVideoAutoplay
+    [floVideoAutoplayClickUnmuteRef]="unmute"
+    [floVideoAutoplayClickPlayRef]="play"
+    src="http://techslides.com/demos/sample-videos/small.mp4">
+  </video>`
 })
 export class FloVideoAutoplayTestComponent { }
 
 @Component({
   selector: 'flo-mutli-test-component',
   template: `
-  <div [floVideoAutoplay]="unmute">
+  <div floVideoAutoplay [floVideoAutoplayClickUnmuteRef]="unmute" [floVideoAutoplayClickPlayRef]="play">
     <button #unmute>click to unmute</button>
+    <button #play>click to play</button>
     <video #floVideoAutoplay src="http://techslides.com/demos/sample-videos/small.mp4"></video>
     <video #floVideoAutoplay src="http://techslides.com/demos/sample-videos/small.mp4"></video>
   </div>
