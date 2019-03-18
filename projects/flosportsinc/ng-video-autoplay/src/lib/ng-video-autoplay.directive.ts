@@ -35,23 +35,22 @@ const tryPlayVideoMuted =
   selector: '[floVideoAutoplay]'
 })
 export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
-  @Input() public readonly floVideoAutoplay?: HTMLElement
+  @Input() public readonly floVideoAutoplay = true
+  @Input() public readonly floVideoAutoplayClickUnmuteRef?: HTMLElement
+  @Input() public readonly floVideoAutoplayClickPlayRef?: HTMLElement
   @Input() public readonly floVideoAutoplayIndex = 0
 
   @ContentChildren('floVideoAutoplay', { descendants: true }) public readonly videos: QueryList<ElementRef<HTMLVideoElement>>
 
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
+  private readonly canExecute = () => this.floVideoAutoplay === true || this.floVideoAutoplay === ''
   private readonly maybeVideoElement = () => maybe(this.elmRef.nativeElement).filter(e => e.nodeName === 'VIDEO')
-  private readonly maybeActionRef = () => maybe(this.floVideoAutoplay).filter(a => a as any !== '')
+  private readonly maybeUnmuteActionRef = () => maybe(this.floVideoAutoplayClickUnmuteRef).filter(a => a as any !== '')
+  private readonly maybePlayActionRef = () => maybe(this.floVideoAutoplayClickPlayRef).filter(a => a as any !== '')
 
-  private readonly hideRef = (ref: HTMLElement) => {
-    this.rd.setStyle(ref, 'display', 'none')
-  }
-
-  private readonly showRef = (ref: HTMLElement) => {
-    this.rd.setStyle(ref, 'display', 'block')
-  }
+  private readonly hideRef = (ref: HTMLElement) => this.rd.setStyle(ref, 'display', 'none')
+  private readonly showRef = (ref: HTMLElement) => this.rd.setStyle(ref, 'display', 'block')
 
   private readonly volumeChange = (videoElement: HTMLVideoElement) =>
     fromEvent(videoElement, 'volumechange', { passive: true }).pipe(
@@ -65,36 +64,54 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
       map(evt => evt.target as HTMLVideoElement),
       tryPlayVideoAsIs,
       tryPlayVideoMuted,
-      takeUntil(this.onDestroy)
-    ).subscribe()
+      take(1)
+    ).subscribe(res => { // could not autoplay, must click to play
+      res.videoElement.preload = 'none'
+      res.videoElement.muted = false
+      res.videoElement.volume = 1
+      this.maybePlayActionRef().tapSome(this.showRef)
+    })
 
   constructor(private elmRef: ElementRef<HTMLVideoElement>, private rd: Renderer2) { }
 
-  private readonly runSequence = (actionRef: HTMLElement) => (runOnce: boolean) => (videoElement: HTMLVideoElement) => {
+  private readonly runUnmuteSequence = (actionRef: HTMLElement) => (runOnce: boolean) => (videoElement: HTMLVideoElement) => {
     videoElement.setAttribute('autoplay', 'true')
     fromEvent(actionRef, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
       videoElement.muted = false
       videoElement.volume = 1
     })
 
-    this.volumeChange(videoElement).pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.hideRef(actionRef))
+    this.volumeChange(videoElement).pipe(filter(v => !v.muted || v.volume > 0), takeUntil(this.onDestroy))
+      .subscribe(() => this.hideRef(actionRef))
     const showRef = this.volumeChange(videoElement).pipe(filter(v => v.muted || v.volume <= 0));
     (runOnce ? showRef.pipe(take(1)) : showRef).subscribe(() => this.showRef(actionRef))
   }
 
   ngAfterContentInit() {
+    // tslint:disable-next-line: no-if-statement
+    if (!this.canExecute()) { return }
+
     this.maybeVideoElement().tapSome(this.initOnVideo)
     this.videos.map(a => a.nativeElement).forEach(this.initOnVideo)
 
-    this.maybeActionRef().tapSome(ref => {
+    this.maybeUnmuteActionRef().tapSome(ref => {
       this.hideRef(ref)
 
       either(this.maybeVideoElement().valueOrUndefined(),
         maybe(this.videos.toArray()[this.floVideoAutoplayIndex]).map(a => a.nativeElement).valueOrUndefined())
         .tap({
-          left: this.runSequence(ref)(false),
-          right: this.runSequence(ref)(true)
+          left: this.runUnmuteSequence(ref)(false),
+          right: this.runUnmuteSequence(ref)(true)
         })
+    })
+
+    this.maybePlayActionRef().tapSome(actionRef => {
+      this.hideRef(actionRef)
+
+      fromEvent(actionRef, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
+        this.hideRef(actionRef)
+        this.maybeVideoElement().tapSome(v => v.play())
+      })
     })
   }
 

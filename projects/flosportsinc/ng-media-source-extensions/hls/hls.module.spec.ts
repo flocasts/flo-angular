@@ -1,6 +1,9 @@
 import {
   HlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
-  defaultMseClientSrcChangeFunction
+  defaultMseClientSrcChangeFunction,
+  selfHealFunc,
+  MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
+  DEFAULT_MODULE_CONFIG
 } from './hls.module'
 import { TestBed, async } from '@angular/core/testing'
 import * as Hls from 'hls.js'
@@ -10,7 +13,7 @@ import {
 } from './mse.tokens'
 import { MseDirective } from './mse.directive'
 import { Component, Input, NgModule } from '@angular/core'
-import { take } from 'rxjs/operators'
+import { take, filter } from 'rxjs/operators'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { By } from '@angular/platform-browser'
 import { TEST_SOURCES } from '../core/mse.directive.spec'
@@ -122,11 +125,13 @@ describe(HlsModule.name, () => {
   describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
     it('should reset HLS client with new source', () => {
       const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<Hls> = { clientRef:  {
-        loadSource: () => {},
-        detachMedia: () => {},
-        attachMedia: () => {}
-       } as any, src: '/new-url', videoElement }
+      const event: IMseSrcChangeOptions<Hls> = {
+        clientRef: {
+          loadSource: () => { },
+          detachMedia: () => { },
+          attachMedia: () => { }
+        } as any, src: '/new-url', videoElement
+      }
       const spy1 = spyOn(event.clientRef, 'detachMedia')
       const spy2 = spyOn(event.clientRef, 'loadSource')
       const spy3 = spyOn(event.clientRef, 'attachMedia')
@@ -142,5 +147,26 @@ describe(HlsModule.name, () => {
     afterEach(() => TestBed.resetTestingModule())
     it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission',
       shouldUnsubscribeFromInternalNgAfterViewInit)
+  })
+
+  describe('when using module config', () => {
+    it('should handle empty config object', done => {
+      TestBed.configureTestingModule({ imports: [HlsModule.config()], declarations: [HlsTestComponent] })
+
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
+      expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
+      done()
+    })
+
+    it('should handle config object', done => {
+      TestBed.configureTestingModule({
+        imports: [HlsModule.config({})],
+        declarations: [HlsTestComponent]
+      })
+
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
+      expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
+      done()
+    })
   })
 })

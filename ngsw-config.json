@@ -30,15 +30,6 @@
       "cacheConfig": {
         "strategy": "performance"
       }
-    },
-    {
-      "name": "rendered",
-      "urls": [
-        "/"
-      ],
-      "cacheConfig": {
-        "strategy": "freshness"
-      }
     }
   ]
 }
