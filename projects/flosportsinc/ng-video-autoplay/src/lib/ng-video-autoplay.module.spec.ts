@@ -6,15 +6,24 @@ import { FloVideoAutoplayDirective } from './ng-video-autoplay.directive'
 
 @Component({
   selector: 'flo-test-component',
-  template: `<button #unmute>click to unmute</button>
-  <button #play>click to play</button>
+  template: `<button #unmuteBtnRef>click to unmute</button>
+  <button #playBtnRef>click to play</button>
   <video floVideoAutoplay
-    [floVideoAutoplayClickUnmuteRef]="unmute"
-    [floVideoAutoplayClickPlayRef]="play"
+    [floVideoAutoplayClickUnmuteRef]="unmuteBtnRef"
+    [floVideoAutoplayClickPlayRef]="playBtnRef"
     src="http://techslides.com/demos/sample-videos/small.mp4">
   </video>`
 })
 export class FloVideoAutoplayTestComponent { }
+
+@Component({
+  selector: 'flo-test-component',
+  template: `<button #unmute>click to unmute</button>
+  <button #play>click to play</button>
+  <video [floVideoAutoplay]="false" src="http://techslides.com/demos/sample-videos/small.mp4">
+  </video>`
+})
+export class FloVideoAutoplayTestDisabledComponent { }
 
 @Component({
   selector: 'flo-mutli-test-component',
@@ -33,11 +42,11 @@ export class FloVideoAutoplayMultiTestComponent { }
 @NgModule({
   imports: [FloVideoAutoplayModule],
   exports: [FloVideoAutoplayModule],
-  declarations: [FloVideoAutoplayTestComponent, FloVideoAutoplayMultiTestComponent]
+  declarations: [FloVideoAutoplayTestComponent, FloVideoAutoplayMultiTestComponent, FloVideoAutoplayTestDisabledComponent]
 })
 export class FloVideoAutoplayTestModule { }
 
-export const createSut = (comp = FloVideoAutoplayTestComponent) => {
+export const createSut = (comp: any = FloVideoAutoplayTestComponent) => {
   const hoist = TestBed.createComponent(comp)
   hoist.autoDetectChanges()
   const directive = hoist.debugElement.query(By.directive(FloVideoAutoplayDirective))

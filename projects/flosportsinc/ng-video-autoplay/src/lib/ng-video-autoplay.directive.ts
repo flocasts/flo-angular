@@ -49,13 +49,8 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
   private readonly maybeUnmuteActionRef = () => maybe(this.floVideoAutoplayClickUnmuteRef).filter(a => a as any !== '')
   private readonly maybePlayActionRef = () => maybe(this.floVideoAutoplayClickPlayRef).filter(a => a as any !== '')
 
-  private readonly hideRef = (ref: HTMLElement) => {
-    this.rd.setStyle(ref, 'display', 'none')
-  }
-
-  private readonly showRef = (ref: HTMLElement) => {
-    this.rd.setStyle(ref, 'display', 'block')
-  }
+  private readonly hideRef = (ref: HTMLElement) => this.rd.setStyle(ref, 'display', 'none')
+  private readonly showRef = (ref: HTMLElement) => this.rd.setStyle(ref, 'display', 'block')
 
   private readonly volumeChange = (videoElement: HTMLVideoElement) =>
     fromEvent(videoElement, 'volumechange', { passive: true }).pipe(
@@ -86,7 +81,8 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
       videoElement.volume = 1
     })
 
-    this.volumeChange(videoElement).pipe(filter(v => !v.muted || v.volume > 0)).subscribe(() => this.hideRef(actionRef))
+    this.volumeChange(videoElement).pipe(filter(v => !v.muted || v.volume > 0), takeUntil(this.onDestroy))
+      .subscribe(() => this.hideRef(actionRef))
     const showRef = this.volumeChange(videoElement).pipe(filter(v => v.muted || v.volume <= 0));
     (runOnce ? showRef.pipe(take(1)) : showRef).subscribe(() => this.showRef(actionRef))
   }
@@ -112,7 +108,7 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
     this.maybePlayActionRef().tapSome(actionRef => {
       this.hideRef(actionRef)
 
-      fromEvent(actionRef, 'click').toPromise().then(() => {
+      fromEvent(actionRef, 'click').pipe(takeUntil(this.onDestroy)).subscribe(() => {
         this.hideRef(actionRef)
         this.maybeVideoElement().tapSome(v => v.play())
       })
