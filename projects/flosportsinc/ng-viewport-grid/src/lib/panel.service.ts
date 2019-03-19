@@ -12,6 +12,8 @@ export interface IFloViewportManagerService<T> {
   readonly swap: () => void
 }
 
+// const fill = <T>() => Array.from(Array(fill).keys()).map(_ => maybe<T>())
+
 @Injectable()
 export class FloViewportManagerService<T> implements IFloViewportManagerService<T> {
   private readonly items = new BehaviorSubject<ReadonlyArray<IMaybe<T>>>([])
@@ -20,7 +22,15 @@ export class FloViewportManagerService<T> implements IFloViewportManagerService<
 
   readonly items$ = this.items.asObservable()
   readonly viewItems$ = this.viewItems.asObservable()
-  readonly showCount = (num: number) => this.viewItems.next(this.getItems().slice(0, num))
+  readonly showCount = (num: number) => {
+    // if num is above current list size, fill in with empties
+    const items = this.getItems()
+    const currentCount = items.length
+    const numToFill = num > currentCount ? num - currentCount : 0
+    this.items.next([...this.getItems(), ...Array.from(Array(numToFill).keys()).map(_ => maybe<T>())])
+
+    // this.viewItems.next(this.getItems().slice(0, num))
+  }
   readonly add = (item?: T) => this.items.next([...this.getItems(), maybe(item)])
 
   readonly set = (item?: T, index?: number) => {

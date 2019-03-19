@@ -33,15 +33,23 @@ describe(FloViewportManagerService.name, () => {
     sut.viewItems$.subscribe(res => expect(res.length).toEqual(0))
   })
 
-  it('should show count', () => {
-    const sut = setupSample()
+  describe('should show panel count', () => {
+    it('when...', () => {
+      const sut = setupSample()
 
-    sut.showCount(1)
-    sut.items$.subscribe(res => expect(res.length).toEqual(3))
-    sut.viewItems$.subscribe(res => expect(res.length).toEqual(1))
+      sut.showCount(1)
+      sut.items$.subscribe(res => expect(res.length).toEqual(3))
+      sut.viewItems$.subscribe(res => expect(res.length).toEqual(1))
+    })
+
+    it('when...', () => {
+      const sut = setupSample()
+
+      sut.showCount(4)
+      sut.items$.subscribe(res => expect(res.length).toEqual(3))
+      sut.viewItems$.subscribe(res => expect(res.length).toEqual(4))
+    })
   })
-
-
 
   it('should set with index', () => {
     const sut = setupSample()
