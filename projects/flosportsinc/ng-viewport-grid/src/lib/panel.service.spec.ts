@@ -6,6 +6,13 @@ interface TestType {
 }
 
 const getSut = () => TestBed.get(FloViewportManagerService) as FloViewportManagerService<TestType>
+const setupSample = () => {
+  const sut = getSut()
+  sut.add({ name: 'John' })
+  sut.add({ name: 'Adam' })
+  sut.set({ name: 'Brody' })
+  return sut
+}
 
 describe(FloViewportManagerService.name, () => {
   beforeEach(() => {
@@ -27,63 +34,153 @@ describe(FloViewportManagerService.name, () => {
   })
 
   it('should show count', () => {
-    const sut = getSut()
-    sut.add({ name: 'John' })
-    sut.add({ name: 'Adam' })
+    const sut = setupSample()
 
     sut.showCount(1)
-    sut.items$.subscribe(res => expect(res.length).toEqual(2))
+    sut.items$.subscribe(res => expect(res.length).toEqual(3))
     sut.viewItems$.subscribe(res => expect(res.length).toEqual(1))
   })
 
-  it('should add defined', () => {
-    const sut = getSut()
-    sut.add({ name: 'John' })
 
-    sut.items$.subscribe(res => {
-      expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
-    })
-  })
-
-  it('should add undefined', () => {
-    const sut = getSut()
-    sut.add()
-
-    sut.items$.subscribe(res => {
-      expect(res[0].valueOrUndefined()).toEqual(undefined)
-    })
-  })
 
   it('should set with index', () => {
-    const sut = getSut()
-
-    sut.add({ name: 'John' })
-    sut.add({ name: 'Adam' })
-    sut.set({ name: 'Brody' }, 0)
-
-    sut.items$.subscribe(res => {
-      expect(res.length).toEqual(2)
-      expect(res[0].valueOrUndefined()).toEqual({ name: 'Brody' })
-      expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
-    })
-  })
-
-  it('should set without index', () => {
-    const sut = getSut()
-
-    sut.add({ name: 'John' })
-    sut.add({ name: 'Adam' })
-    sut.set({ name: 'Brody' })
+    const sut = setupSample()
+    sut.set({ name: 'Devon' }, 0)
 
     sut.items$.subscribe(res => {
       expect(res.length).toEqual(3)
-      expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+      expect(res[0].valueOrUndefined()).toEqual({ name: 'Devon' })
       expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
       expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
     })
   })
 
-  it('should swap', () => {
+  // it('should set without index', () => {
+  //   const sut = getSut()
+
+  //   sut.set({ name: 'Rainbow' })
+
+  //   sut.items$.subscribe(res => {
+  //     expect(res.length).toEqual(3)
+  //     expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+  //     expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+  //     expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+  //   })
+  // })
+
+  describe('should add', () => {
+    it('a defined value', () => {
+      const sut = setupSample()
+
+      sut.items$.subscribe(res => {
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+      })
+    })
+
+    it('an undefined value', () => {
+      const sut = getSut()
+      sut.add()
+
+      sut.items$.subscribe(res => {
+        expect(res[0].valueOrUndefined()).toEqual(undefined)
+      })
+    })
+  })
+
+  describe('should remove values by index', () => {
+    it('when index is a negative number (-1)', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex(-10)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+        expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+        expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+      })
+    })
+
+    it('when index is 0', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex(0)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual(undefined)
+        expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+        expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+      })
+    })
+
+    it('when index is nominal', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex(1)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+        expect(res[1].valueOrUndefined()).toEqual(undefined)
+        expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+      })
+    })
+
+    it('when index is terminal length', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex(2)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+        expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+        expect(res[2].valueOrUndefined()).toEqual(undefined)
+      })
+    })
+
+    it('when index is out of bounds', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex(3)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+        expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+        expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+      })
+    })
+
+    it('when index is NaN', () => {
+      const sut = setupSample()
+
+      sut.removeValueByIndex('dfasdfasdf' as any)
+
+      sut.items$.subscribe(res => {
+        expect(res.length).toEqual(3)
+        expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+        expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+        expect(res[2].valueOrUndefined()).toEqual({ name: 'Brody' })
+      })
+    })
+  })
+
+  it('should remove values by predicate', () => {
+    const sut = setupSample()
+
+    sut.removeValueByPredicate(a => a && a.name === 'Brody' || false)
+
+    sut.items$.subscribe(res => {
+      expect(res.length).toEqual(3)
+      expect(res[0].valueOrUndefined()).toEqual({ name: 'John' })
+      expect(res[1].valueOrUndefined()).toEqual({ name: 'Adam' })
+      expect(res[2].valueOrUndefined()).toEqual(undefined)
+    })
+  })
+
+  it('should swap panels', () => {
     expect(() => getSut().swap()).toThrow()
   })
 })
