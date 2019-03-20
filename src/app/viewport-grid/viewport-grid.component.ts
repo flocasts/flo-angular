@@ -2,9 +2,10 @@ import {
   Component, ChangeDetectionStrategy, ViewChild
 } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
-import { distinctUntilChanged, map, startWith } from 'rxjs/operators'
+import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
-import { ViewportGridComponent } from '@flosportsinc/ng-viewport-grid'
+import { ViewportGridComponent, FloViewportManagerService } from '@flosportsinc/ng-viewport-grid'
+import { Subject, combineLatest } from 'rxjs';
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
@@ -30,7 +31,39 @@ const mapFromForm = (input: ICompConfigForm) => {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FramerComponent {
-  @ViewChild(ViewportGridComponent) readonly grid?: ViewportGridComponent
+  private readonly items = new Subject<ReadonlyArray<any>>()
+  private readonly selectedIndex = new Subject<number>()
+
+  readonly viewItems$ = this.vms.viewItems$.pipe(map(a => {
+    return a.map(i => {
+      return {
+        hasSomethingToSee: i.map(() => true).valueOr(false),
+        item: i.valueOrUndefined()
+      }
+    })
+  }))
+
+  readonly items$ = this.items.pipe(startWith([
+    DEFAULT_VIDEO_SOURCE_URL,
+    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4'
+  ]))
+
+  readonly items2$ = combineLatest(this.selectedIndex, this.items$).pipe(
+    map(a => {
+      return {
+        index: a[0],
+        items: a[1]
+      }
+    }),
+    tap(console.log)
+  )
+
+  constructor(public vms: FloViewportManagerService) {
+    vms.setVisible(4)
+    vms.set('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 0)
+  }
+
+  @ViewChild(ViewportGridComponent) readonly grid: ViewportGridComponent
 
   readonly formGroup = new FormGroup({
     maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required]),
@@ -44,5 +77,17 @@ export class FramerComponent {
     map<ICompConfigForm, any>(mapFromForm)
   )
 
-  readonly trackByVideoId = (_: number, item: any) => item.id
+  readonly trackByFn = (idx: number) => idx
+
+  ngAfterViewInit() {
+    // this.grid.itemSelected$.subscribe(console.log)
+  }
+
+  setItem(item: any, index: number) {
+    this.vms.set(item, index)
+  }
+
+  itemSelected(evt: any) {
+    this.selectedIndex.next(evt.selectedIndex)
+  }
 }

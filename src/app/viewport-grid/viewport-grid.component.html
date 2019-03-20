@@ -28,11 +28,18 @@
   </div>
 </form>
 <br>
+<ul *ngIf="items2$ | async as listWrapper">
+  <li *ngFor="let item of listWrapper.items" (click)="setItem(item, listWrapper.index)">{{ item }}</li>
+</ul>
 <ng-container *ngIf="view_ | async as view">
   <button #unmute>Click to unmute</button>
-  <flo-viewport-grid [maxHeight]="view.maxHeight" startingSelectedIndex="1" [floVideoAutoplay]="unmute" floVideoAutoplayIndex="1">
-    <flo-viewport-grid-box *ngFor="let vid of view.videos; trackBy: trackByVideoId">
-      <video floViewportGridBoxItem [floVideoEvents]="{ meta: 1}" playsinline controls #floVideoAutoplay [src]="vid.src"></video>
+  <flo-viewport-grid #grid [maxHeight]="view.maxHeight" startingSelectedIndex="0"  
+    (itemSelected$)="itemSelected($event)">
+    <flo-viewport-grid-box *ngFor="let panelItem of viewItems$ | async; trackBy: trackByFn">
+      <ng-container [ngSwitch]="panelItem.hasSomethingToSee">
+        <video *ngSwitchCase="true" floViewportGridBoxItem [floVideoEvents]="{ meta: 1 }" playsinline controls floVideoAutoplay [src]="panelItem.item"></video>
+        <p style="color: white;" *ngSwitchCase="false">ADD SOURCE</p>
+      </ng-container>
     </flo-viewport-grid-box>
   </flo-viewport-grid>
 </ng-container>

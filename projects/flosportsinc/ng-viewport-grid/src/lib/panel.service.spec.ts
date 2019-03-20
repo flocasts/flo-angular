@@ -27,29 +27,28 @@ describe(FloViewportManagerService.name, () => {
     expect(getSut()).toBeDefined()
   })
 
-  it('should start with empty subjects', () => {
+  it('should start with empty subject', () => {
     const sut = getSut()
     sut.items$.subscribe(res => expect(res.length).toEqual(0))
-    sut.viewItems$.subscribe(res => expect(res.length).toEqual(0))
   })
 
-  describe('should show panel count', () => {
-    it('when...', () => {
-      const sut = setupSample()
+  // describe('should show panel count', () => {
+  //   it('when...', () => {
+  //     const sut = setupSample()
 
-      sut.showCount(1)
-      sut.items$.subscribe(res => expect(res.length).toEqual(3))
-      sut.viewItems$.subscribe(res => expect(res.length).toEqual(1))
-    })
+  //     sut.setVisible(1)
+  //     sut.items$.subscribe(res => expect(res.length).toEqual(3))
+  //     sut.viewItems$.subscribe(res => expect(res.length).toEqual(1))
+  //   })
 
-    it('when...', () => {
-      const sut = setupSample()
+  //   it('when...', () => {
+  //     const sut = setupSample()
 
-      sut.showCount(4)
-      sut.items$.subscribe(res => expect(res.length).toEqual(3))
-      sut.viewItems$.subscribe(res => expect(res.length).toEqual(4))
-    })
-  })
+  //     sut.setVisible(4)
+  //     sut.items$.subscribe(res => expect(res.length).toEqual(3))
+  //     sut.viewItems$.subscribe(res => expect(res.length).toEqual(4))
+  //   })
+  // })
 
   it('should set with index', () => {
     const sut = setupSample()

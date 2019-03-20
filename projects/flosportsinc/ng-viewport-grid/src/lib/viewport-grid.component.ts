@@ -268,7 +268,6 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
       })
   }
 
-
   ngAfterContentInit() {
     this._maybeCombinedView()
       .tapSome(obj => {
