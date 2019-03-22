@@ -88,7 +88,7 @@ describe(HlsModule.name, () => {
 
     // it('when both are supported, default to MSE library over native', () => {
     //   const videElement = window.document.createElement('video')
-    //   spyOn(videElement, 'canPlayType').and.returnValue(true)
+    //   spyOn(videElement, 'canPlayType').and.returnValue('probably')
     //   spyOn(Hls, 'isSupported').and.callFake(() => true)
     //   const result = defaultHlsSupportedNativelyFunction().func(videElement)
     //   expect(result).toEqual(false)
@@ -96,7 +96,7 @@ describe(HlsModule.name, () => {
 
     // it('when environment supports media source extensions only', () => {
     //   const videElement = window.document.createElement('video')
-    //   spyOn(videElement, 'canPlayType').and.returnValue(false)
+    //   spyOn(videElement, 'canPlayType').and.returnValue('')
     //   spyOn(Hls, 'isSupported').and.callFake(() => true)
     //   const result = defaultHlsSupportedNativelyFunction().func(videElement)
     //   expect(result).toEqual(false)
@@ -104,7 +104,7 @@ describe(HlsModule.name, () => {
 
     it('when environment only supports native (iOS safari, for example)', () => {
       const videElement = window.document.createElement('video')
-      spyOn(videElement, 'canPlayType').and.returnValue(true)
+      spyOn(videElement, 'canPlayType').and.returnValue('probably')
       spyOn(Hls, 'isSupported').and.callFake(() => false)
       const result = defaultHlsSupportedNativelyFunction().func(videElement)
       expect(result).toEqual(true)
