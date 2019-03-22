@@ -53,7 +53,7 @@ export function defaultIsSupportedFactory() {
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
   const func: IVideoElementSupportsTargetMseCheck = ve =>
-    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') &&
+    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') === 'probably' &&
       !defaultIsSupportedFactory().func() ? true : false
   return {
     exectionKey,
