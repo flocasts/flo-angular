@@ -12,34 +12,23 @@
   <li>Drag and drop to swap element positions</li>
   <li>Extensive API for handle to customize for broad use-cases</li>
 </ul>
-<h3>Demo Configurator</h3>
+<h3>Demo</h3>
 <form [formGroup]="formGroup">
   <div>
     <label for="maxHeight">Max Height</label>
     <input id="maxHeight" placeholder="max height" type="number" formControlName="maxHeight">
   </div>
-  <div>
-    <label for="elementCount">Elements</label>
-    <input id="elementCount" placeholder="4" type="number" formControlName="elementCount">
-  </div>
-  <div>
-    <label for="videoSource">Video Source</label>
-    <input id="videoSource" placeholder="video source url" type="text" formControlName="videoSource">
-  </div>
 </form>
 <br>
 <ul *ngIf="items2$ | async as listWrapper">
-  <li *ngFor="let item of listWrapper.items" (click)="setItem(item, listWrapper.index)">{{ item }}</li>
+  <li *ngFor="let item of listWrapper.items" (click)="setItem(item.src, listWrapper.index)"><a class="pointer">{{ item.title }}</a></li>
 </ul>
 <ng-container *ngIf="view_ | async as view">
   <button #unmute>Click to unmute</button>
-  <flo-viewport-grid #grid [maxHeight]="view.maxHeight" startingSelectedIndex="0"  
-    (itemSelected$)="itemSelected($event)">
-    <flo-viewport-grid-box *ngFor="let panelItem of viewItems$ | async; trackBy: trackByFn">
-      <ng-container [ngSwitch]="panelItem.hasSomethingToSee">
-        <video *ngSwitchCase="true" floViewportGridBoxItem [floVideoEvents]="{ meta: 1 }" playsinline controls floVideoAutoplay [src]="panelItem.item"></video>
-        <p style="color: white;" *ngSwitchCase="false">ADD SOURCE</p>
-      </ng-container>
+  <flo-viewport-grid #grid startingSelectedIndex="0" [maxHeight]="view.maxHeight" (itemSelected$)="itemSelected($event)">
+    <flo-viewport-grid-box *ngFor="let panelItem of viewItems$ | async; trackBy: trackByFn" [ngSwitch]="panelItem.hasSomethingToSee">
+      <video *ngSwitchCase="true" floViewportGridBoxItem [floVideoEvents]="{ meta: 1 }" playsinline floMse floVideoAutoplay [src]="panelItem.item"></video>
+      <p *ngSwitchCase="false" style="color: white;">ADD SOURCE</p>
     </flo-viewport-grid-box>
   </flo-viewport-grid>
 </ng-container>

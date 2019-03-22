@@ -8,8 +8,24 @@ import { ViewportGridComponent, FloViewportManagerService } from '@flosportsinc/
 import { Subject, combineLatest } from 'rxjs'
 
 const DEFAULT_MAX_HEIGHT = 600
-const DEFAULT_ELEMENT_COUNT = 4
-const DEFAULT_VIDEO_SOURCE_URL = 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4'
+const VIDEO_DB: ReadonlyArray<any> = [
+  {
+    title: 'How David Taylor Became Magic Man',
+    src: 'https://cdn-flo.flowrestling.org/uploaded/gkMqKG2RjoggDmEN69egZmkO1nKr4qNK/playlist.m3u8'
+  },
+  {
+    title: 'Dake - Taylor Gold Medal Interview',
+    src: 'https://cdn-flo.flowrestling.org/uploaded/gEzpz1RK5Wkn3rOj2N3gV7brnQyo8DeJ/playlist.m3u8'
+  },
+  {
+    title: 'My Best Rival, Kyle Dake And David Taylor FloFilm (Trailer)',
+    src: 'https://cdn-flo.flowrestling.org/migrated/hvcnN2ZzE6tIEglt0GrdtRzv01NFX7o8/playlist.m3u8'
+  },
+  {
+    title: 'Nick Suriano: Fearless Warrior (Trailer)',
+    src: 'https://cdn-flo.flowrestling.org/migrated/w1cnhsZTE6_gGu2ocRadp16NyxD3KwID/playlist.m3u8'
+  }
+]
 
 const objectsAreEqual = (a: any) => (b: any) => JSON.stringify(a) === JSON.stringify(b)
 const mapFromForm = (input: ICompConfigForm) => {
@@ -43,10 +59,7 @@ export class FramerComponent {
     })
   }))
 
-  readonly items$ = this.items.pipe(startWith([
-    DEFAULT_VIDEO_SOURCE_URL,
-    'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4'
-  ]))
+  readonly items$ = this.items.pipe(startWith(VIDEO_DB))
 
   readonly items2$ = combineLatest(this.selectedIndex, this.items$).pipe(
     map(a => {
@@ -55,20 +68,19 @@ export class FramerComponent {
         items: a[1]
       }
     }),
-    tap(console.log)
+    // tap(console.log)
   )
 
   constructor(public vms: FloViewportManagerService) {
     vms.setVisible(4)
-    vms.set('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4', 0)
+    vms.set(VIDEO_DB[0].src, 0)
+    vms.set(VIDEO_DB[1].src, 3)
   }
 
   @ViewChild(ViewportGridComponent) readonly grid: ViewportGridComponent
 
   readonly formGroup = new FormGroup({
-    maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required]),
-    elementCount: new FormControl(DEFAULT_ELEMENT_COUNT, [Validators.required]),
-    videoSource: new FormControl(DEFAULT_VIDEO_SOURCE_URL, [Validators.required])
+    maxHeight: new FormControl(DEFAULT_MAX_HEIGHT, [Validators.required])
   })
 
   readonly view_ = this.formGroup.valueChanges.pipe(
@@ -77,7 +89,10 @@ export class FramerComponent {
     map<ICompConfigForm, any>(mapFromForm)
   )
 
-  readonly trackByFn = (idx: number) => idx
+  readonly trackByFn = (idx: number,  item: any) => {
+    // console.log(item)
+    return item.item
+  }
 
   setItem(item: any, index: number) {
     this.vms.set(item, index)

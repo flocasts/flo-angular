@@ -1,6 +1,6 @@
 import { maybe } from 'typescript-monads'
 import { ViewportGridBoxComponent, GRID_BOX_SELECTOR_NAME } from './viewport-grid-box.component'
-import { Subject } from 'rxjs'
+import { Subject, combineLatest, BehaviorSubject } from 'rxjs'
 import { takeUntil, map, distinctUntilChanged, debounceTime } from 'rxjs/operators'
 import { IMaybe } from 'typescript-monads/interfaces'
 import {
@@ -104,13 +104,13 @@ const getPreSelectedIndex =
 export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDestroy {
   constructor(private _renderer: Renderer2) { }
 
+  @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
+  @Input() public readonly startingSelectedIndex = 0
+
   private readonly itemSource = new Subject<ReadonlyArray<ViewportGridBoxComponent>>()
   private readonly itemSelectedSource = new Subject<ViewportGridBoxSelectedEvent>()
   private readonly itemElementSelectedSource = new Subject<ViewportGridBoxSelectedElementEvent>()
   private readonly ngDestroy$ = new Subject<ViewportGridBoxSelectedElementEvent>()
-
-  @Input() public readonly maxHeight = DEFAULT_MAX_HEIGHT
-  @Input() public readonly startingSelectedIndex = 0
 
   @Output() public readonly items$ = this.itemSource.asObservable()
   @Output() public readonly itemSelected$ = this.itemSelectedSource.pipe(debounceTime(1), distinctUntilChanged(compareWrappedGuids))
@@ -129,6 +129,12 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
           container
         }
       }))
+
+  // tslint:disable-next-line:readonly-keyword
+  private selectedIndex!: number
+
+  // tslint:disable-next-line: no-object-mutation
+  private readonly setSelectedIndex = (num: number) => this.selectedIndex = num
 
   public readonly maybeGetSelectedItem =
     <TElement extends HTMLElement>(): IMaybe<ViewportGridBoxComponent<TElement>> =>
@@ -247,10 +253,12 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
         map<any, ReadonlyArray<ViewportGridBoxComponent<HTMLElement>>>(a => a.toArray())
       )
       .subscribe(viewports => {
+        viewports[this.selectedIndex].setSelected(true)
+
         // tslint:disable-next-line:no-if-statement
-        if (!viewports.some(z => z.isSelected())) {
-          maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
-        }
+        // if (!viewports.some(z => z.isSelected())) {
+        //   maybe(viewports.slice(-1)[0]).tapSome(dd => dd.setSelected(true))
+        // }
 
         viewports.forEach((z, idx) => z.clicked$
           .pipe(takeUntil(combined.children.changes))
@@ -269,6 +277,10 @@ export class ViewportGridComponent implements AfterContentInit, OnChanges, OnDes
   }
 
   ngAfterContentInit() {
+    this.itemSelected$
+      .pipe(takeUntil(this.ngDestroy$))
+      .subscribe(item => this.setSelectedIndex(item.selectedIndex))
+
     this._maybeCombinedView()
       .tapSome(obj => {
         const arr = obj.children.toArray()
