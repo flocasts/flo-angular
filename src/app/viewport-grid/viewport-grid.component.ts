@@ -5,7 +5,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent, FloViewportManagerService } from '@flosportsinc/ng-viewport-grid'
-import { Subject, combineLatest } from 'rxjs';
+import { Subject, combineLatest } from 'rxjs'
 
 const DEFAULT_MAX_HEIGHT = 600
 const DEFAULT_ELEMENT_COUNT = 4
@@ -78,10 +78,6 @@ export class FramerComponent {
   )
 
   readonly trackByFn = (idx: number) => idx
-
-  ngAfterViewInit() {
-    // this.grid.itemSelected$.subscribe(console.log)
-  }
 
   setItem(item: any, index: number) {
     this.vms.set(item, index)
