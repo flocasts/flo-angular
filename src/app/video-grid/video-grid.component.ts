@@ -1,6 +1,6 @@
 import {
   Component, Directive, ChangeDetectionStrategy, ContentChild,
-  Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild, Renderer2, ViewChildren, QueryList, ChangeDetectorRef
+  Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild, Renderer2, ViewChildren, QueryList, ChangeDetectorRef, AfterViewInit
 } from '@angular/core'
 import { IMaybe } from 'typescript-monads'
 
@@ -22,13 +22,21 @@ export class FloVideoGridItemNoneDirective<TElement extends HTMLElement> {
   constructor(public elmRef: ElementRef<TElement>) { }
 }
 
+const chunk = (size: number, collection: ReadonlyArray<any> = []) =>
+  collection.reduce(
+    (acc, _, index) =>
+      index % size === 0
+        ? [...acc, collection.slice(index, index + size)]
+        : acc,
+    [])
+
 @Component({
   selector: 'flo-video-grid',
   templateUrl: './video-grid.component.html',
   styleUrls: ['./video-grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VideoGridComponent<TItem extends IFloGridItem> implements OnChanges {
+export class VideoGridComponent<TItem extends IFloGridItem> implements AfterViewInit {
   constructor(private elmRef: ElementRef<HTMLDivElement>, private rd: Renderer2, private cdRef: ChangeDetectorRef) { }
 
   // tslint:disable-next-line:readonly-keyword
@@ -51,15 +59,6 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements OnChanges
         value
       }
     })
-  }
-
-  ngOnChanges(change: SimpleChanges) {
-    // tslint:disable-next-line:no-if-statement
-    if (!change.items.firstChange) {
-      const items = change.items.currentValue as ReadonlyArray<IMaybe<TItem>>
-      // console.log(items.length)
-      // this.updateGridStyles(items.length)
-    }
   }
 
   readonly fillTo = (n: number) => new Array<string>(n).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
@@ -93,17 +92,13 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements OnChanges
           this.rd.removeStyle(element, 'max-width')
           this.rd.setStyle(element, 'max-height', '675px')
 
-          const groups = Math.ceil(children.length / gridCounts.columns)
+          const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
-
-          children.forEach((val, idx) => {
-            // console.log('MOD: ', groups % idx + 1)
-            if (idx === 0) {
-              this.rd.setStyle(val, 'grid-area', `2 / ${idx + 1} / span 2 / span 2`)
-            } else {
-              this.rd.setStyle(val, 'grid-area', `2 / ${idx + 2} / span 2 / span 2`)
-            }
-            this.rd.setStyle(val, 'align-self', 'center')
+          chunk(groups, children).forEach((coll, groupIdx) => {
+            coll.forEach((val, idx) => {
+              this.rd.setStyle(val, 'grid-area', `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
+              this.rd.setStyle(val, 'align-self', 'center')
+            })
           })
         } else {
           this.rd.setStyle(element, 'max-width', '1200px')
@@ -122,7 +117,6 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements OnChanges
       ? num
       : this.findMaxSquare(num + 1)
   }
-
 
   readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)
