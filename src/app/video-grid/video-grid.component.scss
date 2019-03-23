@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  background: black;
+  .flo-video-grid-container {
+    display: grid;
+    margin: auto;
+    // max-height: 670px;
+    // grid-template-columns: 1fr 1fr; // CHANGES OVER TIME
+    // grid-template-rows: 1fr 1fr; // CHANGES OVER TIME
+    // max-width: 1200px; // TODO: check this out
+  }
+  .flo-video-item-container {
+    overflow: hidden;
+    height: 0;
+    padding-top: 56.25%;
+    position: relative;
+    ::ng-deep>* {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      object-fit: cover;
+    }
+    .flo-video-item-selection-border {
+      transition: box-shadow 400ms ease 0s;
+      box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
+      z-index: 1; // pointer-events: none; TODO: check this out
+    }
+    .flo-video-item-empty {
+      color: white;
+      ::ng-deep>* {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        max-width: 100%;
+        object-fit: cover;
+
+
+        display: flex; // TODO
+        align-items: center;
+        justify-content: center;
+      }
+    }
+  }
+}

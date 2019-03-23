@@ -6,6 +6,7 @@ import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent, FloViewportManagerService } from '@flosportsinc/ng-viewport-grid'
 import { Subject, combineLatest } from 'rxjs'
+import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
 const VIDEO_DB: ReadonlyArray<any> = [
@@ -89,7 +90,7 @@ export class FramerComponent {
     map<ICompConfigForm, any>(mapFromForm)
   )
 
-  readonly trackByFn = (idx: number,  item: any) => {
+  readonly trackByFn = (idx: number, item: any) => {
     // console.log(item)
     return item.item
   }
@@ -100,5 +101,13 @@ export class FramerComponent {
 
   itemSelected(evt: any) {
     this.selectedIndex.next(evt.selectedIndex)
+  }
+
+  items3 = [maybe(), maybe()]
+
+  // items3 = [maybe()]
+
+  thing(num: number) {
+    this.items3 = new Array(num).fill(maybe())
   }
 }

@@ -1,4 +1,4 @@
-<markdown [src]="'/assets/md/ng-viewport-grid/README.md'"></markdown>
+<!-- <markdown [src]="'/assets/md/ng-viewport-grid/README.md'"></markdown>
 
 <h2>Window Panels</h2>
 <p>The <em>flo-window-panes</em> component is a response grid window/tile manager.</p>
@@ -31,4 +31,22 @@
       <p *ngSwitchCase="false" style="color: white;">ADD SOURCE</p>
     </flo-viewport-grid-box>
   </flo-viewport-grid>
-</ng-container>
+</ng-container> -->
+
+<button (click)="thing(1)">1</button>
+<button (click)="thing(2)">2</button>
+<button (click)="thing(3)">3</button>
+<button (click)="thing(4)">4</button>
+<button (click)="thing(5)">5</button>
+<button (click)="thing(6)">6</button>
+<button (click)="thing(7)">7</button>
+<button (click)="thing(8)">8</button>
+<button (click)="thing(9)">9</button>
+<button (click)="thing(10)">10</button>
+<button (click)="thing(11)">11</button>
+<button (click)="thing(16)">16</button>
+
+<flo-video-grid [items]="items3" [selectedIndex]="1">
+  <video *floVideoGridItemSome="let item" [src]="item" autoplay floMse></video>
+  <div *floVideoGridItemNone>ADD STREAM</div>
+</flo-video-grid>
