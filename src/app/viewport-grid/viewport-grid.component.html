@@ -33,6 +33,7 @@
   </flo-viewport-grid>
 </ng-container> -->
 
+<h3>Set Panel Count</h3>
 <button (click)="thing(1)">1</button>
 <button (click)="thing(2)">2</button>
 <button (click)="thing(3)">3</button>
@@ -46,7 +47,20 @@
 <button (click)="thing(11)">11</button>
 <button (click)="thing(16)">16</button>
 
-<flo-video-grid [items]="items3" [selectedIndex]="1">
-  <video *floVideoGridItemSome="let item" [src]="item" autoplay floMse></video>
+<h3>Grid</h3>
+<flo-video-grid #videoGridRef [listRef]="gridListRef" [viewPortCount]="vpCountr">
+  <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse></video>
   <div *floVideoGridItemNone>ADD STREAM</div>
+  <div>OPTIONAL: SET VIEW COUNT LOGIC GOES HERE</div>
+  <div>OPTIONAL: OVERLAYS INJECECT HERE</div>
 </flo-video-grid>
+
+<h3>Grid List</h3>
+<button (click)="removeListItem()">Remove Item</button>
+<button (click)="addListItem()">Add Item</button>
+<button (click)="emptyList()">Make List Empty</button>
+<flo-video-grid-list #gridListRef [gridRef]="videoGridRef" [items]="gridListItems">
+  <div *floVideoGridListItem="let container">
+    <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="gridListRef.setItem(container.item)">{{ container.item.title }}</a>
+  </div>
+</flo-video-grid-list>

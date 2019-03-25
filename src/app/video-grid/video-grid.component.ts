@@ -1,8 +1,10 @@
 import {
   Component, Directive, ChangeDetectionStrategy, ContentChild,
-  Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild, Renderer2, ViewChildren, QueryList, ChangeDetectorRef, AfterViewInit
+  Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild,
+  Renderer2, ViewChildren, QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
 } from '@angular/core'
-import { IMaybe } from 'typescript-monads'
+import { IMaybe, maybe } from 'typescript-monads'
+import { FloVideoGridListComponent } from '../video-grid-list/video-grid-list.component'
 
 export interface IFloGridItem {
   readonly id: string
@@ -40,19 +42,38 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   constructor(private elmRef: ElementRef<HTMLDivElement>, private rd: Renderer2, private cdRef: ChangeDetectorRef) { }
 
   // tslint:disable-next-line:readonly-keyword
-  @Input() selectedIndex = 0
-  @Input() readonly items: ReadonlyArray<IMaybe<TItem>> = []
+  private selectedIndexValue = 0
+
+  @Input()
+  get selectedIndex() {
+    return this.selectedIndexValue
+  }
+  set selectedIndex(val: number) { // TODO: check is number
+    // tslint:disable-next-line: no-object-mutation
+    this.selectedIndexValue = val
+    this.selectedIndexChange.emit(this.selectedIndexValue)
+    // console.log(this.listRef)
+  }
+
+  items: any[] = []
+  @Input() readonly listRef: any
+  @Input() readonly viewPortCount = 4
+  @Output() readonly selectedIndexChange = new EventEmitter<number>()
 
   @ViewChild('floGridContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
   @ContentChild(FloVideoGridItemSomeDirective, { read: TemplateRef }) readonly gridItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloVideoGridItemNoneDirective, { read: TemplateRef }) readonly gridItemNoneTemplate: TemplateRef<HTMLElement>
 
-  public readonly trackByFn = (_: number, item: TItem) => item.id
+  public readonly trackByFn = (_: number, item?: any) =>
+    maybe(item).flatMapAuto(a => a.value).flatMapAuto(c => `${_}_${c.src}`).valueOrUndefined()
 
   get viewItems() {
-    return this.items.map((item, idx) => {
-      const value = item.valueOrUndefined()
+    return new Array<any>(this.viewPortCount).fill(undefined).map((val, idx) => {
+      return this.items[idx]
+        ? this.items[idx]
+        : val
+    }).map((value, idx) => {
       return {
         hasSomething: value ? true : false,
         selected: this.selectedIndex === idx,
@@ -61,9 +82,16 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     })
   }
 
+  public setItem(item: any) {
+    // tslint:disable-next-line: no-object-mutation
+    this.items[this.selectedIndex] = item
+    this.cdRef.markForCheck()
+  }
+
   readonly fillTo = (n: number) => new Array<string>(n).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
 
   ngAfterViewInit() {
+    // console.log(this.listRef.items)
     // this.gridItemContainers.changes.subscribe(console.log)
     this.updateGridStyles(this.gridItemContainers.length)
     this.gridItemContainers.changes.subscribe(a => {
@@ -111,20 +139,11 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     }
   }
 
-  readonly findMaxSquare = (num: number) => {
-    if (num === 1 || num === 2) return num
-    return Math.sqrt(num) % 1 === 0
-      ? num
-      : this.findMaxSquare(num + 1)
-  }
-
   readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)
     const columns = Math.ceil(squared)
-    const rows = Math.floor(squared)
-    const mod = n % squared
-    const maxSquare = this.findMaxSquare(n)
-    const shouldFill = mod < 1 && mod !== 0 || n + columns <= maxSquare
+    const rows = columns
+    const shouldFill = n === 2
     return {
       columns,
       rows,

@@ -11,19 +11,23 @@ import { maybe } from 'typescript-monads'
 const DEFAULT_MAX_HEIGHT = 600
 const VIDEO_DB: ReadonlyArray<any> = [
   {
+    id: 1,
     title: 'How David Taylor Became Magic Man',
     src: 'https://cdn-flo.flowrestling.org/uploaded/gkMqKG2RjoggDmEN69egZmkO1nKr4qNK/playlist.m3u8'
   },
   {
+    id: 2,
     title: 'Dake - Taylor Gold Medal Interview',
     src: 'https://cdn-flo.flowrestling.org/uploaded/gEzpz1RK5Wkn3rOj2N3gV7brnQyo8DeJ/playlist.m3u8'
   },
   {
-    title: 'My Best Rival, Kyle Dake And David Taylor FloFilm (Trailer)',
+    id: 3,
+    title: 'My Best Rival, Kyle Dake And David Taylor FloFilm',
     src: 'https://cdn-flo.flowrestling.org/migrated/hvcnN2ZzE6tIEglt0GrdtRzv01NFX7o8/playlist.m3u8'
   },
   {
-    title: 'Nick Suriano: Fearless Warrior (Trailer)',
+    id: 4,
+    title: 'Nick Suriano: Fearless Warrior',
     src: 'https://cdn-flo.flowrestling.org/migrated/w1cnhsZTE6_gGu2ocRadp16NyxD3KwID/playlist.m3u8'
   }
 ]
@@ -103,11 +107,34 @@ export class FramerComponent {
     this.selectedIndex.next(evt.selectedIndex)
   }
 
-  items3 = [maybe(), maybe()]
+  testerIdx = 0
 
-  // items3 = [maybe()]
+  vpCountr = 1
 
   thing(num: number) {
-    this.items3 = new Array(num).fill(maybe())
+    this.vpCountr = num
+  }
+
+  gridListItems = VIDEO_DB
+
+  removeListItem() {
+    this.gridListItems = [
+      ...this.gridListItems.slice(0, this.gridListItems.length - 1)
+    ]
+  }
+
+  addListItem() {
+    this.gridListItems = [
+      ...this.gridListItems,
+      {
+        id: this.gridListItems.length + 1,
+        title: 'Nick Suriano: Fearless Warrior',
+        src: 'https://cdn-flo.flowrestling.org/migrated/w1cnhsZTE6_gGu2ocRadp16NyxD3KwID/playlist.m3u8'
+      }
+    ]
+  }
+
+  emptyList() {
+    this.gridListItems = []
   }
 }

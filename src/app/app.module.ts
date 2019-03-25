@@ -27,6 +27,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { VideoGridComponent, FloVideoGridItemSomeDirective, FloVideoGridItemNoneDirective } from './video-grid/video-grid.component'
+import { FloVideoGridListComponent, FloVideoGridListItemSomeDirective } from './video-grid-list/video-grid-list.component'
 
 @NgModule({
   imports: [
@@ -61,7 +62,9 @@ import { VideoGridComponent, FloVideoGridItemSomeDirective, FloVideoGridItemNone
     NotFoundComponent,
     VideoGridComponent,
     FloVideoGridItemSomeDirective,
-    FloVideoGridItemNoneDirective
+    FloVideoGridItemNoneDirective,
+    FloVideoGridListComponent,
+    FloVideoGridListItemSomeDirective
   ]
 })
 export class AppModule {

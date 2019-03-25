@@ -1,0 +1,3 @@
+<ng-container *ngFor="let viewItem of viewItems; trackBy: trackByFn">
+  <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: viewItem }"></ng-container>
+</ng-container>
