@@ -1,11 +1,11 @@
 import {
   Component, Directive, ChangeDetectionStrategy, ContentChild,
-  Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild,
-  Renderer2, ViewChildren, QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
+  Input, TemplateRef, ElementRef, ViewChild, Renderer2, ViewChildren,
+  QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
 } from '@angular/core'
 import { maybe } from 'typescript-monads'
-import { combineLatest } from 'rxjs'
-import { startWith } from 'rxjs/operators'
+import { merge } from 'rxjs'
+import { share } from 'rxjs/operators'
 
 export interface IFloGridItem {
   readonly id: string
@@ -60,7 +60,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   @Input() readonly viewPortCount = 4 // TODO
   @Output() readonly selectedIndexChange = new EventEmitter<number>()
   @Output() readonly itemsChange = new EventEmitter<ReadonlyArray<any>>()
-  @Output() readonly ticked = combineLatest(this.itemsChange.asObservable(), this.selectedIndexChange.asObservable()).pipe(startWith())
+  @Output() readonly ticked = merge(this.itemsChange, this.selectedIndexChange).pipe(share())
 
   @ViewChild('floGridContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -98,9 +98,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
 
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
-    this.gridItemContainers.changes.subscribe(a => {
-      this.updateGridStyles(a.length)
-    })
+    this.gridItemContainers.changes.subscribe(a => this.updateGridStyles(a.length))
   }
 
   updateGridStyles(squareCount: number) {
