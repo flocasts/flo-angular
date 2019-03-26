@@ -26,12 +26,10 @@ export class FloVideoGridItemNoneDirective<TElement extends HTMLElement> {
 }
 
 const chunk = (size: number, collection: ReadonlyArray<any> = []) =>
-  collection.reduce(
-    (acc, _, index) =>
-      index % size === 0
-        ? [...acc, collection.slice(index, index + size)]
-        : acc,
-    [])
+  collection.reduce((acc, _, index) =>
+    index % size === 0
+      ? [...acc, collection.slice(index, index + size)]
+      : acc, [])
 
 @Component({
   selector: 'flo-video-grid',
@@ -94,7 +92,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
 
   public readonly removeItem = () => this.setItem(undefined)
   public readonly getSelectedItem = () => this.items[this.selectedIndex]
-  private readonly fillTo = (n: number) => new Array<string>(n).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
+  private readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
 
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
