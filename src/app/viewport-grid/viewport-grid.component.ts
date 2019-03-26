@@ -117,6 +117,8 @@ export class FramerComponent {
 
   gridListItems = VIDEO_DB
 
+  gridListItems2 = VIDEO_DB.slice(0, 2)
+
   removeListItem() {
     this.gridListItems = [
       ...this.gridListItems.slice(0, this.gridListItems.length - 1)

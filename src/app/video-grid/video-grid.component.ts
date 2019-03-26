@@ -3,8 +3,9 @@ import {
   Input, TemplateRef, ElementRef, SimpleChanges, OnChanges, ViewChild,
   Renderer2, ViewChildren, QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
 } from '@angular/core'
-import { IMaybe, maybe } from 'typescript-monads'
-import { FloVideoGridListComponent } from '../video-grid-list/video-grid-list.component'
+import { maybe } from 'typescript-monads'
+import { combineLatest } from 'rxjs'
+import { startWith } from 'rxjs/operators'
 
 export interface IFloGridItem {
   readonly id: string
@@ -52,21 +53,23 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     // tslint:disable-next-line: no-object-mutation
     this.selectedIndexValue = val
     this.selectedIndexChange.emit(this.selectedIndexValue)
-    // console.log(this.listRef)
   }
 
-  items: any[] = []
-  @Input() readonly listRef: any
-  @Input() readonly viewPortCount = 4
+  // tslint:disable-next-line: readonly-keyword
+  public items: any[] = [] // TODO
+  @Input() readonly viewPortCount = 4 // TODO
   @Output() readonly selectedIndexChange = new EventEmitter<number>()
+  @Output() readonly itemsChange = new EventEmitter<ReadonlyArray<any>>()
+  @Output() readonly ticked = combineLatest(this.itemsChange.asObservable(), this.selectedIndexChange.asObservable()).pipe(startWith())
 
   @ViewChild('floGridContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
   @ContentChild(FloVideoGridItemSomeDirective, { read: TemplateRef }) readonly gridItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloVideoGridItemNoneDirective, { read: TemplateRef }) readonly gridItemNoneTemplate: TemplateRef<HTMLElement>
 
-  public readonly trackByFn = (_: number, item?: any) =>
-    maybe(item).flatMapAuto(a => a.value).flatMapAuto(c => `${_}_${c.src}`).valueOrUndefined()
+  public readonly trackByFn =
+    (idx: number, item?: any) =>
+      maybe(item).flatMapAuto(a => a.value).flatMapAuto(c => `${idx}_${c.src}`).valueOrUndefined()
 
   get viewItems() {
     return new Array<any>(this.viewPortCount).fill(undefined).map((val, idx) => {
@@ -85,14 +88,15 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   public setItem(item: any) {
     // tslint:disable-next-line: no-object-mutation
     this.items[this.selectedIndex] = item
+    this.itemsChange.next(this.items)
     this.cdRef.markForCheck()
   }
 
-  readonly fillTo = (n: number) => new Array<string>(n).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
+  public readonly removeItem = () => this.setItem(undefined)
+  public readonly getSelectedItem = () => this.items[this.selectedIndex]
+  private readonly fillTo = (n: number) => new Array<string>(n).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
 
   ngAfterViewInit() {
-    // console.log(this.listRef.items)
-    // this.gridItemContainers.changes.subscribe(console.log)
     this.updateGridStyles(this.gridItemContainers.length)
     this.gridItemContainers.changes.subscribe(a => {
       this.updateGridStyles(a.length)

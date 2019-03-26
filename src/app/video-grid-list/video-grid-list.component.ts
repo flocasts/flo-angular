@@ -1,5 +1,11 @@
-import { Component, ChangeDetectionStrategy, ContentChild, TemplateRef, Directive, ElementRef, Input } from '@angular/core'
 import { VideoGridComponent } from '../video-grid/video-grid.component'
+import { maybe } from 'typescript-monads'
+import { Subject } from 'rxjs'
+import { share, takeUntil } from 'rxjs/operators'
+import {
+  Component, ChangeDetectionStrategy, ContentChild, TemplateRef,
+  Directive, ElementRef, Input, ChangeDetectorRef, AfterViewInit, OnDestroy
+} from '@angular/core'
 
 @Directive({
   selector: '[floVideoGridListItem]'
@@ -14,44 +20,46 @@ export class FloVideoGridListItemSomeDirective<TElement extends HTMLElement> {
   styleUrls: ['./video-grid-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloVideoGridListComponent {
+export class FloVideoGridListComponent implements AfterViewInit, OnDestroy {
+  constructor(private cd: ChangeDetectorRef) { }
 
   @Input() readonly items: ReadonlyArray<any> = []
   @Input() readonly gridRef: VideoGridComponent<any>
   @ContentChild(FloVideoGridListItemSomeDirective, { read: TemplateRef }) readonly itemTemplate: any
 
+  private readonly onDestroySource = new Subject()
+  private readonly onDestroy = this.onDestroySource.pipe(share())
+
   public readonly trackByFn = (_: number, item: any) => item.id
 
-  // tslint:disable-next-line: readonly-keyword
-  map: {
-    // 1: ''
-  }
-
   get viewItems() {
+    const selectedId = maybe(this.gridRef.getSelectedItem()).map(a => a.id)
+
     return this.items.map(item => {
+      const selected = selectedId.valueOrUndefined() === item.id
+      const maybeSelectedIndex = maybe(this.gridRef.items.findIndex(a => a && a.id === item.id)).filter(a => a >= 0)
+      const inAnotherSquare = maybeSelectedIndex.filter(d => d >= 0).map(() => true).valueOr(false)
       return {
         item,
-        selected: true,
-        canAdd: false,
-        canRemove: false,
-        canSwap: false,
-        canReplace: false
+        selected,
+        selectedIndex: maybeSelectedIndex.valueOrUndefined(),
+        canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
+        canRemove: selected,
+        canReplace: !selected,
+        canSwap: !selected && inAnotherSquare,
+        add: () => this.gridRef.setItem(item),
+        remove: () => this.gridRef.removeItem(),
+        swap: () => { }
       }
     })
   }
 
-  ngOnChanges(d) {
-    // console.log(d)
-  }
-
   ngAfterViewInit() {
-    // console.log(this.items[this.gridRef.selectedIndex])
+    this.gridRef.ticked.pipe(takeUntil(this.onDestroy)).subscribe(() => this.cd.markForCheck())
   }
 
-  setItem(item: any) {
-    console.log('SET ITEM', item, this.gridRef.selectedIndex)
-    // tslint:disable-next-line: no-object-mutation
-    this.gridRef.setItem(item)
-    // this.gridRef.items[this.gridRef.selectedIndex] = item
+  ngOnDestroy() {
+    this.onDestroySource.next()
+    this.onDestroySource.complete()
   }
 }

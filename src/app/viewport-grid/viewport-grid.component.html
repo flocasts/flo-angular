@@ -48,19 +48,30 @@
 <button (click)="thing(16)">16</button>
 
 <h3>Grid</h3>
-<flo-video-grid #videoGridRef [listRef]="gridListRef" [viewPortCount]="vpCountr">
+<flo-video-grid #videoGridRef [viewPortCount]="vpCountr">
   <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse></video>
   <div *floVideoGridItemNone>ADD STREAM</div>
   <div>OPTIONAL: SET VIEW COUNT LOGIC GOES HERE</div>
   <div>OPTIONAL: OVERLAYS INJECECT HERE</div>
 </flo-video-grid>
-
-<h3>Grid List</h3>
+<br/>
+<h3>Grid List 1</h3>
 <button (click)="removeListItem()">Remove Item</button>
 <button (click)="addListItem()">Add Item</button>
 <button (click)="emptyList()">Make List Empty</button>
-<flo-video-grid-list #gridListRef [gridRef]="videoGridRef" [items]="gridListItems">
+<flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems">
   <div *floVideoGridListItem="let container">
-    <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="gridListRef.setItem(container.item)">{{ container.item.title }}</a>
+    <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="container.add()">{{ container.item.title }}</a>
+    (<span>selectedIndex: {{ container.selectedIndex }} | canAdd: {{ container.canAdd }} | <a (click)="container.remove()">canRemove: {{ container.canRemove }}</a> | canReplace: {{ container.canReplace }} | canSwap: {{ container.canSwap }}</span>)
+  </div>
+</flo-video-grid-list>
+
+<br/>
+
+<h3>Grid List 2</h3>
+<flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems2">
+  <div *floVideoGridListItem="let container">
+    <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="container.add()">{{ container.item.title }}</a>
+    (<span>selectedIndex: {{ container.selectedIndex }} | canAdd: {{ container.canAdd }} | <a (click)="container.remove()">canRemove: {{ container.canRemove }}</a> | canReplace: {{ container.canReplace }} | canSwap: {{ container.canSwap }}</span>)
   </div>
 </flo-video-grid-list>
