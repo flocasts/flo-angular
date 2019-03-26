@@ -11,6 +11,12 @@ export interface IFloGridItem {
   readonly id: string
 }
 
+interface IViewItem<T> {
+  readonly hasSomething: boolean
+  readonly selected: boolean
+  readonly value?: T
+}
+
 @Directive({
   selector: '[floVideoGridItemSome]'
 })
@@ -58,6 +64,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   public items: IMaybe<TItem>[] = [] // TODO
 
   @Input() readonly viewPortCount = 4 // TODO
+  @Input() readonly trackByFunc: (item: TItem) => string
 
   @Output() readonly selectedIndexChange = new EventEmitter<number>()
   @Output() readonly itemsChange = new EventEmitter<ReadonlyArray<IMaybe<TItem>>>()
@@ -70,19 +77,18 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   @ContentChild(FloVideoGridItemNoneDirective, { read: TemplateRef }) readonly gridItemNoneTemplate: TemplateRef<HTMLElement>
 
   public readonly trackByFn =
-    (idx: number, item?: TItem) =>
-      maybe(item)
-        // .flatMapAuto(a => a.value)
-        .flatMapAuto(c => `${idx}_${c.id}`)
+    (idx: number, viewItem?: IViewItem<TItem>) =>
+      maybe(viewItem)
+        .flatMapAuto(i => i.value)
+        .flatMapAuto(c => typeof this.trackByFunc === 'function'
+          ? `${idx}_${this.trackByFunc(c)}`
+          : idx)
         .valueOrUndefined()
 
   get viewItems() {
-    return new Array<IMaybe<TItem>>(this.viewPortCount).fill(maybe())
-      .map((val, idx) => {
-        return this.items[idx]
-          ? this.items[idx]
-          : val
-      })
+    return new Array<IMaybe<TItem>>(this.viewPortCount)
+      .fill(maybe())
+      .map((val, idx) => this.items[idx] ? this.items[idx] : val)
       .map((value, idx) => {
         return {
           hasSomething: value.map(() => true).valueOr(false),
@@ -95,8 +101,12 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   public setItem(item?: TItem) {
     // tslint:disable-next-line: no-object-mutation
     this.items[this.selectedIndex] = maybe(item)
-    this.itemsChange.next(this.items)
+    this.updateCd()
+  }
+
+  private readonly updateCd = () => {
     this.cdRef.markForCheck()
+    this.itemsChange.next(this.items)
   }
 
   public readonly removeItem = () => this.setItem(undefined)
@@ -165,5 +175,23 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   setSelected(idx: number) {
     // tslint:disable-next-line: no-object-mutation
     this.selectedIndex = idx
+  }
+
+  findIndexByItemId = (id: string) => maybe(this.items.findIndex(a => a && a.map(b => b.id).valueOrUndefined() === id)).filter(a => a >= 0)
+
+  swap(idx1: number, idx2: number) {
+    const obj1 = this.items[idx1]
+    const obj2 = this.items[idx2]
+
+    // tslint:disable-next-line: no-object-mutation
+    this.items[idx1] = obj2
+    // tslint:disable-next-line: no-object-mutation
+    this.items[idx2] = obj1
+
+    this.updateCd()
+  }
+
+  swapWithCurrent(fromIdx: number) {
+    this.swap(fromIdx, this.selectedIndex)
   }
 }

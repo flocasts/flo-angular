@@ -32,7 +32,7 @@
     </flo-viewport-grid-box>
   </flo-viewport-grid>
 </ng-container> -->
-
+<br/>
 <h3>Set Panel Count</h3>
 <button (click)="thing(1)">1</button>
 <button (click)="thing(2)">2</button>
@@ -46,9 +46,9 @@
 <button (click)="thing(10)">10</button>
 <button (click)="thing(11)">11</button>
 <button (click)="thing(16)">16</button>
-
+<br/>
 <h3>Grid</h3>
-<flo-video-grid #videoGridRef [viewPortCount]="vpCountr">
+<flo-video-grid #videoGridRef [viewPortCount]="vpCountr" [trackByFunc]="tbFunc">
   <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse></video>
   <div *floVideoGridItemNone>ADD STREAM</div>
   <div>OPTIONAL: SET VIEW COUNT LOGIC GOES HERE</div>
@@ -61,17 +61,22 @@
 <button (click)="emptyList()">Make List Empty</button>
 <flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems">
   <div *floVideoGridListItem="let container">
-    <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="container.add()">{{ container.item.title }}</a>
-    (<span>selectedIndex: {{ container.selectedIndex }} | canAdd: {{ container.canAdd }} | <a (click)="container.remove()">canRemove: {{ container.canRemove }}</a> | canReplace: {{ container.canReplace }} | canSwap: {{ container.canSwap }}</span>)
+    <a [style.font-weight]="container.selected ? 'bold' : 'normal'">{{ container.item.title }}</a>
+    (
+    <span class="pointer" *ngIf="container.permissions.canAdd" (click)="container.actions.add()"> Add </span>
+    <span class="pointer" *ngIf="container.permissions.canRemove" (click)="container.actions.remove()"> Remove </span>
+    <span class="pointer" *ngIf="container.permissions.canSwap" (click)="container.actions.swap()"> Swap </span>
+    <span class="pointer" *ngIf="container.permissions.canReplace" (click)="container.actions.replace()"> Replace </span>
+    )
   </div>
 </flo-video-grid-list>
 
 <br/>
-
+<!-- 
 <h3>Grid List 2</h3>
 <flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems2">
   <div *floVideoGridListItem="let container">
     <strong>{{ container.item.id }}: </strong><a [style.font-weight]="container.selected ? 'bold' : 'normal'" (click)="container.add()">{{ container.item.title }}</a>
     (<span>selectedIndex: {{ container.selectedIndex }} | canAdd: {{ container.canAdd }} | <a (click)="container.remove()">canRemove: {{ container.canRemove }}</a> | canReplace: {{ container.canReplace }} | canSwap: {{ container.canSwap }}</span>)
   </div>
-</flo-video-grid-list>
+</flo-video-grid-list> -->

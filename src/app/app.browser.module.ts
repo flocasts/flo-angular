@@ -17,7 +17,8 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
     DashModule,
     HlsModule.config({
       hlsConfig: {
-        liveSyncDurationCount: 6
+        liveSyncDurationCount: 6,
+        capLevelToPlayerSize: true
       }
     }),
     NodeEnvTransferBrowserModule.config({
