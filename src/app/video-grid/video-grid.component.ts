@@ -3,7 +3,7 @@ import {
   Input, TemplateRef, ElementRef, ViewChild, Renderer2, ViewChildren,
   QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
 } from '@angular/core'
-import { maybe } from 'typescript-monads'
+import { maybe, IMaybe } from 'typescript-monads'
 import { merge } from 'rxjs'
 import { share } from 'rxjs/operators'
 
@@ -38,7 +38,7 @@ const chunk = (size: number, collection: ReadonlyArray<any> = []) =>
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoGridComponent<TItem extends IFloGridItem> implements AfterViewInit {
-  constructor(private elmRef: ElementRef<HTMLDivElement>, private rd: Renderer2, private cdRef: ChangeDetectorRef) { }
+  constructor(private rd: Renderer2, private cdRef: ChangeDetectorRef) { }
 
   // tslint:disable-next-line:readonly-keyword
   private selectedIndexValue = 0
@@ -53,45 +53,54 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     this.selectedIndexChange.emit(this.selectedIndexValue)
   }
 
-  // tslint:disable-next-line: readonly-keyword
-  public items: any[] = [] // TODO
+  // tslint:disable: readonly-keyword
+  // tslint:disable-next-line:readonly-array
+  public items: IMaybe<TItem>[] = [] // TODO
+
   @Input() readonly viewPortCount = 4 // TODO
+
   @Output() readonly selectedIndexChange = new EventEmitter<number>()
-  @Output() readonly itemsChange = new EventEmitter<ReadonlyArray<any>>()
+  @Output() readonly itemsChange = new EventEmitter<ReadonlyArray<IMaybe<TItem>>>()
   @Output() readonly ticked = merge(this.itemsChange, this.selectedIndexChange).pipe(share())
 
   @ViewChild('floGridContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
+
   @ContentChild(FloVideoGridItemSomeDirective, { read: TemplateRef }) readonly gridItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloVideoGridItemNoneDirective, { read: TemplateRef }) readonly gridItemNoneTemplate: TemplateRef<HTMLElement>
 
   public readonly trackByFn =
-    (idx: number, item?: any) =>
-      maybe(item).flatMapAuto(a => a.value).flatMapAuto(c => `${idx}_${c.src}`).valueOrUndefined()
+    (idx: number, item?: TItem) =>
+      maybe(item)
+        // .flatMapAuto(a => a.value)
+        .flatMapAuto(c => `${idx}_${c.id}`)
+        .valueOrUndefined()
 
   get viewItems() {
-    return new Array<any>(this.viewPortCount).fill(undefined).map((val, idx) => {
-      return this.items[idx]
-        ? this.items[idx]
-        : val
-    }).map((value, idx) => {
-      return {
-        hasSomething: value ? true : false,
-        selected: this.selectedIndex === idx,
-        value
-      }
-    })
+    return new Array<IMaybe<TItem>>(this.viewPortCount).fill(maybe())
+      .map((val, idx) => {
+        return this.items[idx]
+          ? this.items[idx]
+          : val
+      })
+      .map((value, idx) => {
+        return {
+          hasSomething: value.map(() => true).valueOr(false),
+          selected: this.selectedIndex === idx,
+          value: value.valueOrUndefined()
+        }
+      })
   }
 
-  public setItem(item: any) {
+  public setItem(item?: TItem) {
     // tslint:disable-next-line: no-object-mutation
-    this.items[this.selectedIndex] = item
+    this.items[this.selectedIndex] = maybe(item)
     this.itemsChange.next(this.items)
     this.cdRef.markForCheck()
   }
 
   public readonly removeItem = () => this.setItem(undefined)
-  public readonly getSelectedItem = () => this.items[this.selectedIndex]
+  public readonly getSelectedItem = () => this.items[this.selectedIndex] ? this.items[this.selectedIndex] : maybe<TItem>()
   private readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
 
   ngAfterViewInit() {
@@ -122,8 +131,8 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
 
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
-          chunk(groups, children).forEach((coll, groupIdx) => {
-            coll.forEach((val, idx) => {
+          chunk(groups, children).forEach((col, groupIdx) => {
+            col.forEach((val, idx) => {
               this.rd.setStyle(val, 'grid-area', `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
               this.rd.setStyle(val, 'align-self', 'center')
             })

@@ -1,4 +1,4 @@
-import { VideoGridComponent } from '../video-grid/video-grid.component'
+import { VideoGridComponent, IFloGridItem } from '../video-grid/video-grid.component'
 import { maybe } from 'typescript-monads'
 import { Subject } from 'rxjs'
 import { share, takeUntil } from 'rxjs/operators'
@@ -20,24 +20,25 @@ export class FloVideoGridListItemSomeDirective<TElement extends HTMLElement> {
   styleUrls: ['./video-grid-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloVideoGridListComponent implements AfterViewInit, OnDestroy {
+export class FloVideoGridListComponent<TItem extends IFloGridItem> implements AfterViewInit, OnDestroy {
   constructor(private cd: ChangeDetectorRef) { }
 
-  @Input() readonly items: ReadonlyArray<any> = []
-  @Input() readonly gridRef: VideoGridComponent<any>
+  @Input() readonly items: ReadonlyArray<TItem> = []
+  @Input() readonly gridRef: VideoGridComponent<TItem>
   @ContentChild(FloVideoGridListItemSomeDirective, { read: TemplateRef }) readonly itemTemplate: any
 
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
-  public readonly trackByFn = (_: number, item: any) => item.id
+  public readonly trackByFn = (_: number, item: TItem) => item.id
 
   get viewItems() {
-    const selectedId = maybe(this.gridRef.getSelectedItem()).map(a => a.id)
+    const selectedId = this.gridRef.getSelectedItem().map(a => a.id)
 
     return this.items.map(item => {
       const selected = selectedId.valueOrUndefined() === item.id
-      const maybeSelectedIndex = maybe(this.gridRef.items.findIndex(a => a && a.id === item.id)).filter(a => a >= 0)
+      const maybeSelectedIndex = maybe(this.gridRef.items.findIndex(a => a.map(b => b.id).valueOrUndefined() === item.id))
+        .filter(a => a >= 0)
       const inAnotherSquare = maybeSelectedIndex.filter(d => d >= 0).map(() => true).valueOr(false)
       return {
         item,
