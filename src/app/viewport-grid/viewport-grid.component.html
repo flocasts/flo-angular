@@ -61,7 +61,7 @@
 <button (click)="emptyList()">Make List Empty</button>
 <flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems">
   <div *floVideoGridListItem="let container">
-    <a [style.font-weight]="container.selected ? 'bold' : 'normal'">{{ container.item.title }}</a>
+    <a [style.font-weight]="container.selected ? 'bold' : 'normal'">{{ container.item.id }} - {{ container.item.title }}</a>
     (
     <span class="pointer" *ngIf="container.permissions.canAdd" (click)="container.actions.add()"> Add </span>
     <span class="pointer" *ngIf="container.permissions.canRemove" (click)="container.actions.remove()"> Remove </span>

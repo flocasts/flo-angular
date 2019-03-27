@@ -1,7 +1,7 @@
 import {
   Component, Directive, ChangeDetectionStrategy, ContentChild,
   Input, TemplateRef, ElementRef, ViewChild, Renderer2, ViewChildren,
-  QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter
+  QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter, ViewEncapsulation
 } from '@angular/core'
 import { maybe, IMaybe } from 'typescript-monads'
 import { merge } from 'rxjs'
@@ -25,7 +25,7 @@ export class FloVideoGridItemSomeDirective<TElement extends HTMLElement> {
 }
 
 @Directive({
-  selector: '[floVideoGridItemNone]'
+  selector: '[floVideoGridItemNone]',
 })
 export class FloVideoGridItemNoneDirective<TElement extends HTMLElement> {
   constructor(public elmRef: ElementRef<TElement>) { }

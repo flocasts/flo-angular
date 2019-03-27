@@ -1,6 +1,6 @@
 <div #floGridContainer class="flo-video-grid-container">
   <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
-    <div #floGridItemContainer class="flo-video-item-container" (click)="setSelected(idx)">
+    <div #floGridItemContainer class="flo-video-item-container" (click)="setSelected(idx)" [attr.id]="item?.value?.id">
       <div [class.flo-video-item-selection-border]="item.selected"></div>
       <ng-container [ngSwitch]="item.hasSomething">
         <ng-container *ngSwitchCase="true">

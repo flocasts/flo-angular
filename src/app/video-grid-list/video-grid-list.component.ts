@@ -31,6 +31,11 @@ export class FloVideoGridListItemSomeDirective<TElement extends HTMLElement> {
   constructor(public elmRef: ElementRef<TElement>) { }
 }
 
+// tslint:disable: no-bitwise
+const uuidv4 = () =>
+  ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11)
+    .replace(/[018]/g, (c: any) => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+
 @Component({
   selector: 'flo-video-grid-list',
   templateUrl: './video-grid-list.component.html',
@@ -40,7 +45,23 @@ export class FloVideoGridListItemSomeDirective<TElement extends HTMLElement> {
 export class FloVideoGridListComponent<TItem extends IFloGridItem> implements AfterViewInit, OnDestroy {
   constructor(private cd: ChangeDetectorRef) { }
 
-  @Input() readonly items: ReadonlyArray<TItem> = []
+  // tslint:disable-next-line: readonly-keyword
+  private _items: ReadonlyArray<TItem> = []
+
+  @Input()
+  get items() {
+    return this._items
+  }
+  set items(val: ReadonlyArray<TItem>) {
+    // tslint:disable-next-line: no-object-mutation
+    this._items = val.map(v => {
+      return {
+        ...v,
+        id: v.id ? v.id : uuidv4()
+      }
+    })
+  }
+
   @Input() readonly gridRef: VideoGridComponent<TItem>
   @ContentChild(FloVideoGridListItemSomeDirective, { read: TemplateRef }) readonly itemTemplate: any
 
