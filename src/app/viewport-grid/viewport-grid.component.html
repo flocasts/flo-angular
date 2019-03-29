@@ -1,6 +1,6 @@
 <h3>Grid</h3>
 <flo-video-grid #videoGridRef [viewcount]="vpCountr" [trackByFunc]="tbFunc">
-  <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse></video>
+  <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse playsinline></video>
   <div *floVideoGridItemNone>ADD STREAM</div>
   <div *floVideoGridOverlay>
     <button (click)="videoGridRef.setViewCount(1)">1</button>

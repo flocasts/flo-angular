@@ -128,17 +128,17 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     this.gridItemContainers.changes.subscribe(a => this.updateGridStyles(a.length))
   }
 
-  maxHeight = 900
+  maxHeight = 800
 
   updateGridStyles(squareCount: number) {
     const gridCounts = this.calcNumRowsColumns(squareCount)
     const element = this.gridContainer.nativeElement
-    const maxWidth = `${this.maxHeight * 3.55}px`
+    const maxWidth = `${this.maxHeight * 1.777778}px`
 
     // tslint:disable:no-if-statement
     if (this.gridContainer) {
-      // this.rd.removeStyle(element, 'max-height')
-      // this.rd.setStyle(element, 'max-width', maxWidth)
+      this.rd.removeStyle(element, 'max-height')
+      this.rd.setStyle(element, 'max-width', maxWidth)
       if (gridCounts.columns <= 1) {
         this.rd.setStyle(element, 'display', 'block')
       } else {
@@ -149,8 +149,8 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
         this.rd.setStyle(element, 'grid-template-rows', this.fillTo(gridCounts.gridBoxRows))
 
         if (gridCounts.shouldFill) {
-          // this.rd.removeStyle(element, 'max-width')
-          // this.rd.setStyle(element, 'max-height', `${this.maxHeight}px`)
+          this.rd.removeStyle(element, 'max-width')
+          this.rd.setStyle(element, 'max-height', `${this.maxHeight}px`)
 
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
@@ -161,7 +161,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
             })
           })
         } else {
-          // this.rd.setStyle(element, 'max-width', maxWidth)
+          this.rd.setStyle(element, 'max-width', maxWidth)
           children.forEach(child => {
             this.rd.removeStyle(child, 'grid-area')
             this.rd.removeStyle(child, 'align-self')
