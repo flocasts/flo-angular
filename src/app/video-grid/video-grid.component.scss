@@ -1,3 +1,26 @@
+@mixin aspect-ratio($width, $height) {
+  position: relative;
+  overflow: hidden;
+  &:before {
+    display: block;
+    content: ' ';
+    width: 100%;
+    padding-top: ($height / $width) * 100%;
+    background-color: black;
+  }
+  > .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // @include flex;
+    align-items: center;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+}
+
 :host {
   display: block;
   background: black;
@@ -8,12 +31,18 @@
     // grid-template-columns: 1fr 1fr; // CHANGES OVER TIME
     // grid-template-rows: 1fr 1fr; // CHANGES OVER TIME
     // max-width: 1200px; // TODO: check this out
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
   }
   .flo-video-item-container {
     overflow: hidden;
     height: 0;
     padding-top: 56.25%;
     position: relative;
+    
     ::ng-deep>* {
       position: absolute;
       top: 0;
@@ -46,4 +75,15 @@
       }
     }
   }
+  .flo-video-overlay {
+    z-index: 4;
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
+  @include aspect-ratio(16, 9);
 }

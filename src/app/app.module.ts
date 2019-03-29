@@ -26,8 +26,11 @@ import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
-import { VideoGridComponent, FloVideoGridItemSomeDirective, FloVideoGridItemNoneDirective } from './video-grid/video-grid.component'
 import { FloVideoGridListComponent, FloVideoGridListItemSomeDirective } from './video-grid-list/video-grid-list.component'
+import {
+  VideoGridComponent, FloVideoGridItemSomeDirective,
+  FloVideoGridItemNoneDirective, FloVideoGridOverlayDirective
+} from './video-grid/video-grid.component'
 
 @NgModule({
   imports: [
@@ -64,7 +67,8 @@ import { FloVideoGridListComponent, FloVideoGridListItemSomeDirective } from './
     FloVideoGridItemSomeDirective,
     FloVideoGridItemNoneDirective,
     FloVideoGridListComponent,
-    FloVideoGridListItemSomeDirective
+    FloVideoGridListItemSomeDirective,
+    FloVideoGridOverlayDirective
   ]
 })
 export class AppModule {

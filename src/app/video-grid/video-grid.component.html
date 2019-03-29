@@ -1,3 +1,6 @@
+<div class="flo-video-overlay">
+  <ng-container *ngTemplateOutlet="gridViewOverlayTemplate"></ng-container>
+</div>
 <div #floGridContainer class="flo-video-grid-container">
   <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
     <div #floGridItemContainer class="flo-video-item-container" (click)="setSelected(idx)" [attr.id]="item?.value?.id">

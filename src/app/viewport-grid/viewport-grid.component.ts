@@ -1,12 +1,9 @@
-import {
-  Component, ChangeDetectionStrategy, ViewChild
-} from '@angular/core'
+import { Component, ChangeDetectionStrategy, ViewChild } from '@angular/core'
 import { FormGroup, FormControl, Validators } from '@angular/forms'
 import { distinctUntilChanged, map, startWith, tap } from 'rxjs/operators'
 import { ICompConfigForm } from './viewport-grid.interface'
 import { ViewportGridComponent, FloViewportManagerService } from '@flosportsinc/ng-viewport-grid'
 import { Subject, combineLatest } from 'rxjs'
-import { maybe } from 'typescript-monads'
 
 const DEFAULT_MAX_HEIGHT = 600
 const VIDEO_DB: ReadonlyArray<any> = [

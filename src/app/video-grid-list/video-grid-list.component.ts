@@ -84,18 +84,22 @@ export class FloVideoGridListComponent<TItem extends IFloGridItem> implements Af
       const selected = selectedId.valueOrUndefined() === item.id
       const maybeSelectedIndex = this.gridRef.findIndexByItemId(item.id)
       const inAnotherSquare = maybeSelectedIndex.map(() => true).valueOr(false)
+      const selectedIndex = maybeSelectedIndex.valueOr(-1)
+      const isValidIndex = selectedIndex >= 0 && selectedIndex <= this.gridRef.viewcount - 1
 
       return {
         item,
         selected,
-        selectedIndex: maybeSelectedIndex.valueOrUndefined(),
+        selectedIndex,
         permissions: {
           canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
           canRemove: selected,
           canReplace: !selected && selectedId.valueOrUndefined() !== undefined,
           canSwap: !selected && inAnotherSquare,
+          canSelect: !selected && isValidIndex
         },
         actions: {
+          select: () => selectedIndex >= 0 && this.gridRef.setSelected(selectedIndex),
           add: () => this.gridRef.setItem(item),
           replace: () => this.gridRef.setItem(item),
           remove: () => this.gridRef.removeItem(),
