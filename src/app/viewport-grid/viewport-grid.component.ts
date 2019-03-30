@@ -100,11 +100,7 @@ export class FramerComponent {
     this.selectedIndex.next(evt.selectedIndex)
   }
 
-  vpCountr = 1
-
-  thing(num: number) {
-    this.vpCountr = num
-  }
+  viewcount = 1
 
   gridListItems = VIDEO_DB
   gridListItems2 = VIDEO_DB.slice(0, 2)

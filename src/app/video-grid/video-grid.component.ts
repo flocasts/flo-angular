@@ -113,7 +113,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
       .map((value, idx) => {
         return {
           hasSomething: value.map(() => true).valueOr(false),
-          selected: this.selectedIndex === idx,
+          selected: this.selectedIndex === idx && this.viewcount > 1,
           value: value.valueOrUndefined()
         }
       })
@@ -133,7 +133,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
   updateGridStyles(squareCount: number) {
     const gridCounts = this.calcNumRowsColumns(squareCount)
     const element = this.gridContainer.nativeElement
-    const maxWidth = `${this.maxHeight * 1.777778}px`
+    const maxWidth = `${this.maxHeight * 1.77777778}px`
 
     // tslint:disable:no-if-statement
     if (this.gridContainer) {

@@ -1,19 +1,16 @@
 <h3>Grid</h3>
-<flo-video-grid #videoGridRef [viewcount]="vpCountr" [trackByFunc]="tbFunc">
+<flo-video-grid #videoGridRef [(viewcount)]="viewcount" [trackByFunc]="tbFunc">
   <video *floVideoGridItemSome="let item" [src]="item.src" autoplay floMse playsinline></video>
   <div *floVideoGridItemNone>ADD STREAM</div>
-  <div *floVideoGridOverlay>
+  <div *floVideoGridOverlay style="background-color: red;">
     <button (click)="videoGridRef.setViewCount(1)">1</button>
-    <!-- TODO: ENABLE/DISABLE injected overlay -->
     <button (click)="videoGridRef.setViewCount(2)">2</button>
     <button (click)="videoGridRef.setViewCount(4)">4</button>
+    <!-- <button (click)="videoGridRef.toggleOptionalOverlays()">Toggle Overlay Visibility</button> -->
   </div>
 </flo-video-grid>
 <br/>
 <h3>Grid List 1</h3>
-<button (click)="removeListItem()">Remove Item</button>
-<button (click)="addListItem()">Add Item</button>
-<button (click)="emptyList()">Make List Empty</button>
 <flo-video-grid-list [gridRef]="videoGridRef" [items]="gridListItems">
   <div *floVideoGridListItem="let container">
     <a [style.font-weight]="container.selected ? 'bold' : 'normal'" [class.pointer]="container.permissions.canSelect" (click)="container.actions.select()">{{ container.item.id }} - {{ container.item.title }}</a>

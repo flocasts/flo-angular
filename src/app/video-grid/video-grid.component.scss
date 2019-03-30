@@ -64,7 +64,6 @@
 
   .flo-video-overlay {
     @include posfill();
-    display: block;
     z-index: 4;
     pointer-events: none;
     ::ng-deep>* {
