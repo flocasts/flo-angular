@@ -35,30 +35,31 @@
       max-width: 100%;
       object-fit: cover;
     }
+  }
 
-    .flo-video-item-selection-border {
-      transition: box-shadow 400ms ease 0s;
-      box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
-      z-index: 1; // pointer-events: none; TODO: check this out
-    }
+  .flo-video-item-selection-border {
+    opacity: 1;
+    transition: box-shadow 400ms ease 0s;
+    box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
+    z-index: 1; // pointer-events: none; TODO: check this out
+    transition: .5s ease-in-out all;
+  }
 
-    .flo-video-item-empty {
-      color: white;
+  .flo-video-item-empty {
+    color: white;
 
-      ::ng-deep>* {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        max-width: 100%;
-        object-fit: cover;
+    ::ng-deep>* {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      object-fit: cover;
 
-
-        display: flex; // TODO
-        align-items: center;
-        justify-content: center;
-      }
+      display: flex; // TODO
+      align-items: center;
+      justify-content: center;
     }
   }
 
@@ -66,8 +67,15 @@
     @include posfill();
     z-index: 4;
     pointer-events: none;
+    opacity: 1;
+    transition: .5s ease-in-out all;
     ::ng-deep>* {
       pointer-events: all;
     }
+  }
+
+  .flo-video-hide {
+    opacity: 0;
+    transition: .5s ease-in-out all;
   }
 }

@@ -1,10 +1,10 @@
-<div *ngIf="showOverlay$ | async" class="flo-video-overlay">
+<div class="flo-video-overlay" [class.flo-video-hide]="hideOverlay$ | async">
   <ng-container *ngTemplateOutlet="gridViewOverlayTemplate"></ng-container>
 </div>
 <div #floGridContainer class="flo-video-grid-container">
   <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
     <div #floGridItemContainer class="flo-video-item-container" (click)="setSelected(idx)" [attr.id]="item?.value?.id">
-      <div [class.flo-video-item-selection-border]="item.selected"></div>
+      <div [class.flo-video-item-selection-border]="item.selected" [class.flo-video-hide]="hideOverlay$ | async" ></div>
       <ng-container [ngSwitch]="item.hasSomething">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngTemplateOutlet="gridItemSomeTemplate; context: { $implicit: item.value }"></ng-container>

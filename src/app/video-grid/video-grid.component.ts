@@ -1,13 +1,12 @@
 import { maybe, IMaybe } from 'typescript-monads'
 import { merge, fromEvent, EMPTY, timer, of } from 'rxjs'
 import { share, throttleTime, map, mapTo, startWith, switchMap } from 'rxjs/operators'
+import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   Component, Directive, ChangeDetectionStrategy, ContentChild,
   Input, TemplateRef, ElementRef, ViewChild, Renderer2, ViewChildren,
-  QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter, HostListener, Inject, PLATFORM_ID
+  QueryList, ChangeDetectorRef, AfterViewInit, Output, EventEmitter, Inject, PLATFORM_ID
 } from '@angular/core'
-import { DOCUMENT, isPlatformBrowser, isPlatformServer } from '@angular/common'
-import { type } from 'os';
 
 export interface IFloGridItem {
   readonly id: string
@@ -59,21 +58,21 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     private cdRef: ChangeDetectorRef, @Inject(DOCUMENT) private doc: any, @Inject(PLATFORM_ID) private platformId: string) {
   }
 
-  THROTTLE = 30
+  SAMPLE_THROTTLE = 30
   TIMER = 3000
   START_SHOWN = true
 
-  public showOverlay$ = isPlatformServer(this.platformId)
+  public hideOverlay$ = isPlatformServer(this.platformId)
     ? EMPTY
     : fromEvent((this.doc as HTMLDocument), 'mousemove').pipe(
-      throttleTime(this.THROTTLE),
+      throttleTime(this.SAMPLE_THROTTLE),
       map(evt => maybe(evt.target)
         .map((trgt: HTMLElement) => this.elmRef.nativeElement.contains(trgt))
         .valueOr(false)),
       startWith(this.START_SHOWN),
       switchMap(res => res
-        ? timer(this.TIMER).pipe(mapTo(false), startWith(true))
-        : of(false)))
+        ? timer(this.TIMER).pipe(mapTo(true), startWith(false))
+        : of(true)))
 
   private _selectedIndex = 0
   private _viewcount = 1
