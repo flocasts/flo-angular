@@ -72,7 +72,7 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
         .valueOr(false)),
       startWith(this.START_SHOWN),
       switchMap(res => res
-        ? timer(2000).pipe(mapTo(false), startWith(true))
+        ? timer(this.TIMER).pipe(mapTo(false), startWith(true))
         : of(false)))
 
   private _selectedIndex = 0
