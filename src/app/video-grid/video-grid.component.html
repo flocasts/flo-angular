@@ -1,4 +1,4 @@
-<div class="flo-video-overlay">
+<div *ngIf="showOverlay$ | async" class="flo-video-overlay">
   <ng-container *ngTemplateOutlet="gridViewOverlayTemplate"></ng-container>
 </div>
 <div #floGridContainer class="flo-video-grid-container">
