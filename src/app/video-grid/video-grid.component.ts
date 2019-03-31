@@ -58,21 +58,24 @@ export class VideoGridComponent<TItem extends IFloGridItem> implements AfterView
     private cdRef: ChangeDetectorRef, @Inject(DOCUMENT) private doc: any, @Inject(PLATFORM_ID) private platformId: string) {
   }
 
-  SAMPLE_THROTTLE = 30
-  TIMER = 3000
-  START_SHOWN = true
+  OVERLAY_SAMPLE_THROTTLE = 30
+  OVERLAY_TIMER = 3000
+  OVERLAY_START_SHOWN = true
+  OVERLAY_DISABLED = false
 
   public hideOverlay$ = isPlatformServer(this.platformId)
     ? EMPTY
-    : fromEvent((this.doc as HTMLDocument), 'mousemove').pipe(
-      throttleTime(this.SAMPLE_THROTTLE),
-      map(evt => maybe(evt.target)
-        .map((trgt: HTMLElement) => this.elmRef.nativeElement.contains(trgt))
-        .valueOr(false)),
-      startWith(this.START_SHOWN),
-      switchMap(res => res
-        ? timer(this.TIMER).pipe(mapTo(true), startWith(false))
-        : of(true)))
+    : this.OVERLAY_DISABLED
+      ? EMPTY
+      : fromEvent((this.doc as HTMLDocument), 'mousemove').pipe(
+        throttleTime(this.OVERLAY_SAMPLE_THROTTLE),
+        map(evt => maybe(evt.target)
+          .map((trgt: HTMLElement) => this.elmRef.nativeElement.contains(trgt))
+          .valueOr(false)),
+        startWith(this.OVERLAY_START_SHOWN),
+        switchMap(res => res
+          ? timer(this.OVERLAY_TIMER).pipe(mapTo(true), startWith(false))
+          : of(true)))
 
   private _selectedIndex = 0
   private _viewcount = 1

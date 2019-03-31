@@ -42,7 +42,7 @@
     transition: box-shadow 400ms ease 0s;
     box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
     z-index: 1; // pointer-events: none; TODO: check this out
-    transition: .5s ease-in-out all;
+    transition: .25s ease-in-out all;
   }
 
   .flo-video-item-empty {
@@ -68,7 +68,7 @@
     z-index: 4;
     pointer-events: none;
     opacity: 1;
-    transition: .5s ease-in-out all;
+    transition: .25s ease-in-out all;
     ::ng-deep>* {
       pointer-events: all;
     }
@@ -76,6 +76,6 @@
 
   .flo-video-hide {
     opacity: 0;
-    transition: .5s ease-in-out all;
+    transition: .25s ease-in-out all;
   }
 }
