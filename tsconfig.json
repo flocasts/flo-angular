@@ -108,5 +108,8 @@
         "dist/flosportsinc/ng-video-events/*"
       ]
     }
+  },
+  "angularCompilerOptions": {
+    "disableTypeScriptVersionCheck": true
   }
 }
