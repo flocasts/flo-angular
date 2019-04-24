@@ -1,4 +1,4 @@
-import { Observable, bindNodeCallback, of } from 'rxjs'
+import { Observable, bindNodeCallback, scheduled, asapScheduler } from 'rxjs'
 import { Injectable, Inject } from '@angular/core'
 import {
   HttpEvent,
@@ -27,11 +27,11 @@ export class HttpRelativeInterceptor implements HttpInterceptor {
           })
         }),
         catchError(_ => {
-          return of(new HttpResponse<any>({
+          return scheduled([new HttpResponse<any>({
             status: 404,
             statusText: 'Not found',
             url: req.url
-          }))
+          })], asapScheduler)
         })
       )
   }

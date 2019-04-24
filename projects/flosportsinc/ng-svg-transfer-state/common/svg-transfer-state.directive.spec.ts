@@ -3,7 +3,7 @@ import { SvgTransferStateModule, DEFAULT_STYLES } from './svg-transfer-state.mod
 import { SvgTransferStateDirective } from './svg-transfer-state.directive'
 import { Component } from '@angular/core'
 import { SVG_REQUEST_PATTERN_BASE, SVG_LOADER, SVG_DIRECTIVE_DEFAULT_STYLES } from './svg-transfer-state.tokens'
-import { of } from 'rxjs'
+import { scheduled, asapScheduler } from 'rxjs'
 import { By } from '@angular/platform-browser'
 
 const sampleSvg = `<svg><circle cx="50" cy="50" r="40" /></svg> `
@@ -22,7 +22,7 @@ const setupTb = () => {
       {
         provide: SVG_LOADER,
         useValue: {
-          load: () => of(sampleSvg)
+          load: () => scheduled([sampleSvg], asapScheduler)
         }
       },
       {

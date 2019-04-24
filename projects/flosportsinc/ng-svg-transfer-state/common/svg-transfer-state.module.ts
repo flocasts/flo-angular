@@ -3,7 +3,7 @@ import { SvgTransferStateDirective } from './svg-transfer-state.directive'
 import { ISvgLoaderErrorReturnValueStreamFunc, ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
 import { HttpErrorResponse, HttpClient, HttpClientModule } from '@angular/common/http'
 import { catchError } from 'rxjs/operators'
-import { of } from 'rxjs'
+import { scheduled, asapScheduler } from 'rxjs'
 import {
   SVG_DIRECTIVE_DEFAULT_STYLES, SVG_DIRECTIVE_PARENT_STYLE_KEYS,
   SVG_REQUEST_PATTERN, SVG_REQUEST_PATTERN_BASE, SVG_LOADER_ERROR_RETURN_OPERATOR, SVG_LOADER_HTTP_REQUEST
@@ -19,7 +19,7 @@ export function standardServerReqPatternFactory(dir: string): ISvgRequestPattern
 export function standardErrorValReturnFactory(): ISvgLoaderErrorReturnValueStreamFunc {
   const lambda = (_err: HttpErrorResponse) => {
     console.log(_err.message)
-    return of(undefined)
+    return scheduled([undefined], asapScheduler)
   }
   return lambda
 }

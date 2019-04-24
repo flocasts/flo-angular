@@ -4,10 +4,10 @@ import { AD_BLOCK_PING_URL } from './ad-block.browser.tokens'
 import { map, catchError, shareReplay } from 'rxjs/operators'
 import { AD_BLOCK_LOADER } from './ad-block.tokens'
 import { AdBlockModule } from './ad-block.module'
-import { of } from 'rxjs'
+import { scheduled, asapScheduler } from 'rxjs'
 
 const returnFalse = () => false
-const returnTrusObs = () => of(true)
+const returnTrusObs = () => scheduled([true], asapScheduler)
 
 export function defaultBrowserLoader(http: HttpClient, pingUrl: string) {
   const func = http.get(pingUrl).pipe(map(returnFalse), catchError(returnTrusObs), shareReplay(1))

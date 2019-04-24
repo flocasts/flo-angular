@@ -2,10 +2,10 @@ import { NgModule } from '@angular/core'
 import { AdBlockModule } from './ad-block.module'
 import { shareReplay } from 'rxjs/operators'
 import { AD_BLOCK_LOADER } from './ad-block.tokens'
-import { of } from 'rxjs'
+import { scheduled, asapScheduler } from 'rxjs'
 
 export function defaultServerLoader() {
-  return of(false).pipe(shareReplay(1))
+  return scheduled([false], asapScheduler).pipe(shareReplay(1))
 }
 
 @NgModule({

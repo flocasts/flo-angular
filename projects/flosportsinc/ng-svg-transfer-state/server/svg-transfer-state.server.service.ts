@@ -9,7 +9,7 @@ import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { SVG_REQUEST_PATTERN } from './svg-transfer-state.tokens'
 import { ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
 import { Injectable, Inject, Optional } from '@angular/core'
-import { bindNodeCallback, of } from 'rxjs'
+import { bindNodeCallback, scheduled, asapScheduler } from 'rxjs'
 import { tap, map, catchError } from 'rxjs/operators'
 import { readFile } from 'fs'
 
@@ -24,7 +24,7 @@ export class SvgServerLoaderService implements ISvgLoaderService {
   readonly load = (svgKey: string) => {
     const cachedValue = this._cache && this._cache.get(svgKey)
     const svg_ = cachedValue
-      ? of(cachedValue)
+      ? scheduled([cachedValue], asapScheduler)
       : svgKey.includes('://')
         ? this._httpRequest(svgKey)
         : bindNodeCallback(readFile)(this._reqPattern(svgKey))

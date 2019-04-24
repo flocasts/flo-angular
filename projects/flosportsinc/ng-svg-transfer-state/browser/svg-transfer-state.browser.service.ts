@@ -2,7 +2,7 @@ import { Injectable, Inject, Optional } from '@angular/core'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_BROWSER_CACHE } from './svg-transfer-state.tokens'
 import { ISvgLoaderService, StringDict, ISvgLoaderHttpFunc, ISvgLoaderBrowserCacheService } from './svg-transfer-state.interfaces'
-import { of } from 'rxjs'
+import { scheduled, asapScheduler } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
 @Injectable()
@@ -20,9 +20,9 @@ export class SvgBrowserLoaderService implements ISvgLoaderService {
     const browserCache = this._cache && this._cache.get(lookupKey)
 
     return fromServerTransferCache
-      ? of(fromServerTransferCache)
+      ? scheduled([fromServerTransferCache], asapScheduler)
       : browserCache
-        ? of(browserCache)
+        ? scheduled([browserCache], asapScheduler)
         : this._httpRequest(svgKey).pipe(
           tap(v => v && this._cache && this._cache.set(lookupKey, v)))
   }
