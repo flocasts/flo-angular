@@ -19,7 +19,7 @@ import {
   IVideoElementSupportsTargetMseCheckContext,
   IMseInitFunc
 } from './mse.tokens'
-import { map, takeUntil, take, startWith } from 'rxjs/operators'
+import { map, takeUntil, take, startWith, filter } from 'rxjs/operators'
 import { Subject, combineLatest, BehaviorSubject } from 'rxjs'
 import { maybe, IMaybe } from 'typescript-monads'
 
@@ -223,8 +223,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
       })
   })
 
-  private readonly _destroyPlayerSubscription = combineLatest(this.mseClient, this._ngOnDestroy$)
-    .pipe(take(1), map(a => a[0]))
+  private readonly _destroyPlayerSubscription = combineLatest([this.mseClient, this._ngOnDestroy$])
+    .pipe(take(1), map(a => a[0]), filter<MseClientContext<TMseClient>>(a => a !== undefined))
     .subscribe(clientRef => clientRef.mseClient
       .flatMap(mseRef => clientRef.contextKey
         .flatMapAuto(execKey => this._mseDestroyTask.find(a => a.exectionKey === execKey))
