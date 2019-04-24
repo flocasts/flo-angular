@@ -22,7 +22,7 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
     }),
     NodeEnvTransferBrowserModule.config({
       mergeWithServer: {
-        test: 'ok'
+        browserOnly: 'testing-123'
       }
     }),
     SvgTransferStateBrowserModule

@@ -14,7 +14,7 @@ import { take } from 'rxjs/operators'
 export class AdBlockBrowserTestModule { }
 
 const getService = () => TestBed.get(AdBlockService) as AdBlockService
-const getHttpMock = () => TestBed.get(HttpTestingController) as HttpTestingController
+const getHttpMock = () => TestBed.get<HttpTestingController>(HttpTestingController as any) as HttpTestingController
 
 describe(AdBlockBrowserModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
