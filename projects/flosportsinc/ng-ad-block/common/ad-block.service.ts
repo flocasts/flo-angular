@@ -11,3 +11,4 @@ export class AdBlockService implements IAdBlockService {
 
   readonly isAnAdBlockerActive = () => this._loader
 }
+

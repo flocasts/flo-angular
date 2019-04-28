@@ -32,7 +32,7 @@ describe(NodeEnvTransferServerModule.name, () => {
 
   it('should pluck nonde by default B', () => {
     setupTestBed(defNode)()
-    expect(TestBed.get(ENV_CONFIG_SERVER).selectKeys.length).toEqual(0)
+    expect(TestBed.get(ENV_CONFIG_SERVER as any).selectKeys.length).toEqual(0)
   })
 
   it('should pluck keys', () => {
