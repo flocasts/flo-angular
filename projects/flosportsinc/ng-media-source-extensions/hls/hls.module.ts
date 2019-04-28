@@ -16,11 +16,11 @@ import {
   IVideoElementSupportsTargetMseCheckContext
 } from './mse.tokens'
 import { MseModule } from './mse.module'
-import { NgModule, ModuleWithProviders } from '@angular/core'
+import { NgModule, ModuleWithProviders, Type } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
-export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'flo.mse.lib.hls.init.config'
+export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'flo.mse.lib.hls.init.config' as unknown as Type<any>
 
 export interface HlsMessage {
   readonly key: keyof typeof Hls.Events
