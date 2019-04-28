@@ -113,7 +113,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~1.1.2",
     "karma-jasmine-html-reporter": "^0.2.2",
-    "ng-packagr": "^4.7.1",
+    "ng-packagr": "^5.1.0",
     "protractor": "^5.4.2",
     "semantic-release": "^15.13.12",
     "shelljs": "^0.8.3",
