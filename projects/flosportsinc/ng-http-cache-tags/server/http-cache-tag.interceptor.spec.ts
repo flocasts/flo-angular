@@ -34,7 +34,7 @@ describe(HttpCacheTagInterceptor.name, () => {
   const httpTestHelpers = () => {
     return {
       http: TestBed.get(HttpClient) as HttpClient,
-      httpMock: TestBed.get<HttpTestingController>(HttpTestingController as any) as HttpTestingController
+      httpMock: TestBed.get(HttpTestingController as any) as HttpTestingController
     }
   }
 
