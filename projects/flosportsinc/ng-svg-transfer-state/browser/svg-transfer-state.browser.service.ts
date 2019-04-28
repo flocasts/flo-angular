@@ -12,7 +12,7 @@ export class SvgBrowserLoaderService implements ISvgLoaderService {
 
   private readonly _getFromTransferCache =
     (svgKey: string): string | undefined =>
-      this._ts.get<StringDict>(makeStateKey(SVG_TRANSFER_KEY), {})[svgKey]
+      this._ts.get<StringDict>(makeStateKey(SVG_TRANSFER_KEY.toString()), {})[svgKey]
 
   readonly load = (svgKey: string) => {
     const fromServerTransferCache = this._getFromTransferCache(svgKey)

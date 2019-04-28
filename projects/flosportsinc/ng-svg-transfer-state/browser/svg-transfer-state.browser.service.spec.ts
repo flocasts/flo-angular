@@ -29,7 +29,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load without cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController) as HttpTestingController
+    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any)._cache, 'get').and.returnValue(undefined)
 
@@ -43,7 +43,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load server state cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController) as HttpTestingController
+    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any), '_getFromTransferCache').and.returnValue('<svg></svg>')
 
@@ -57,7 +57,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load with cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController) as HttpTestingController
+    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any)._cache, 'get').and.returnValue('<svg></svg>')
 
