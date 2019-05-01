@@ -1,0 +1,14 @@
+:host {
+  > div {
+    display: grid;
+    grid-template-columns: repeat(2, 150px);
+    grid-template-rows: repeat(2, 100px);
+    div {
+      background-color: aqua;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: solid 1px;
+    }
+  }
+}
