@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID } from '@angular/core'
+import { Subject } from 'rxjs'
+import { isPlatformServer } from '@angular/common'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_FADEOUT,
   FLO_GRID_LIST_OVERLAY_THROTTLE
 } from '../ng-grid-list.tokens'
-import { Subject } from 'rxjs'
-import { isPlatformServer } from '@angular/common'
 
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
@@ -20,7 +20,7 @@ import { isPlatformServer } from '@angular/common'
 })
 export class FloGridTilesComponent {
   constructor(
-    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
     @Inject(FLO_GRID_LIST_MAX_VIEWCOUNT) private _max: number,
@@ -71,9 +71,65 @@ export class FloGridTilesComponent {
     this.max = min
   }
 
+  @Input()
+  get overlayEnabled() {
+    return this._overlayEnabled
+  }
+  set overlayEnabled(enabled: boolean) {
+    this._overlayEnabled = enabled
+    this.overlayEnabledChange.next(enabled)
+  }
+
+  public setOverlayEnabled(enabled: boolean) {
+    this.overlayEnabled = enabled
+  }
+
+  @Input()
+  get overlayStart() {
+    return this._overlayStart
+  }
+  set overlayStart(start: boolean) {
+    this._overlayStart = start
+    this.overlayStartChange.next(start)
+  }
+
+  public setOverlayStart(start: boolean) {
+    this.overlayStart = start
+  }
+
+  @Input()
+  get overlayFadeout() {
+    return this._overlayFadeout
+  }
+  set overlayFadeout(fadeout: number) {
+    this._overlayFadeout = fadeout
+    this.overlayFadeoutChange.next(fadeout)
+  }
+
+  public setOverlayFadeout(fadeout: number) {
+    this.overlayFadeout = fadeout
+  }
+
+  @Input()
+  get overlayThrottle() {
+    return this._overlayThrottle
+  }
+  set overlayThrottle(throttle: number) {
+    this._overlayThrottle = throttle
+    this.overlayThrottleChange.next(throttle)
+  }
+
+  public setOverlayThrottle(throttle: number) {
+    this.overlayThrottle = throttle
+  }
+
   @Output() readonly countChange = new Subject<number>()
   @Output() readonly minChange = new Subject<number>()
   @Output() readonly maxChange = new Subject<number>()
+  @Output() readonly overlayEnabledChange = new Subject<boolean>()
+  @Output() readonly overlayStartChange = new Subject<boolean>()
+  @Output() readonly overlayFadeoutChange = new Subject<number>()
+  @Output() readonly overlayThrottleChange = new Subject<number>()
 
-  public hideOverlay$ = isPlatformServer(this.platformId)
+  public hideOverlay$ = isPlatformServer(this._platformId)
 }
