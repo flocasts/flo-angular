@@ -32,6 +32,13 @@ const testInputProperty = (prop: string, testNumber: number, ) => {
   sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testNumber))
 }
 
+const testInputPropSetFunc = (prop: string, prop2: string, num: number) => {
+  const sut = createSutInstance()
+  sut[prop2](num)
+  expect(sut[prop]).toEqual(num)
+  sut[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(num))
+}
+
 describe(FloGridTilesComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -43,17 +50,11 @@ describe(FloGridTilesComponent.name, () => {
     expect(createSut().componentInstance).toBeTruthy()
   })
 
-  describe('viewcount property', () => {
+  describe('count property', () => {
     it('should double bind', () => testInputProperty('count', 10))
 
     it('should expose setViewcount()', () => {
-      const sut = TestBed.createComponent(FloGridTilesComponent)
-      const testNumber = 13
-
-      sut.componentInstance.setCount(testNumber)
-      sut.detectChanges()
-      expect(sut.componentInstance.count).toEqual(testNumber)
-      sut.componentInstance.countChange.toPromise().then(ve => expect(ve).toEqual(testNumber))
+      testInputPropSetFunc('count', 'setCount', 13)
     })
 
     it('should handle out of bounds value is set below minimum', () => {
@@ -79,11 +80,13 @@ describe(FloGridTilesComponent.name, () => {
 
   describe('min property', () => {
     it('should double bind', () => testInputProperty('min', 4))
+    it('should expose setter function', () => testInputPropSetFunc('min', 'setMin', 4))
     it('should start with token value', () => expect(createSutInstance().min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)))
   })
 
   describe('max property', () => {
     it('should double bind', () => testInputProperty('max', 52))
+    it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
     it('should start with token value', () => expect(createSutInstance().max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)))
   })
 })

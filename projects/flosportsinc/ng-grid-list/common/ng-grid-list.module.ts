@@ -8,7 +8,9 @@ import {
 import { CommonModule } from '@angular/common'
 
 export interface FloGridListModuleConfig {
-  readonly defaultViewcount: number
+  readonly defaultCount: number
+  readonly defaultMin: number
+  readonly defaultMax: number
 }
 
 export const DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT = 1
@@ -59,8 +61,16 @@ export class FloGridListModule {
       ngModule: FloGridListModule,
       providers: [
         {
+          provide: FLO_GRID_LIST_MIN_VIEWCOUNT,
+          useValue: cfg.defaultMin || DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT
+        },
+        {
+          provide: FLO_GRID_LIST_MAX_VIEWCOUNT,
+          useValue: cfg.defaultMax || DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
+        },
+        {
           provide: FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
-          useValue: cfg.defaultViewcount || DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
+          useValue: cfg.defaultCount || DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
         }
       ]
     }

@@ -2,7 +2,7 @@ import { FloGridListModule, DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng
 import { NgModule, Component } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
-import { FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.tokens'
+import { FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT } from './ng-grid-list.tokens'
 
 interface TItem {
   readonly title: string
@@ -82,11 +82,15 @@ describe(FloGridListModule.name, () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       imports: [FloGridListModule.config({
-        defaultViewcount: 25
+        defaultCount: 25,
+        defaultMax: 64,
+        defaultMin: 4
       })]
     }).compileComponents()
 
     expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(25)
+    expect(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)).toEqual(4)
+    expect(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)).toEqual(64)
   })
 
   it('', () => {
