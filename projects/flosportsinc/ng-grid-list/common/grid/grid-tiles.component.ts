@@ -1,6 +1,12 @@
-import { Component, ChangeDetectionStrategy, Input, Output, Inject } from '@angular/core'
-import { FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT } from '../ng-grid-list.tokens'
+import { Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID } from '@angular/core'
+import {
+  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
+  FLO_GRID_LIST_OVERLAY_ENABLED,
+  FLO_GRID_LIST_OVERLAY_FADEOUT,
+  FLO_GRID_LIST_OVERLAY_THROTTLE
+} from '../ng-grid-list.tokens'
 import { Subject } from 'rxjs'
+import { isPlatformServer } from '@angular/common'
 
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
@@ -13,9 +19,16 @@ import { Subject } from 'rxjs'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloGridTilesComponent {
-  constructor(@Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
-    @Inject(FLO_GRID_LIST_MAX_VIEWCOUNT) private _max: number) { }
+    @Inject(FLO_GRID_LIST_MAX_VIEWCOUNT) private _max: number,
+    @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
+    @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayStart: boolean,
+    @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
+    @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number
+  ) { }
 
   @Input()
   get count() {
@@ -61,4 +74,6 @@ export class FloGridTilesComponent {
   @Output() readonly countChange = new Subject<number>()
   @Output() readonly minChange = new Subject<number>()
   @Output() readonly maxChange = new Subject<number>()
+
+  public hideOverlay$ = isPlatformServer(this.platformId)
 }

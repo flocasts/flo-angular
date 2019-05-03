@@ -1,21 +1,46 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
-import {
-  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN,
-  FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT
-} from './ng-grid-list.tokens'
 import { CommonModule } from '@angular/common'
+import {
+  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
+  FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
+  FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE
+} from './ng-grid-list.tokens'
+import {
+  DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
+  DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
+  DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_START,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
+} from './ng-grid-list.module.defaults'
 
-export interface FloGridListModuleConfig {
-  readonly defaultCount: number
-  readonly defaultMin: number
-  readonly defaultMax: number
+export interface OverlayConfiguration {
+  readonly enabled: boolean
+  readonly fadeout: number
+  readonly start: boolean
+  readonly throttle: number
 }
 
-export const DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT = 1
-export const DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT = 1
-export const DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT = 25
+/**
+ * Configure global defaults such that every
+ * instance start with the same configuration
+ */
+export interface FloGridListModuleConfiguration {
+  /** Number of viewports shown on start */
+  readonly count: number
+
+  /** Minimum number of viewports shown */
+  readonly min: number
+
+  /** Maximum number of viewports shown */
+  readonly max: number
+
+  /** Overlay configuration */
+  readonly overlay: Partial<OverlayConfiguration>
+}
 
 export function defaultFloGridListGuidGenerator() {
   return () =>
@@ -52,25 +77,71 @@ export function defaultFloGridListGuidGenerator() {
     {
       provide: FLO_GRID_LIST_GUID_GEN,
       useFactory: defaultFloGridListGuidGenerator
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_ENABLED,
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_START,
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_START
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_FADEOUT,
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
     }
   ]
 })
 export class FloGridListModule {
-  static config(cfg: Partial<FloGridListModuleConfig> = {}): ModuleWithProviders {
+  static config(cfg: Partial<FloGridListModuleConfiguration>): ModuleWithProviders {
+    const config: FloGridListModuleConfiguration = {
+      count: DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+      max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
+      min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
+      ...cfg,
+      overlay: {
+        enabled: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
+        start: DEFAULT_FLO_GRID_LIST_OVERLAY_START,
+        fadeout: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
+        throttle: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
+        ...cfg.overlay
+      }
+    }
+
     return {
       ngModule: FloGridListModule,
       providers: [
         {
           provide: FLO_GRID_LIST_MIN_VIEWCOUNT,
-          useValue: cfg.defaultMin || DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT
+          useValue: config.min
         },
         {
           provide: FLO_GRID_LIST_MAX_VIEWCOUNT,
-          useValue: cfg.defaultMax || DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
+          useValue: config.max
         },
         {
           provide: FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
-          useValue: cfg.defaultCount || DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
+          useValue: config.count
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_ENABLED,
+          useValue: config.overlay.enabled
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_START,
+          useValue: config.overlay.start
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_FADEOUT,
+          useValue: config.overlay.fadeout
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
+          useValue: config.overlay.throttle
         }
       ]
     }

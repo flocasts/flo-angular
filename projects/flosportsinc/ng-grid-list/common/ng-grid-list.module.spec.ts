@@ -1,8 +1,13 @@
-import { FloGridListModule, DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module'
+import { FloGridListModule } from './ng-grid-list.module'
 import { NgModule, Component } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
-import { FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT } from './ng-grid-list.tokens'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module.defaults'
+import {
+  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
+  FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_FADEOUT,
+  FLO_GRID_LIST_OVERLAY_START
+} from './ng-grid-list.tokens'
 
 interface TItem {
   readonly title: string
@@ -72,7 +77,7 @@ describe(FloGridListModule.name, () => {
   it('should construct with empty configuration', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [FloGridListModule.config()]
+      imports: [FloGridListModule.config({})]
     }).compileComponents()
 
     expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT)
@@ -82,15 +87,25 @@ describe(FloGridListModule.name, () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       imports: [FloGridListModule.config({
-        defaultCount: 25,
-        defaultMax: 64,
-        defaultMin: 4
+        count: 25,
+        max: 64,
+        min: 4,
+        overlay: {
+          fadeout: 1,
+          throttle: 2,
+          enabled: false,
+          start: false
+        }
       })]
     }).compileComponents()
 
     expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(25)
     expect(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)).toEqual(4)
     expect(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)).toEqual(64)
+    expect(TestBed.get(FLO_GRID_LIST_OVERLAY_ENABLED)).toEqual(false)
+    expect(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)).toEqual(2)
+    expect(TestBed.get(FLO_GRID_LIST_OVERLAY_FADEOUT)).toEqual(1)
+    expect(TestBed.get(FLO_GRID_LIST_OVERLAY_START)).toEqual(false)
   })
 
   it('', () => {

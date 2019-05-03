@@ -1,8 +1,9 @@
 import { async, TestBed } from '@angular/core/testing'
 import { FloGridTilesComponent } from './grid-tiles.component'
 import { Component } from '@angular/core'
-import { FloGridListModule, DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module'
+import { FloGridListModule } from '../ng-grid-list.module'
 import { FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT } from '../ng-grid-list.tokens'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
 
 // @Component({
 //   selector: 'flo-grid-tiles-test-component',
