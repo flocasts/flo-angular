@@ -20,10 +20,10 @@ export class FloGridListComponent<TItem> {
   private _items: ReadonlyArray<TItem> = []
 
   @Input()
-  get items() {
+  private get items() {
     return this._items
   }
-  set items(val: ReadonlyArray<TItem>) {
+  private set items(val: ReadonlyArray<TItem>) {
     // tslint:disable-next-line: no-object-mutation
     this._items = val.map(v => {
       return {

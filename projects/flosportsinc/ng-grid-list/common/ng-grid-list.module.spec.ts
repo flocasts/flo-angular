@@ -1,8 +1,8 @@
-import { FloGridListModule, DEFAULT_FLO_GRID_LIST_VIEWCOUNT } from './ng-grid-list.module'
+import { FloGridListModule, DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module'
 import { NgModule, Component } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
-import { FLO_GRID_LIST_VIEWCOUNT } from './ng-grid-list.tokens'
+import { FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.tokens'
 
 interface TItem {
   readonly title: string
@@ -75,7 +75,7 @@ describe(FloGridListModule.name, () => {
       imports: [FloGridListModule.config()]
     }).compileComponents()
 
-    expect(TestBed.get(FLO_GRID_LIST_VIEWCOUNT)).toEqual(DEFAULT_FLO_GRID_LIST_VIEWCOUNT)
+    expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT)
   })
 
   it('should construct with custom configuration', () => {
@@ -86,7 +86,7 @@ describe(FloGridListModule.name, () => {
       })]
     }).compileComponents()
 
-    expect(TestBed.get(FLO_GRID_LIST_VIEWCOUNT)).toEqual(25)
+    expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(25)
   })
 
   it('', () => {

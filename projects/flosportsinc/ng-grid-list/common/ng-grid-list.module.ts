@@ -1,14 +1,19 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
-import { FLO_GRID_LIST_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN } from './ng-grid-list.tokens'
+import {
+  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN,
+  FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT
+} from './ng-grid-list.tokens'
 import { CommonModule } from '@angular/common'
 
 export interface FloGridListModuleConfig {
   readonly defaultViewcount: number
 }
 
-export const DEFAULT_FLO_GRID_LIST_VIEWCOUNT = 1
+export const DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT = 1
+export const DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT = 1
+export const DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT = 25
 
 export function defaultFloGridListGuidGenerator() {
   return () =>
@@ -31,8 +36,16 @@ export function defaultFloGridListGuidGenerator() {
   ],
   providers: [
     {
-      provide: FLO_GRID_LIST_VIEWCOUNT,
-      useValue: DEFAULT_FLO_GRID_LIST_VIEWCOUNT
+      provide: FLO_GRID_LIST_MIN_VIEWCOUNT,
+      useValue: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT
+    },
+    {
+      provide: FLO_GRID_LIST_MAX_VIEWCOUNT,
+      useValue: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
+    },
+    {
+      provide: FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+      useValue: DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
     },
     {
       provide: FLO_GRID_LIST_GUID_GEN,
@@ -46,8 +59,8 @@ export class FloGridListModule {
       ngModule: FloGridListModule,
       providers: [
         {
-          provide: FLO_GRID_LIST_VIEWCOUNT,
-          useValue: cfg.defaultViewcount || DEFAULT_FLO_GRID_LIST_VIEWCOUNT
+          provide: FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+          useValue: cfg.defaultViewcount || DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
         }
       ]
     }
