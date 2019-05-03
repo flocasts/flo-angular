@@ -2,7 +2,7 @@ import { FloGridListModule, DEFAULT_FLO_GRID_LIST_VIEWCOUNT } from './ng-grid-li
 import { NgModule, Component } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
-import { FLO_GRID_LIST_VIEWCOUNT } from './tokens'
+import { FLO_GRID_LIST_VIEWCOUNT } from './ng-grid-list.tokens'
 
 interface TItem {
   readonly title: string
@@ -21,7 +21,7 @@ interface TItem {
   <flo-grid-tiles #grid>
   </flo-grid-tiles>
 
-  <h3 >Grid List 1</h3>
+  <h3>Grid List 1</h3>
   <flo-grid-list [gridTileRef]="grid" [items]="items">
     <div *floGridListItem="let item">
       {{ item.title }}

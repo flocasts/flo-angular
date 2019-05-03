@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Output, Inject } from '@angular/core'
-import { FLO_GRID_LIST_VIEWCOUNT } from '../tokens'
+import { FLO_GRID_LIST_VIEWCOUNT } from '../ng-grid-list.tokens'
 import { Subject } from 'rxjs'
 
 // tslint:disable: no-object-mutation
