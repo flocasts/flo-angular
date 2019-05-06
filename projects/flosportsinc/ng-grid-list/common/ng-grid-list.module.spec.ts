@@ -1,8 +1,8 @@
 import { FloGridListModule } from './ng-grid-list.module'
-import { NgModule, Component } from '@angular/core'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module.defaults'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module.defaults'
+import { NgModule, Component } from '@angular/core'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_FADEOUT,

@@ -1,4 +1,8 @@
-<div>
+<div class="flo-grid-list-overlay" [class.flo-grid-list-overlay-hide]="hideOverlay$ | async">
+  <span style="color: white;">OVERLAY</span>
+  <!-- <ng-container *ngTemplateOutlet="gridViewOverlayTemplate"></ng-container> -->
+</div>
+<div class="flo-video-grid-container">
   <div>1</div>
   <div>2</div>
   <div>3</div>

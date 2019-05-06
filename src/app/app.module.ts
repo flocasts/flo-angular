@@ -26,9 +26,11 @@ import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
+import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 
 @NgModule({
   imports: [
+    FloGridListModule,
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     NodeEnvTransferModule,

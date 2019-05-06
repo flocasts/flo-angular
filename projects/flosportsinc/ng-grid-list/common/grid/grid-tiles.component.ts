@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID } from '@angular/core'
-import { Subject } from 'rxjs'
+import { Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef } from '@angular/core'
+import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { isPlatformServer } from '@angular/common'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -20,6 +21,7 @@ import {
 })
 export class FloGridTilesComponent {
   constructor(
+    private _elmRef: ElementRef<HTMLElement>,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
@@ -131,5 +133,22 @@ export class FloGridTilesComponent {
   @Output() readonly overlayFadeoutChange = new Subject<number>()
   @Output() readonly overlayThrottleChange = new Subject<number>()
 
-  public hideOverlay$ = isPlatformServer(this._platformId)
+  private cursorInsideElement = merge(
+    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(false))),
+    fromEvent(this._elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
+    fromEvent(this._elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
+  ).pipe(startWith(this.overlayStart))
+
+  private fadeoutIntervalReset = new Subject<boolean>()
+  private fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
+  private fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
+
+  public showOverlay$ = (isPlatformServer(this._platformId)
+    ? of(true)
+    : this.overlayEnabled
+      ? merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
+      : of(true)
+  ).pipe(distinctUntilChanged(), share())
+
+  public hideOverlay$ = this.showOverlay$.pipe(map(show => !show))
 }

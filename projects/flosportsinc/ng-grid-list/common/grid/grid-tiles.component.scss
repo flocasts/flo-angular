@@ -1,14 +1,23 @@
 :host {
-  > div {
+  display: block;
+  background: black;
+  position: relative;
+  .flo-video-grid-container {
     display: grid;
-    grid-template-columns: repeat(2, 150px);
-    grid-template-rows: repeat(2, 100px);
-    div {
-      background-color: aqua;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border: solid 1px;
-    }
+    margin: auto;
+  }
+  .flo-grid-list-overlay {
+    opacity: 1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transition: .25s ease-in-out all;
+  }
+  .flo-grid-list-overlay-hide {
+    opacity: 0;
+    transition: .25s ease-in-out all;
+    cursor: none;
   }
 }

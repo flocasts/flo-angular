@@ -1,6 +1,6 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
-import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
+import { FloGridTilesComponent } from './grid/grid-tiles.component'
+import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -43,10 +43,11 @@ export interface FloGridListModuleConfiguration {
 }
 
 export function defaultFloGridListGuidGenerator() {
-  return () =>
+  const lambda = () =>
     ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11)
       // tslint:disable-next-line: no-bitwise
       .replace(/[018]/g, (c: any) => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+  return lambda
 }
 
 @NgModule({

@@ -1,9 +1,14 @@
-import { async, TestBed } from '@angular/core/testing'
+import { async, TestBed, fakeAsync } from '@angular/core/testing'
 import { FloGridTilesComponent } from './grid-tiles.component'
-import { Component } from '@angular/core'
 import { FloGridListModule } from '../ng-grid-list.module'
-import { FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE } from '../ng-grid-list.tokens'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
+import { take } from 'rxjs/operators'
+import { By, DOCUMENT } from '@angular/platform-browser'
+import { PLATFORM_ID } from '@angular/core'
+import {
+  FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
+  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE
+} from '../ng-grid-list.tokens'
 
 // @Component({
 //   selector: 'flo-grid-tiles-test-component',
@@ -43,7 +48,12 @@ const testInputPropSetFunc = (prop: string, prop2: string, num: any) => {
 describe(FloGridTilesComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FloGridListModule]
+      imports: [FloGridListModule.config({
+        overlay: {
+          throttle: 6000,
+          fadeout: 1
+        }
+      })]
     }).compileComponents()
   }))
 
@@ -104,7 +114,6 @@ describe(FloGridTilesComponent.name, () => {
     it('should start with token value', () => expect(createSutInstance().overlayStart).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_START)))
   })
 
-
   describe('overlayFadeout property', () => {
     it('should double bind', () => testInputProperty('overlayFadeout', 76))
     it('should expose setter function', () => testInputPropSetFunc('overlayFadeout', 'setOverlayFadeout', 76))
@@ -116,5 +125,61 @@ describe(FloGridTilesComponent.name, () => {
     it('should expose setter function', () => testInputPropSetFunc('overlayThrottle', 'setOverlayThrottle', 4))
     it('should start with token value',
       () => expect(createSutInstance().overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('overlay', () => {
+    it('should be shown on platform browser', async(() => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule.config({
+          overlay: {
+            fadeout: 1
+          }
+        })],
+      }).compileComponents()
+
+      const sut = createSut()
+      const mousemove = new MouseEvent('mousemove')
+      sut.debugElement.nativeElement.dispatchEvent(mousemove)
+      // sut.componentInstance.hideOverlay$.pipe(take(1)).subscribe(hideOverlay => {
+      //   expect(hideOverlay).toEqual(false)
+      // })
+      sut.detectChanges()
+      sut.componentInstance.showOverlay$.pipe(take(1)).subscribe(res => {
+        console.log(res)
+        // expect(res).toEqual(true)
+      })
+    }))
+    // it('should be ignored on platform server', () => {
+    //   TestBed.resetTestingModule()
+    //   TestBed.configureTestingModule({
+    //     imports: [FloGridListModule.config({
+    //       overlay: {
+    //         throttle: 6000,
+    //         fadeout: 1
+    //       }
+    //     })],
+    //     providers: [{
+    //       provide: PLATFORM_ID,
+    //       useValue: 'server'
+    //     }]
+    //   }).compileComponents()
+    //   const sut = createSut()
+    //   sut.detectChanges()
+    //   sut.componentInstance.hideOverlay$.pipe(take(1)).subscribe(res => {
+    //     expect(res).toEqual(true)
+    //   })
+    //   sut.componentInstance.showOverlay$.pipe(take(1)).subscribe(res => {
+    //     expect(res).toEqual(false)
+    //   })
+
+    //   // sut.debugElement.triggerEventHandler('mousedown', { pageX: 50, pageY: 40 })
+    //   // sut.debugElement.triggerEventHandler('mousemove', { pageX: 60, pageY: 50 })
+
+    //   // const d = sut.debugElement.parent.query(By.css('body'))
+    //   // d.parent && d.parent.triggerEventHandler('mousemove', { pageX: 50, pageY: 40 })
+    //   // console.log(sut.debugElement.parent)
+    //   // sut.detectChanges()
+    // })
   })
 })
