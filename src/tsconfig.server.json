@@ -91,6 +91,12 @@
       ],
       "@flosportsinc/ng-video-events/*": [
         "../dist/flosportsinc/ng-video-events/*"
+      ],
+      "@flosportsinc/ng-grid-list": [
+        "../dist/flosportsinc/ng-grid-list"
+      ],
+      "@flosportsinc/ng-grid-list/*": [
+        "../dist/flosportsinc/ng-grid-list/*"
       ]
     }
   },
