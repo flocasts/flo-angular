@@ -128,58 +128,61 @@ describe(FloGridTilesComponent.name, () => {
   })
 
   describe('overlay', () => {
-    it('should be shown on platform browser', async(() => {
+    it('should be shown on platform browser', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule],
+      }).compileComponents()
+      const sut = createSut()
+      sut.detectChanges()
+      const mousemove = new MouseEvent('mousemove', )
+      sut.debugElement.nativeElement.dispatchEvent(mousemove)
+      sut.detectChanges()
+      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(true)
+      })
+      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(hideOverlay => {
+        expect(hideOverlay).toEqual(false)
+      })
+    })
+
+    it('should respect enabled flag', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
         imports: [FloGridListModule.config({
           overlay: {
-            fadeout: 1
+            enabled: false
           }
-        })],
+        })]
       }).compileComponents()
 
       const sut = createSut()
-      const mousemove = new MouseEvent('mousemove')
-      sut.debugElement.nativeElement.dispatchEvent(mousemove)
-      // sut.componentInstance.hideOverlay$.pipe(take(1)).subscribe(hideOverlay => {
-      //   expect(hideOverlay).toEqual(false)
-      // })
       sut.detectChanges()
-      sut.componentInstance.showOverlay$.pipe(take(1)).subscribe(res => {
-        console.log(res)
-        // expect(res).toEqual(true)
+      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(true)
+      })
+      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(false)
       })
     }))
-    // it('should be ignored on platform server', () => {
-    //   TestBed.resetTestingModule()
-    //   TestBed.configureTestingModule({
-    //     imports: [FloGridListModule.config({
-    //       overlay: {
-    //         throttle: 6000,
-    //         fadeout: 1
-    //       }
-    //     })],
-    //     providers: [{
-    //       provide: PLATFORM_ID,
-    //       useValue: 'server'
-    //     }]
-    //   }).compileComponents()
-    //   const sut = createSut()
-    //   sut.detectChanges()
-    //   sut.componentInstance.hideOverlay$.pipe(take(1)).subscribe(res => {
-    //     expect(res).toEqual(true)
-    //   })
-    //   sut.componentInstance.showOverlay$.pipe(take(1)).subscribe(res => {
-    //     expect(res).toEqual(false)
-    //   })
 
-    //   // sut.debugElement.triggerEventHandler('mousedown', { pageX: 50, pageY: 40 })
-    //   // sut.debugElement.triggerEventHandler('mousemove', { pageX: 60, pageY: 50 })
-
-    //   // const d = sut.debugElement.parent.query(By.css('body'))
-    //   // d.parent && d.parent.triggerEventHandler('mousemove', { pageX: 50, pageY: 40 })
-    //   // console.log(sut.debugElement.parent)
-    //   // sut.detectChanges()
-    // })
+    it('should be ignored on platform server', async(() => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule],
+        providers: [{
+          provide: PLATFORM_ID,
+          useValue: 'server'
+        }]
+      }).compileComponents()
+      const sut = createSut()
+      sut.detectChanges()
+      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(true)
+      })
+      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(false)
+      })
+    }))
   })
 })

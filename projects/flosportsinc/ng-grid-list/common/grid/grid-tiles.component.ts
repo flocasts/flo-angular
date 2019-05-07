@@ -134,7 +134,7 @@ export class FloGridTilesComponent {
   @Output() readonly overlayThrottleChange = new Subject<number>()
 
   private cursorInsideElement = merge(
-    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(false))),
+    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(true))),
     fromEvent(this._elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this._elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart))
@@ -143,12 +143,12 @@ export class FloGridTilesComponent {
   private fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
   private fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
 
-  public showOverlay$ = (isPlatformServer(this._platformId)
-    ? of(true)
+  public showOverlay = (isPlatformServer(this._platformId)
+    ? of(false)
     : this.overlayEnabled
       ? merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
-      : of(true)
+      : of(false)
   ).pipe(distinctUntilChanged(), share())
 
-  public hideOverlay$ = this.showOverlay$.pipe(map(show => !show))
+  public hideOverlay = this.showOverlay.pipe(map(show => !show))
 }
