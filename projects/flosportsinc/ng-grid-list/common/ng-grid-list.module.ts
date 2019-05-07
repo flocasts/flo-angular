@@ -14,7 +14,9 @@ import {
   DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
   DEFAULT_FLO_GRID_LIST_OVERLAY_START,
   DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
-  DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
+  DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
+  DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE
 } from './ng-grid-list.module.defaults'
 import { FloGridListOverlayDirective } from './grid/grid.overlay.directive'
 
@@ -22,7 +24,9 @@ export interface OverlayConfiguration {
   readonly enabled: boolean
   readonly fadeout: number
   readonly start: boolean
-  readonly throttle: number
+  readonly throttle: number,
+  readonly ngStyle: Partial<{ readonly [key: string]: string }>
+  readonly ngClass: Partial<{ readonly [key: string]: string }>
 }
 
 /**
@@ -100,11 +104,11 @@ export function defaultFloGridListGuidGenerator() {
     },
     {
       provide: FLO_GRID_LIST_OVERLAY_NG_CLASS,
-      useValue: {}
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS
     },
     {
       provide: FLO_GRID_LIST_OVERLAY_NG_STYLE,
-      useValue: {}
+      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE
     }
   ]
 })
@@ -120,6 +124,8 @@ export class FloGridListModule {
         start: DEFAULT_FLO_GRID_LIST_OVERLAY_START,
         fadeout: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
         throttle: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
+        ngClass: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
+        ngStyle: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
         ...cfg.overlay
       }
     }
@@ -154,6 +160,14 @@ export class FloGridListModule {
         {
           provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
           useValue: config.overlay.throttle
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_NG_CLASS,
+          useValue: config.overlay.ngClass
+        },
+        {
+          provide: FLO_GRID_LIST_OVERLAY_NG_STYLE,
+          useValue: config.overlay.ngStyle
         }
       ]
     }
