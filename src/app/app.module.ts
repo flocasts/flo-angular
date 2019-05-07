@@ -31,6 +31,11 @@ import { GridListComponent } from './grid-list/grid-list.component'
 @NgModule({
   imports: [
     FloGridListModule,
+    // .config({
+    //   overlay: {
+    //     styles: {}
+    //   }
+    // }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     NodeEnvTransferModule,

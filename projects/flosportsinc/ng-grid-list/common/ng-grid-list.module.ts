@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
   FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
-  FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE
+  FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_NG_CLASS, FLO_GRID_LIST_OVERLAY_NG_STYLE
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -16,6 +16,7 @@ import {
   DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
   DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
 } from './ng-grid-list.module.defaults'
+import { FloGridListOverlayDirective } from './grid/grid.overlay.directive'
 
 export interface OverlayConfiguration {
   readonly enabled: boolean
@@ -55,12 +56,14 @@ export function defaultFloGridListGuidGenerator() {
   declarations: [
     FloGridListComponent,
     FloGridTilesComponent,
-    FloGridListItemDirective
+    FloGridListItemDirective,
+    FloGridListOverlayDirective
   ],
   exports: [
     FloGridListComponent,
     FloGridTilesComponent,
-    FloGridListItemDirective
+    FloGridListItemDirective,
+    FloGridListOverlayDirective
   ],
   providers: [
     {
@@ -94,6 +97,14 @@ export function defaultFloGridListGuidGenerator() {
     {
       provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
       useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_NG_CLASS,
+      useValue: {}
+    },
+    {
+      provide: FLO_GRID_LIST_OVERLAY_NG_STYLE,
+      useValue: {}
     }
   ]
 })

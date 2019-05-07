@@ -13,7 +13,11 @@ import {
 @Component({
   selector: 'flo-grid-tiles-test-component',
   template: `
-    <flo-grid-tiles [(count)]="count"></flo-grid-tiles>
+    <flo-grid-tiles [(count)]="count">
+      <div *floGridListOverlay>
+        Overlay controls go here
+      </div>
+    </flo-grid-tiles>
   `
 })
 export class FloGridTilesTestComponent {
@@ -132,6 +136,20 @@ describe(FloGridTilesComponent.name, () => {
   describe('overlayThrottle property', () => {
     it('should double bind', () => testInputProperty('overlayThrottle', 4))
     it('should expose setter function', () => testInputPropSetFunc('overlayThrottle', 'setOverlayThrottle', 4))
+    it('should start with token value',
+      () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('overlayNgClass property', () => {
+    it('should double bind', () => testInputProperty('overlayNgClass', { 'someClass': true }))
+    it('should expose setter function', () => testInputPropSetFunc('overlayNgClass', 'setOverlayNgClass', { 'someClass': true }))
+    it('should start with token value',
+      () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('overlayNgStyle property', () => {
+    it('should double bind', () => testInputProperty('overlayNgStyle', { 'color': 'white' }))
+    it('should expose setter function', () => testInputPropSetFunc('overlayNgStyle', 'setOverlayNgStyle', { 'color': 'white' }))
     it('should start with token value',
       () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
   })

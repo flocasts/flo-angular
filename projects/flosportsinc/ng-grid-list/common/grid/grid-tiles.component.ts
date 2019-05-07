@@ -1,13 +1,19 @@
-import { Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef } from '@angular/core'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { isPlatformServer } from '@angular/common'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
 import {
+  Component, ChangeDetectionStrategy, Input, Output,
+  Inject, PLATFORM_ID, ElementRef, ContentChild, TemplateRef
+} from '@angular/core'
+import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_FADEOUT,
-  FLO_GRID_LIST_OVERLAY_THROTTLE
+  FLO_GRID_LIST_OVERLAY_THROTTLE,
+  FLO_GRID_LIST_OVERLAY_NG_CLASS,
+  FLO_GRID_LIST_OVERLAY_NG_STYLE
 } from '../ng-grid-list.tokens'
+import { FloGridListOverlayDirective } from './grid.overlay.directive'
 
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
@@ -29,7 +35,9 @@ export class FloGridTilesComponent {
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
-    @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number
+    @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number,
+    @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
+    @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object
   ) { }
 
   @Input()
@@ -125,6 +133,32 @@ export class FloGridTilesComponent {
     this.overlayThrottle = throttle
   }
 
+  @Input()
+  get overlayNgClass() {
+    return this._overlayNgClass
+  }
+  set overlayNgClass(ngClass: object) {
+    this._overlayNgClass = ngClass
+    this.overlayNgClassChange.next(ngClass)
+  }
+
+  public setOverlayNgClass(ngClass: object) {
+    this.overlayNgClass = ngClass
+  }
+
+  @Input()
+  get overlayNgStyle() {
+    return this._overlayNgStyle
+  }
+  set overlayNgStyle(ngStyle: object) {
+    this._overlayNgStyle = ngStyle
+    this.overlayNgStyleChange.next(ngStyle)
+  }
+
+  public setOverlayNgStyle(ngStyle: object) {
+    this.overlayNgStyle = ngStyle
+  }
+
   @Output() public readonly countChange = new Subject<number>()
   @Output() public readonly minChange = new Subject<number>()
   @Output() public readonly maxChange = new Subject<number>()
@@ -132,6 +166,10 @@ export class FloGridTilesComponent {
   @Output() public readonly overlayStartChange = new Subject<boolean>()
   @Output() public readonly overlayFadeoutChange = new Subject<number>()
   @Output() public readonly overlayThrottleChange = new Subject<number>()
+  @Output() public readonly overlayNgClassChange = new Subject<Object>()
+  @Output() public readonly overlayNgStyleChange = new Subject<Object>()
+
+  @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   private cursorInsideElement = merge(
     fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(true))),
