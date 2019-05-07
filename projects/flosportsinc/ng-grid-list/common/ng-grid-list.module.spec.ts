@@ -54,7 +54,7 @@ export class FloGridListTestComponent {
   readonly items3: ReadonlyArray<TItem> = [{ title: 'Interstellar' }]
 
   setViewCount(count: number) {
-    console.log(count)
+    // console.log(count)
   }
 }
 

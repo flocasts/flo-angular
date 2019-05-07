@@ -3,31 +3,41 @@ import { FloGridTilesComponent } from './grid-tiles.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
-import { PLATFORM_ID } from '@angular/core'
+import { PLATFORM_ID, Component, NgModule } from '@angular/core'
+import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE
 } from '../ng-grid-list.tokens'
 
-// @Component({
-//   selector: 'flo-grid-tiles-test-component',
-//   template: `
-//     <flo-grid-tiles [(viewcount)]="viewcount"></flo-grid-tiles>
-//   `
-// })
-// export class FloGridTilesTestComponent {
-//   readonly viewcount = 12
-// }
-
-// tslint:disable: no-object-mutation
-
-const createSut = () => {
-  const fixture = TestBed.createComponent(FloGridTilesComponent)
-  fixture.detectChanges()
-  return fixture
+@Component({
+  selector: 'flo-grid-tiles-test-component',
+  template: `
+    <flo-grid-tiles [(count)]="count"></flo-grid-tiles>
+  `
+})
+export class FloGridTilesTestComponent {
+  readonly count = 1
 }
 
-const createSutInstance = () => createSut().componentInstance
+@NgModule({
+  imports: [FloGridListModule],
+  declarations: [FloGridTilesTestComponent]
+})
+export class FloGridTestingModule { }
+
+// tslint:disable: no-object-mutation
+const createSut = () => {
+  const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
+  const fixture = hoistFixture.debugElement.query(By.directive(FloGridTilesComponent))
+  hoistFixture.detectChanges()
+  return {
+    hoistFixture,
+    hoiseInstance: fixture.componentInstance,
+    fixture,
+    instance: fixture.componentInstance
+  }
+}
 
 const testInputProperty = (prop: string, testNumber: any, ) => {
   const sut = TestBed.createComponent(FloGridTilesComponent)
@@ -38,7 +48,7 @@ const testInputProperty = (prop: string, testNumber: any, ) => {
 }
 
 const testInputPropSetFunc = (prop: string, prop2: string, num: any) => {
-  const sut = createSutInstance()
+  const sut = createSut().instance
   sut[prop2](num)
   expect(sut[prop]).toEqual(num)
   sut[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(num))
@@ -47,7 +57,7 @@ const testInputPropSetFunc = (prop: string, prop2: string, num: any) => {
 describe(FloGridTilesComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FloGridListModule.config({
+      imports: [FloGridTestingModule, FloGridListModule.config({
         overlay: {
           throttle: 6000,
           fadeout: 1
@@ -57,7 +67,7 @@ describe(FloGridTilesComponent.name, () => {
   }))
 
   it('should create', () => {
-    expect(createSut().componentInstance).toBeTruthy()
+    expect(createSut().instance).toBeTruthy()
   })
 
   describe('count property', () => {
@@ -91,39 +101,39 @@ describe(FloGridTilesComponent.name, () => {
   describe('min property', () => {
     it('should double bind', () => testInputProperty('min', 4))
     it('should expose setter function', () => testInputPropSetFunc('min', 'setMin', 4))
-    it('should start with token value', () => expect(createSutInstance().min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)))
+    it('should start with token value', () => expect(createSut().instance.min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)))
   })
 
   describe('max property', () => {
     it('should double bind', () => testInputProperty('max', 52))
     it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
-    it('should start with token value', () => expect(createSutInstance().max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)))
+    it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)))
   })
 
   describe('overlayEnabled property', () => {
     it('should double bind', () => testInputProperty('overlayEnabled', false))
     it('should expose setter function', () => testInputPropSetFunc('overlayEnabled', 'setOverlayEnabled', false))
     it('should start with token value',
-      () => expect(createSutInstance().overlayEnabled).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_ENABLED)))
+      () => expect(createSut().instance.overlayEnabled).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_ENABLED)))
   })
 
   describe('overlayStart property', () => {
     it('should double bind', () => testInputProperty('overlayStart', false))
     it('should expose setter function', () => testInputPropSetFunc('overlayStart', 'setOverlayStart', false))
-    it('should start with token value', () => expect(createSutInstance().overlayStart).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_START)))
+    it('should start with token value', () => expect(createSut().instance.overlayStart).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_START)))
   })
 
   describe('overlayFadeout property', () => {
     it('should double bind', () => testInputProperty('overlayFadeout', 76))
     it('should expose setter function', () => testInputPropSetFunc('overlayFadeout', 'setOverlayFadeout', 76))
     it('should start with token value',
-      () => expect(createSutInstance().overlayFadeout).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_FADEOUT)))
+      () => expect(createSut().instance.overlayFadeout).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_FADEOUT)))
   })
   describe('overlayThrottle property', () => {
     it('should double bind', () => testInputProperty('overlayThrottle', 4))
     it('should expose setter function', () => testInputPropSetFunc('overlayThrottle', 'setOverlayThrottle', 4))
     it('should start with token value',
-      () => expect(createSutInstance().overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+      () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
   })
 
   describe('overlay', () => {
@@ -131,23 +141,26 @@ describe(FloGridTilesComponent.name, () => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
         imports: [FloGridListModule],
+        declarations: [FloGridTilesTestComponent]
       }).compileComponents()
       const sut = createSut()
-      sut.detectChanges()
-      const mousemove = new MouseEvent('mousemove', )
-      sut.debugElement.nativeElement.dispatchEvent(mousemove)
-      sut.detectChanges()
-      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+      const mousemove = new MouseEvent('mousemove')
+      sut.fixture.nativeElement.dispatchEvent(mousemove)
+      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(true)
       })
-      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(hideOverlay => {
+      sut.instance.hideOverlay.pipe(take(1)).subscribe(hideOverlay => {
         expect(hideOverlay).toEqual(false)
       })
+
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.flo-grid-list-overlay-hide'))
+      expect(elementHasHiddenClass).toBeFalsy()
     })
 
     it('should respect enabled flag', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
+        declarations: [FloGridTilesTestComponent],
         imports: [FloGridListModule.config({
           overlay: {
             enabled: false
@@ -156,11 +169,10 @@ describe(FloGridTilesComponent.name, () => {
       }).compileComponents()
 
       const sut = createSut()
-      sut.detectChanges()
-      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(true)
       })
-      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
     }))
@@ -169,19 +181,21 @@ describe(FloGridTilesComponent.name, () => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
         imports: [FloGridListModule],
+        declarations: [FloGridTilesTestComponent],
         providers: [{
           provide: PLATFORM_ID,
           useValue: 'server'
         }]
       }).compileComponents()
       const sut = createSut()
-      sut.detectChanges()
-      sut.componentInstance.hideOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(true)
       })
-      sut.componentInstance.showOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.flo-grid-list-overlay-hide'))
+      expect(elementHasHiddenClass).toBeTruthy()
     }))
   })
 })
