@@ -1,9 +1,8 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing'
+import { async, TestBed } from '@angular/core/testing'
 import { FloGridTilesComponent } from './grid-tiles.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
-import { By, DOCUMENT } from '@angular/platform-browser'
 import { PLATFORM_ID } from '@angular/core'
 import {
   FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,

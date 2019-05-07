@@ -125,13 +125,13 @@ export class FloGridTilesComponent {
     this.overlayThrottle = throttle
   }
 
-  @Output() readonly countChange = new Subject<number>()
-  @Output() readonly minChange = new Subject<number>()
-  @Output() readonly maxChange = new Subject<number>()
-  @Output() readonly overlayEnabledChange = new Subject<boolean>()
-  @Output() readonly overlayStartChange = new Subject<boolean>()
-  @Output() readonly overlayFadeoutChange = new Subject<number>()
-  @Output() readonly overlayThrottleChange = new Subject<number>()
+  @Output() public readonly countChange = new Subject<number>()
+  @Output() public readonly minChange = new Subject<number>()
+  @Output() public readonly maxChange = new Subject<number>()
+  @Output() public readonly overlayEnabledChange = new Subject<boolean>()
+  @Output() public readonly overlayStartChange = new Subject<boolean>()
+  @Output() public readonly overlayFadeoutChange = new Subject<number>()
+  @Output() public readonly overlayThrottleChange = new Subject<number>()
 
   private cursorInsideElement = merge(
     fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(true))),
@@ -139,16 +139,16 @@ export class FloGridTilesComponent {
     fromEvent(this._elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart))
 
-  private fadeoutIntervalReset = new Subject<boolean>()
-  private fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
-  private fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
+  private readonly fadeoutIntervalReset = new Subject<boolean>()
+  private readonly fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
+  private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
 
-  public showOverlay = (isPlatformServer(this._platformId)
+  public readonly showOverlay = (isPlatformServer(this._platformId)
     ? of(false)
     : this.overlayEnabled
       ? merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
       : of(false)
   ).pipe(distinctUntilChanged(), share())
 
-  public hideOverlay = this.showOverlay.pipe(map(show => !show))
+  public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 }
