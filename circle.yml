@@ -252,7 +252,7 @@ jobs:
           root: .
           paths:
             - cc.ng-video-events.json
-  test_grid_list:
+  test_grid-list:
     <<: *defaults
     steps:
       - checkout
