@@ -2,7 +2,6 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { FramerComponent } from './viewport-grid/viewport-grid.component'
 import { ViewportGridModule } from '@flosportsinc/ng-viewport-grid'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
@@ -27,6 +26,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
+import { GridListComponent } from './grid-list/grid-list.component'
 
 @NgModule({
   imports: [
@@ -49,7 +49,6 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
   ],
   declarations: [
     AppComponent,
-    FramerComponent,
     HomeComponent,
     IconsComponent,
     HlsComponent,
@@ -59,7 +58,8 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
     UniversalServicesComponent,
     StylesComponent,
     AutoplayComponent,
-    NotFoundComponent
+    GridListComponent,
+    NotFoundComponent,
   ]
 })
 export class AppModule {
