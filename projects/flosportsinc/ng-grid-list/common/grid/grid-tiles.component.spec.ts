@@ -7,7 +7,7 @@ import { PLATFORM_ID, Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
-  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE
+  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_MAX_HEIGHT
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -118,6 +118,12 @@ describe(FloGridTilesComponent.name, () => {
     it('should double bind', () => testInputProperty('max', 52))
     it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
     it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)))
+  })
+
+  describe('maxheight property', () => {
+    it('should double bind', () => testInputProperty('maxheight', 400))
+    it('should expose setter function', () => testInputPropSetFunc('maxheight', 'setMaxheight', 400))
+    it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
   })
 
   describe('overlayEnabled property', () => {

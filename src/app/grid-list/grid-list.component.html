@@ -1,14 +1,18 @@
 <h1>grid-list</h1>
 
-<flo-grid-tiles #grid>
-  <div *floGridListOverlay="let overlay">
-    Overlay controls here!
+<flo-grid-tiles #gridRef>
+  <div *floGridListOverlay>
+    <button (click)="gridRef.setCount(1)">1</button>
+    <button (click)="gridRef.setCount(2)">2</button>
+    <button (click)="gridRef.setCount(3)">3</button>
+    <button (click)="gridRef.setCount(4)">4</button>
+    <button (click)="gridRef.setCount(9)">9</button>
   </div>
   <div *floGridListItemSome="let item">
-    Item here!
+    {{ item.prop }}
   </div>
   <div *floGridListItemNone>
-    SELECT STREAM
+    EMPTY!
   </div>
 </flo-grid-tiles>
 

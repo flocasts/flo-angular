@@ -2,10 +2,40 @@
   display: block;
   position: relative;
   background: black; // move to js
+
   .flo-grid-list-container {
     display: grid;
+    // // grid-template-rows: repeat(2, auto);
+    // grid-template-columns: repeat(2, auto);
     margin: auto;
+    // max-width: 1000px;
   }
+
+  .flo-grid-list-item-container {
+    overflow: hidden;
+    height: 0;
+    padding-top: 56.25%;
+    position: relative;
+    color: white;
+
+    ::ng-deep :first-child {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      max-width: 100%;
+      object-fit: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .flo-grid-list-item-none {
+    color: white;
+  }
+
   .flo-grid-list-overlay {
     position: absolute;
     opacity: 1;
@@ -13,9 +43,23 @@
     bottom: 0;
     left: 0;
     right: 0;
+    z-index: 4;
+
+    ::ng-deep>* {
+      pointer-events: all;
+    }
   }
+
   .flo-grid-list-overlay-hide {
     opacity: 0;
     cursor: none;
+  }
+
+  .flo-grid-list-item-selection-border {
+    opacity: 1;
+    transition: box-shadow 400ms ease 0s;
+    box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
+    z-index: 1; // pointer-events: none; TODO: check this out
+    transition: .25s ease-in-out all;
   }
 }
