@@ -17,6 +17,12 @@ import {
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
+      <div *floGridListItemSome="let item">
+        <span>{{ item.title }}</span>
+      </div>
+      <div *floGridListItemNone>
+        EMPTY
+      </div>
     </flo-grid-tiles>
   `
 })

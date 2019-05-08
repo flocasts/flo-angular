@@ -2,7 +2,7 @@ import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list
 import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
-import { FloGridListOverlayDirective } from './grid/grid.overlay.directive'
+import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid/grid.tiles.directive'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
   FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
@@ -58,16 +58,20 @@ export function defaultFloGridListGuidGenerator() {
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    FloGridListComponent,
     FloGridTilesComponent,
+    FloGridListComponent,
     FloGridListItemDirective,
-    FloGridListOverlayDirective
+    FloGridListOverlayDirective,
+    FloGridListItemSomeDirective,
+    FloGridListItemNoneDirective
   ],
   exports: [
-    FloGridListComponent,
     FloGridTilesComponent,
+    FloGridListComponent,
     FloGridListItemDirective,
-    FloGridListOverlayDirective
+    FloGridListOverlayDirective,
+    FloGridListItemSomeDirective,
+    FloGridListItemNoneDirective
   ],
   providers: [
     {

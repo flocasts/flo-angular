@@ -3,7 +3,7 @@ import { isPlatformServer } from '@angular/common'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
 import {
   Component, ChangeDetectionStrategy, Input, Output,
-  Inject, PLATFORM_ID, ElementRef, ContentChild, TemplateRef
+  Inject, PLATFORM_ID, ElementRef, ContentChild, TemplateRef, ViewChild, ViewChildren, QueryList
 } from '@angular/core'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
@@ -13,7 +13,7 @@ import {
   FLO_GRID_LIST_OVERLAY_NG_CLASS,
   FLO_GRID_LIST_OVERLAY_NG_STYLE
 } from '../ng-grid-list.tokens'
-import { FloGridListOverlayDirective } from './grid.overlay.directive'
+import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
@@ -159,6 +159,8 @@ export class FloGridTilesComponent {
     this.overlayNgStyle = ngStyle
   }
 
+  items: ReadonlyArray<any> = [1, 2, 3]
+
   @Output() public readonly countChange = new Subject<number>()
   @Output() public readonly minChange = new Subject<number>()
   @Output() public readonly maxChange = new Subject<number>()
@@ -169,6 +171,11 @@ export class FloGridTilesComponent {
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
 
+  @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
+  @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
+
+  @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   private cursorInsideElement = merge(

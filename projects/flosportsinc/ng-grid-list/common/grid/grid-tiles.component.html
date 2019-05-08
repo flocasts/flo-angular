@@ -1,12 +1,21 @@
 <div class="flo-grid-list-overlay"
-  [class.flo-grid-list-overlay-hide]="hideOverlay | async"
   [ngClass]="overlayNgClass"
-  [ngStyle]="overlayNgStyle">
+  [ngStyle]="overlayNgStyle"
+  [class.flo-grid-list-overlay-hide]="hideOverlay | async">
   <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
 </div>
-<div class="flo-video-grid-container">
-  <div>1</div>
-  <div>2</div>
-  <div>3</div>
-  <div>4</div>
+<div #floGridListContainer class="flo-grid-list-container">
+  <ng-container *ngFor="let item of items">
+    <div #floGridListItemContainer class="flo-grid-list-item-container" [attr.id]="item?.value?.id">
+      <!-- <div [class.flo-video-item-selection-border]="item.selected" [class.flo-video-hide]="hideOverlay$ | async" ></div>
+      <ng-container [ngSwitch]="item.hasSomething">
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngTemplateOutlet="gridItemSomeTemplate; context: { $implicit: item.value }"></ng-container>
+        </ng-container>
+        <div *ngSwitchCase="false" class="flo-video-item-empty">
+          <ng-container *ngTemplateOutlet="gridItemNoneTemplate; context: { $implicit: item.value }"></ng-container>
+        </div>
+      </ng-container> -->
+    </div>
+  </ng-container>
 </div>
