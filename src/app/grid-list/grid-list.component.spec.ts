@@ -1,24 +1,18 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, TestBed } from '@angular/core/testing'
 import { GridListComponent } from './grid-list.component'
 
-describe('GridListComponent', () => {
-  let component: GridListComponent
-  let fixture: ComponentFixture<GridListComponent>
-
+describe(GridListComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GridListComponent ]
+      declarations: [GridListComponent]
     })
-    .compileComponents()
+      .compileComponents()
   }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(GridListComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
 
   it('should create', () => {
-    expect(component).toBeTruthy()
+    const fixture = TestBed.createComponent(GridListComponent)
+    fixture.detectChanges()
+    expect(fixture.componentInstance).toBeTruthy()
   })
 })
