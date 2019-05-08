@@ -20,13 +20,13 @@ import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
-import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 import { GridListComponent } from './grid-list/grid-list.component'
+import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 
 @NgModule({
   imports: [

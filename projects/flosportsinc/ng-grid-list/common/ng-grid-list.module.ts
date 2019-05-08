@@ -2,6 +2,7 @@ import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list
 import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
+import { FloGridListOverlayDirective } from './grid/grid.overlay.directive'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
   FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
@@ -18,7 +19,6 @@ import {
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE
 } from './ng-grid-list.module.defaults'
-import { FloGridListOverlayDirective } from './grid/grid.overlay.directive'
 
 export interface OverlayConfiguration {
   readonly enabled: boolean
@@ -124,9 +124,15 @@ export class FloGridListModule {
         start: DEFAULT_FLO_GRID_LIST_OVERLAY_START,
         fadeout: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
         throttle: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
-        ngClass: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
-        ngStyle: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
-        ...cfg.overlay
+        ...cfg.overlay,
+        ngClass: {
+          ...DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
+          ...(cfg.overlay || {}).ngClass
+        },
+        ngStyle: {
+          ...DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
+          ...(cfg.overlay || {}).ngStyle
+        }
       }
     }
 
