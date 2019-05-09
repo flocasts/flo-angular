@@ -7,7 +7,7 @@ import { PLATFORM_ID, Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
-  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_MAX_HEIGHT
+  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -132,9 +132,30 @@ describe(FloGridTilesComponent.name, () => {
   })
 
   describe('selectedIndex property', () => {
-    it('should double bind', () => testInputProperty('selectedIndex', 3))
-    it('should expose setter function', () => testInputPropSetFunc('selectedIndex', 'setSelectedIndex', 3))
-    // it('should start with token value', () => expect(createSut().instance.selectedIndex).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
+    it('should double bind', () => testInputProperty('selectedIndex', 0))
+    it('should expose setter function', () => testInputPropSetFunc('selectedIndex', 'setSelectedIndex', 0))
+    it('should start with token value', () => expect(createSut().instance.selectedIndex).toEqual(TestBed.get(FLO_GRID_LIST_SELECTED_INDEX)))
+    it('should not set out of bounds', () => {
+      const sut = createSut().instance
+      const originalIndex = sut.selectedIndex
+      sut.count = 4
+      sut.setSelectedIndex(100)
+      expect(sut.selectedIndex).toEqual(originalIndex)
+
+      sut.setSelectedIndex(3)
+      expect(sut.selectedIndex).toEqual(3)
+
+      const originalIndex1 = sut.selectedIndex
+      sut.setSelectedIndex(-1)
+      expect(sut.selectedIndex).toEqual(originalIndex1)
+    })
+    it('should not go out of visual bounds', () => {
+      const sut = createSut().instance
+      sut.count = 4
+      sut.selectedIndex = 3
+      sut.count = 1
+      expect(sut.selectedIndex).toEqual(0)
+    })
   })
 
   describe('overlayEnabled property', () => {

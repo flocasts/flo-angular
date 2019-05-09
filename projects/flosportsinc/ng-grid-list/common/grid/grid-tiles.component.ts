@@ -112,8 +112,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     return this._selectedIndex
   }
   set selectedIndex(index: number) {
-    this._selectedIndex = index
-    this.selectedIndexChange.next(index)
+    if (index >= 0 && index < this.count) {
+      this._selectedIndex = index
+      this.selectedIndexChange.next(index)
+    }
   }
 
   public setSelectedIndex(index: number) {
