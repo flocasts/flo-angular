@@ -1,11 +1,11 @@
-import { isPlatformServer } from '@angular/common'
+import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, ChangeDetectorRef
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding, OnDestroy
 } from '@angular/core'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
@@ -29,7 +29,7 @@ import {
   styleUrls: ['./grid-tiles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit {
+export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnDestroy {
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
@@ -48,6 +48,24 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object
   ) { }
 
+  private _cursor = 'initial'
+
+  @HostBinding('style.cursor')
+  get cursor() {
+    return this._cursor
+  }
+  set cursor(val: string) {
+    this._cursor = val
+  }
+
+  readonly showCursor = (on = true) => {
+    if (on && this.cursor !== 'initial') {
+      this.cursor = 'initial'
+    } else {
+      this.cursor = 'none'
+    }
+  }
+
   @Input()
   get count() {
     return this._count
@@ -59,7 +77,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     }
 
     // Ensure seletedIndex doesn't go out of bounds visually
-    if (this.selectedIndex > val) {
+    if (this.selectedIndex >= val) {
       this.setSelectedIndex(0)
     }
   }
@@ -272,28 +290,35 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       : of(false)
   ).pipe(distinctUntilChanged(), share())
 
+  // public readonly showOverlay = this.fadeGroup.pipe(map(show => this.overlayEnabled && show))
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  //
-  //
-  //
-  //
+  private readonly onDestroySource = new Subject()
+  private readonly onDestroy = this.onDestroySource.pipe(share())
+
   // GRID WORK IN PROGRESS
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
-    this.gridItemContainers.changes.subscribe(a => this.updateGridStyles(a.length))
+    if (isPlatformBrowser(this._platformId)) {
+      // this.fadeGroup.pipe(takeUntil(this.onDestroy)).subscribe(show => this.showCursor(show))
+      this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
 
-    const observer = new MutationObserver(_mr => {
-      const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
-      // console.log(elements)
-    })
-
-    observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
-    // observer.disconnect() // TODO
+      // TODO!
+      const observer = new MutationObserver(_mr => {
+        const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
+        // console.log(elements)
+      })
+      observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
+      // observer.disconnect() // TODO
+    }
   }
 
-  trackByFn = () => false
+  ngOnDestroy() {
+    this.onDestroySource.next()
+    this.onDestroySource.complete()
+  }
 
+  readonly trackByFn = () => false
   readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
   readonly chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
     collection.reduce((acc, _, index) =>

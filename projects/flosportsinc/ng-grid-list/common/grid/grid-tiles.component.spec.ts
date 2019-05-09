@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing'
+import { async, TestBed, fakeAsync } from '@angular/core/testing'
 import { FloGridTilesComponent } from './grid-tiles.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
@@ -21,9 +21,7 @@ import {
       <div *floGridListItemSome="let item">
         <span>{{ item.title }}</span>
       </div>
-      <div *floGridListItemNone>
-        EMPTY
-      </div>
+      <div *floGridListItemNone>EMPTY</div>
     </flo-grid-tiles>
   `
 })
@@ -147,6 +145,10 @@ describe(FloGridTilesComponent.name, () => {
       sut.setSelectedIndex(3)
       expect(sut.selectedIndex).toEqual(3)
 
+      sut.setSelectedIndex(3)
+      sut.count = 3
+      expect(sut.selectedIndex).toEqual(0)
+
       const originalIndex1 = sut.selectedIndex
       sut.setSelectedIndex(-1)
       expect(sut.selectedIndex).toEqual(originalIndex1)
@@ -220,7 +222,16 @@ describe(FloGridTilesComponent.name, () => {
     })
   })
 
-  describe('switching counts', () => {
+  describe('when count equals 1', () => {
+    it('should', () => {
+      const sut = createSut()
+      const result = sut.hoistInstance.count = 1
+      sut.hoistFixture.detectChanges()
+      // TODO!
+    })
+  })
+
+  describe('when count equals 2', () => {
     it('should', () => {
       const sut = createSut()
       const result = sut.hoistInstance.count = 2
@@ -253,8 +264,7 @@ describe(FloGridTilesComponent.name, () => {
     it('should respect enabled flag', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
-        declarations: [FloGridTilesTestComponent],
-        imports: [FloGridListModule.config({
+        imports: [FloGridTestingModule, FloGridListModule.config({
           overlay: {
             enabled: false
           }
@@ -262,6 +272,7 @@ describe(FloGridTilesComponent.name, () => {
       }).compileComponents()
 
       const sut = createSut()
+      sut.hoistFixture.detectChanges()
       sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(true)
       })
