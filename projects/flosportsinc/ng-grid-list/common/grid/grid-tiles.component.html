@@ -7,7 +7,6 @@
 <div #floGridListContainer class="flo-grid-list-container">
   <ng-container *ngFor="let item of viewItems; trackBy: trackByFn">
     <div #floGridListItemContainer class="flo-grid-list-item-container">
-      <!-- <div [class.flo-grid-list-item-selection-border]="item.selected" [class.flo-grid-list-overlay-hide]="hideOverlay | async"></div> -->
       <ng-container [ngSwitch]="item.hasSomething">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item.value }"></ng-container>
@@ -16,6 +15,7 @@
           <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item.value }"></ng-container>
         </div>
       </ng-container>
+      <div [class.flo-grid-list-item-selection-border]="item.selected" [class.flo-grid-list-overlay-hide]="hideOverlay | async"></div>
     </div>
   </ng-container>
 </div>

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, Directive, ContentChild, TemplateRef, Inject } from '@angular/core'
 import { FloGridTilesComponent } from '../grid/grid-tiles.component'
-import { FLO_GRID_LIST_GUID_GEN } from '../ng-grid-list.tokens'
+import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
 
 @Directive({
   selector: '[floGridListItem]'
@@ -13,7 +13,7 @@ export class FloGridListItemDirective { }
   styleUrls: ['./grid-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListComponent<TItem> {
+export class FloGridListComponent<TItem extends IFloGridListBaseItem> {
   constructor(@Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
 
   // tslint:disable-next-line: readonly-keyword
@@ -34,7 +34,7 @@ export class FloGridListComponent<TItem> {
   }
 
   @Input()
-  readonly gridTileRef: FloGridTilesComponent
+  readonly gridTileRef: FloGridTilesComponent<TItem>
 
   @ContentChild(FloGridListItemDirective, { read: TemplateRef })
   readonly itemTemplate?: TemplateRef<TItem>

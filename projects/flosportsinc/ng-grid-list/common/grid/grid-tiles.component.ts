@@ -2,7 +2,7 @@ import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { isPlatformServer } from '@angular/common'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
-import { maybe } from 'typescript-monads'
+import { maybe, IMaybe } from 'typescript-monads'
 import {
   Component, ChangeDetectionStrategy, Input, Output,
   Inject, PLATFORM_ID, ElementRef, ContentChild, TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit
@@ -14,7 +14,9 @@ import {
   FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_OVERLAY_NG_CLASS,
   FLO_GRID_LIST_OVERLAY_NG_STYLE,
-  FLO_GRID_LIST_MAX_HEIGHT
+  FLO_GRID_LIST_MAX_HEIGHT,
+  FLO_GRID_LIST_SELECTED_INDEX,
+  IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: no-object-mutation
@@ -27,7 +29,7 @@ import {
   styleUrls: ['./grid-tiles.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridTilesComponent implements AfterViewInit {
+export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit {
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
@@ -36,6 +38,7 @@ export class FloGridTilesComponent implements AfterViewInit {
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
     @Inject(FLO_GRID_LIST_MAX_VIEWCOUNT) private _max: number,
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
+    @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
@@ -96,6 +99,34 @@ export class FloGridTilesComponent implements AfterViewInit {
 
   public setMaxheight(val: number) {
     this.maxheight = val
+  }
+
+  @Input()
+  get selectedIndex() {
+    return this._selectedIndex
+  }
+  set selectedIndex(index: number) {
+    this._selectedIndex = index
+    this.selectedIndexChange.next(index)
+  }
+
+  public setSelectedIndex(index: number) {
+    this.selectedIndex = index
+  }
+
+  private _selectedId: string
+
+  @Input()
+  get selectedId() {
+    return this._selectedId
+  }
+  set selectedId(id: string) {
+    this._selectedId = id
+    this.selectedIdChange.next(id)
+  }
+
+  public setSelectedId(id: string) {
+    this.selectedId = id
   }
 
   @Input()
@@ -176,22 +207,22 @@ export class FloGridTilesComponent implements AfterViewInit {
     this.overlayNgStyle = ngStyle
   }
 
-  public items: ReadonlyArray<any> = [
-    { id: '123', prop: '123' },
+  public items: ReadonlyArray<TItem> = [
+    { id: '123', prop: '123' } as any,
     { id: '456', prop: '456' },
     { id: '789', prop: '789' },
     { id: '000', prop: '000' }
   ]
 
   get viewItems() {
-    return new Array(this.count)
+    return new Array<IMaybe<TItem>>(this.count)
       .fill(maybe())
-      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) :  val)
-      .map((value, _idx) => {
+      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
+      .map((value, idx) => {
         return {
           value: value.valueOrUndefined(),
-          hasSomething: value.map(() => true).valueOr(false)
-          // selected: this.selectedIndex === idx && this.viewcount > 1,
+          hasSomething: value.isSome(),
+          selected: this.selectedIndex === idx && this.count > 1,
         }
       })
   }
@@ -200,6 +231,8 @@ export class FloGridTilesComponent implements AfterViewInit {
   @Output() public readonly minChange = new Subject<number>()
   @Output() public readonly maxChange = new Subject<number>()
   @Output() public readonly maxheightChange = new Subject<number>()
+  @Output() public readonly selectedIdChange = new Subject<string>()
+  @Output() public readonly selectedIndexChange = new Subject<number>()
   @Output() public readonly overlayEnabledChange = new Subject<boolean>()
   @Output() public readonly overlayStartChange = new Subject<boolean>()
   @Output() public readonly overlayFadeoutChange = new Subject<number>()
@@ -247,7 +280,7 @@ export class FloGridTilesComponent implements AfterViewInit {
       console.log(elements)
     })
 
-    observer.observe(this.gridContainer.nativeElement,  { attributes: false, childList: true, subtree: false })
+    observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
     // observer.disconnect() // TODO
   }
 
@@ -274,8 +307,8 @@ export class FloGridTilesComponent implements AfterViewInit {
     }
   }
 
-  updateGridStyles(squareCount: number) {
-    const gridCounts = this.calcNumRowsColumns(squareCount)
+  readonly updateGridStyles = (count: number) => {
+    const gridCounts = this.calcNumRowsColumns(count)
     const element = this.gridContainer.nativeElement
     const maxWidth = `${this.maxheight * 1.777777778}px`
 

@@ -30,7 +30,7 @@
   }
 
   .flo-grid-list-item-none {
-    color: white;
+    color: white; // TODO: move to JS land
   }
 
   .flo-grid-list-overlay {
@@ -47,16 +47,24 @@
     }
   }
 
-  .flo-grid-list-overlay-hide {
-    opacity: 0;
-    cursor: none;
-  }
-
   .flo-grid-list-item-selection-border {
     opacity: 1;
     // transition: box-shadow 400ms ease 0s;
     box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
     z-index: 1; // pointer-events: none; TODO: check this out
     transition: .25s ease-in-out all; // TODO same config as outer animation
+
+    height: 100%;
+    /* z-index: 222; */
+    position: absolute;
+    top: 0;
+    /* bottom: 0; */
+    left: 0;
+    right: 0;
+  }
+
+  .flo-grid-list-overlay-hide {
+    opacity: 0;
+    cursor: none;
   }
 }

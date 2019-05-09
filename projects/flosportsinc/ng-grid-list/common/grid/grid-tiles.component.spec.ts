@@ -126,6 +126,17 @@ describe(FloGridTilesComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
   })
 
+  describe('selectedId property', () => {
+    it('should double bind', () => testInputProperty('selectedId', 'awesome-id'))
+    it('should expose setter function', () => testInputPropSetFunc('selectedId', 'setSelectedId', 'awesome-id'))
+  })
+
+  describe('selectedIndex property', () => {
+    it('should double bind', () => testInputProperty('selectedIndex', 3))
+    it('should expose setter function', () => testInputPropSetFunc('selectedIndex', 'setSelectedIndex', 3))
+    // it('should start with token value', () => expect(createSut().instance.selectedIndex).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
+  })
+
   describe('overlayEnabled property', () => {
     it('should double bind', () => testInputProperty('overlayEnabled', false))
     it('should expose setter function', () => testInputPropSetFunc('overlayEnabled', 'setOverlayEnabled', false))

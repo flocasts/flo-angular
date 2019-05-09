@@ -7,7 +7,7 @@ import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_VIEWCOUNT,
   FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
   FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_NG_CLASS,
-  FLO_GRID_LIST_OVERLAY_NG_STYLE, FLO_GRID_LIST_MAX_HEIGHT
+  FLO_GRID_LIST_OVERLAY_NG_STYLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -19,7 +19,8 @@ import {
   DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
-  DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
+  DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
+  DEFAULT_FLO_GRID_LIST_SELECTED_INDEX
 } from './ng-grid-list.module.defaults'
 
 export interface OverlayConfiguration {
@@ -47,6 +48,9 @@ export interface FloGridListModuleConfiguration {
 
   /** Maximum height of container */
   readonly maxHeight: number
+
+  /** Starting selection box. Defaults to 0 */
+  readonly selectedIdx: number
 
   /** Overlay configuration */
   readonly overlay: Partial<OverlayConfiguration>
@@ -96,6 +100,10 @@ export function defaultFloGridListGuidGenerator() {
       useValue: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
     },
     {
+      provide: FLO_GRID_LIST_SELECTED_INDEX,
+      useValue: DEFAULT_FLO_GRID_LIST_SELECTED_INDEX
+    },
+    {
       provide: FLO_GRID_LIST_GUID_GEN,
       useFactory: defaultFloGridListGuidGenerator
     },
@@ -132,6 +140,7 @@ export class FloGridListModule {
       max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
       min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
       maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
+      selectedIdx: DEFAULT_FLO_GRID_LIST_SELECTED_INDEX,
       ...cfg,
       overlay: {
         enabled: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -168,6 +177,10 @@ export class FloGridListModule {
         {
           provide: FLO_GRID_LIST_MAX_HEIGHT,
           useValue: config.maxHeight
+        },
+        {
+          provide: FLO_GRID_LIST_SELECTED_INDEX,
+          useValue: config.selectedIdx
         },
         {
           provide: FLO_GRID_LIST_OVERLAY_ENABLED,
