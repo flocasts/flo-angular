@@ -28,7 +28,8 @@ import {
   `
 })
 export class FloGridTilesTestComponent {
-  readonly count = 1
+  // tslint:disable: readonly-keyword
+  count = 1
 }
 
 @NgModule({
@@ -44,7 +45,7 @@ const createSut = () => {
   hoistFixture.detectChanges()
   return {
     hoistFixture,
-    hoiseInstance: fixture.componentInstance,
+    hoistInstance: fixture.componentInstance,
     fixture,
     instance: fixture.componentInstance as FloGridTilesComponent<any>
   }
@@ -216,6 +217,15 @@ describe(FloGridTilesComponent.name, () => {
       const sut = createSut()
       const result = sut.instance.chunk(1)
       expect(result.length).toEqual(0)
+    })
+  })
+
+  describe('switching counts', () => {
+    it('should', () => {
+      const sut = createSut()
+      const result = sut.hoistInstance.count = 2
+      sut.hoistFixture.detectChanges()
+      // TODO!
     })
   })
 

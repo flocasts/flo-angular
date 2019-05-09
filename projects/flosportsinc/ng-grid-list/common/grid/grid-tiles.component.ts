@@ -285,7 +285,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
     const observer = new MutationObserver(_mr => {
       const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
-      console.log(elements)
+      // console.log(elements)
     })
 
     observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
