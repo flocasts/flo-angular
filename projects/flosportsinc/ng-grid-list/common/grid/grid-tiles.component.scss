@@ -14,7 +14,6 @@
     padding-top: 56.25%;
     position: relative;
     color: white;
-    z-index: 4;
 
     ::ng-deep :first-child {
       position: absolute;
@@ -42,30 +41,29 @@
     left: 0;
     right: 0;
     z-index: 4;
-
-    ::ng-deep>* {
+    pointer-events: none;
+    ::ng-deep :first-child {
       pointer-events: all;
     }
   }
 
   .flo-grid-list-item-selection-border {
     opacity: 1;
-    // transition: box-shadow 400ms ease 0s;
-    box-shadow: inset 0px 0px 0px 3px white; // TODO: make config
+    height: 100%;
+    box-shadow: inset 0px 0px 0px 2px white; // TODO: make config
     z-index: 1; // pointer-events: none; TODO: check this out
     transition: .25s ease-in-out all; // TODO same config as outer animation
-
-    height: 100%;
-    /* z-index: 222; */
+    
     position: absolute;
     top: 0;
-    /* bottom: 0; */
     left: 0;
     right: 0;
   }
 
   .flo-grid-list-overlay-hide {
     opacity: 0;
+  }
+  .flo-grid-list-cursor-hide  {
     cursor: none;
   }
 }
