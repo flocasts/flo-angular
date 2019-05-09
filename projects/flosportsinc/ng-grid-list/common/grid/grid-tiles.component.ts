@@ -57,6 +57,11 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       this._count = val
       this.countChange.next(this._count)
     }
+
+    // Ensure seletedIndex doesn't go out of bounds visually
+    if (this.selectedIndex > val) {
+      this.setSelectedIndex(0)
+    }
   }
 
   public setCount(count: number) {
@@ -223,7 +228,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
         return {
           value: value.valueOrUndefined(),
           hasSomething: value.isSome(),
-          selected: this.selectedIndex === idx && this.count > 1,
+          selected: this.selectedIndex === idx && this.count > 1
         }
       })
   }
