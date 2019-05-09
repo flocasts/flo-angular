@@ -261,7 +261,7 @@ describe(FloGridTilesComponent.name, () => {
       expect(elementHasHiddenClass).toBeFalsy()
     })
 
-    it('should respect enabled flag', async(() => {
+    it('should respect enabled flag', () => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
         imports: [FloGridTestingModule, FloGridListModule.config({
@@ -278,7 +278,7 @@ describe(FloGridTilesComponent.name, () => {
       sut.instance.showOverlay.toPromise().then(res => {
         expect(res).toEqual(false)
       })
-    }))
+    })
 
     it('should be ignored on platform server', async(() => {
       TestBed.resetTestingModule()

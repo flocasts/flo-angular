@@ -1,3 +1,7 @@
+// tslint:disable: no-object-mutation
+// tslint:disable: readonly-keyword
+// tslint:disable: no-if-statement
+
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
@@ -20,10 +24,6 @@ import {
   FLO_GRID_LIST_SELECTED_INDEX,
   IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
-
-// tslint:disable: no-object-mutation
-// tslint:disable: readonly-keyword
-// tslint:disable: no-if-statement
 
 @Component({
   selector: 'flo-grid-tiles',
@@ -59,8 +59,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       this.countChange.next(this._count)
     }
 
-    // Ensure seletedIndex doesn't go out of bounds visually
-    if (this.selectedIndex >= val) {
+    if (this.selectedIndex >= val) { // Ensure seletedIndex doesn't go out of bounds visually
       this.setSelectedIndex(0)
     }
   }
@@ -277,13 +276,13 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
+  private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+
   // GRID WORK IN PROGRESS
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
     if (isPlatformBrowser(this._platformId)) {
-      // this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => {
-      //   this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
-      // })
+      this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
       this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
 
       // TODO!
