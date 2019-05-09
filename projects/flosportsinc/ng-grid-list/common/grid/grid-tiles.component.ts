@@ -1,11 +1,11 @@
-import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { isPlatformServer } from '@angular/common'
+import { maybe, IMaybe } from 'typescript-monads'
+import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
-import { maybe, IMaybe } from 'typescript-monads'
 import {
-  Component, ChangeDetectionStrategy, Input, Output,
-  Inject, PLATFORM_ID, ElementRef, ContentChild, TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit
+  Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, ChangeDetectorRef
 } from '@angular/core'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
@@ -33,6 +33,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
+    private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,

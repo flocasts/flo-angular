@@ -14,6 +14,7 @@
     padding-top: 56.25%;
     position: relative;
     color: white;
+    z-index: 4;
 
     ::ng-deep :first-child {
       position: absolute;
