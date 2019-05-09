@@ -272,11 +272,10 @@ describe(FloGridTilesComponent.name, () => {
       }).compileComponents()
 
       const sut = createSut()
-      sut.hoistFixture.detectChanges()
-      sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.hideOverlay.toPromise().then(res => {
         expect(res).toEqual(true)
       })
-      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
+      sut.instance.showOverlay.toPromise().then(res => {
         expect(res).toEqual(false)
       })
     }))

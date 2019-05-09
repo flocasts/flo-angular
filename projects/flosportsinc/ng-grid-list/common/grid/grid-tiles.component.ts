@@ -1,14 +1,16 @@
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, ChangeDetectorRef, HostBinding, OnDestroy
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, HostBinding, OnDestroy
 } from '@angular/core'
 import {
-  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
+  FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+  FLO_GRID_LIST_MIN_VIEWCOUNT,
+  FLO_GRID_LIST_MAX_VIEWCOUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_FADEOUT,
   FLO_GRID_LIST_OVERLAY_THROTTLE,
@@ -33,7 +35,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
-    private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
     @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
@@ -47,24 +48,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object
   ) { }
-
-  private _cursor = 'initial'
-
-  @HostBinding('style.cursor')
-  get cursor() {
-    return this._cursor
-  }
-  set cursor(val: string) {
-    this._cursor = val
-  }
-
-  readonly showCursor = (on = true) => {
-    if (on && this.cursor !== 'initial') {
-      this.cursor = 'initial'
-    } else {
-      this.cursor = 'none'
-    }
-  }
 
   @Input()
   get count() {
@@ -283,14 +266,12 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   private readonly fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
 
-  public readonly showOverlay = (isPlatformServer(this._platformId)
+  public readonly fadeStream = (isPlatformServer(this._platformId)
     ? of(false)
-    : this.overlayEnabled
-      ? merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
-      : of(false)
-  ).pipe(distinctUntilChanged(), share())
+    : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
+  ).pipe(distinctUntilChanged(), shareReplay(1))
 
-  // public readonly showOverlay = this.fadeGroup.pipe(map(show => this.overlayEnabled && show))
+  public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
   private readonly onDestroySource = new Subject()
@@ -300,7 +281,9 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
     if (isPlatformBrowser(this._platformId)) {
-      // this.fadeGroup.pipe(takeUntil(this.onDestroy)).subscribe(show => this.showCursor(show))
+      // this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => {
+      //   this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+      // })
       this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
 
       // TODO!
@@ -344,10 +327,11 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     const gridCounts = this.calcNumRowsColumns(count)
     const element = this.gridContainer.nativeElement
     const maxWidth = `${this.maxheight * 1.777777778}px`
+    const maxWidthKey = 'max-width'
 
     if (this.gridContainer) {
       this._rd.removeStyle(element, 'max-height')
-      this._rd.setStyle(element, 'max-width', maxWidth)
+      this._rd.setStyle(element, maxWidthKey, maxWidth)
       if (gridCounts.columns <= 1) {
         this._rd.setStyle(element, 'display', 'block')
       } else {
@@ -358,7 +342,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
         this._rd.setStyle(element, 'grid-template-rows', this.fillTo(gridCounts.gridBoxRows))
 
         if (gridCounts.shouldFill) {
-          this._rd.removeStyle(element, 'max-width')
+          this._rd.removeStyle(element, maxWidthKey)
           this._rd.setStyle(element, 'max-height', `${this.maxheight}px`)
 
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
@@ -370,7 +354,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
             })
           })
         } else {
-          this._rd.setStyle(element, 'max-width', maxWidth)
+          this._rd.setStyle(element, maxWidthKey, maxWidth)
           children.forEach(child => {
             this._rd.removeStyle(child, 'grid-area')
             this._rd.removeStyle(child, 'align-self')
