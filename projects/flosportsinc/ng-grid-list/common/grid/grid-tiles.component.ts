@@ -295,7 +295,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   trackByFn = () => false
 
   readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
-  readonly chunk = (size: number, collection: ReadonlyArray<any> = []) =>
+  readonly chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
     collection.reduce((acc, _, index) =>
       index % size === 0
         ? [...acc, collection.slice(index, index + size)]

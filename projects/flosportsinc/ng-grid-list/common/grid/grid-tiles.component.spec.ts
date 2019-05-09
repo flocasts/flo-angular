@@ -7,7 +7,8 @@ import { PLATFORM_ID, Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
-  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX
+  FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
+  FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -45,7 +46,7 @@ const createSut = () => {
     hoistFixture,
     hoiseInstance: fixture.componentInstance,
     fixture,
-    instance: fixture.componentInstance
+    instance: fixture.componentInstance as FloGridTilesComponent<any>
   }
 }
 
@@ -196,6 +197,26 @@ describe(FloGridTilesComponent.name, () => {
     it('should expose setter function', () => testInputPropSetFunc('overlayNgStyle', 'setOverlayNgStyle', { 'color': 'white' }))
     it('should start with token value',
       () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('chunk utility function', () => {
+    it('should work', () => {
+      const sut = createSut()
+      const result = sut.instance.chunk(1, [{}, {}, {}, {}])
+      expect(result.length).toEqual(4)
+    })
+
+    it('should handle empty collection', () => {
+      const sut = createSut()
+      const result = sut.instance.chunk(2, [{}, {}, {}])
+      expect(result.length).toEqual(2)
+    })
+
+    it('should handle empty collection', () => {
+      const sut = createSut()
+      const result = sut.instance.chunk(1)
+      expect(result.length).toEqual(0)
+    })
   })
 
   describe('overlay', () => {
