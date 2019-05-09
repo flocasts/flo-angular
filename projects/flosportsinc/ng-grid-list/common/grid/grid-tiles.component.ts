@@ -9,7 +9,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, HostBinding, OnDestroy
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy
 } from '@angular/core'
 import {
   FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
@@ -22,7 +22,8 @@ import {
   FLO_GRID_LIST_OVERLAY_NG_STYLE,
   FLO_GRID_LIST_MAX_HEIGHT,
   FLO_GRID_LIST_SELECTED_INDEX,
-  IFloGridListBaseItem
+  IFloGridListBaseItem,
+  FLO_GRID_LIST_OVERLAY_START
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -42,7 +43,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
-    @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayStart: boolean,
+    @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
     @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
@@ -286,11 +287,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
 
       // TODO!
-      const observer = new MutationObserver(_mr => {
-        const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
-        // console.log(elements)
-      })
-      observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
+      // const observer = new MutationObserver(_mr => {
+      //   const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
+      // })
+      // observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
       // observer.disconnect() // TODO
     }
   }
@@ -300,7 +300,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.onDestroySource.complete()
   }
 
-  readonly trackByFn = () => false
+  readonly trackByFn = () => true
   readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
   readonly chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
     collection.reduce((acc, _, index) =>

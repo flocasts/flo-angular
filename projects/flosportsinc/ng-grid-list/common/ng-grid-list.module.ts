@@ -19,8 +19,7 @@ import {
   DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
   DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
-  DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
-  DEFAULT_FLO_GRID_LIST_SELECTED_INDEX
+  DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
 } from './ng-grid-list.module.defaults'
 
 export interface OverlayConfiguration {
@@ -50,7 +49,7 @@ export interface FloGridListModuleConfiguration {
   readonly maxHeight: number
 
   /** Starting selection box. Defaults to 0 */
-  readonly selectedIdx: number
+  readonly selectedIndex: number
 
   /** Overlay configuration */
   readonly overlay: Partial<OverlayConfiguration>
@@ -84,6 +83,10 @@ export function defaultFloGridListGuidGenerator() {
   ],
   providers: [
     {
+      provide: FLO_GRID_LIST_GUID_GEN,
+      useFactory: defaultFloGridListGuidGenerator
+    },
+    {
       provide: FLO_GRID_LIST_MIN_VIEWCOUNT,
       useValue: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT
     },
@@ -101,11 +104,7 @@ export function defaultFloGridListGuidGenerator() {
     },
     {
       provide: FLO_GRID_LIST_SELECTED_INDEX,
-      useValue: DEFAULT_FLO_GRID_LIST_SELECTED_INDEX
-    },
-    {
-      provide: FLO_GRID_LIST_GUID_GEN,
-      useFactory: defaultFloGridListGuidGenerator
+      useValue: 0
     },
     {
       provide: FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -140,7 +139,7 @@ export class FloGridListModule {
       max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
       min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
       maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
-      selectedIdx: DEFAULT_FLO_GRID_LIST_SELECTED_INDEX,
+      selectedIndex: 0,
       ...cfg,
       overlay: {
         enabled: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -180,7 +179,7 @@ export class FloGridListModule {
         },
         {
           provide: FLO_GRID_LIST_SELECTED_INDEX,
-          useValue: config.selectedIdx
+          useValue: config.selectedIndex
         },
         {
           provide: FLO_GRID_LIST_OVERLAY_ENABLED,

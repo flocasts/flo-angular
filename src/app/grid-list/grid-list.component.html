@@ -1,6 +1,6 @@
 <h1>grid-list</h1>
 
-<flo-grid-tiles #gridRef>
+<flo-grid-tiles #gridRef [count]="4">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)">1</button>
     <button (click)="gridRef.setCount(2)">2</button>
