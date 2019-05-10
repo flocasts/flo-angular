@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync } from '@angular/core/testing'
+import { async, TestBed } from '@angular/core/testing'
 import { FloGridTilesComponent } from './grid-tiles.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
@@ -338,5 +338,16 @@ describe(FloGridTilesComponent.name, () => {
       const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.flo-grid-list-overlay-hide'))
       expect(elementHasHiddenClass).toBeTruthy()
     }))
+  })
+
+  it('should set value at index', () => {
+    const sut = createSut()
+    sut.hoistInstance.setCount(2)
+    sut.hoistInstance.setItems([{ id: '1', value: 'SOME_VALUE_1' }, { id: '2', value: 'SOME_VALUE_2' }])
+    sut.instance.setValueAtIndex(0, { id: '1', value: 'WE WIN!' } as any)
+    sut.hoistFixture.detectChanges()
+    const res = sut.instance.gridItemContainers.toArray()
+    expect(res[0].nativeElement.textContent).toEqual('WE WIN!')
+    expect(res[1].nativeElement.textContent).toEqual('SOME_VALUE_2')
   })
 })

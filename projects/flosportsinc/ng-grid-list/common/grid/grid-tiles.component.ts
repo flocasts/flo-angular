@@ -4,6 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
+import { swapAtIndex, fillWith } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
@@ -235,8 +236,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.overlayNgStyle = ngStyle
   }
 
-  // private _items: ReadonlyArray<TItem> = []
-
   @Input()
   get items() {
     return this._items as ReadonlyArray<TItem>
@@ -294,6 +293,8 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   private readonly fadeoutIntervalReset = new Subject<boolean>()
   private readonly fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
+  private readonly onDestroySource = new Subject()
+  private readonly onDestroy = this.onDestroySource.pipe(share())
 
   public readonly fadeStream = (isPlatformServer(this._platformId)
     ? of(false)
@@ -302,9 +303,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
-
-  private readonly onDestroySource = new Subject()
-  private readonly onDestroy = this.onDestroySource.pipe(share())
 
   private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
 
@@ -330,7 +328,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   readonly trackByFn = () => true
-  readonly fillTo = (num: number) => new Array<string>(num).fill('1fr ').reduce((acc, curr) => acc + curr, '').trimRight()
   readonly chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
     collection.reduce((acc, _, index) =>
       index % size === 0
@@ -349,6 +346,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       gridBoxRows: shouldFill ? columns * 2 : rows,
       shouldFill
     }
+  }
+
+  readonly setValueAtIndex = (idx: number, val: TItem) => {
+    this.setItems(swapAtIndex(this.items, idx, val))
   }
 
   readonly updateGridStyles = (count: number) => {
@@ -370,8 +371,8 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
         const children = this.gridItemContainers.map(a => a.nativeElement)
 
         this._rd.setStyle(element, displayKey, 'grid')
-        this._rd.setStyle(element, 'grid-template-columns', this.fillTo(gridCounts.gridBoxColumns))
-        this._rd.setStyle(element, 'grid-template-rows', this.fillTo(gridCounts.gridBoxRows))
+        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
