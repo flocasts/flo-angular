@@ -29,8 +29,6 @@ import {
   IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
 
-export type Test<TItem> = ReadonlyArray<TItem>
-
 @Component({
   selector: 'flo-grid-tiles',
   templateUrl: './grid-tiles.component.html',
