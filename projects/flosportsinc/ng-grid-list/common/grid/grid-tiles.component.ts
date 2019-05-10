@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, ChangeDetectorRef
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, ChangeDetectorRef, ApplicationRef
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -47,6 +47,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
     private cdRef: ChangeDetectorRef,
+    private appRef: ApplicationRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
