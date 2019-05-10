@@ -330,4 +330,16 @@ describe(FloGridTilesComponent.name, () => {
     expect(res[0].nativeElement.textContent).toEqual('WE WIN!')
     expect(res[1].nativeElement.textContent).toEqual('SOME_VALUE_2')
   })
+
+  it('should set value of currently selected', () => {
+    const sut = createSut()
+    sut.hoistInstance.setCount(2)
+    sut.hoistInstance.setSelectedIndex(1)
+    sut.hoistInstance.setItems([{ id: '1', value: 'SOME_VALUE_1' }, { id: '2', value: 'SOME_VALUE_2' }])
+    sut.instance.setValueOfSelected({ id: '1', value: 'WE_WIN!' })
+    sut.hoistFixture.detectChanges()
+    const res = sut.instance.gridItemContainers.toArray()
+    expect(res[0].nativeElement.textContent).toEqual('SOME_VALUE_1')
+    expect(res[1].nativeElement.textContent).toEqual('WE_WIN!')
+  })
 })
