@@ -15,6 +15,8 @@ export const FLO_GRID_LIST_OVERLAY_STATIC = 'flo.grid.list.overlay.static'
 export const FLO_GRID_LIST_OVERLAY_NG_CLASS = 'flo.grid.list.overlay.ngclass'
 export const FLO_GRID_LIST_OVERLAY_NG_STYLE = 'flo.grid.list.overlay.ngstyle'
 
+export const FLO_GRID_LIST_DRAG_DROP_ENABLED = 'flo.grid.list.dragdrop.enabled'
+
 export interface IFloGridListBaseItem {
   readonly id: string
 }

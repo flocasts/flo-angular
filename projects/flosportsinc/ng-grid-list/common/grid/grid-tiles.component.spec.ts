@@ -8,7 +8,8 @@ import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
-  FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS
+  FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
+  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -216,6 +217,13 @@ describe(FloGridTilesComponent.name, () => {
     it('should expose setter function', () => testInputPropSetFunc('overlayNgStyle', 'setOverlayNgStyle', { 'color': 'white' }))
     it('should start with token value',
       () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('dragDropEnabled property', () => {
+    it('should double bind', () => testInputProperty('dragDropEnabled', false))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropEnabled', 'setDragDropEnabled', false))
+    it('should start with token value',
+      () => expect(createSut().instance.dragDropEnabled).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_ENABLED)))
   })
 
   describe('items property', () => {

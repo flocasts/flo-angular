@@ -26,6 +26,7 @@ import {
   FLO_GRID_LIST_OVERLAY_START,
   FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS,
+  FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
 
@@ -52,8 +53,22 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number,
     @Inject(FLO_GRID_LIST_OVERLAY_STATIC) private _overlayStatic: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
-    @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object
+    @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean
   ) { }
+
+  @Input()
+  get items() {
+    return this._items as ReadonlyArray<TItem>
+  }
+  set items(items: ReadonlyArray<TItem>) {
+    this._items = items
+    this.itemsChange.next(items)
+  }
+
+  public setItems(items: ReadonlyArray<TItem>) {
+    this.items = items
+  }
 
   @Input()
   get count() {
@@ -235,16 +250,16 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   @Input()
-  get items() {
-    return this._items as ReadonlyArray<TItem>
+  get dragDropEnabled() {
+    return this._dragDropEnabled
   }
-  set items(items: ReadonlyArray<TItem>) {
-    this._items = items
-    this.itemsChange.next(items)
+  set dragDropEnabled(enabled: boolean) {
+    this._dragDropEnabled = enabled
+    this.dragDropEnabledChange.next(enabled)
   }
 
-  public setItems(items: ReadonlyArray<TItem>) {
-    this.items = items
+  public setDragDropEnabled(enabled: boolean) {
+    this.dragDropEnabled = enabled
   }
 
   get viewItems() {
@@ -274,6 +289,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   @Output() public readonly overlayThrottleChange = new Subject<number>()
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
+  @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -314,6 +330,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       // TODO!
       // const observer = new MutationObserver(_mr => {
       //   const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
+      //   console.log(elements)
       // })
       // observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
       // observer.disconnect() // TODO
