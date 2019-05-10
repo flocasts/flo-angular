@@ -7,14 +7,10 @@
     <button (click)="gridRef.setCount(3)">3</button>
     <button (click)="gridRef.setCount(4)">4</button>
     <button (click)="gridRef.setCount(9)">9</button>
-    <button (click)="gridRef.setValueAtIndex(1)">VA</button>
+    <button (click)="gridRef.setValueAtIndex(2, items[0])">VA</button>
   </div>
-  <div *floGridListItemSome="let item">
-    {{ item.prop }}
-  </div>
-  <div *floGridListItemNone>
-    EMPTY!
-  </div>
+  <video *floGridListItemSome="let item" [src]="item.src" floMse autoplay></video>
+  <div *floGridListItemNone>EMPTY!</div>
 </flo-grid-tiles>
 
 <!-- <h3>Grid List 1</h3>

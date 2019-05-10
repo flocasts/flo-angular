@@ -58,6 +58,9 @@ export interface FloGridListModuleConfiguration {
   /** Starting selection box. Defaults to 0 */
   readonly selectedIndex: number
 
+  /** Allow drag drop of grid items. Defaults to true */
+  readonly dragDropEnabled: boolean
+
   /** Overlay configuration */
   readonly overlay: Partial<OverlayConfiguration>
 }
@@ -159,6 +162,7 @@ export class FloGridListModule {
       max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
       min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
       maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
+      dragDropEnabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
       selectedIndex: 0,
       ...cfg,
       overlay: {
@@ -236,7 +240,7 @@ export class FloGridListModule {
         },
         {
           provide: FLO_GRID_LIST_DRAG_DROP_ENABLED,
-          useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED
+          useValue: config.dragDropEnabled
         }
       ]
     }

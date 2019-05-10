@@ -6,7 +6,14 @@
 </div>
 <div #floGridListContainer class="flo-grid-list-container">
   <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
-    <div #floGridListItemContainer class="flo-grid-list-item-container" (click)="setSelectedIndex(idx)">
+    <div #floGridListItemContainer
+      class="flo-grid-list-item-container" 
+      (click)="setSelectedIndex(idx)" 
+      (drop)="drop(idx, item, $event)"
+      (dragstart)="drag(idx, item, $event)"
+      (dragover)="dragover($event)" 
+      [draggable]="dragDropEnabled"
+      [attr.id]="item?.value?.id">
       <ng-container [ngSwitch]="item.hasSomething">
         <ng-container *ngSwitchCase="true">
           <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item.value }"></ng-container>
