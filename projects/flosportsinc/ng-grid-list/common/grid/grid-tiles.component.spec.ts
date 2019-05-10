@@ -11,23 +11,24 @@ import {
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS
 } from '../ng-grid-list.tokens'
 
+// tslint:disable: readonly-keyword
+// tslint:disable: no-object-mutation
+// tslint:disable: readonly-array
 @Component({
   selector: 'flo-grid-tiles-test-component',
   template: `
-    <flo-grid-tiles [(count)]="count">
+    <flo-grid-tiles [(count)]="count" [items]="items">
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
-      <div *floGridListItemSome="let item">
-        <span>{{ item.title }}</span>
-      </div>
+      <div *floGridListItemSome="let item">{{ item.value }}</div>
       <div *floGridListItemNone>EMPTY</div>
     </flo-grid-tiles>
   `
 })
 export class FloGridTilesTestComponent {
-  // tslint:disable: readonly-keyword
   count = 1
+  items = []
 }
 
 @NgModule({
@@ -36,7 +37,6 @@ export class FloGridTilesTestComponent {
 })
 export class FloGridTestingModule { }
 
-// tslint:disable: no-object-mutation
 const createSut = () => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
   const fixture = hoistFixture.debugElement.query(By.directive(FloGridTilesComponent))
@@ -62,6 +62,15 @@ const testInputPropSetFunc = (prop: string, prop2: string, num: any) => {
   sut[prop2](num)
   expect(sut[prop]).toEqual(num)
   sut[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(num))
+}
+
+const setupCountSomeNoneTests = (count: number, items: any[] = []) => {
+  const sut = createSut()
+  sut.hoistInstance.items = items
+  sut.hoistInstance.count = count
+  sut.hoistFixture.detectChanges()
+
+  return sut.instance.gridItemContainers.toArray()
 }
 
 describe(FloGridTilesComponent.name, () => {
@@ -236,20 +245,36 @@ describe(FloGridTilesComponent.name, () => {
   })
 
   describe('when count equals 1', () => {
-    it('should', () => {
-      const sut = createSut()
-      const result = sut.hoistInstance.count = 1
-      sut.hoistFixture.detectChanges()
-      // TODO!
+    it('should show 1 empty', () => {
+      const result = setupCountSomeNoneTests(1, [])
+      expect(result.length).toEqual(1)
+      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
+    })
+    it('should show 1 filled', () => {
+      const result = setupCountSomeNoneTests(1, [{ id: '1', value: 'SOME_VALUE' }])
+      expect(result.length).toEqual(1)
+      expect(result[0].nativeElement.innerText).toEqual('SOME_VALUE')
     })
   })
 
   describe('when count equals 2', () => {
-    it('should', () => {
-      const sut = createSut()
-      const result = sut.hoistInstance.count = 2
-      sut.hoistFixture.detectChanges()
-      // TODO!
+    it('should show 2 empty', () => {
+      const result = setupCountSomeNoneTests(2, [])
+      expect(result.length).toEqual(2)
+      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
+      expect(result[1].nativeElement.innerText).toEqual('EMPTY')
+    })
+    it('should show 1 empty, 1 filled', () => {
+      const result = setupCountSomeNoneTests(2, [undefined, { id: '1', value: 'SOME_VALUE' }])
+      expect(result.length).toEqual(2)
+      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
+      expect(result[1].nativeElement.innerText).toEqual('SOME_VALUE')
+    })
+    it('should show 2 filled', () => {
+      const result = setupCountSomeNoneTests(2, [{ id: '1', value: 'SOME_VALUE_1' }, { id: '2', value: 'SOME_VALUE_2' }])
+      expect(result.length).toEqual(2)
+      expect(result[0].nativeElement.innerText).toEqual('SOME_VALUE_1')
+      expect(result[1].nativeElement.innerText).toEqual('SOME_VALUE_2')
     })
   })
 
