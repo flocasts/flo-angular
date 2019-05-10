@@ -224,26 +224,6 @@ describe(FloGridTilesComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
   })
 
-  describe('chunk utility function', () => {
-    it('should work', () => {
-      const sut = createSut()
-      const result = sut.instance.chunk(1, [{}, {}, {}, {}])
-      expect(result.length).toEqual(4)
-    })
-
-    it('should handle empty collection', () => {
-      const sut = createSut()
-      const result = sut.instance.chunk(2, [{}, {}, {}])
-      expect(result.length).toEqual(2)
-    })
-
-    it('should handle empty collection', () => {
-      const sut = createSut()
-      const result = sut.instance.chunk(1)
-      expect(result.length).toEqual(0)
-    })
-  })
-
   describe('when count equals 1', () => {
     it('should show 1 empty', () => {
       const result = setupCountSomeNoneTests(1, [])

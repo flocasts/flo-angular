@@ -4,7 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { swapAtIndex, fillWith } from './helpers'
+import { swapAtIndex, fillWith, chunk } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
@@ -326,11 +326,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   readonly trackByFn = () => true
-  readonly chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
-    collection.reduce((acc, _, index) =>
-      index % size === 0
-        ? [...acc, collection.slice(index, index + size)]
-        : acc, [])
 
   readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)
@@ -378,7 +373,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
-          this.chunk(groups, children).forEach((col, groupIdx) => {
+          chunk(groups, children).forEach((col, groupIdx) => {
             col.forEach((val, idx) => {
               this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
               this._rd.setStyle(val, alignSelfKey, 'center')
