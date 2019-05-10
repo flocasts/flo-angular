@@ -12,9 +12,9 @@ import {
   TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy
 } from '@angular/core'
 import {
-  FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
-  FLO_GRID_LIST_MIN_VIEWCOUNT,
-  FLO_GRID_LIST_MAX_VIEWCOUNT,
+  FLO_GRID_LIST_COUNT,
+  FLO_GRID_LIST_MIN_COUNT,
+  FLO_GRID_LIST_MAX_COUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_FADEOUT,
   FLO_GRID_LIST_OVERLAY_THROTTLE,
@@ -22,9 +22,13 @@ import {
   FLO_GRID_LIST_OVERLAY_NG_STYLE,
   FLO_GRID_LIST_MAX_HEIGHT,
   FLO_GRID_LIST_SELECTED_INDEX,
-  IFloGridListBaseItem,
-  FLO_GRID_LIST_OVERLAY_START
+  FLO_GRID_LIST_OVERLAY_START,
+  FLO_GRID_LIST_OVERLAY_STATIC,
+  FLO_GRID_LIST_ITEMS,
+  IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
+
+export type Test<TItem> = ReadonlyArray<TItem>
 
 @Component({
   selector: 'flo-grid-tiles',
@@ -37,15 +41,17 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
     @Inject(PLATFORM_ID) private _platformId: string,
-    @Inject(FLO_GRID_LIST_DEFAULT_VIEWCOUNT) private _count: number,
-    @Inject(FLO_GRID_LIST_MIN_VIEWCOUNT) private _min: number,
-    @Inject(FLO_GRID_LIST_MAX_VIEWCOUNT) private _max: number,
+    @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
+    @Inject(FLO_GRID_LIST_COUNT) private _count: number,
+    @Inject(FLO_GRID_LIST_MIN_COUNT) private _min: number,
+    @Inject(FLO_GRID_LIST_MAX_COUNT) private _max: number,
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
     @Inject(FLO_GRID_LIST_OVERLAY_THROTTLE) private _overlayThrottle: number,
+    @Inject(FLO_GRID_LIST_OVERLAY_STATIC) private _overlayStatic: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object
   ) { }
@@ -152,6 +158,19 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   @Input()
+  get overlayStatic() {
+    return this._overlayStatic
+  }
+  set overlayStatic(isStatic: boolean) {
+    this._overlayStatic = isStatic
+    this.overlayStaticChange.next(isStatic)
+  }
+
+  public setOverlayStatic(isStatic: boolean) {
+    this.overlayStatic = isStatic
+  }
+
+  @Input()
   get overlayStart() {
     return this._overlayStart
   }
@@ -216,12 +235,20 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.overlayNgStyle = ngStyle
   }
 
-  public items: ReadonlyArray<TItem> = [
-    { id: '123', prop: '123' } as any,
-    { id: '456', prop: '456' },
-    { id: '789', prop: '789' },
-    { id: '000', prop: '000' }
-  ]
+  // private _items: ReadonlyArray<TItem> = []
+
+  @Input()
+  get items() {
+    return this._items as ReadonlyArray<TItem>
+  }
+  set items(items: ReadonlyArray<TItem>) {
+    this._items = items
+    this.itemsChange.next(items)
+  }
+
+  public setItems(items: ReadonlyArray<TItem>) {
+    this.items = items
+  }
 
   get viewItems() {
     return new Array<IMaybe<TItem>>(this.count)
@@ -236,6 +263,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       })
   }
 
+  @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
   @Output() public readonly countChange = new Subject<number>()
   @Output() public readonly minChange = new Subject<number>()
   @Output() public readonly maxChange = new Subject<number>()
@@ -243,6 +271,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   @Output() public readonly selectedIdChange = new Subject<string>()
   @Output() public readonly selectedIndexChange = new Subject<number>()
   @Output() public readonly overlayEnabledChange = new Subject<boolean>()
+  @Output() public readonly overlayStaticChange = new Subject<boolean>()
   @Output() public readonly overlayStartChange = new Subject<boolean>()
   @Output() public readonly overlayFadeoutChange = new Subject<number>()
   @Output() public readonly overlayThrottleChange = new Subject<number>()
@@ -279,9 +308,9 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
 
-  // GRID WORK IN PROGRESS
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
+
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
       this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
@@ -327,36 +356,40 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     const element = this.gridContainer.nativeElement
     const maxWidth = `${this.maxheight * 1.777777778}px`
     const maxWidthKey = 'max-width'
+    const maxHeightKey = 'max-height'
+    const displayKey = 'display'
+    const gridAreaKey = 'grid-area'
+    const alignSelfKey = 'align-self'
 
     if (this.gridContainer) {
-      this._rd.removeStyle(element, 'max-height')
+      this._rd.removeStyle(element, maxHeightKey)
       this._rd.setStyle(element, maxWidthKey, maxWidth)
       if (gridCounts.columns <= 1) {
-        this._rd.setStyle(element, 'display', 'block')
+        this._rd.setStyle(element, displayKey, 'block')
       } else {
         const children = this.gridItemContainers.map(a => a.nativeElement)
 
-        this._rd.setStyle(element, 'display', 'grid')
+        this._rd.setStyle(element, displayKey, 'grid')
         this._rd.setStyle(element, 'grid-template-columns', this.fillTo(gridCounts.gridBoxColumns))
         this._rd.setStyle(element, 'grid-template-rows', this.fillTo(gridCounts.gridBoxRows))
 
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
-          this._rd.setStyle(element, 'max-height', `${this.maxheight}px`)
+          this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
 
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
           this.chunk(groups, children).forEach((col, groupIdx) => {
             col.forEach((val, idx) => {
-              this._rd.setStyle(val, 'grid-area', `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
-              this._rd.setStyle(val, 'align-self', 'center')
+              this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
+              this._rd.setStyle(val, alignSelfKey, 'center')
             })
           })
         } else {
           this._rd.setStyle(element, maxWidthKey, maxWidth)
           children.forEach(child => {
-            this._rd.removeStyle(child, 'grid-area')
-            this._rd.removeStyle(child, 'align-self')
+            this._rd.removeStyle(child, gridAreaKey)
+            this._rd.removeStyle(child, alignSelfKey)
           })
         }
       }

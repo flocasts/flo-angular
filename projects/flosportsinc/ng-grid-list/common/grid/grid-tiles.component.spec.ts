@@ -6,9 +6,9 @@ import { take } from 'rxjs/operators'
 import { PLATFORM_ID, Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
-  FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
+  FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
-  FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX
+  FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -111,13 +111,13 @@ describe(FloGridTilesComponent.name, () => {
   describe('min property', () => {
     it('should double bind', () => testInputProperty('min', 4))
     it('should expose setter function', () => testInputPropSetFunc('min', 'setMin', 4))
-    it('should start with token value', () => expect(createSut().instance.min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)))
+    it('should start with token value', () => expect(createSut().instance.min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_COUNT)))
   })
 
   describe('max property', () => {
     it('should double bind', () => testInputProperty('max', 52))
     it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
-    it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)))
+    it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_COUNT)))
   })
 
   describe('maxheight property', () => {
@@ -169,6 +169,13 @@ describe(FloGridTilesComponent.name, () => {
       () => expect(createSut().instance.overlayEnabled).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_ENABLED)))
   })
 
+  describe('overlayStatic property', () => {
+    it('should double bind', () => testInputProperty('overlayStatic', true))
+    it('should expose setter function', () => testInputPropSetFunc('overlayStatic', 'setOverlayStatic', true))
+    it('should start with token value',
+      () => expect(createSut().instance.overlayStatic).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_STATIC)))
+  })
+
   describe('overlayStart property', () => {
     it('should double bind', () => testInputProperty('overlayStart', false))
     it('should expose setter function', () => testInputPropSetFunc('overlayStart', 'setOverlayStart', false))
@@ -200,6 +207,12 @@ describe(FloGridTilesComponent.name, () => {
     it('should expose setter function', () => testInputPropSetFunc('overlayNgStyle', 'setOverlayNgStyle', { 'color': 'white' }))
     it('should start with token value',
       () => expect(createSut().instance.overlayThrottle).toEqual(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)))
+  })
+
+  describe('items property', () => {
+    it('should double bind', () => testInputProperty('items', [{ id: '1' }]))
+    it('should expose setter function', () => testInputPropSetFunc('items', 'setItems', [{ id: '1' }]))
+    it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
   })
 
   describe('chunk utility function', () => {

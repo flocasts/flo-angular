@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { NgModule, Component } from '@angular/core'
 import {
-  FLO_GRID_LIST_DEFAULT_VIEWCOUNT, FLO_GRID_LIST_MIN_VIEWCOUNT, FLO_GRID_LIST_MAX_VIEWCOUNT,
+  FLO_GRID_LIST_COUNT, FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_FADEOUT,
   FLO_GRID_LIST_OVERLAY_START
 } from './ng-grid-list.tokens'
@@ -80,7 +80,7 @@ describe(FloGridListModule.name, () => {
       imports: [FloGridListModule.config({})]
     }).compileComponents()
 
-    expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT)
+    expect(TestBed.get(FLO_GRID_LIST_COUNT)).toEqual(DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT)
   })
 
   it('should construct with custom configuration', () => {
@@ -99,9 +99,9 @@ describe(FloGridListModule.name, () => {
       })]
     }).compileComponents()
 
-    expect(TestBed.get(FLO_GRID_LIST_DEFAULT_VIEWCOUNT)).toEqual(25)
-    expect(TestBed.get(FLO_GRID_LIST_MIN_VIEWCOUNT)).toEqual(4)
-    expect(TestBed.get(FLO_GRID_LIST_MAX_VIEWCOUNT)).toEqual(64)
+    expect(TestBed.get(FLO_GRID_LIST_COUNT)).toEqual(25)
+    expect(TestBed.get(FLO_GRID_LIST_MIN_COUNT)).toEqual(4)
+    expect(TestBed.get(FLO_GRID_LIST_MAX_COUNT)).toEqual(64)
     expect(TestBed.get(FLO_GRID_LIST_OVERLAY_ENABLED)).toEqual(false)
     expect(TestBed.get(FLO_GRID_LIST_OVERLAY_THROTTLE)).toEqual(2)
     expect(TestBed.get(FLO_GRID_LIST_OVERLAY_FADEOUT)).toEqual(1)
