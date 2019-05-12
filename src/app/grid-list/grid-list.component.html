@@ -9,13 +9,17 @@
     <button (click)="gridRef.setCount(9)">9</button>
     <button (click)="gridRef.setValueAtIndex(2, items[0])">VA</button>
   </div>
-  <video *floGridListItemSome="let item" [src]="item.src" floMse autoplay></video>
+  <video *floGridListItemSome="let item" [src]="item.src" floMse destroyOnMseSrcChange autoplay></video>
   <div *floGridListItemNone>EMPTY!</div>
 </flo-grid-tiles>
-
+<flo-grid-list [gridTileRef]="grid" [items]="items">
+  <div *floGridListItem="let item">
+    {{ item.src }}
+  </div>
+</flo-grid-list>
 <!-- <h3>Grid List 1</h3>
   <flo-grid-list [gridTileRef]="grid" [items]="items">
-    <div *floGridListItem="let item">
+    <div *floGridListItem="let item" [floGridListDrag]="item">
       {{ item.title }}
     </div>
   </flo-grid-list>

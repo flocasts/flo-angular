@@ -20,10 +20,10 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> {
   private _items: ReadonlyArray<TItem> = []
 
   @Input()
-  private get items() {
+  get items() {
     return this._items
   }
-  private set items(val: ReadonlyArray<TItem>) {
+  set items(val: ReadonlyArray<TItem>) {
     // tslint:disable-next-line: no-object-mutation
     this._items = val.map(v => {
       return {
@@ -39,11 +39,5 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> {
   @ContentChild(FloGridListItemDirective, { read: TemplateRef })
   readonly itemTemplate?: TemplateRef<TItem>
 
-  trackByFn(idx: number, _item: TItem) {
-    return idx
-  }
-
-  get viewItems() {
-    return this.items
-  }
+  readonly trackByFn = (idx: number, _item: TItem) => idx
 }

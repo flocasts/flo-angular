@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, ChangeDetectorRef, ApplicationRef
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -34,8 +34,6 @@ interface IViewItem<TItem> {
   readonly value: TItem
 }
 
-interface IDragDropMap<TItem> { index: number, value: TItem }
-
 @Component({
   selector: 'flo-grid-tiles',
   templateUrl: './grid-tiles.component.html',
@@ -46,8 +44,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
-    private cdRef: ChangeDetectorRef,
-    private appRef: ApplicationRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -283,25 +279,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       })
   }
 
-  drag(index: string, item: IViewItem<TItem>, evt: DragEvent) {
-    maybe(evt.dataTransfer).tapSome(dt => dt.setData('text', JSON.stringify({ index, value: item.value })))
-  }
-
-  drop(to: number, item: IViewItem<TItem>, evt: DragEvent) {
-    maybe(evt.dataTransfer)
-      .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
-      .map(from => ({ from, to: { index: to, value: item.value } }))
-      .filter(replace => replace.from.index !== replace.to.index)
-      .tapSome(replace => {
-        this.setValueAtIndex(replace.to.index, replace.from.value)
-        this.setValueAtIndex(replace.from.index, replace.to.value)
-      })
-  }
-
-  dragover(evt: DragEvent) {
-    evt.preventDefault()
-  }
-
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
   @Output() public readonly countChange = new Subject<number>()
   @Output() public readonly minChange = new Subject<number>()
@@ -353,14 +330,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
       this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
-
-      // TODO!
-      // const observer = new MutationObserver(_mr => {
-      //   const elements = Array.from(this.gridContainer.nativeElement.querySelectorAll('.flo-grid-list-item-container'))
-      //   console.log(elements)
-      // })
-      // observer.observe(this.gridContainer.nativeElement, { attributes: false, childList: true, subtree: false })
-      // observer.disconnect() // TODO
     }
   }
 
@@ -369,7 +338,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.onDestroySource.complete()
   }
 
-  readonly trackByFn = (idx: number, item: TItem) => item.id
+  readonly trackByFn = (_idx: number, _item: TItem) => false
 
   readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)
@@ -386,7 +355,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   readonly setValueAtIndex = (idx: number, val: TItem) => {
-    this.setItems(swapAtIndex(this.items, idx, val))
+    typeof idx === 'number' && this.setItems(swapAtIndex(this.items, idx, val))
   }
 
   readonly setValueOfSelected = (val: TItem) => {
