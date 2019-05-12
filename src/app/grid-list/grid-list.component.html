@@ -7,10 +7,10 @@
     <button (click)="gridRef.setCount(3)">3</button>
     <button (click)="gridRef.setCount(4)">4</button>
     <button (click)="gridRef.setCount(9)">9</button>
-    <button (click)="gridRef.setValueAtIndex(2, items[0])">VA</button>
+    <button (click)="gridRef.setCount(16)">16</button>
   </div>
-  <video *floGridListItemSome="let item" [src]="item.value.src" [muted]="item.isNotSelected" floMse destroyOnMseSrcChange autoplay></video>
   <div *floGridListItemNone>EMPTY!</div>
+  <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected" ></video>
 </flo-grid-tiles>
 
 <h3>Grid List 1</h3>
@@ -19,13 +19,7 @@
     {{ item.src }}
   </div>
 </flo-grid-list>
-<!-- <h3>Grid List 1</h3>
-  <flo-grid-list [gridTileRef]="grid" [items]="items">
-    <div *floGridListItem="let item" [floGridListDrag]="item">
-      {{ item.title }}
-    </div>
-  </flo-grid-list>
-
+<!-- 
   <h3>Grid List 2</h3>
   <flo-grid-list [gridTileRef]="grid" [items]="items2">
     <div *floGridListItem="let item">
