@@ -14,15 +14,15 @@
       [floGridListDragDropIndex]="idx"
       [floGridListDragDropGridRef]="this"
       [attr.id]="item?.value?.id">
-      <ng-container [ngSwitch]="item.hasSomething">
+      <ng-container [ngSwitch]="item.hasValue">
         <ng-container *ngSwitchCase="true">
-          <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item.value }"></ng-container>
+          <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>
         </ng-container>
         <div *ngSwitchCase="false" class="flo-grid-list-item-none">
-          <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item.value }"></ng-container>
+          <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
         </div>
       </ng-container>
-      <div [class.flo-grid-list-item-selection-border]="item.selected" [class.flo-grid-list-overlay-hide]="hideOverlay | async"></div>
+      <div [class.flo-grid-list-item-selection-border]="item.isShowingBorder" [class.flo-grid-list-overlay-hide]="hideOverlay | async"></div>
     </div>
   </ng-container>
 </div>

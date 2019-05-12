@@ -271,10 +271,13 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
       .map((value, idx) => {
+        const isSelected = this.selectedIndex === idx
         return {
+          hasValue: value.isSome(),
           value: value.valueOrUndefined(),
-          hasSomething: value.isSome(),
-          selected: this.selectedIndex === idx && this.count > 1
+          isShowingBorder: isSelected && this.count > 1,
+          isSelected,
+          isNotSelected: !isSelected
         }
       })
   }
