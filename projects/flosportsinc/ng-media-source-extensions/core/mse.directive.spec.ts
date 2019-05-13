@@ -10,6 +10,8 @@ import { HlsModule } from '../hls/hls.module'
 import { DashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
 
+// tslint:disable: no-object-mutation
+
 export const TEST_SOURCES = {
   HLS: {
     TINY: '/base/test/hls/stream_110k_48k_416x234.m3u8',
