@@ -73,7 +73,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   public readonly videoElement = this._elementRef.nativeElement
 
   // tslint:disable-next-line: readonly-keyword
-  private _newClientOnSrcChange = false
+  private _newClientOnSrcChange = true
 
   @Input() public readonly src?: string
   @Input()
