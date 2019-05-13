@@ -11,6 +11,7 @@ import {
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED
 } from '../ng-grid-list.tokens'
+import { FloGridListDragDropDirective } from '../ng-grid-list-drag-drop.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -349,6 +350,13 @@ describe(FloGridTilesComponent.name, () => {
     const res = sut.instance.gridItemContainers.toArray()
     expect(res[0].nativeElement.textContent).toEqual('SOME_VALUE_1')
     expect(res[1].nativeElement.textContent).toEqual('WE_WIN!')
+  })
+
+  it('should have drag-drop directive set when enabled', () => {
+    const sut = createSut()
+    sut.instance.items = [{ id: 1, value: 'Test' }]
+    const dragDropDirs = sut.fixture.queryAll(By.directive(FloGridListDragDropDirective))
+    console.log('TODO')
   })
 
   describe('allow selecting of next available empty item', () => {
