@@ -9,7 +9,8 @@ import {
   FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
   FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_NG_CLASS,
   FLO_GRID_LIST_OVERLAY_NG_STYLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX,
-  FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED
+  FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -25,8 +26,13 @@ import {
   DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
   DEFAULT_FLO_GRID_LIST_ITEMS,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
-  DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
+  DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from './ng-grid-list.module.defaults'
+
+export interface IStringDict {
+  readonly [key: string]: string
+}
 
 export interface OverlayConfiguration {
   readonly enabled: boolean
@@ -34,8 +40,8 @@ export interface OverlayConfiguration {
   readonly fadeout: number
   readonly start: boolean
   readonly throttle: number,
-  readonly ngStyle: Partial<{ readonly [key: string]: string }>
-  readonly ngClass: Partial<{ readonly [key: string]: string }>
+  readonly ngStyle: Partial<IStringDict>
+  readonly ngClass: Partial<IStringDict>
 }
 
 /**
@@ -59,6 +65,9 @@ export interface FloGridListModuleConfiguration {
 
   /** Starting selection box. Defaults to 0 */
   readonly selectedIndex: number
+
+  /** When view count increases, set selection box to next empty square  */
+  readonly autoSelectNextEmptyItem: boolean
 
   /** Allow drag drop of grid items. Defaults to true */
   readonly dragDropEnabled: boolean
@@ -128,6 +137,10 @@ export function defaultFloGridListGuidGenerator() {
       useValue: 0
     },
     {
+      provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+      useValue: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+    },
+    {
       provide: FLO_GRID_LIST_OVERLAY_ENABLED,
       useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED
     },
@@ -173,6 +186,7 @@ export class FloGridListModule {
       max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
       min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
       maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
+      autoSelectNextEmptyItem: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
       dragDropEnabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
       dragDropFromListsEnabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
       selectedIndex: 0,
@@ -221,6 +235,10 @@ export class FloGridListModule {
         {
           provide: FLO_GRID_LIST_SELECTED_INDEX,
           useValue: config.selectedIndex
+        },
+        {
+          provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+          useValue: config.autoSelectNextEmptyItem
         },
         {
           provide: FLO_GRID_LIST_OVERLAY_ENABLED,

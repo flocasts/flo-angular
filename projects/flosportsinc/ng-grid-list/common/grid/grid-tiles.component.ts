@@ -27,7 +27,8 @@ import {
   FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS,
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
-  IFloGridListBaseItem
+  IFloGridListBaseItem,
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from '../ng-grid-list.tokens'
 
 interface IViewItem<TItem> {
@@ -51,6 +52,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     @Inject(FLO_GRID_LIST_MAX_COUNT) private _max: number,
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
+    @Inject(FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY) private _shouldSelectNextEmpty: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
@@ -86,6 +88,8 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
     if (this.selectedIndex >= val) { // Ensure seletedIndex doesn't go out of bounds visually
       this.setSelectedIndex(0)
+    } else if (this._shouldSelectNextEmpty) {
+      this.trySelectNextEmpty()
     }
   }
 
@@ -326,6 +330,12 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
   private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+
+  public readonly trySelectNextEmpty = () => {
+    maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
+      .filter(idx => idx >= 0)
+      .tapSome(idx => this.setSelectedIndex(idx))
+  }
 
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)

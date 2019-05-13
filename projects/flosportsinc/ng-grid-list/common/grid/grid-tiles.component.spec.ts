@@ -22,7 +22,7 @@ import {
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
-      <div *floGridListItemSome="let item">{{ item.value }}</div>
+      <div *floGridListItemSome="let item">{{ item.value.value }}</div>
       <div *floGridListItemNone>EMPTY</div>
     </flo-grid-tiles>
   `
@@ -349,5 +349,57 @@ describe(FloGridTilesComponent.name, () => {
     const res = sut.instance.gridItemContainers.toArray()
     expect(res[0].nativeElement.textContent).toEqual('SOME_VALUE_1')
     expect(res[1].nativeElement.textContent).toEqual('WE_WIN!')
+  })
+
+  describe('allow selecting of next available empty item', () => {
+    describe('when disabled', () => {
+      it('should not work', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }]
+        sut.instance.setCount(2)
+        expect(sut.instance.selectedIndex).toEqual(0)
+      })
+    })
+    describe('when enabled', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridTestingModule, FloGridListModule.config({
+            autoSelectNextEmptyItem: true
+          })]
+        }).compileComponents()
+      })
+      it('should handle counts of 1', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }]
+        sut.instance.setCount(1)
+        expect(sut.instance.selectedIndex).toEqual(0)
+      })
+      it('should handle counts of 2', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }]
+        sut.instance.setCount(2)
+        expect(sut.instance.selectedIndex).toEqual(1)
+      })
+      it('should handle counts of 3', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }]
+        sut.instance.setCount(3)
+        expect(sut.instance.selectedIndex).toEqual(1)
+      })
+      it('should handle counts of 4', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }]
+        sut.instance.setCount(4)
+        expect(sut.instance.selectedIndex).toEqual(1)
+      })
+
+      it('should handle multi items w/ counts', () => {
+        const sut = createSut()
+        sut.hoistInstance.items = [{ id: 1 }, { id: 2 }]
+        sut.instance.setCount(4)
+        expect(sut.instance.selectedIndex).toEqual(2)
+      })
+    })
   })
 })

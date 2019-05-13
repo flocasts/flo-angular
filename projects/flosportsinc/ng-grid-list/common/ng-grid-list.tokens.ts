@@ -5,6 +5,8 @@ export const FLO_GRID_LIST_MIN_COUNT = 'flo.grid.list.count.min'
 export const FLO_GRID_LIST_MAX_COUNT = 'flo.grid.list.count.max'
 export const FLO_GRID_LIST_MAX_HEIGHT = 'flo.grid.list.maxheight'
 export const FLO_GRID_LIST_SELECTED_INDEX = 'flo.grid.list.selectedIndex'
+export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = 'flo.grid.list.selectNext'
+
 export const FLO_GRID_LIST_GUID_GEN = 'flo.grid.list.guid'
 
 export const FLO_GRID_LIST_OVERLAY_ENABLED = 'flo.grid.list.overlay.enabled'
