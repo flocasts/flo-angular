@@ -165,6 +165,10 @@ describe('rewrite these... problems', () => {
     const sut = createMseSut()
     const task = (sut.instance as any)._mseDestroyTask[1]
     const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = false;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
     sut.hoist.detectChanges()
     sut.hoist.destroy()
     expect(spy).toHaveBeenCalled()
@@ -184,16 +188,13 @@ describe('rewrite these... problems', () => {
 
   it('should set src', () => {
     const wrapper = createMseSut()
-    const instance = wrapper.instance as any
     const task = (wrapper.instance as any)
-    const spy = spyOn(task, '_setSrc').and.callThrough()
-    const spy2 = spyOn(instance, '_executeInit').and.callThrough();
+    const spy = spyOn(task, '_setSrc').and.callThrough();
     (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
     wrapper.hoist.detectChanges();
     (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
     wrapper.hoist.detectChanges()
     expect(spy).toHaveBeenCalled()
-    // expect(spy2).toHaveBeenCalled()
   })
 
   it('should handle input newClientOnSrcChange', () => {
