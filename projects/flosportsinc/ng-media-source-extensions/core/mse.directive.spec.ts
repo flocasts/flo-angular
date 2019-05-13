@@ -168,6 +168,18 @@ describe('rewrite these... problems', () => {
     expect(spy).toHaveBeenCalled()
   })
 
+  it('should trigger destroy function when set', () => {
+    const sut = createMseSut()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = true;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+    sut.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
+
   it('should set src', () => {
     const wrapper = createMseSut()
     const instance = wrapper.instance as any
@@ -182,17 +194,19 @@ describe('rewrite these... problems', () => {
     // expect(spy2).toHaveBeenCalled()
   })
 
-  // it('should take path when no init task provided', () => {
-  //   const sut = createMseSut()
-  //   sut.hoist.detectChanges()
-  //   const instance = sut.instance as any
-  //   const spy2 = spyOn(instance, '_executeInit');
-  //   (sut.hoist.componentInstance.src as any) = 'noinit1.file';
-  //   // sut.hoist.detectChanges();
-  //   (sut.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   // sut.hoist.detectChanges()
-  //   expect(spy2).toHaveBeenCalled()
-  // })
+  it('should handle input newClientOnSrcChange', () => {
+    const sut = createMseSut()
+    const instance = (sut.instance as any)
+    instance.newClientOnSrcChange = ''
+    sut.hoist.detectChanges()
+    expect(instance.newClientOnSrcChange).toEqual(true)
+
+    instance.newClientOnSrcChange = true
+    expect(instance.newClientOnSrcChange).toEqual(true)
+
+    instance.newClientOnSrcChange = false
+    expect(instance.newClientOnSrcChange).toEqual(false)
+  })
 
   it('should not push src change when same src value during ngOnChanges', () => {
     const sut = createMseSut()
