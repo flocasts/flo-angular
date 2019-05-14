@@ -3,6 +3,7 @@ import { FloGridTilesComponent } from './grid/grid-tiles.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
+import { FloGridListModuleConfiguration } from './ng-grid-list.config.interfaces'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid/grid.tiles.directive'
 import {
   FLO_GRID_LIST_COUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_COUNT,
@@ -29,55 +30,6 @@ import {
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
   DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from './ng-grid-list.module.defaults'
-
-export interface IStringDict {
-  readonly [key: string]: string
-}
-
-export interface OverlayConfiguration {
-  readonly enabled: boolean
-  readonly static: boolean
-  readonly fadeout: number
-  readonly start: boolean
-  readonly throttle: number,
-  readonly ngStyle: Partial<IStringDict>
-  readonly ngClass: Partial<IStringDict>
-}
-
-/**
- * Configure global defaults such that every
- * instance start with the same configuration
- */
-export interface FloGridListModuleConfiguration {
-  readonly items: ReadonlyArray<any>
-
-  /** Number of viewports shown on start */
-  readonly count: number
-
-  /** Minimum number of viewports shown */
-  readonly min: number
-
-  /** Maximum number of viewports shown */
-  readonly max: number
-
-  /** Maximum height of container */
-  readonly maxHeight: number
-
-  /** Starting selection box. Defaults to 0 */
-  readonly selectedIndex: number
-
-  /** When view count increases, set selection box to next empty square  */
-  readonly autoSelectNextEmptyItem: boolean
-
-  /** Allow drag drop of grid items. Defaults to true */
-  readonly dragDropEnabled: boolean
-
-  /** Allow drag/drop of list onto grid. Defaults to true */
-  readonly dragDropFromListsEnabled: boolean
-
-  /** Overlay configuration */
-  readonly overlay: Partial<OverlayConfiguration>
-}
 
 export function defaultFloGridListGuidGenerator() {
   const lambda = () =>
