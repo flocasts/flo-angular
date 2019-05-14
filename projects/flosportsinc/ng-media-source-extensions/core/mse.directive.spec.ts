@@ -10,6 +10,8 @@ import { HlsModule } from '../hls/hls.module'
 import { DashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
 
+// tslint:disable: no-object-mutation
+
 export const TEST_SOURCES = {
   HLS: {
     TINY: '/base/test/hls/stream_110k_48k_416x234.m3u8',
@@ -163,36 +165,51 @@ describe('rewrite these... problems', () => {
     const sut = createMseSut()
     const task = (sut.instance as any)._mseDestroyTask[1]
     const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = false;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
     sut.hoist.detectChanges()
     sut.hoist.destroy()
     expect(spy).toHaveBeenCalled()
   })
 
+  it('should trigger destroy function when set', () => {
+    const sut = createMseSut()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = true;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+    sut.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
+
   it('should set src', () => {
     const wrapper = createMseSut()
-    const instance = wrapper.instance as any
     const task = (wrapper.instance as any)
-    const spy = spyOn(task, '_setSrc').and.callThrough()
-    const spy2 = spyOn(instance, '_executeInit').and.callThrough();
+    const spy = spyOn(task, '_setSrc').and.callThrough();
     (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
     wrapper.hoist.detectChanges();
     (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
     wrapper.hoist.detectChanges()
     expect(spy).toHaveBeenCalled()
-    // expect(spy2).toHaveBeenCalled()
   })
 
-  // it('should take path when no init task provided', () => {
-  //   const sut = createMseSut()
-  //   sut.hoist.detectChanges()
-  //   const instance = sut.instance as any
-  //   const spy2 = spyOn(instance, '_executeInit');
-  //   (sut.hoist.componentInstance.src as any) = 'noinit1.file';
-  //   // sut.hoist.detectChanges();
-  //   (sut.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   // sut.hoist.detectChanges()
-  //   expect(spy2).toHaveBeenCalled()
-  // })
+  it('should handle input newClientOnSrcChange', () => {
+    const sut = createMseSut()
+    const instance = (sut.instance as any)
+    instance.newClientOnSrcChange = ''
+    sut.hoist.detectChanges()
+    expect(instance.newClientOnSrcChange).toEqual(true)
+
+    instance.newClientOnSrcChange = true
+    expect(instance.newClientOnSrcChange).toEqual(true)
+
+    instance.newClientOnSrcChange = false
+    expect(instance.newClientOnSrcChange).toEqual(false)
+  })
 
   it('should not push src change when same src value during ngOnChanges', () => {
     const sut = createMseSut()

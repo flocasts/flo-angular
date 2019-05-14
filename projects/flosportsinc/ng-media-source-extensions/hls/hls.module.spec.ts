@@ -3,7 +3,8 @@ import {
   defaultMseClientSrcChangeFunction,
   selfHealFunc,
   MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-  DEFAULT_MODULE_CONFIG
+  DEFAULT_MODULE_CONFIG,
+  selfHealSwitch
 } from './hls.module'
 import { TestBed, async } from '@angular/core/testing'
 import * as Hls from 'hls.js'
@@ -169,4 +170,34 @@ describe(HlsModule.name, () => {
       done()
     })
   })
+
+  describe('self heal', () => {
+    it('should handle Hls.ErrorTypes.NETWORK_ERROR', () => {
+      const client = new Hls()
+      const spyConsole = spyOn(console, 'log')
+      const spyHls = spyOn(client, 'startLoad').and.callThrough()
+      selfHealSwitch(client, { type: Hls.ErrorTypes.NETWORK_ERROR, fatal: true } as any)
+      expect(spyConsole).toHaveBeenCalledWith('Fatal network error encountered, trying to recover')
+      expect(spyHls).toHaveBeenCalled()
+    })
+
+    it('should handle Hls.ErrorTypes.MEDIA_ERROR', () => {
+      const client = new Hls()
+      const spyConsole = spyOn(console, 'log')
+      const spyHls = spyOn(client, 'recoverMediaError').and.callThrough()
+      selfHealSwitch(client, { type: Hls.ErrorTypes.MEDIA_ERROR, fatal: true } as any)
+      expect(spyConsole).toHaveBeenCalledWith('Fatal media error encountered, trying to recover')
+      expect(spyHls).toHaveBeenCalled()
+    })
+
+    it('should handle Hls.ErrorTypes.OTHERS', () => {
+      const client = new Hls()
+      const spyConsole = spyOn(console, 'log')
+      const spyHls = spyOn(client, 'destroy').and.callThrough()
+      selfHealSwitch(client, { type: 'other', fatal: true } as any)
+      expect(spyConsole).toHaveBeenCalledWith('Fatal error, hls client destroyed')
+      expect(spyHls).toHaveBeenCalled()
+    })
+  })
+
 })

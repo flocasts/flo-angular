@@ -61,26 +61,27 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   }
 }
 
-// tslint:disable: no-if-statement
+export const selfHealSwitch = (client: Hls, type: Hls.errorData) => {
+  // tslint:disable-next-line: no-if-statement
+  if (!type.fatal) { return }
+  switch (type.type) {
+    case Hls.ErrorTypes.NETWORK_ERROR:
+      console.log('Fatal network error encountered, trying to recover')
+      client.startLoad()
+      break
+    case Hls.ErrorTypes.MEDIA_ERROR:
+      console.log('Fatal media error encountered, trying to recover')
+      client.recoverMediaError()
+      break
+    default:
+      console.log('Fatal error, hls client destroyed')
+      client.destroy()
+      break
+  }
+}
+
 export const selfHealFunc = (client: Hls) => {
-  client.on(Hls.Events.ERROR, (_, data) => {
-    if (data.fatal) {
-      switch (data.type) {
-        case Hls.ErrorTypes.NETWORK_ERROR:
-          console.log('Fatal network error encountered, trying to recover')
-          client.startLoad()
-          break
-        case Hls.ErrorTypes.MEDIA_ERROR:
-          console.log('Fatal media error encountered, trying to recover')
-          client.recoverMediaError()
-          break
-        default:
-          console.log('Fatal error, hls client destroyed')
-          client.destroy()
-          break
-      }
-    }
-  })
+  client.on(Hls.Events.ERROR, (_, data) => selfHealSwitch(client, data))
 }
 
 // TODO: if another Media Error is raised 'quickly' after this first Media Error,
