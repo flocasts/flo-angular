@@ -2,7 +2,7 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser } from '@angular/common'
+import { isPlatformServer, isPlatformBrowser, Time } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapAtIndex, fillWith, chunk } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
@@ -369,6 +369,16 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   readonly setValueAtIndex = (idx: number, val: TItem) => {
     typeof idx === 'number' && this.setItems(swapAtIndex(this.items, idx, val))
+  }
+
+  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number, fromVal?: TItem) => {
+    const firstPass = swapAtIndex(this.items, toIndex, toVal)
+
+    if (typeof fromIndex === 'number' && fromVal) {
+      this.setItems(swapAtIndex(firstPass, fromIndex, fromVal))
+    } else {
+      this.setItems(firstPass)
+    }
   }
 
   readonly setValueOfSelected = (val: TItem) => {

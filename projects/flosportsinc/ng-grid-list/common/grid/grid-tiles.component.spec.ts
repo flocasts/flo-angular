@@ -352,11 +352,29 @@ describe(FloGridTilesComponent.name, () => {
     expect(res[1].nativeElement.textContent).toEqual('WE_WIN!')
   })
 
-  it('should have drag-drop directive set when enabled', () => {
-    const sut = createSut()
-    sut.instance.items = [{ id: 1, value: 'Test' }]
-    const dragDropDirs = sut.fixture.queryAll(By.directive(FloGridListDragDropDirective))
-    console.log('TODO')
+  describe('swap items function', () => {
+    it('should swap items when all provided', () => {
+      const sut = createSut()
+      const item0 = { id: 1, test: 'Test1' }
+      const item1 = { id: 2, test: 'Test2' }
+
+      sut.instance.items = [item0, item1]
+      sut.instance.swapItemsAtIndex(1, item0, 0, item1)
+
+      expect(sut.instance.items[0]).toEqual(item1)
+      expect(sut.instance.items[1]).toEqual(item0)
+    })
+
+    it('should swap items when only to is provided', () => {
+      const sut = createSut()
+      const item0 = { id: 1, test: 'Test1' }
+      const item1 = { id: 2, test: 'Test2' }
+
+      sut.instance.items = [item0, item1]
+      sut.instance.swapItemsAtIndex(0, item0)
+
+      expect(sut.instance.items[0]).toEqual(item0)
+    })
   })
 
   describe('allow selecting of next available empty item', () => {

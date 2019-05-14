@@ -5,18 +5,26 @@ import { maybe } from 'typescript-monads'
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
 
+// tslint:disable: readonly-keyword
+// tslint:disable: no-object-mutation
 @Directive({
   selector: '[floGridListDragDrop]',
 })
 export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>) {
-    elmRef.nativeElement.draggable = this.floGridListDragDrop
+  constructor(public elmRef: ElementRef<TElement>) { }
+
+  private _floGridListDragDrop = false
+
+  @Input()
+  get floGridListDragDrop() { return this._floGridListDragDrop }
+  set floGridListDragDrop(val: any) {
+    this._floGridListDragDrop = (val || (val as any) === '') ? true : false
+    this.elmRef.nativeElement.draggable = this._floGridListDragDrop
   }
 
-  @Input() readonly floGridListDragDrop = true
-  @Input() readonly floGridListDragDropItem: TItem
-  @Input() readonly floGridListDragDropIndex: number
-  @Input() readonly floGridListDragDropGridRef?: FloGridTilesComponent<TItem>
+  @Input() floGridListDragDropItem: TItem
+  @Input() floGridListDragDropIndex: number
+  @Input() floGridListDragDropGridRef?: FloGridTilesComponent<TItem>
 
   @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
     evt.preventDefault()
@@ -33,8 +41,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .flatMap(replace => maybe(this.floGridListDragDropGridRef)
         .map(gridRef => ({ gridRef, replace })))
       .tapSome(res => {
-        res.gridRef.setValueAtIndex(res.replace.to.index, res.replace.from.value)
-        res.gridRef.setValueAtIndex(res.replace.from.index, res.replace.to.value)
+        res.gridRef.swapItemsAtIndex(res.replace.to.index, res.replace.from.value, res.replace.from.index, res.replace.to.value)
       })
   }
 }
