@@ -72,7 +72,20 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
   private readonly _mseClientMessages$ = new Subject<TMseMessage>()
   public readonly videoElement = this._elementRef.nativeElement
 
+  // tslint:disable-next-line: readonly-keyword
+  private _newClientOnSrcChange = true
+
   @Input() public readonly src?: string
+  @Input()
+  get newClientOnSrcChange() {
+    return this._newClientOnSrcChange
+  }
+
+  set newClientOnSrcChange(val: boolean) {
+    // tslint:disable-next-line: no-object-mutation
+    this._newClientOnSrcChange = (val || (val as any) === '') ? true : false
+  }
+
   @Output() public readonly srcChange = this._srcChanges$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
   @Output() public readonly mseClient = this._mseClientSource$.asObservable().pipe(startWith(undefined), takeUntil(this._ngOnDestroy$))
   @Output() public readonly mseClientMessage = this._mseClientMessages$.asObservable().pipe(takeUntil(this._ngOnDestroy$))
@@ -192,14 +205,23 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
               .tap({
                 none: () => this._executeInit(ctx),
                 some: clientRef => {
-                  this._Tt(srcChange.current)(this._mseSourceChangeTask)
-                    .tapSome(ct => {
-                      ct.func({
-                        clientRef,
-                        src: ct.src,
-                        videoElement: this.videoElement
+                  // tslint:disable-next-line:no-if-statement
+                  if (this.newClientOnSrcChange) {
+                    srcChange.current.flatMap(this._getExecutionKey)
+                      .tapSome(execKey => {
+                        this._maybeExecuteDestroyTask(execKey) // destory old
+                        this._executeInit(ctx) // init new
                       })
-                    })
+                  } else {
+                    this._Tt(srcChange.current)(this._mseSourceChangeTask)
+                      .tapSome(ct => {
+                        ct.func({
+                          clientRef,
+                          src: ct.src,
+                          videoElement: this.videoElement
+                        })
+                      })
+                  }
                 }
               })
           }
