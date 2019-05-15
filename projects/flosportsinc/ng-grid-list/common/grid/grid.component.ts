@@ -2,12 +2,12 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser, Time } from '@angular/common'
+import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapAtIndex, fillWith, chunk } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.tiles.directive'
+import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy
@@ -31,14 +31,10 @@ import {
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from '../ng-grid-list.tokens'
 
-interface IViewItem<TItem> {
-  readonly value: TItem
-}
-
 @Component({
-  selector: 'flo-grid-tiles',
-  templateUrl: './grid-tiles.component.html',
-  styleUrls: ['./grid-tiles.component.scss'],
+  selector: 'flo-grid-list-view',
+  templateUrl: './grid.component.html',
+  styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnDestroy {

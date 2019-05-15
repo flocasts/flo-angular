@@ -1,6 +1,6 @@
 <h1>Grid List</h1>
 
-<flo-grid-tiles #gridRef [count]="4" [(items)]="items">
+<flo-grid-list-view #gridRef [count]="4" [(items)]="items">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)">1</button>
     <button (click)="gridRef.setCount(2)">2</button>
@@ -11,7 +11,7 @@
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
-</flo-grid-tiles>
+</flo-grid-list-view>
 
 <h3>Grid List 1</h3>
 <flo-grid-list [gridTileRef]="gridRef" [items]="items">

@@ -23,8 +23,8 @@ interface TItem {
   <button id="setViewCount16" (click)="setViewCount(16)">16</button>
   <button id="setViewCount25" (click)="setViewCount(25)">25</button>
 
-  <flo-grid-tiles #grid>
-  </flo-grid-tiles>
+  <flo-grid-list-view #grid>
+  </flo-grid-list-view>
 
   <h3>Grid List 1</h3>
   <flo-grid-list [gridTileRef]="grid" [items]="items">

@@ -1,10 +1,10 @@
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
-import { FloGridTilesComponent } from './grid/grid-tiles.component'
+import { FloGridTilesComponent } from './grid/grid.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
 import { FloGridListModuleConfiguration } from './ng-grid-list.config.interfaces'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid/grid.tiles.directive'
+import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid/grid.directive'
 import {
   FLO_GRID_LIST_COUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_COUNT,
   FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,

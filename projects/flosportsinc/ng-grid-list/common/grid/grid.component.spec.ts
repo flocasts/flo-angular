@@ -1,5 +1,5 @@
 import { async, TestBed } from '@angular/core/testing'
-import { FloGridTilesComponent } from './grid-tiles.component'
+import { FloGridTilesComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
@@ -11,21 +11,20 @@ import {
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED
 } from '../ng-grid-list.tokens'
-import { FloGridListDragDropDirective } from '../ng-grid-list-drag-drop.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-array
 @Component({
-  selector: 'flo-grid-tiles-test-component',
+  selector: 'flo-grid-list-view-test-component',
   template: `
-    <flo-grid-tiles [(count)]="count" [items]="items">
+    <flo-grid-list-view [(count)]="count" [items]="items">
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
       <div *floGridListItemSome="let item">{{ item.value.value }}</div>
       <div *floGridListItemNone>EMPTY</div>
-    </flo-grid-tiles>
+    </flo-grid-list-view>
   `
 })
 export class FloGridTilesTestComponent {

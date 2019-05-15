@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, Directive, ContentChild, TemplateRef, Inject } from '@angular/core'
-import { FloGridTilesComponent } from '../grid/grid-tiles.component'
+import { FloGridTilesComponent } from '../grid/grid.component'
 import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
 
 @Directive({

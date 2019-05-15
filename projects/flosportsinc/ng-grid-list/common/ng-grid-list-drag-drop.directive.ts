@@ -1,6 +1,6 @@
 import { ElementRef, Directive, HostListener, Input } from '@angular/core'
 import { IFloGridListBaseItem } from './ng-grid-list.tokens'
-import { FloGridTilesComponent } from './grid/grid-tiles.component'
+import { FloGridTilesComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
