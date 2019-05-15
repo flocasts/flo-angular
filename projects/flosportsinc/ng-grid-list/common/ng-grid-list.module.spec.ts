@@ -27,21 +27,21 @@ interface TItem {
   </flo-grid-list-view>
 
   <h3>Grid List 1</h3>
-  <flo-grid-list [gridTileRef]="grid" [items]="items">
+  <flo-grid-list [gridRef]="grid" [items]="items">
     <div *floGridListItem="let item">
       {{ item.title }}
     </div>
   </flo-grid-list>
 
   <h3>Grid List 2</h3>
-  <flo-grid-list [gridTileRef]="grid" [items]="items2">
+  <flo-grid-list [gridRef]="grid" [items]="items2">
     <div *floGridListItem="let item">
       {{ item.title }}
     </div>
   </flo-grid-list>
 
   <h3>Grid List 3</h3>
-  <flo-grid-list [gridTileRef]="grid" [items]="items3">
+  <flo-grid-list [gridRef]="grid" [items]="items3">
     <div *floGridListItem="let item">
       {{ item.title }}
     </div>

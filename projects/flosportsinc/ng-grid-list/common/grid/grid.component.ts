@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -37,7 +37,7 @@ import {
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnDestroy {
+export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
@@ -145,20 +145,21 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   public setSelectedIndex(index: number) {
     this.selectedIndex = index
+    this.setSelectedIdViaIndex(index)
   }
 
-  private _selectedId: string
+  private _selectedId?: string
 
   @Input()
   get selectedId() {
     return this._selectedId
   }
-  set selectedId(id: string) {
+  set selectedId(id: string | undefined) {
     this._selectedId = id
     this.selectedIdChange.next(id)
   }
 
-  public setSelectedId(id: string) {
+  public setSelectedId(id?: string) {
     this.selectedId = id
   }
 
@@ -333,6 +334,14 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       .tapSome(idx => this.setSelectedIndex(idx))
   }
 
+  private readonly setSelectedIdViaIndex = (idx: number) =>
+    this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())
+
+  ngOnInit() {
+    // initial setup of selected id
+    this.setSelectedIdViaIndex(this.selectedIndex)
+  }
+
   ngAfterViewInit() {
     this.updateGridStyles(this.gridItemContainers.length)
 
@@ -380,6 +389,9 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   readonly setValueOfSelected = (val: TItem) => {
     this.setItems(swapAtIndex(this.items, this.selectedIndex, val))
   }
+
+  readonly isItemSeleected = (item: TItem) => this.selectedId === item.id
+  readonly isIdSelected = (id: string) => this.selectedId === id
 
   readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)

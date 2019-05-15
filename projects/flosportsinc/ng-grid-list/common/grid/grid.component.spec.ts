@@ -50,12 +50,11 @@ const createSut = () => {
   }
 }
 
-const testInputProperty = (prop: string, testNumber: any, ) => {
+const testInputProperty = (prop: string, testValue: any, ) => {
   const sut = TestBed.createComponent(FloGridTilesComponent)
-  sut.componentInstance[prop] = testNumber
-  sut.detectChanges()
-  expect(sut.componentInstance[prop]).toEqual(testNumber)
-  sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testNumber))
+  sut.componentInstance[prop] = testValue
+  expect(sut.componentInstance[prop]).toEqual(testValue)
+  sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testValue))
 }
 
 const testInputPropSetFunc = (prop: string, prop2: string, num: any) => {
@@ -425,6 +424,44 @@ describe(FloGridTilesComponent.name, () => {
         sut.instance.setCount(4)
         expect(sut.instance.selectedIndex).toEqual(2)
       })
+    })
+  })
+
+  describe('isIdSelected', () => {
+    it('works internally', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(2)
+      sut.instance.setSelectedIndex(0)
+      expect(sut.instance.isIdSelected('1')).toEqual(true)
+    })
+
+    it('via click event', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(2)
+      const res = sut.instance.gridItemContainers.toArray()
+      res[0].nativeElement.click()
+      expect(sut.instance.isIdSelected('1')).toEqual(true)
+    })
+  })
+
+  describe('isIdSelected', () => {
+    it('works internally', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(2)
+      sut.instance.setSelectedIndex(0)
+      expect(sut.instance.isItemSeleected({ id: '1', prop: 'prop1' })).toEqual(true)
+    })
+
+    it('via click event', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(2)
+      const res = sut.instance.gridItemContainers.toArray()
+      res[0].nativeElement.click()
+      expect(sut.instance.isItemSeleected({ id: '1', prop: 'prop1' })).toEqual(true)
     })
   })
 })

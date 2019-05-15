@@ -1,15 +1,16 @@
 // import { async, ComponentFixture, TestBed } from '@angular/core/testing'
 // import { FloGridListComponent } from './grid-list.component'
 
-// describe('GridListComponent', () => {
-//   let component: FloGridListComponent
-//   let fixture: ComponentFixture<FloGridListComponent>
+// describe(FloGridListComponent.name, () => {
+//   // tslint:disable-next-line: no-let
+//   let component: FloGridListComponent<any>
+//   // tslint:disable-next-line: no-let
+//   let fixture: ComponentFixture<FloGridListComponent<any>>
 
 //   beforeEach(async(() => {
 //     TestBed.configureTestingModule({
 //       declarations: [FloGridListComponent]
-//     })
-//       .compileComponents()
+//     }).compileComponents()
 //   }))
 
 //   beforeEach(() => {

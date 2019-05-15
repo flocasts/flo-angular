@@ -1,6 +1,30 @@
-import { Component, ChangeDetectionStrategy, Input, Directive, ContentChild, TemplateRef, Inject } from '@angular/core'
+import {
+  Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
+  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
+} from '@angular/core'
 import { FloGridTilesComponent } from '../grid/grid.component'
 import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
+import { Subject, merge } from 'rxjs'
+import { maybe } from 'typescript-monads'
+import { takeUntil } from 'rxjs/operators'
+
+export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
+  readonly item: TItem
+  readonly selected: boolean
+  readonly selectedIndex?: number
+  readonly permissions: {
+    readonly canAdd: boolean
+    readonly canRemove: boolean
+    readonly canReplace: boolean
+    readonly canSwap: boolean
+  }
+  readonly actions: {
+    readonly add: () => void
+    readonly remove: () => void
+    readonly replace: () => void
+    readonly swap: () => void
+  }
+}
 
 @Directive({
   selector: '[floGridListItem]'
@@ -13,8 +37,8 @@ export class FloGridListItemDirective { }
   styleUrls: ['./grid-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListComponent<TItem extends IFloGridListBaseItem> {
-  constructor(@Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
+export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
+  constructor(private _cdRef: ChangeDetectorRef, @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
 
   // tslint:disable-next-line: readonly-keyword
   private _items: ReadonlyArray<TItem> = []
@@ -28,16 +52,67 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> {
     this._items = val.map(v => {
       return {
         ...v,
-        id: this.guid()
+        id: v.id || this.guid()
       }
     })
   }
 
+  get viewItems(): ReadonlyArray<any> {
+    const selectedId = this.maybeGridRef().map(a => a.selectedId)
+    return this.items.map(item => {
+      const isSelected = selectedId.map(id => id === item.id).valueOr(false)
+      // const itemInAnotherIndex = this.gridRef.items.findIndex()
+      // const maybeSelectedIndex = this.gridRef.findIndexByItemId(item.id)
+      // const inAnotherSquare = maybeSelectedIndex.map(() => true).valueOr(false)
+      // const selectedIndex = maybeSelectedIndex.valueOr(-1)
+      // const isValidIndex = selectedIndex >= 0 && selectedIndex <= this.gridRef.viewcount - 1
+
+      return {
+        item,
+        isSelected,
+        // selectedIndex,
+        permissions: {
+          //   canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
+          //   canRemove: selected,
+          //   canReplace: !selected && selectedId.valueOrUndefined() !== undefined,
+          //   canSwap: !selected && inAnotherSquare,
+          //   canSelect: !selected && isValidIndex
+        },
+        actions: {
+          //   select: () => selectedIndex >= 0 && this.gridRef.setSelected(selectedIndex),
+          //   add: () => this.gridRef.setItem(item),
+          //   replace: () => this.gridRef.setItem(item),
+          //   remove: () => this.gridRef.removeItem(),
+          //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
+        }
+      }
+    })
+  }
+
+  @Output()
+  public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+
   @Input()
-  readonly gridTileRef: FloGridTilesComponent<TItem>
+  public readonly gridRef?: FloGridTilesComponent<TItem>
+  public readonly maybeGridRef = () => maybe(this.gridRef)
 
   @ContentChild(FloGridListItemDirective, { read: TemplateRef })
-  readonly itemTemplate?: TemplateRef<TItem>
+  public readonly itemTemplate?: TemplateRef<TItem>
 
-  readonly trackByFn = (idx: number, _item: TItem) => idx
+  readonly trackByFn = (_idx: number, item: TItem) => item.id
+
+  private readonly onDestroy = new Subject()
+
+  ngOnInit() {
+    this.maybeGridRef().tapSome(grid => {
+      merge(grid.selectedIdChange, grid.selectedIndexChange)
+        .pipe(takeUntil(this.onDestroy))
+        .subscribe(() => this._cdRef.detectChanges())
+    })
+  }
+
+  ngOnDestroy() {
+    this.onDestroy.next()
+    this.onDestroy.complete()
+  }
 }
