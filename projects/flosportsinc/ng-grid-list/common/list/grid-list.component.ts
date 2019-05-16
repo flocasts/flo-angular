@@ -58,34 +58,50 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
 
   get viewItems(): ReadonlyArray<any> {
-    const maybeSelectedId = this.maybeGridRef().map(a => a.selectedId)
     return this.items.map(item => {
-      const isSelected = maybeSelectedId.map(id => id === item.id).valueOr(false)
+      return this.maybeGridRef()
+        .map(grid => {
+          const isSelected = grid.selectedId === item.id
+          return {
+            item,
+            isSelected,
+            permissions: {},
+            actions: {}
+          }
+        })
+        .valueOr({
+          item,
+          isSelected: false,
+          permissions: {},
+          actions: {}
+        })
+
       // const itemInAnotherIndex = this.gridRef.items.findIndex()
       // const maybeSelectedIndex = this.gridRef.findIndexByItemId(item.id)
       // const inAnotherSquare = maybeSelectedIndex.map(() => true).valueOr(false)
       // const selectedIndex = maybeSelectedIndex.valueOr(-1)
       // const isValidIndex = selectedIndex >= 0 && selectedIndex <= this.gridRef.viewcount - 1
 
-      return {
-        item,
-        isSelected,
-        // selectedIndex,
-        permissions: {
-          //   canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
-          //   canRemove: selected,
-          //   canReplace: !selected && selectedId.valueOrUndefined() !== undefined,
-          //   canSwap: !selected && inAnotherSquare,
-          //   canSelect: !selected && isValidIndex
-        },
-        actions: {
-          //   select: () => selectedIndex >= 0 && this.gridRef.setSelected(selectedIndex),
-          //   add: () => this.gridRef.setItem(item),
-          //   replace: () => this.gridRef.setItem(item),
-          //   remove: () => this.gridRef.removeItem(),
-          //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
-        }
-      }
+      // return {
+      //   item,
+      //   // isSelected,
+      //   // selectedIndex,
+      //   permissions: {
+      //     //   canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
+      //     //   canRemove: selected,
+      //     //   canReplace: !selected && selectedId.valueOrUndefined() !== undefined,
+      //     //   canSwap: !selected && inAnotherSquare,
+      //     //   canSelect: !selected && isValidIndex
+      //   },
+      //   actions: {
+      //     select: () => this.maybeGridRef().map(g => g.setSelectedIndex(1))
+      //     // selectedIndex >= 0 && this.gridRef.setSelected(selectedIndex),
+      //     //   add: () => this.gridRef.setItem(item),
+      //     //   replace: () => this.gridRef.setItem(item),
+      //     //   remove: () => this.gridRef.removeItem(),
+      //     //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
+      //   }
+      // }
     })
   }
 

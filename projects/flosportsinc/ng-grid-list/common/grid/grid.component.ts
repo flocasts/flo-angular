@@ -394,6 +394,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   readonly isItemSeleected = (item: TItem) => this.selectedId === item.id
   readonly isIdSelected = (id: string) => this.selectedId === id
   readonly resetItems = () => this._items = []
+  readonly getItemId = (id: string) => this.items.findIndex(a => a.id === id)
 
   readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
