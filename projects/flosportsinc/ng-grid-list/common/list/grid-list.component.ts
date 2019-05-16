@@ -1,6 +1,6 @@
 import { FloGridTilesComponent } from '../grid/grid.component'
 import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
-import { Subject, merge } from 'rxjs'
+import { Subject } from 'rxjs'
 import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
 import {
@@ -143,7 +143,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   ngOnInit() {
     this.maybeGridRef().tapSome(grid => {
-      merge(grid.selectedIdChange, grid.selectedIndexChange)
+      grid.cdRefChange
         .pipe(takeUntil(this.onDestroy))
         .subscribe(() => this._cdRef.detectChanges())
     })

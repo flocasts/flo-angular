@@ -301,6 +301,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
+  @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -365,20 +366,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   readonly trackByFn = (_idx: number, _item: TItem) => false
 
-  readonly calcNumRowsColumns = (n: number) => {
-    const squared = Math.sqrt(n)
-    const columns = Math.ceil(squared)
-    const rows = columns
-    const shouldFill = n === 2
-    return {
-      columns,
-      rows,
-      gridBoxColumns: shouldFill ? columns * 2 : columns,
-      gridBoxRows: shouldFill ? columns * 2 : rows,
-      shouldFill
-    }
-  }
-
   readonly setItemAtIndex = (idx: number, val: TItem) => {
     // tslint:disable-next-line: readonly-array
     const _cloned = [...this.items]
@@ -396,19 +383,33 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
-  readonly isCount = (count: number) => this.count === count
-  readonly isItemSelected = (item: TItem) => this.selectedId === item.id
-  readonly isIdSelected = (id: string) => this.selectedId === id
-  readonly resetItems = () => this._items = []
-  readonly getItemIndex = (id: string) => this.items.findIndex(a => a && a.id === id)
-  readonly isItemInGrid = (id: string) => this.getItemIndex(id) >= 0
-  readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndex(id))
+  public readonly isCount = (count: number) => this.count === count
+  public readonly isItemSelected = (item: TItem) => this.selectedId === item.id
+  public readonly isIdSelected = (id: string) => this.selectedId === id
+  public readonly resetItems = () => this.items = []
+  public readonly getItemIndex = (id: string) => this.items.findIndex(a => a && a.id === id)
+  public readonly isItemInGrid = (id: string) => this.getItemIndex(id) >= 0
+  public readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndex(id))
     .filter(i => i >= 0)
     .filter(i => i !== idx)
     .map(() => true)
     .valueOr(false)
 
-  readonly updateGridStyles = (count: number) => {
+  private readonly calcNumRowsColumns = (n: number) => {
+    const squared = Math.sqrt(n)
+    const columns = Math.ceil(squared)
+    const rows = columns
+    const shouldFill = n === 2
+    return {
+      columns,
+      rows,
+      gridBoxColumns: shouldFill ? columns * 2 : columns,
+      gridBoxRows: shouldFill ? columns * 2 : rows,
+      shouldFill
+    }
+  }
+
+  private readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
     const element = this.gridContainer.nativeElement
     const maxWidth = `${this.maxheight * 1.777777778}px`
