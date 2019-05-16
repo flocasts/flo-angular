@@ -390,8 +390,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.setItems(swapAtIndex(this.items, this.selectedIndex, val))
   }
 
+  readonly isCount = (count: number) => this.count === count
   readonly isItemSeleected = (item: TItem) => this.selectedId === item.id
   readonly isIdSelected = (id: string) => this.selectedId === id
+  readonly resetItems = () => this._items = []
 
   readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)

@@ -1,12 +1,12 @@
-import {
-  Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
-  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
-} from '@angular/core'
 import { FloGridTilesComponent } from '../grid/grid.component'
 import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
 import { Subject, merge } from 'rxjs'
 import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
+import {
+  Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
+  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
+} from '@angular/core'
 
 export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly item: TItem
@@ -58,9 +58,9 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
 
   get viewItems(): ReadonlyArray<any> {
-    const selectedId = this.maybeGridRef().map(a => a.selectedId)
+    const maybeSelectedId = this.maybeGridRef().map(a => a.selectedId)
     return this.items.map(item => {
-      const isSelected = selectedId.map(id => id === item.id).valueOr(false)
+      const isSelected = maybeSelectedId.map(id => id === item.id).valueOr(false)
       // const itemInAnotherIndex = this.gridRef.items.findIndex()
       // const maybeSelectedIndex = this.gridRef.findIndexByItemId(item.id)
       // const inAnotherSquare = maybeSelectedIndex.map(() => true).valueOr(false)

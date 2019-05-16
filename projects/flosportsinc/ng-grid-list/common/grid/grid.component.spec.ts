@@ -464,4 +464,30 @@ describe(FloGridTilesComponent.name, () => {
       expect(sut.instance.isItemSeleected({ id: '1', prop: 'prop1' })).toEqual(true)
     })
   })
+
+  describe('resetItems', () => {
+    it('should reset', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(4)
+      sut.instance.resetItems()
+      expect(sut.instance.items.length).toEqual(0)
+      expect(sut.instance.count).toEqual(4)
+    })
+  })
+
+  describe('isCount', () => {
+    it('should return true w/ matching count', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(4)
+      expect(sut.instance.isCount(4)).toEqual(true)
+    })
+    it('should return false w/ mismatching count', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.instance.setCount(2)
+      expect(sut.instance.isCount(4)).toEqual(false)
+    })
+  })
 })
