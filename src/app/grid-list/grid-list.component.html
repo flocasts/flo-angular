@@ -19,8 +19,10 @@
      [ngClass]="{ 'underline': row.roles.canSelect }"
      [ngStyle]="{'font-weight': row.roles.isSelected ? 'bold': 'initial' }" (click)="row.actions.select()">{{ row?.item?.src }}</span>
     (
-      <span *ngIf="row.roles.canAdd">Add</span>
-      <span *ngIf="row.roles.canRemoveSelf">Remove</span>
+      <span *ngIf="row.roles.canAdd" class="underline" (click)="row.actions.add()">Add </span>
+      <span *ngIf="row.roles.canReplace" class="underline" (click)="row.actions.replace()">Replace </span>
+      <span *ngIf="row.roles.canSwap" class="underline" (click)="row.actions.swap()">Swap </span>
+      <span *ngIf="row.roles.canRemoveSelf" class="underline" (click)="row.actions.removeSelf()">RemoveSelf </span>
     )
   </div>
 </flo-grid-list>

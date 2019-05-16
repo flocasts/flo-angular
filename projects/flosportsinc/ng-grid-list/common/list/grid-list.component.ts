@@ -60,28 +60,18 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
 
   get viewItems(): ReadonlyArray<any> {
-    //   actions: {
-    //     //   add: () => this.gridRef.setItem(item),
-    //     //   replace: () => this.gridRef.setItem(item),
-    //     //   remove: () => this.gridRef.removeItem(),
-    //     //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
-    //   }
-
     return this.items.map(item => {
       return this.maybeGridRef()
         .map(grid => {
           const isSelected = grid.isIdSelected(item.id)
-          const isNotSelected = grid.isIdNotSelected(item.id)
           const itemIndexInGrid = grid.getItemIndex(item)
-          const isItemInGrid = grid.isItemInGrid(item)
-          const isInView = grid.isItemInView(item)
-          const isInAnother = grid.isItemInAnotherIndex(item.id, grid.selectedIndex)
+          const isInAnother = grid.isItemInAnotherIndex(item, grid.selectedIndex)
           const canSelect = grid.canSelectItem(item)
-          const canSwap = grid.canSwapItemIntoSelected(item)
+          const canSwap = grid.canSwapItem(item)
           const canRemoveSelf = grid.canRemoveItemSelected(item)
           const canRemove = grid.canRemoveItem(item)
-          const canAdd = !isItemInGrid && !isInAnother
-          const canReplace = isNotSelected && itemIndexInGrid >= 0
+          const canAdd = grid.canAddItem(item)
+          const canReplace = grid.canReplaceItem(item)
           return {
             item,
             roles: {
@@ -95,10 +85,11 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
               canSelect
             },
             actions: {
-              select: () => isInView && grid.setSelectedIndex(itemIndexInGrid),
-              add: () => { canAdd && 1 }, // TODO
-              replace: () => { canReplace && 1 }, // TODO
+              select: () => canSelect && grid.setSelectedIndex(itemIndexInGrid),
+              add: () => { canAdd && grid.setSelectedItem(item) },
+              replace: () => { canReplace && grid.replaceSelectedItem(item) },
               remove: () => { canRemove && 1 }, // TODO
+              removeSelf: () => { canRemoveSelf && 1 }, // TODO
               swap: () => { canSwap && 1 } // TODO
             }
           }
@@ -120,6 +111,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
             add: noop,
             replace: noop,
             remove: noop,
+            removeSelf: noop,
             swap: noop
           }
         })

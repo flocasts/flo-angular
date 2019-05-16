@@ -148,7 +148,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   public setSelectedIndex(index: number) {
     this.selectedIndex = index
     this.setSelectedIdViaIndex(index)
-    setTimeout(() => this._cdRef.markForCheck())
+    // setTimeout(() => this._cdRef.markForCheck())
   }
 
   private _selectedId?: string
@@ -396,24 +396,37 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   }
 
   public readonly isItemInGrid = (item: TItem) => this.getItemIndex(item) >= 0
-  public readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndexById(id))
+  public readonly isItemNotInGrid = (item: TItem) => !this.isItemInGrid(item)
+  public readonly isItemInAnotherIndex = (item: TItem, idx: number) => maybe(this.getItemIndex(item))
     .filter(i => i >= 0)
     .filter(i => i !== idx)
     .map(() => true)
     .valueOr(false)
 
-  public readonly canSwapItemIntoSelected =
-    (item: TItem) =>
-      this.isIdNotSelected(item.id) && this.isItemInAnotherIndex(item.id, this.selectedIndex)
+  public readonly isItemInNotAnotherIndex = (item: TItem, idx: number) => !this.isItemInAnotherIndex(item, idx)
+
+  public readonly canRemoveItem = (item: TItem) => this.isItemInGrid(item)
+  public readonly canRemoveItemSelected = (item: TItem) => this.isItemSelected(item)
+  public readonly canSwapItem =
+    (item: TItem, toIndex = this.selectedIndex) =>
+      this.isIdNotSelected(item.id) && this.isItemInAnotherIndex(item, toIndex)
 
   public readonly canSelectItem =
     (item: TItem) =>
       this.isItemInView(item) && this.isItemNotSelected(item)
 
-  public readonly canRemoveItem = (item: TItem) => this.isItemInGrid(item)
-  public readonly canRemoveItemSelected = (item: TItem) => this.isItemSelected(item)
-  public readonly canAddItem = (item: TItem) => {}
-  public readonly canReplaceItem = (item: TItem) => {}
+  public readonly canAddItem =
+    (item: TItem, toIndex = this.selectedIndex) =>
+      this.isItemNotInGrid(item) && this.isItemInNotAnotherIndex(item, toIndex)
+
+  public readonly canReplaceItem = (item: TItem) => {
+    return this.isItemNotSelected(item) && this.isItemInView(item)
+  }
+
+  public readonly setSelectedItem = (item: TItem) => this.setValueOfSelected(item)
+  public readonly replaceSelectedItem = (item: TItem) => {
+    // TODO
+  }
 
   public readonly resetItems = () => {
     this.items = []
