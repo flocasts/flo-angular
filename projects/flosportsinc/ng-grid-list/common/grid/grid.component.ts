@@ -4,7 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { swapAtIndex, fillWith, chunk } from './helpers'
+import { swapAtIndex, fillWith, chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
@@ -372,23 +372,22 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     }
   }
 
-  readonly setValueAtIndex = (idx: number, val: TItem) => {
-    typeof idx === 'number' && this.setItems(swapAtIndex(this.items, idx, val))
+  readonly setItemAtIndex = (idx: number, val: TItem) => {
+    // tslint:disable-next-line: readonly-array
+    const _cloned = [...this.items]
+    _cloned[idx] = val
+    this.setItems(_cloned)
   }
 
-  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number, fromVal?: TItem) => {
-    const firstPass = swapAtIndex(this.items, toIndex, toVal)
-
-    if (typeof fromIndex === 'number' && fromVal) {
-      this.setItems(swapAtIndex(firstPass, fromIndex, fromVal))
+  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number) => {
+    if (typeof fromIndex === 'number') {
+      this.setItems(swapItemsViaIndices(this.items, toIndex, fromIndex))
     } else {
-      this.setItems(firstPass)
+      this.setItemAtIndex(toIndex, toVal)
     }
   }
 
-  readonly setValueOfSelected = (val: TItem) => {
-    this.setItems(swapAtIndex(this.items, this.selectedIndex, val))
-  }
+  readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
   readonly isCount = (count: number) => this.count === count
   readonly isItemSeleected = (item: TItem) => this.selectedId === item.id

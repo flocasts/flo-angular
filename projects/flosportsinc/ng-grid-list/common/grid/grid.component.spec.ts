@@ -327,11 +327,11 @@ describe(FloGridTilesComponent.name, () => {
     }))
   })
 
-  it('should set value at index', () => {
+  it('should setItemAtIndex', () => {
     const sut = createSut()
     sut.hoistInstance.setCount(2)
     sut.hoistInstance.setItems([{ id: '1', value: 'SOME_VALUE_1' }, { id: '2', value: 'SOME_VALUE_2' }])
-    sut.instance.setValueAtIndex(0, { id: '1', value: 'WE WIN!' } as any)
+    sut.instance.setItemAtIndex(0, { id: '1', value: 'WE WIN!' } as any)
     sut.hoistFixture.detectChanges()
     const res = sut.instance.gridItemContainers.toArray()
     expect(res[0].nativeElement.textContent).toEqual('WE WIN!')
@@ -357,10 +357,10 @@ describe(FloGridTilesComponent.name, () => {
       const item1 = { id: 2, test: 'Test2' }
 
       sut.instance.items = [item0, item1]
-      sut.instance.swapItemsAtIndex(1, item0, 0, item1)
+      sut.instance.setCount(2)
+      sut.instance.swapItemsAtIndex(1, item0, 0)
 
-      expect(sut.instance.items[0]).toEqual(item1)
-      expect(sut.instance.items[1]).toEqual(item0)
+      expect(sut.instance.items).toEqual([item1, item0])
     })
 
     it('should swap items when only to is provided', () => {

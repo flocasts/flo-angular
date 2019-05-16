@@ -4,7 +4,7 @@ const COLLECTION_1: ReadonlyArray<any> = [{ prop: 1 }, { prop: 2 }, { prop: 3 }]
 
 describe(swapAtIndex.name, () => {
   it('should handle empty collection', () => {
-    const sut = swapAtIndex([], 0, { prop: 'NEW' })
+    const sut = swapAtIndex([], 0, { prop: 'NEW' } as any)
 
     expect(sut.length).toEqual(1)
     expect(sut[0]).toEqual({ prop: 'NEW' })

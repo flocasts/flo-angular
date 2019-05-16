@@ -41,7 +41,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .flatMap(replace => maybe(this.floGridListDragDropGridRef)
         .map(gridRef => ({ gridRef, replace })))
       .tapSome(res => {
-        res.gridRef.swapItemsAtIndex(res.replace.to.index, res.replace.from.value, res.replace.from.index, res.replace.to.value)
+        res.gridRef.swapItemsAtIndex(res.replace.to.index, res.replace.from.value, res.replace.from.index)
       })
   }
 }
