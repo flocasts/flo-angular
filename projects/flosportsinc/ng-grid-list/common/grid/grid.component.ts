@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -41,6 +41,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
+    private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -147,6 +148,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   public setSelectedIndex(index: number) {
     this.selectedIndex = index
     this.setSelectedIdViaIndex(index)
+    setTimeout(() => this._cdRef.markForCheck())
   }
 
   private _selectedId?: string
@@ -308,7 +310,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   private cursorInsideElement = merge(
-    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.fadeoutIntervalReset.next(true))),
+    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this._elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this._elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart))
@@ -335,8 +337,12 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       .tapSome(idx => this.setSelectedIndex(idx))
   }
 
-  private readonly setSelectedIdViaIndex = (idx: number) =>
+  private readonly setSelectedIdViaIndex = (idx: number) => {
     this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())
+    this.cycleOverlay()
+  }
+
+  public readonly cycleOverlay = () => this.fadeoutIntervalReset.next(true)
 
   ngOnInit() {
     // initial setup of selected id
@@ -391,10 +397,16 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
   readonly isCount = (count: number) => this.count === count
-  readonly isItemSeleected = (item: TItem) => this.selectedId === item.id
+  readonly isItemSelected = (item: TItem) => this.selectedId === item.id
   readonly isIdSelected = (id: string) => this.selectedId === id
   readonly resetItems = () => this._items = []
-  readonly getItemId = (id: string) => this.items.findIndex(a => a.id === id)
+  readonly getItemIndex = (id: string) => this.items.findIndex(a => a && a.id === id)
+  readonly isItemInGrid = (id: string) => this.getItemIndex(id) >= 0
+  readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndex(id))
+    .filter(i => i >= 0)
+    .filter(i => i !== idx)
+    .map(() => true)
+    .valueOr(false)
 
   readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)

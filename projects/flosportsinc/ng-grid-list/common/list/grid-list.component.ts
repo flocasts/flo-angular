@@ -10,9 +10,8 @@ import {
 
 export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly item: TItem
-  readonly selected: boolean
-  readonly selectedIndex?: number
-  readonly permissions: {
+  readonly roles: {
+    readonly isSelected: boolean
     readonly canAdd: boolean
     readonly canRemove: boolean
     readonly canReplace: boolean
@@ -25,6 +24,8 @@ export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
     readonly swap: () => void
   }
 }
+
+const noop = () => { }
 
 @Directive({
   selector: '[floGridListItem]'
@@ -58,50 +59,71 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
 
   get viewItems(): ReadonlyArray<any> {
+    //   actions: {
+    //     //   add: () => this.gridRef.setItem(item),
+    //     //   replace: () => this.gridRef.setItem(item),
+    //     //   remove: () => this.gridRef.removeItem(),
+    //     //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
+    //   }
+
     return this.items.map(item => {
       return this.maybeGridRef()
         .map(grid => {
           const isSelected = grid.selectedId === item.id
+          const itemIndexInGrid = grid.getItemIndex(item.id)
+          const isItemInGrid = grid.isItemInGrid(item.id)
+          const isInView = itemIndexInGrid >= 0 && itemIndexInGrid < grid.count
+          const currentSelectedIndex = grid.selectedIndex
+          const isInAnother = grid.isItemInAnotherIndex(item.id, currentSelectedIndex)
+
+          const isNotSelected = !isSelected
+          const canSelect = isInView && isNotSelected
+          const canSwap = isNotSelected && isInAnother
+          const canRemoveSelf = isSelected
+          const canRemove = isItemInGrid
+          const canAdd = !isItemInGrid && !isInAnother
+          const canReplace = isNotSelected && itemIndexInGrid >= 0
           return {
             item,
-            isSelected,
-            permissions: {},
-            actions: {}
+            roles: {
+              isSelected,
+              isInAnother,
+              canAdd,
+              canRemoveSelf,
+              canRemove,
+              canReplace,
+              canSwap,
+              canSelect
+            },
+            actions: {
+              select: () => isInView && grid.setSelectedIndex(itemIndexInGrid),
+              add: () => { canAdd && 1 }, // TODO
+              replace: () => { canReplace && 1 }, // TODO
+              remove: () => { canRemove && 1 }, // TODO
+              swap: () => { canSwap && 1 } // TODO
+            }
           }
         })
         .valueOr({
           item,
-          isSelected: false,
-          permissions: {},
-          actions: {}
+          roles: {
+            isSelected: false,
+            isInAnother: false,
+            canAdd: false,
+            canRemoveSelf: false,
+            canRemove: false,
+            canReplace: false,
+            canSwap: false,
+            canSelect: false
+          },
+          actions: {
+            select: noop,
+            add: noop,
+            replace: noop,
+            remove: noop,
+            swap: noop
+          }
         })
-
-      // const itemInAnotherIndex = this.gridRef.items.findIndex()
-      // const maybeSelectedIndex = this.gridRef.findIndexByItemId(item.id)
-      // const inAnotherSquare = maybeSelectedIndex.map(() => true).valueOr(false)
-      // const selectedIndex = maybeSelectedIndex.valueOr(-1)
-      // const isValidIndex = selectedIndex >= 0 && selectedIndex <= this.gridRef.viewcount - 1
-
-      // return {
-      //   item,
-      //   // isSelected,
-      //   // selectedIndex,
-      //   permissions: {
-      //     //   canAdd: selectedId.map(() => false).valueOr(true) && !inAnotherSquare,
-      //     //   canRemove: selected,
-      //     //   canReplace: !selected && selectedId.valueOrUndefined() !== undefined,
-      //     //   canSwap: !selected && inAnotherSquare,
-      //     //   canSelect: !selected && isValidIndex
-      //   },
-      //   actions: {
-      //     select: () => this.maybeGridRef().map(g => g.setSelectedIndex(1))
-      //     // selectedIndex >= 0 && this.gridRef.setSelected(selectedIndex),
-      //     //   add: () => this.gridRef.setItem(item),
-      //     //   replace: () => this.gridRef.setItem(item),
-      //     //   remove: () => this.gridRef.removeItem(),
-      //     //   swap: () => maybeSelectedIndex.tapSome(idx => this.gridRef.swapWithCurrent(idx))
-      //   }
-      // }
     })
   }
 

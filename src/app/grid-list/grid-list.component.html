@@ -15,7 +15,13 @@
 <h3>Grid List 1</h3>
 <flo-grid-list [gridRef]="gridRef" [items]="items">
   <div *floGridListItem="let row">
-    <span [ngStyle]="{'font-weight': row?.isSelected ? 'bold': 'initial'}">{{ row?.item?.src }}</span>
+    <span
+     [ngClass]="{ 'underline': row.roles.canSelect }"
+     [ngStyle]="{'font-weight': row.roles.isSelected ? 'bold': 'initial' }" (click)="row.actions.select()">{{ row?.item?.src }}</span>
+    (
+      <span *ngIf="row.roles.canAdd">Add</span>
+      <span *ngIf="row.roles.canRemoveSelf">Remove</span>
+    )
   </div>
 </flo-grid-list>
 <!-- 

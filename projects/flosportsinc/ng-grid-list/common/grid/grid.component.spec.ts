@@ -452,7 +452,7 @@ describe(FloGridTilesComponent.name, () => {
       sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
       sut.instance.setCount(2)
       sut.instance.setSelectedIndex(0)
-      expect(sut.instance.isItemSeleected({ id: '1', prop: 'prop1' })).toEqual(true)
+      expect(sut.instance.isItemSelected({ id: '1', prop: 'prop1' })).toEqual(true)
     })
 
     it('via click event', () => {
@@ -461,7 +461,7 @@ describe(FloGridTilesComponent.name, () => {
       sut.instance.setCount(2)
       const res = sut.instance.gridItemContainers.toArray()
       res[0].nativeElement.click()
-      expect(sut.instance.isItemSeleected({ id: '1', prop: 'prop1' })).toEqual(true)
+      expect(sut.instance.isItemSelected({ id: '1', prop: 'prop1' })).toEqual(true)
     })
   })
 
