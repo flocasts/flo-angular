@@ -381,19 +381,44 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     }
   }
 
-  readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
+  public readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
+  public readonly getItemIndexById = (id: string) => this.items.findIndex(a => a && a.id === id)
+  public readonly getItemIndex = (item: TItem) => this.getItemIndexById(item.id)
   public readonly isCount = (count: number) => this.count === count
-  public readonly isItemSelected = (item: TItem) => this.selectedId === item.id
   public readonly isIdSelected = (id: string) => this.selectedId === id
-  public readonly resetItems = () => this.items = []
-  public readonly getItemIndex = (id: string) => this.items.findIndex(a => a && a.id === id)
-  public readonly isItemInGrid = (id: string) => this.getItemIndex(id) >= 0
-  public readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndex(id))
+  public readonly isIdNotSelected = (id: string) => !this.isIdSelected(id)
+  public readonly isItemSelected = (item: TItem) => this.selectedId === item.id
+  public readonly isItemNotSelected = (item: TItem) => !this.isItemSelected(item)
+  public readonly isItemInView = (item: TItem) => {
+    const itemIndex = this.getItemIndex(item)
+    return itemIndex >= 0 && itemIndex <= this.count
+  }
+
+  public readonly isItemInGrid = (item: TItem) => this.getItemIndex(item) >= 0
+  public readonly isItemInAnotherIndex = (id: string, idx: number) => maybe(this.getItemIndexById(id))
     .filter(i => i >= 0)
     .filter(i => i !== idx)
     .map(() => true)
     .valueOr(false)
+
+  public readonly canSwapItemIntoSelected =
+    (item: TItem) =>
+      this.isIdNotSelected(item.id) && this.isItemInAnotherIndex(item.id, this.selectedIndex)
+
+  public readonly canSelectItem =
+    (item: TItem) =>
+      this.isItemInView(item) && this.isItemNotSelected(item)
+
+  public readonly canRemoveItem = (item: TItem) => this.isItemInGrid(item)
+  public readonly canRemoveItemSelected = (item: TItem) => this.isItemSelected(item)
+  public readonly canAddItem = (item: TItem) => {}
+  public readonly canReplaceItem = (item: TItem) => {}
+
+  public readonly resetItems = () => {
+    this.items = []
+    this.setSelectedId(undefined)
+  }
 
   private readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)

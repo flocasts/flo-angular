@@ -13,6 +13,7 @@ export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly roles: {
     readonly isSelected: boolean
     readonly canAdd: boolean
+    readonly canRemoveSelf: boolean
     readonly canRemove: boolean
     readonly canReplace: boolean
     readonly canSwap: boolean
@@ -69,18 +70,16 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     return this.items.map(item => {
       return this.maybeGridRef()
         .map(grid => {
-          const isSelected = grid.selectedId === item.id
-          const itemIndexInGrid = grid.getItemIndex(item.id)
-          const isItemInGrid = grid.isItemInGrid(item.id)
-          const isInView = itemIndexInGrid >= 0 && itemIndexInGrid < grid.count
-          const currentSelectedIndex = grid.selectedIndex
-          const isInAnother = grid.isItemInAnotherIndex(item.id, currentSelectedIndex)
-
-          const isNotSelected = !isSelected
-          const canSelect = isInView && isNotSelected
-          const canSwap = isNotSelected && isInAnother
-          const canRemoveSelf = isSelected
-          const canRemove = isItemInGrid
+          const isSelected = grid.isIdSelected(item.id)
+          const isNotSelected = grid.isIdNotSelected(item.id)
+          const itemIndexInGrid = grid.getItemIndex(item)
+          const isItemInGrid = grid.isItemInGrid(item)
+          const isInView = grid.isItemInView(item)
+          const isInAnother = grid.isItemInAnotherIndex(item.id, grid.selectedIndex)
+          const canSelect = grid.canSelectItem(item)
+          const canSwap = grid.canSwapItemIntoSelected(item)
+          const canRemoveSelf = grid.canRemoveItemSelected(item)
+          const canRemove = grid.canRemoveItem(item)
           const canAdd = !isItemInGrid && !isInAnother
           const canReplace = isNotSelected && itemIndexInGrid >= 0
           return {
