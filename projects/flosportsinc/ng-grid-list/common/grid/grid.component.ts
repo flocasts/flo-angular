@@ -4,7 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { swapAtIndex, fillWith, chunk, swapItemsViaIndices } from './helpers'
+import { fillWith, chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
@@ -70,6 +70,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   public setItems(items: ReadonlyArray<TItem>) {
     this.items = items
+    this.setSelectedIdViaIndex(this.selectedIndex)
   }
 
   @Input()

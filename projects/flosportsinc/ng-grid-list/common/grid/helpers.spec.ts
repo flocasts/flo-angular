@@ -1,38 +1,30 @@
-import { swapAtIndex, chunk } from './helpers'
+import { swapItemsViaIndices, chunk } from './helpers'
 
 const COLLECTION_1: ReadonlyArray<any> = [{ prop: 1 }, { prop: 2 }, { prop: 3 }]
 
-describe(swapAtIndex.name, () => {
+describe(swapItemsViaIndices.name, () => {
   it('should handle empty collection', () => {
-    const sut = swapAtIndex([], 0, { prop: 'NEW' } as any)
+    const sut = swapItemsViaIndices([], 0, 2)
 
-    expect(sut.length).toEqual(1)
-    expect(sut[0]).toEqual({ prop: 'NEW' })
+    expect(sut.length).toEqual(0)
+    expect(sut[0]).toBeUndefined()
   })
 
   it('should hanbdle 0 index', () => {
-    const sut = swapAtIndex(COLLECTION_1, 0, { prop: 'NEW' })
+    const sut = swapItemsViaIndices(COLLECTION_1, 0, 2)
 
     expect(sut.length).toEqual(3)
-    expect(sut[0]).toEqual({ prop: 'NEW' })
-    expect(sut[2]).toEqual({ prop: 3 })
+    expect(sut[0]).toEqual({ prop: 3 })
+    expect(sut[2]).toEqual({ prop: 1 })
   })
 
   it('should hanbdle last index', () => {
-    const sut = swapAtIndex(COLLECTION_1, 2, { prop: 'NEW' })
-
-    expect(sut.length).toEqual(3)
-    expect(sut[0]).toEqual({ prop: 1 })
-    expect(sut[2]).toEqual({ prop: 'NEW' })
-  })
-
-  it('should hanbdle last index + 1', () => {
-    const sut = swapAtIndex(COLLECTION_1, 3, { prop: 'NEW' })
+    const sut = swapItemsViaIndices(COLLECTION_1, 2, 3)
 
     expect(sut.length).toEqual(4)
     expect(sut[0]).toEqual({ prop: 1 })
-    expect(sut[2]).toEqual({ prop: 3 })
-    expect(sut[3]).toEqual({ prop: 'NEW' })
+    expect(sut[3]).toEqual({ prop: 3 })
+    expect(sut[2]).toBeUndefined()
   })
 })
 
