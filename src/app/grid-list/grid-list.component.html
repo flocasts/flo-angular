@@ -12,7 +12,9 @@
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
 
-<flo-grid-list [gridRef]="gridRef" [items]="items">
+<button (click)="fill()">AUTOFILL</button>
+
+<flo-grid-list #list [gridRef]="gridRef" [items]="items">
   <div *floGridListItem="let row">
     <span
      [ngClass]="{ 'underline': row.roles.canSelect }"

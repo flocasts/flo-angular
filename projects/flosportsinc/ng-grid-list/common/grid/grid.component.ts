@@ -453,6 +453,14 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.setSelectedId(undefined)
   }
 
+  public readonly findNextEmptyIndex = () => this.viewItems.findIndex(a => !a.hasValue)
+
+  public readonly fillNextEmpty =
+    (item: TItem) =>
+      maybe(this.findNextEmptyIndex())
+        .filter(idx => idx >= 0)
+        .tapSome(idx => this.setItem(item, idx))
+
   private readonly calcNumRowsColumns = (n: number) => {
     const squared = Math.sqrt(n)
     const columns = Math.ceil(squared)

@@ -132,6 +132,13 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   private readonly onDestroy = new Subject()
 
+  public readonly autoFill = () =>
+    this.maybeGridRef().tapSome(grid => {
+      this.items
+        .filter(i => grid.isItemNotInGrid(i))
+        .forEach(i => grid.fillNextEmpty(i))
+    })
+
   ngOnInit() {
     this.maybeGridRef().tapSome(grid => {
       grid.cdRefChange
