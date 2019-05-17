@@ -549,6 +549,17 @@ describe(FloGridListViewComponent.name, () => {
     })
   })
 
+  describe('isIdNotSelected', () => {
+    const item1 = { id: '1', prop: 'prop1' }
+    it('should return true when an id is not selected', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [item1]
+      sut.instance.setSelectedId('1')
+      expect(sut.instance.isIdNotSelected('2')).toEqual(true)
+    })
+  })
+
   describe('isItemInAnotherIndex', () => {
     const item1 = { id: '1', prop: 'prop1' }
     const item2 = { id: '2', prop: 'prop2' }
