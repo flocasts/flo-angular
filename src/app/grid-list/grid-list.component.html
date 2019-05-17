@@ -1,6 +1,6 @@
 <h1>Grid List</h1>
 
-<flo-grid-list-view #gridRef [count]="4">
+<flo-grid-list-view #gridRef [count]="4" [maxheight]="400">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>
     <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>
@@ -12,7 +12,6 @@
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
 
-<h3>Grid List 1</h3>
 <flo-grid-list [gridRef]="gridRef" [items]="items">
   <div *floGridListItem="let row">
     <span
@@ -23,6 +22,7 @@
       <span *ngIf="row.roles.canReplace" class="underline" (click)="row.actions.replace()">Replace </span>
       <span *ngIf="row.roles.canSwap" class="underline" (click)="row.actions.swap()">Swap </span>
       <span *ngIf="row.roles.canRemoveSelf" class="underline" (click)="row.actions.removeSelf()">RemoveSelf </span>
+      <span *ngIf="row.roles.canRemove" class="underline" (click)="row.actions.remove()">Remove </span>
     )
   </div>
 </flo-grid-list>

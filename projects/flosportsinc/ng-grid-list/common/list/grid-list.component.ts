@@ -86,11 +86,11 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
             },
             actions: {
               select: () => canSelect && grid.setSelectedIndex(itemIndexInGrid),
-              add: () => { canAdd && grid.setSelectedItem(item) },
-              replace: () => { canReplace && grid.replaceSelectedItem(item) },
-              remove: () => { canRemove && 1 }, // TODO
-              removeSelf: () => { canRemoveSelf && 1 }, // TODO
-              swap: () => { canSwap && 1 } // TODO
+              add: () => { canAdd && grid.setItem(item) },
+              replace: () => { canReplace && grid.replaceItem(item) },
+              remove: () => { canRemove && grid.removeItem(item) },
+              removeSelf: () => { canRemoveSelf && grid.removeItem(item) },
+              swap: () => { canSwap && grid.swapItems(item) }
             }
           }
         })

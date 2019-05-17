@@ -62,14 +62,15 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   @Input()
   get items() {
-    return this._items as ReadonlyArray<TItem>
+    return this._items as ReadonlyArray<TItem | undefined>
   }
-  set items(items: ReadonlyArray<TItem>) {
+  set items(items: ReadonlyArray<TItem | undefined>) {
     this._items = items
     this.itemsChange.next(items)
+    setTimeout(() => this._cdRef.markForCheck())
   }
 
-  public setItems(items: ReadonlyArray<TItem>) {
+  public setItems(items: ReadonlyArray<TItem | undefined>) {
     this.items = items
     this.setSelectedIdViaIndex(this.selectedIndex)
   }
@@ -148,7 +149,6 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   public setSelectedIndex(index: number) {
     this.selectedIndex = index
     this.setSelectedIdViaIndex(index)
-    // setTimeout(() => this._cdRef.markForCheck())
   }
 
   private _selectedId?: string
@@ -286,7 +286,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
       })
   }
 
-  @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+  @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
   @Output() public readonly countChange = new Subject<number>()
   @Output() public readonly minChange = new Subject<number>()
   @Output() public readonly maxChange = new Subject<number>()
@@ -364,7 +364,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.onDestroySource.complete()
   }
 
-  readonly trackByFn = (_idx: number, _item: TItem) => false
+  readonly trackByFn = (_idx: number, _item: TItem) => _item && _item.id
 
   readonly setItemAtIndex = (idx: number, val: TItem) => {
     // tslint:disable-next-line: readonly-array
@@ -383,7 +383,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   public readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
-  public readonly getItemIndexById = (id: string) => this.items.findIndex(a => a && a.id === id)
+  public readonly getItemIndexById = (id: string) => this.items.findIndex(a => a !== undefined && a.id === id)
   public readonly getItemIndex = (item: TItem) => this.getItemIndexById(item.id)
   public readonly isCount = (count: number) => this.count === count
   public readonly isIdSelected = (id: string) => this.selectedId === id
@@ -409,7 +409,9 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   public readonly canRemoveItemSelected = (item: TItem) => this.isItemSelected(item)
   public readonly canSwapItem =
     (item: TItem, toIndex = this.selectedIndex) =>
-      this.isIdNotSelected(item.id) && this.isItemInAnotherIndex(item, toIndex)
+      this.isItemInAnotherIndex(item, toIndex)
+
+  public readonly isIndexEmpty = (idx: number) => this.items[idx] === undefined
 
   public readonly canSelectItem =
     (item: TItem) =>
@@ -417,15 +419,33 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   public readonly canAddItem =
     (item: TItem, toIndex = this.selectedIndex) =>
-      this.isItemNotInGrid(item) && this.isItemInNotAnotherIndex(item, toIndex)
+      this.isIndexEmpty(toIndex) && this.isItemInNotAnotherIndex(item, toIndex)
 
-  public readonly canReplaceItem = (item: TItem) => {
-    return this.isItemNotSelected(item) && this.isItemInView(item)
+  public readonly canReplaceItem = (item: TItem, toIndex = this.selectedIndex) => {
+    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex) // this.isItemInView(item)
   }
 
-  public readonly setSelectedItem = (item: TItem) => this.setValueOfSelected(item)
-  public readonly replaceSelectedItem = (item: TItem) => {
-    // TODO
+  public readonly setItem = (item: TItem, idx = this.selectedIndex) => this.setItemAtIndex(idx, item)
+
+  public readonly removeItem =
+    (item: TItem) =>
+      maybe(this.getItemIndexById(item.id))
+        .filter(idx => idx >= 0)
+        .tapSome(idx => this.setItems([...this.items.slice(0, idx), undefined, ...this.items.slice(idx + 1)]))
+
+  public readonly replaceItem = (item: TItem, idx = this.selectedIndex) => {
+    const previousIndex = this.getItemIndex(item)
+    // tslint:disable-next-line: readonly-array
+    const _cloned = [...this.items]
+
+    _cloned[idx] = item
+    _cloned[previousIndex] = undefined
+
+    this.setItems(_cloned)
+  }
+
+  public readonly swapItems = (item: TItem, idx = this.selectedIndex) => {
+    this.setItems(swapItemsViaIndices(this.items, idx, this.getItemIndex(item)))
   }
 
   public readonly resetItems = () => {
