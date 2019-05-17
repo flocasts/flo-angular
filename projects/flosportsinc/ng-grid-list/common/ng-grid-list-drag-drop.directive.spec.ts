@@ -85,7 +85,7 @@ describe(FloGridListDragDropDirective.name, () => {
       const directiveInstance = directiveEl.injector.get(FloGridListDragDropDirective)
       directiveInstance.floGridListDragDropIndex = 3
       directiveInstance.floGridListDragDropItem = { id: '2', some: 'thing' } as any
-      directiveInstance.floGridListDragDropGridRef = { swapItemsAtIndex: () => { } } as any
+      directiveInstance.floGridListDragDropGridRef = { swapItemsAtIndex: () => { }, isItemInGrid: () => {} } as any
       const dataTransfer = new DataTransfer()
       dataTransfer.setData('text', JSON.stringify({ index: 4, value: { id: '2', some: 'thing' } }))
       const evt = new DragEvent('drop', { dataTransfer })
