@@ -38,6 +38,11 @@ export class FloGridTilesTestComponent {
 })
 export class FloGridTestingModule { }
 
+const SAMPLE_ITEM_1 = { id: '1', prop: 'prop1' }
+const SAMPLE_ITEM_2 = { id: '2', prop: 'prop2' }
+const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
+const SAMPLE_ITEM_4 = { id: '4', prop: 'prop4' }
+
 const createSut = () => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
   const fixture = hoistFixture.debugElement.query(By.directive(FloGridListViewComponent))
@@ -373,13 +378,43 @@ describe(FloGridListViewComponent.name, () => {
 
       expect(sut.instance.items[0]).toEqual(item0)
     })
+
+    it('should swap items with selected default param', () => {
+      const sut = createSut()
+      const item0 = { id: 1, test: 'Test1' }
+      const item1 = { id: 2, test: 'Test2' }
+
+      sut.instance.items = [item0, item1]
+      sut.instance.setCount(2)
+      sut.instance.setSelectedIndex(0)
+      sut.instance.swapItems(item1)
+
+      expect(sut.instance.items).toEqual([item1, item0])
+    })
+  })
+
+  describe('canSwapItem', () => {
+    it('should', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      sut.instance.setCount(2)
+      expect(sut.instance.canSwapItem(SAMPLE_ITEM_1, 1)).toEqual(true)
+    })
+
+    it('should', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      sut.instance.setSelectedIndex(0)
+      sut.instance.setCount(2)
+      expect(sut.instance.canSwapItem(SAMPLE_ITEM_2)).toEqual(true)
+    })
   })
 
   describe('allow selecting of next available empty item', () => {
     describe('when disabled', () => {
       it('should not work', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(2)
         expect(sut.instance.selectedIndex).toEqual(0)
       })
@@ -395,32 +430,32 @@ describe(FloGridListViewComponent.name, () => {
       })
       it('should handle counts of 1', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(1)
         expect(sut.instance.selectedIndex).toEqual(0)
       })
       it('should handle counts of 2', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(2)
         expect(sut.instance.selectedIndex).toEqual(1)
       })
       it('should handle counts of 3', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(3)
         expect(sut.instance.selectedIndex).toEqual(1)
       })
       it('should handle counts of 4', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(4)
         expect(sut.instance.selectedIndex).toEqual(1)
       })
 
       it('should handle multi items w/ counts', () => {
         const sut = createSut()
-        sut.hoistInstance.items = [{ id: 1 }, { id: 2 }]
+        sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
         sut.instance.setCount(4)
         expect(sut.instance.selectedIndex).toEqual(2)
       })
@@ -430,7 +465,7 @@ describe(FloGridListViewComponent.name, () => {
   describe('isIdSelected', () => {
     it('works internally', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       sut.instance.setSelectedIndex(0)
       expect(sut.instance.isIdSelected('1')).toEqual(true)
@@ -438,37 +473,37 @@ describe(FloGridListViewComponent.name, () => {
 
     it('via click event', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       const res = sut.instance.gridItemContainers.toArray()
       res[0].nativeElement.click()
-      expect(sut.instance.isIdSelected('1')).toEqual(true)
+      expect(sut.instance.isIdSelected(SAMPLE_ITEM_1.id)).toEqual(true)
     })
   })
 
   describe('isIdSelected', () => {
     it('works internally', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       sut.instance.setSelectedIndex(0)
-      expect(sut.instance.isItemSelected({ id: '1', prop: 'prop1' })).toEqual(true)
+      expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
     })
 
     it('via click event', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       const res = sut.instance.gridItemContainers.toArray()
       res[0].nativeElement.click()
-      expect(sut.instance.isItemSelected({ id: '1', prop: 'prop1' })).toEqual(true)
+      expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
     })
   })
 
   describe('resetItems', () => {
     it('should reset', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(4)
       sut.instance.resetItems()
       expect(sut.instance.items.length).toEqual(0)
@@ -479,13 +514,13 @@ describe(FloGridListViewComponent.name, () => {
   describe('isCount', () => {
     it('should return true w/ matching count', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(4)
       expect(sut.instance.isCount(4)).toEqual(true)
     })
     it('should return false w/ mismatching count', () => {
       const sut = createSut()
-      sut.hoistInstance.items = [{ id: '1', prop: 'prop1' }, { id: '2', prop: 'prop1' }]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       expect(sut.instance.isCount(4)).toEqual(false)
     })
@@ -512,17 +547,15 @@ describe(FloGridListViewComponent.name, () => {
   })
 
   describe('removeItem', () => {
-    const item1 = { id: '1', prop: 'prop1' }
-    const item2 = { id: '2', prop: 'prop2' }
-    const items = [item1, item2]
+    const items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
 
     it('should remove when in collection', () => {
       const sut = createSut()
       sut.instance.setCount(2)
       sut.hoistInstance.items = items
-      sut.instance.removeItem(item2)
+      sut.instance.removeItem(SAMPLE_ITEM_2)
       expect(sut.hoistInstance.items.length).toEqual(2)
-      expect(sut.hoistInstance.items[0]).toEqual(item1)
+      expect(sut.hoistInstance.items[0]).toEqual(SAMPLE_ITEM_1)
       expect(sut.hoistInstance.items[1]).toBeUndefined()
     })
 
@@ -532,49 +565,111 @@ describe(FloGridListViewComponent.name, () => {
       sut.hoistInstance.items = items
       sut.instance.removeItem({ id: 'somerandomid' })
       expect(sut.hoistInstance.items.length).toEqual(2)
-      expect(sut.hoistInstance.items[0]).toEqual(item1)
-      expect(sut.hoistInstance.items[1]).toEqual(item2)
+      expect(sut.hoistInstance.items[0]).toEqual(SAMPLE_ITEM_1)
+      expect(sut.hoistInstance.items[1]).toEqual(SAMPLE_ITEM_2)
     })
   })
 
   describe('isItemNotInGrid', () => {
-    const item1 = { id: '1', prop: 'prop1' }
-    const item2 = { id: '2', prop: 'prop2' }
-    const items = [item1]
+    const items = [SAMPLE_ITEM_1]
     it('should return true when item is not inside grid', () => {
       const sut = createSut()
       sut.instance.setCount(2)
       sut.hoistInstance.items = items
-      expect(sut.instance.isItemNotInGrid(item2)).toEqual(true)
+      expect(sut.instance.isItemNotInGrid(SAMPLE_ITEM_2)).toEqual(true)
     })
   })
 
   describe('isIdNotSelected', () => {
-    const item1 = { id: '1', prop: 'prop1' }
     it('should return true when an id is not selected', () => {
       const sut = createSut()
       sut.instance.setCount(2)
-      sut.hoistInstance.items = [item1]
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
       sut.instance.setSelectedId('1')
       expect(sut.instance.isIdNotSelected('2')).toEqual(true)
     })
   })
 
+  describe('replaceItem', () => {
+    it('should default to selected index', () => {
+      const sut = createSut()
+      sut.instance.setCount(4)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2, SAMPLE_ITEM_3]
+      sut.instance.setSelectedIndex(1)
+      sut.instance.replaceItem(SAMPLE_ITEM_3)
+      expect(sut.hoistInstance.items).toEqual([SAMPLE_ITEM_1, SAMPLE_ITEM_3, undefined])
+    })
+    it('should work', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      sut.instance.replaceItem(SAMPLE_ITEM_2, 0)
+      expect(sut.hoistInstance.items).toEqual([SAMPLE_ITEM_2, undefined])
+    })
+  })
+
+  describe('findNextEmptyIndex', () => {
+    it('should return next index when in viewcount', () => {
+      const sut = createSut()
+      sut.instance.setCount(4)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      expect(sut.instance.findNextEmptyIndex()).toEqual(1)
+    })
+
+    it('should return -1 when no index is next', () => {
+      const sut = createSut()
+      sut.instance.setCount(1)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
+    })
+
+    it('should return -1 when out of bounds', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
+    })
+  })
+
+  describe('fillNextEmpty', () => {
+    it('should fill an empty', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = []
+      sut.instance.fillNextEmpty(SAMPLE_ITEM_1)
+      expect(sut.hoistInstance.items[0]).toEqual(SAMPLE_ITEM_1)
+    })
+
+    it('should fill first empty', () => {
+      const sut = createSut()
+      sut.instance.setCount(4)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.instance.fillNextEmpty(SAMPLE_ITEM_2)
+      expect(sut.hoistInstance.items[1]).toEqual(SAMPLE_ITEM_2)
+    })
+  })
+
   describe('isItemInAnotherIndex', () => {
-    const item1 = { id: '1', prop: 'prop1' }
-    const item2 = { id: '2', prop: 'prop2' }
     it('should return true when item is in another index', () => {
       const sut = createSut()
       sut.instance.setCount(2)
-      sut.hoistInstance.items = [item1, item2]
-      expect(sut.instance.isItemInAnotherIndex(item2, 0)).toEqual(true)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      expect(sut.instance.isItemInAnotherIndex(SAMPLE_ITEM_2, 0)).toEqual(true)
     })
 
     it('should return false when item is not in another index ', () => {
       const sut = createSut()
       sut.instance.setCount(2)
-      sut.hoistInstance.items = [item1]
-      expect(sut.instance.isItemInAnotherIndex(item2, 0)).toEqual(false)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      expect(sut.instance.isItemInAnotherIndex(SAMPLE_ITEM_2, 0)).toEqual(false)
+    })
+  })
+
+  describe('viewcount', () => {
+    it('TODO', () => {
+      const sut = createSut()
+      sut.hoistInstance.count = 4
+      sut.hoistFixture.detectChanges()
     })
   })
 })
