@@ -12,7 +12,7 @@
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
 
-<button (click)="fill()">AUTOFILL</button>
+<button (click)="list.autoFill()">AUTOFILL</button>
 
 <flo-grid-list #list [gridRef]="gridRef" [items]="items">
   <div *floGridListItem="let row">

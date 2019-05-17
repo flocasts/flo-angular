@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, ContentChild, ViewChild } from '@angular/core'
-import { FloGridListComponent } from '@flosportsinc/ng-grid-list'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
   selector: 'app-grid-list',
@@ -16,16 +15,4 @@ export class GridListComponent {
     { id: '000', src: 'https://cdn-flo.flowrestling.org/uploaded/xnJpnlmxVj0ZX3d17gLJDPaewJ2dYBv3/playlist.m3u8' },
     { id: 'wut', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4' }
   ]
-
-  @ViewChild('list') readonly gridList: FloGridListComponent<any>
-
-  fill() {
-    // tslint:disable-next-line: no-if-statement
-    if (this.gridList) {
-      this.gridList.autoFill()
-    }
-  }
-
-  ngAfterViewInit() {
-  }
 }
