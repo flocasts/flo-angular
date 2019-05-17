@@ -8,9 +8,9 @@ import {
   TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
 } from '@angular/core'
 
-  // tslint:disable: readonly-keyword
-  // tslint:disable: no-object-mutation
-  // tslint:disable: no-if-statement
+// tslint:disable: readonly-keyword
+// tslint:disable: no-object-mutation
+// tslint:disable: no-if-statement
 
 export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly item: TItem
@@ -30,7 +30,7 @@ export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   }
 }
 
-const noop = () => { }
+export const noop = () => { }
 
 @Directive({
   selector: '[floGridListItem]'
@@ -76,7 +76,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     return this._initialFill
   }
   set initialFill(initialFill: Object) {
-    this._initialFill = initialFill
+    this._initialFill = initialFill || {}
   }
 
   get viewItems(): ReadonlyArray<any> {
@@ -153,11 +153,9 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   private readonly onDestroy = new Subject()
 
   public readonly autoFill = () =>
-    this.maybeGridRef().tapSome(grid => {
-      this.items
-        .filter(i => grid.isItemNotInGrid(i))
-        .forEach(i => grid.fillNextEmpty(i))
-    })
+    this.maybeGridRef().tapSome(grid => this.items
+      .filter(i => grid.isItemNotInGrid(i))
+      .forEach(i => grid.fillNextEmpty(i)))
 
   ngOnInit() {
     this.maybeGridRef().tapSome(grid => {

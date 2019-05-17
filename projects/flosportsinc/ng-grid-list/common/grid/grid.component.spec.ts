@@ -41,7 +41,6 @@ export class FloGridTestingModule { }
 const SAMPLE_ITEM_1 = { id: '1', prop: 'prop1' }
 const SAMPLE_ITEM_2 = { id: '2', prop: 'prop2' }
 const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
-const SAMPLE_ITEM_4 = { id: '4', prop: 'prop4' }
 
 const createSut = () => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
