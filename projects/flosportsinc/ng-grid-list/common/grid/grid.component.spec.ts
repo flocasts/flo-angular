@@ -490,4 +490,80 @@ describe(FloGridListViewComponent.name, () => {
       expect(sut.instance.isCount(4)).toEqual(false)
     })
   })
+
+  describe('canSelectItem', () => {
+    const item1 = { id: '1', prop: 'prop1' }
+    const item2 = { id: '2', prop: 'prop2' }
+    const items = [item1, item2]
+    it('should allow selecting when in view', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = items
+      expect(sut.instance.canSelectItem(item2)).toEqual(true)
+    })
+
+    it('should not allow selecting when in view but is already selected', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = items
+      sut.instance.setItem(item1)
+      expect(sut.instance.canSelectItem(item1)).toEqual(false)
+    })
+  })
+
+  describe('removeItem', () => {
+    const item1 = { id: '1', prop: 'prop1' }
+    const item2 = { id: '2', prop: 'prop2' }
+    const items = [item1, item2]
+
+    it('should remove when in collection', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = items
+      sut.instance.removeItem(item2)
+      expect(sut.hoistInstance.items.length).toEqual(2)
+      expect(sut.hoistInstance.items[0]).toEqual(item1)
+      expect(sut.hoistInstance.items[1]).toBeUndefined()
+    })
+
+    it('should ignore when not in collection', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = items
+      sut.instance.removeItem({ id: 'somerandomid' })
+      expect(sut.hoistInstance.items.length).toEqual(2)
+      expect(sut.hoistInstance.items[0]).toEqual(item1)
+      expect(sut.hoistInstance.items[1]).toEqual(item2)
+    })
+  })
+
+  describe('isItemNotInGrid', () => {
+    const item1 = { id: '1', prop: 'prop1' }
+    const item2 = { id: '2', prop: 'prop2' }
+    const items = [item1]
+    it('should return true when item is not inside grid', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = items
+      expect(sut.instance.isItemNotInGrid(item2)).toEqual(true)
+    })
+  })
+
+  describe('isItemInAnotherIndex', () => {
+    const item1 = { id: '1', prop: 'prop1' }
+    const item2 = { id: '2', prop: 'prop2' }
+    it('should return true when item is in another index', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [item1, item2]
+      expect(sut.instance.isItemInAnotherIndex(item2, 0)).toEqual(true)
+    })
+
+    it('should return false when item is not in another index ', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [item1]
+      expect(sut.instance.isItemInAnotherIndex(item2, 0)).toEqual(false)
+    })
+  })
 })
