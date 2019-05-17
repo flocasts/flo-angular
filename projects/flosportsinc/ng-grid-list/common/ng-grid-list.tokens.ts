@@ -20,6 +20,8 @@ export const FLO_GRID_LIST_OVERLAY_NG_STYLE = 'flo.grid.list.overlay.ngstyle'
 export const FLO_GRID_LIST_DRAG_DROP_ENABLED = 'flo.grid.list.dragdrop.enabled'
 export const FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED = 'flo.grid.list.dragdroplists.enabled'
 
+export const FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = 'flo.grid.list.lst.autofill'
+
 export interface IFloGridListBaseItem {
   readonly id: string
 }

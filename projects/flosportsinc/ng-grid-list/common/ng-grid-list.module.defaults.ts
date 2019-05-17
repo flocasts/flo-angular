@@ -21,3 +21,5 @@ export const DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE = {
   'transition-duration': '.25s',
   'transition-timing-function': 'ease-in-out'
 }
+
+export const DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = false

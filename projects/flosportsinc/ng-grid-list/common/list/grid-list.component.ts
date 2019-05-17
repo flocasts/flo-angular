@@ -1,5 +1,5 @@
 import { FloGridListViewComponent } from '../grid/grid.component'
-import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
+import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem, FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD } from '../ng-grid-list.tokens'
 import { Subject } from 'rxjs'
 import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
@@ -44,11 +44,13 @@ export class FloGridListItemDirective { }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
-  constructor(private _cdRef: ChangeDetectorRef, @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
+  constructor(private _cdRef: ChangeDetectorRef,
+    @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any,
+    @Inject(FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD) private _autoFillOnLoad: boolean
+  ) { }
 
   private _items: ReadonlyArray<TItem> = []
   private _initialFill = {}
-  private _autoFillOnLoad = false
 
   @Input()
   get items() {
@@ -105,7 +107,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
               canSelect
             },
             actions: {
-              select: () => canSelect && grid.setSelectedIndex(itemIndexInGrid),
+              select: () => { canSelect && grid.setSelectedIndex(itemIndexInGrid) },
               add: () => { canAdd && grid.setItem(item) },
               replace: () => { canReplace && grid.replaceItem(item) },
               remove: () => { canRemove && grid.removeItem(item) },

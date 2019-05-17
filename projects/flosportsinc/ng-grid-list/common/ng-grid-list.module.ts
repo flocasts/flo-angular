@@ -11,7 +11,7 @@ import {
   FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_NG_CLASS,
   FLO_GRID_LIST_OVERLAY_NG_STYLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX,
   FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED,
-  FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+  FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -28,7 +28,8 @@ import {
   DEFAULT_FLO_GRID_LIST_ITEMS,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
-  DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+  DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+  DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
@@ -127,6 +128,10 @@ export function defaultFloGridListGuidGenerator() {
     {
       provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED,
       useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
+    },
+    {
+      provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
+      useValue: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD
     }
   ]
 })
@@ -141,6 +146,10 @@ export class FloGridListModule {
       autoSelectNextEmptyOnCountChange: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
       selectedIndex: 0,
       ...cfg,
+      list: {
+        fillInitialListValues: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
+        ...cfg.list
+      },
       dragDrop: {
         enabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
         allowFromLists: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
@@ -230,6 +239,10 @@ export class FloGridListModule {
         {
           provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED,
           useValue: config.dragDrop.allowFromLists
+        },
+        {
+          provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
+          useValue: config.list.fillInitialListValues
         }
       ]
     }

@@ -20,6 +20,10 @@ export interface DragDropConfiguration {
   readonly allowFromLists: boolean
 }
 
+export interface ListConfiguration {
+  readonly fillInitialListValues: boolean
+}
+
 /**
  * Configure global defaults such that every
  * instance start with the same configuration
@@ -45,12 +49,12 @@ export interface FloGridListModuleConfiguration {
   /** When view count increases, set selection box to next empty square  */
   readonly autoSelectNextEmptyOnCountChange: boolean
 
-  // readonly maxFillInitialListValues: number
-  // readonly fillInitialListValuesToViewCountOnly: boolean
-
-  /** Drag and drop configuration configuration */
-  readonly dragDrop: Partial<DragDropConfiguration>
+  /** List configuration */
+  readonly list: Partial<ListConfiguration>
 
   /** Overlay configuration */
   readonly overlay: Partial<OverlayConfiguration>
+
+  /** Drag and drop configuration */
+  readonly dragDrop: Partial<DragDropConfiguration>
 }
