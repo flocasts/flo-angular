@@ -8,6 +8,10 @@ import {
   TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
 } from '@angular/core'
 
+  // tslint:disable: readonly-keyword
+  // tslint:disable: no-object-mutation
+  // tslint:disable: no-if-statement
+
 export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly item: TItem
   readonly roles: {
@@ -42,21 +46,37 @@ export class FloGridListItemDirective { }
 export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
   constructor(private _cdRef: ChangeDetectorRef, @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
 
-  // tslint:disable-next-line: readonly-keyword
   private _items: ReadonlyArray<TItem> = []
+  private _initialFill = {}
+  private _autoFillOnLoad = false
 
   @Input()
   get items() {
     return this._items
   }
   set items(val: ReadonlyArray<TItem>) {
-    // tslint:disable-next-line: no-object-mutation
     this._items = val.map(v => {
       return {
         ...v,
         id: v.id || this.guid()
       }
     })
+  }
+
+  @Input()
+  get autoFillOnLoad() {
+    return this._autoFillOnLoad
+  }
+  set autoFillOnLoad(autofill: boolean) {
+    this._autoFillOnLoad = autofill
+  }
+
+  @Input()
+  get initialFill() {
+    return this._initialFill
+  }
+  set initialFill(initialFill: Object) {
+    this._initialFill = initialFill
   }
 
   get viewItems(): ReadonlyArray<any> {
@@ -144,6 +164,17 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
       grid.cdRefChange
         .pipe(takeUntil(this.onDestroy))
         .subscribe(() => this._cdRef.detectChanges())
+
+      const keys = Object.keys(this.initialFill)
+      if (keys.length) {
+        const _items: ReadonlyArray<any> = []
+        keys.forEach(key => {
+          _items[key] = this.items.find(a => a.id === this.initialFill[key])
+        })
+        grid.setItems(_items)
+      } else if (this.autoFillOnLoad) {
+        this.autoFill()
+      }
     })
   }
 

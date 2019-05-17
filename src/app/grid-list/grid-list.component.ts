@@ -15,4 +15,6 @@ export class GridListComponent {
     { id: '000', src: 'https://cdn-flo.flowrestling.org/uploaded/xnJpnlmxVj0ZX3d17gLJDPaewJ2dYBv3/playlist.m3u8' },
     { id: 'wut', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4' }
   ]
+
+  readonly initialFill = { 0: '789', 3: 'wut' }
 }

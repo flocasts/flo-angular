@@ -14,7 +14,7 @@
 
 <button (click)="list.autoFill()">AUTOFILL</button>
 
-<flo-grid-list #list [gridRef]="gridRef" [items]="items">
+<flo-grid-list #list [gridRef]="gridRef" [items]="items" [initialFill]="initialFill">
   <div *floGridListItem="let row">
     <span
      [ngClass]="{ 'underline': row.roles.canSelect }"
