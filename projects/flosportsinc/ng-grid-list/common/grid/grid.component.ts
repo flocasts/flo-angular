@@ -67,7 +67,7 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
   set items(items: ReadonlyArray<TItem | undefined>) {
     this._items = items
     this.itemsChange.next(items)
-    setTimeout(() => this._cdRef.markForCheck())
+    this._cdRef.markForCheck()
   }
 
   public setItems(items: ReadonlyArray<TItem | undefined>) {
@@ -342,7 +342,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
     this.cycleOverlay()
   }
 
-  public readonly cycleOverlay = () => this.fadeoutIntervalReset.next(true)
+  public readonly cycleOverlay = () => {
+    this.fadeoutIntervalReset.next(true)
+    this._cdRef.markForCheck()
+  }
 
   ngOnInit() {
     // initial setup of selected id

@@ -45,6 +45,9 @@ export interface FloGridListModuleConfiguration {
   /** When view count increases, set selection box to next empty square  */
   readonly autoSelectNextEmptyOnCountChange: boolean
 
+  // readonly maxFillInitialListValues: number
+  // readonly fillInitialListValuesToViewCountOnly: boolean
+
   /** Drag and drop configuration configuration */
   readonly dragDrop: Partial<DragDropConfiguration>
 
