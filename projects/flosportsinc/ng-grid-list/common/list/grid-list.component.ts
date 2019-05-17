@@ -1,4 +1,4 @@
-import { FloGridTilesComponent } from '../grid/grid.component'
+import { FloGridListViewComponent } from '../grid/grid.component'
 import { FLO_GRID_LIST_GUID_GEN, IFloGridListBaseItem } from '../ng-grid-list.tokens'
 import { Subject } from 'rxjs'
 import { maybe } from 'typescript-monads'
@@ -142,7 +142,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
 
   @Input()
-  public readonly gridRef?: FloGridTilesComponent<TItem>
+  public readonly gridRef?: FloGridListViewComponent<TItem>
   public readonly maybeGridRef = () => maybe(this.gridRef)
 
   @ContentChild(FloGridListItemDirective, { read: TemplateRef })

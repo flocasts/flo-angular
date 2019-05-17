@@ -1,5 +1,5 @@
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
-import { FloGridTilesComponent } from './grid/grid.component'
+import { FloGridListViewComponent } from './grid/grid.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
@@ -42,7 +42,7 @@ export function defaultFloGridListGuidGenerator() {
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    FloGridTilesComponent,
+    FloGridListViewComponent,
     FloGridListComponent,
     FloGridListItemDirective,
     FloGridListOverlayDirective,
@@ -51,7 +51,7 @@ export function defaultFloGridListGuidGenerator() {
     FloGridListDragDropDirective
   ],
   exports: [
-    FloGridTilesComponent,
+    FloGridListViewComponent,
     FloGridListComponent,
     FloGridListItemDirective,
     FloGridListOverlayDirective,

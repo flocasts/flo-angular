@@ -37,7 +37,7 @@ import {
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
+export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     private _elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,

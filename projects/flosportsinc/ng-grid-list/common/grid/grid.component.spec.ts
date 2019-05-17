@@ -1,5 +1,5 @@
 import { async, TestBed } from '@angular/core/testing'
-import { FloGridTilesComponent } from './grid.component'
+import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
@@ -40,18 +40,18 @@ export class FloGridTestingModule { }
 
 const createSut = () => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
-  const fixture = hoistFixture.debugElement.query(By.directive(FloGridTilesComponent))
+  const fixture = hoistFixture.debugElement.query(By.directive(FloGridListViewComponent))
   hoistFixture.detectChanges()
   return {
     hoistFixture,
     hoistInstance: fixture.componentInstance,
     fixture,
-    instance: fixture.componentInstance as FloGridTilesComponent<any>
+    instance: fixture.componentInstance as FloGridListViewComponent<any>
   }
 }
 
 const testInputProperty = (prop: string, testValue: any, ) => {
-  const sut = TestBed.createComponent(FloGridTilesComponent)
+  const sut = TestBed.createComponent(FloGridListViewComponent)
   sut.componentInstance[prop] = testValue
   expect(sut.componentInstance[prop]).toEqual(testValue)
   sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testValue))
@@ -73,7 +73,7 @@ const setupCountSomeNoneTests = (count: number, items: any[] = []) => {
   return sut.instance.gridItemContainers.toArray()
 }
 
-describe(FloGridTilesComponent.name, () => {
+describe(FloGridListViewComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [FloGridTestingModule, FloGridListModule.config({
@@ -97,7 +97,7 @@ describe(FloGridTilesComponent.name, () => {
     })
 
     it('should handle out of bounds value is set below minimum', () => {
-      const sut = TestBed.createComponent(FloGridTilesComponent)
+      const sut = TestBed.createComponent(FloGridListViewComponent)
       const testNumber = 0
 
       sut.componentInstance.setCount(testNumber)
@@ -107,7 +107,7 @@ describe(FloGridTilesComponent.name, () => {
     })
 
     it('should handle out of bounds when value is set above maximum', () => {
-      const sut = TestBed.createComponent(FloGridTilesComponent)
+      const sut = TestBed.createComponent(FloGridListViewComponent)
       const testNumber = 64
 
       sut.componentInstance.setCount(testNumber)
