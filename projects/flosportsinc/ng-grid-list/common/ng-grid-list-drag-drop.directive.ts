@@ -41,12 +41,12 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .flatMap(replace => maybe(this.floGridListDragDropGridRef)
         .map(gridRef => ({ gridRef, replace })))
       .tapSome(res => {
-        // tslint:disable-next-line: no-if-statement
-        if (res.gridRef.isItemInGrid(res.replace.from.value)) {
-          res.gridRef.swapItems(res.replace.from.value, res.replace.to.index)
-        } else {
-          res.gridRef.swapItemsAtIndex(res.replace.to.index, res.replace.from.value, res.replace.from.index)
-        }
+        maybe(res.replace.from.value)
+          .filter(fromVal => res.gridRef.isItemInGrid(fromVal))
+          .tap({
+            none: () => res.gridRef.swapItemsAtIndex(res.replace.to.index, undefined as any, res.replace.from.index),
+            some: _ => res.gridRef.swapItems(res.replace.from.value, res.replace.to.index)
+          })
       })
   }
 }

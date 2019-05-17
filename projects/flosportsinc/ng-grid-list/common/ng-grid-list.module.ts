@@ -138,11 +138,14 @@ export class FloGridListModule {
       max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
       min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
       maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
-      autoSelectNextEmptyItem: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-      dragDropEnabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
-      dragDropFromListsEnabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
+      autoSelectNextEmptyOnCountChange: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
       selectedIndex: 0,
       ...cfg,
+      dragDrop: {
+        enabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
+        allowFromLists: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
+        ...cfg.dragDrop
+      },
       overlay: {
         enabled: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
         start: DEFAULT_FLO_GRID_LIST_OVERLAY_START,
@@ -190,7 +193,7 @@ export class FloGridListModule {
         },
         {
           provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-          useValue: config.autoSelectNextEmptyItem
+          useValue: config.autoSelectNextEmptyOnCountChange
         },
         {
           provide: FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -222,11 +225,11 @@ export class FloGridListModule {
         },
         {
           provide: FLO_GRID_LIST_DRAG_DROP_ENABLED,
-          useValue: config.dragDropEnabled
+          useValue: config.dragDrop.enabled
         },
         {
           provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED,
-          useValue: config.dragDropFromListsEnabled
+          useValue: config.dragDrop.allowFromLists
         }
       ]
     }

@@ -332,11 +332,10 @@ export class FloGridTilesComponent<TItem extends IFloGridListBaseItem> implement
 
   private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
 
-  public readonly trySelectNextEmpty = () => {
+  public readonly trySelectNextEmpty = () =>
     maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
       .filter(idx => idx >= 0)
       .tapSome(idx => this.setSelectedIndex(idx))
-  }
 
   private readonly setSelectedIdViaIndex = (idx: number) => {
     this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())

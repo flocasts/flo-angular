@@ -12,6 +12,14 @@ export interface OverlayConfiguration {
   readonly ngClass: Partial<IStringDict>
 }
 
+export interface DragDropConfiguration {
+  /** Allow drag drop of grid items. Defaults to true */
+  readonly enabled: boolean
+
+  /** Allow drag/drop of list onto grid. Defaults to true */
+  readonly allowFromLists: boolean
+}
+
 /**
  * Configure global defaults such that every
  * instance start with the same configuration
@@ -35,13 +43,10 @@ export interface FloGridListModuleConfiguration {
   readonly selectedIndex: number
 
   /** When view count increases, set selection box to next empty square  */
-  readonly autoSelectNextEmptyItem: boolean
+  readonly autoSelectNextEmptyOnCountChange: boolean
 
-  /** Allow drag drop of grid items. Defaults to true */
-  readonly dragDropEnabled: boolean
-
-  /** Allow drag/drop of list onto grid. Defaults to true */
-  readonly dragDropFromListsEnabled: boolean
+  /** Drag and drop configuration configuration */
+  readonly dragDrop: Partial<DragDropConfiguration>
 
   /** Overlay configuration */
   readonly overlay: Partial<OverlayConfiguration>

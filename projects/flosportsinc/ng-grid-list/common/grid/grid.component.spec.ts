@@ -389,7 +389,7 @@ describe(FloGridTilesComponent.name, () => {
         TestBed.resetTestingModule()
         TestBed.configureTestingModule({
           imports: [FloGridTestingModule, FloGridListModule.config({
-            autoSelectNextEmptyItem: true
+            autoSelectNextEmptyOnCountChange: true
           })]
         }).compileComponents()
       })
