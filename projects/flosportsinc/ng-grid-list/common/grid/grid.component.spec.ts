@@ -545,6 +545,15 @@ describe(FloGridListViewComponent.name, () => {
     })
   })
 
+  describe('canReplaceItem', () => {
+    it('should using defaul', () => {
+      const sut = createSut()
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      expect(sut.instance.canReplaceItem(SAMPLE_ITEM_2, 1)).toEqual(true)
+    })
+  })
+
   describe('removeItem', () => {
     const items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
 
