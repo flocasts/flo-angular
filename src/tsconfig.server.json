@@ -8,12 +8,6 @@
       "node"
     ],
     "paths": {
-      "@flosportsinc/ng-viewport-grid": [
-        "../dist/flosportsinc/ng-viewport-grid"
-      ],
-      "@flosportsinc/ng-viewport-grid/*": [
-        "../dist/flosportsinc/ng-viewport-grid/*"
-      ],
       "@flosportsinc/ng-media-source-extensions": [
         "../dist/flosportsinc/ng-media-source-extensions"
       ],

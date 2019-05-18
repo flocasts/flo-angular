@@ -33,7 +33,6 @@
     "test": "ng test",
     "test.ci.app": "ng test flo-angular --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.mse": "ng test @flosportsinc/ng-media-source-extensions --watch=false --progress=false --browsers=ChromeHeadlessCI",
-    "test.ci.viewport-grid": "ng test @flosportsinc/ng-viewport-grid --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.services": "ng test @flosportsinc/ng-universal-services --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.icons": "ng test @flosportsinc/ng-icons --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "test.ci.styles": "ng test @flosportsinc/ng-styles --watch=false --progress=false --browsers=ChromeHeadlessCI",
