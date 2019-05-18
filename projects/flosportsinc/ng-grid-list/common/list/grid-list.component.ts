@@ -12,22 +12,30 @@ import {
 // tslint:disable: no-object-mutation
 // tslint:disable: no-if-statement
 
-export interface IFloVideoGridListViewItem<TItem extends IFloGridListBaseItem> {
+export interface IFloGridListViewItemRoles {
+  readonly isSelected: boolean
+  readonly isInAnother: boolean
+  readonly canAdd: boolean
+  readonly canRemoveSelf: boolean
+  readonly canRemove: boolean
+  readonly canReplace: boolean
+  readonly canSwap: boolean
+  readonly canSelect: boolean
+}
+
+export interface IFloGridListViewItemActions {
+  readonly select: () => void
+  readonly add: () => void
+  readonly remove: () => void
+  readonly removeSelf: () => void
+  readonly replace: () => void
+  readonly swap: () => void
+}
+
+export interface IFloGridListViewItem<TItem extends IFloGridListBaseItem> {
   readonly item: TItem
-  readonly roles: {
-    readonly isSelected: boolean
-    readonly canAdd: boolean
-    readonly canRemoveSelf: boolean
-    readonly canRemove: boolean
-    readonly canReplace: boolean
-    readonly canSwap: boolean
-  }
-  readonly actions: {
-    readonly add: () => void
-    readonly remove: () => void
-    readonly replace: () => void
-    readonly swap: () => void
-  }
+  readonly roles: IFloGridListViewItemRoles
+  readonly actions: IFloGridListViewItemActions
 }
 
 export const noop = () => { }
@@ -81,7 +89,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     this._initialFill = initialFill || {}
   }
 
-  private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem) => {
+  private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem): IFloGridListViewItemRoles => {
     return {
       isSelected: grid.isIdSelected(item.id),
       isInAnother: grid.isItemInAnotherIndex(item, grid.selectedIndex),
@@ -91,6 +99,30 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
       canReplace: grid.canReplaceItem(item),
       canSwap: grid.canSwapItem(item),
       canSelect: grid.canSelectItem(item)
+    }
+  }
+
+  private generateDefaultItem = (item: TItem) => {
+    return {
+      item,
+      roles: {
+        isSelected: false,
+        isInAnother: false,
+        canAdd: false,
+        canRemoveSelf: false,
+        canRemove: false,
+        canReplace: false,
+        canSwap: false,
+        canSelect: false
+      },
+      actions: {
+        select: noop,
+        add: noop,
+        replace: noop,
+        remove: noop,
+        removeSelf: noop,
+        swap: noop
+      }
     }
   }
 
@@ -113,27 +145,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
             }
           }
         })
-        .valueOr({
-          item,
-          roles: {
-            isSelected: false,
-            isInAnother: false,
-            canAdd: false,
-            canRemoveSelf: false,
-            canRemove: false,
-            canReplace: false,
-            canSwap: false,
-            canSelect: false
-          },
-          actions: {
-            select: noop,
-            add: noop,
-            replace: noop,
-            remove: noop,
-            removeSelf: noop,
-            swap: noop
-          }
-        })
+        .valueOr(this.generateDefaultItem(item))
     })
   }
 
