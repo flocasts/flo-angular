@@ -198,6 +198,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
             this._executeInit(ctx) // init new
           },
           none: () => {
+            // this._getExecutionKey(srcChange.current)
             // MSE Client already running?
             // YES => update source
             // NO => init

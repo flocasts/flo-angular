@@ -36,12 +36,12 @@ describe('App', () => {
       })
   })
 
-  it('should navigate to the viewport-grid demo page when link in nav is clicked', done => {
+  it('should navigate to the grid-list demo page when link in nav is clicked', done => {
     const page = new AppPage()
     page
       .navigateTo()
       .then(() => {
-        page.getNav().getWebElement().findElement(by.css('li a[href="/viewport-grid"]'))
+        page.getNav().getWebElement().findElement(by.css('li a[href="/grid-list"]'))
           .click()
           .then(() => {
             expect(browser.getTitle()).toEqual('FloSports Component Library')

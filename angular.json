@@ -163,48 +163,6 @@
         }
       }
     },
-    "@flosportsinc/ng-viewport-grid": {
-      "root": "projects/flosportsinc/ng-viewport-grid",
-      "sourceRoot": "projects/flosportsinc/ng-viewport-grid/src",
-      "projectType": "library",
-      "prefix": "flo",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss",
-          "changeDetection": "OnPush"
-        }
-      },
-      "targets": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
-            "project": "projects/flosportsinc/ng-viewport-grid/ng-package.json"
-          }
-        },
-        "test": {
-          "builder": "@angular-devkit/build-angular:karma",
-          "options": {
-            "codeCoverage": true,
-            "main": "projects/flosportsinc/ng-viewport-grid/src/test.ts",
-            "tsConfig": "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json",
-            "karmaConfig": "projects/flosportsinc/ng-viewport-grid/karma.conf.js"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "projects/flosportsinc/ng-viewport-grid/tsconfig.lib.json",
-              "projects/flosportsinc/ng-viewport-grid/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
-          }
-        }
-      }
-    },
     "@flosportsinc/ng-media-source-extensions": {
       "root": "projects/flosportsinc/ng-media-source-extensions",
       "sourceRoot": "projects/flosportsinc/ng-media-source-extensions",
@@ -719,6 +677,48 @@
             "tsConfig": [
               "projects/flosportsinc/ng-video-events/tsconfig.lib.json",
               "projects/flosportsinc/ng-video-events/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@flosportsinc/ng-grid-list": {
+      "root": "projects/flosportsinc/ng-grid-list",
+      "sourceRoot": "projects/flosportsinc/ng-grid-list",
+      "projectType": "library",
+      "prefix": "lib",
+      "schematics": {
+        "@schematics/angular:component": {
+          "styleext": "scss",
+          "changeDetection": "OnPush"
+        }
+      },
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-grid-list/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-grid-list/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-grid-list/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-grid-list/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-grid-list/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-grid-list/tsconfig.lib.json",
+              "projects/flosportsinc/ng-grid-list/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

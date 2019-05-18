@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { FramerComponent } from './viewport-grid/viewport-grid.component'
-import { ViewportGridModule } from '@flosportsinc/ng-viewport-grid'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
@@ -21,14 +19,17 @@ import { MseModule } from '@flosportsinc/ng-media-source-extensions'
 import { WindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
-import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
+import { FloGridListModule } from '@flosportsinc/ng-grid-list'
+import { GridListComponent } from './grid-list/grid-list.component'
+import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 
 @NgModule({
   imports: [
+    FloGridListModule,
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     NodeEnvTransferModule,
@@ -37,7 +38,6 @@ import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    ViewportGridModule,
     TransferHttpCacheModule,
     HttpClientModule,
     SvgTransferStateModule,
@@ -47,7 +47,6 @@ import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
   ],
   declarations: [
     AppComponent,
-    FramerComponent,
     HomeComponent,
     IconsComponent,
     HlsComponent,
@@ -57,7 +56,8 @@ import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
     UniversalServicesComponent,
     StylesComponent,
     AutoplayComponent,
-    NotFoundComponent
+    GridListComponent,
+    NotFoundComponent,
   ]
 })
 export class AppModule {

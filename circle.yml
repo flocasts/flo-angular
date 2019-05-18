@@ -72,21 +72,6 @@ jobs:
           root: .
           paths:
             - cc.flo-angular.json
-  test_viewport_grid:
-    <<: *defaults
-    steps:
-      - checkout
-      - attach_workspace:
-          at: .
-      - run:
-          name: Test
-          command: |
-            npm run test.ci.viewport-grid
-            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-viewport-grid.json ./coverage/ng-viewport-grid/lcov.info
-      - persist_to_workspace:
-          root: .
-          paths:
-            - cc.ng-viewport-grid.json
   test_mse:
     <<: *defaults
     steps:
@@ -252,6 +237,21 @@ jobs:
           root: .
           paths:
             - cc.ng-video-events.json
+  test_grid-list:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.grid-list
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-grid-list.json ./coverage/ng-grid-list/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-grid-list.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -285,10 +285,6 @@ workflows:
           requires:
             - build
       - test_docs_site:
-          requires:
-            - build
-            - prep_coverage
-      - test_viewport_grid:
           requires:
             - build
             - prep_coverage
@@ -336,10 +332,13 @@ workflows:
           requires:
               - build
               - prep_coverage
+      - test_grid-list:
+          requires:
+              - build
+              - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
-            - test_viewport_grid
             - test_mse
             - test_services
             - test_icons
@@ -351,10 +350,10 @@ workflows:
             - test_tabs
             - test_video-autoplay
             - test_video-events
+            - test_grid-list
       - publish:
           requires:
             - test_docs_site
-            - test_viewport_grid
             - test_mse
             - test_services
             - test_icons
@@ -366,6 +365,7 @@ workflows:
             - test_tabs
             - test_video-autoplay
             - test_video-events
+            - test_grid-list
             - upload_coverage
             - e2e
           filters:
