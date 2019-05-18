@@ -81,38 +81,35 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     this._initialFill = initialFill || {}
   }
 
+  private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem) => {
+    return {
+      isSelected: grid.isIdSelected(item.id),
+      isInAnother: grid.isItemInAnotherIndex(item, grid.selectedIndex),
+      canAdd: grid.canAddItem(item),
+      canRemoveSelf: grid.canRemoveItemSelected(item),
+      canRemove: grid.canRemoveItem(item),
+      canReplace: grid.canReplaceItem(item),
+      canSwap: grid.canSwapItem(item),
+      canSelect: grid.canSelectItem(item)
+    }
+  }
+
   get viewItems(): ReadonlyArray<any> {
     return this.items.map(item => {
       return this.maybeGridRef()
         .map(grid => {
-          const isSelected = grid.isIdSelected(item.id)
+          const roles = this.generateItemRoles(grid, item)
           const itemIndexInGrid = grid.getItemIndex(item)
-          const isInAnother = grid.isItemInAnotherIndex(item, grid.selectedIndex)
-          const canSelect = grid.canSelectItem(item)
-          const canSwap = grid.canSwapItem(item)
-          const canRemoveSelf = grid.canRemoveItemSelected(item)
-          const canRemove = grid.canRemoveItem(item)
-          const canAdd = grid.canAddItem(item)
-          const canReplace = grid.canReplaceItem(item)
           return {
             item,
-            roles: {
-              isSelected,
-              isInAnother,
-              canAdd,
-              canRemoveSelf,
-              canRemove,
-              canReplace,
-              canSwap,
-              canSelect
-            },
+            roles,
             actions: {
-              select: () => { canSelect && grid.setSelectedIndex(itemIndexInGrid) },
-              add: () => { canAdd && grid.setItem(item) },
-              replace: () => { canReplace && grid.replaceItem(item) },
-              remove: () => { canRemove && grid.removeItem(item) },
-              removeSelf: () => { canRemoveSelf && grid.removeItem(item) },
-              swap: () => { canSwap && grid.swapItems(item) }
+              select: () => { roles.canSelect && grid.setSelectedIndex(itemIndexInGrid) },
+              add: () => { roles.canAdd && grid.setItem(item) },
+              replace: () => { roles.canReplace && grid.replaceItem(item) },
+              remove: () => { roles.canRemove && grid.removeItem(item) },
+              removeSelf: () => { roles.canRemoveSelf && grid.removeItem(item) },
+              swap: () => { roles.canSwap && grid.swapItems(item) }
             }
           }
         })
