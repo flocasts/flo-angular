@@ -1,10 +1,11 @@
 import { TestBed } from '@angular/core/testing'
-import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR, ENV_CONFIG_TS_KEY } from './node-env-transfer.tokens'
-import { TransferState } from '@angular/platform-browser'
-import { APP_INITIALIZER } from '@angular/core'
+import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR } from './node-env-transfer.tokens'
 import {
   NodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory,
-  DEFAULT_ENV_CONFIG_EXTRACTOR
+  DEFAULT_ENV_CONFIG_EXTRACTOR,
+  serverEnvConfigFactory,
+  defaultReplaceExtract,
+  DEFAULT_ENV_CONFIG_FILTER_KEYS
 } from './node-env-transfer.server.module'
 
 const defNode = { cool_key: 'cool value!' }
@@ -47,17 +48,21 @@ describe(NodeEnvTransferServerModule.name, () => {
     expect(env).toEqual({ cool_key: 'cool value!' })
   })
 
-  // it('should bootstrap and set transfer state', () => {
-  //   setupTestBed(defNode)({ selectKeys: ['cool_key'] })
+  it('should ignore non-functions passed as replacer settting', () => {
+    const sut1 = serverEnvConfigFactory({ NG_KEY1: '1' }, ['NG_KEY1'], '', 'thing' as any)
+    const sut2 = serverEnvConfigFactory({ NG_KEY1: '1' }, ['NG_KEY1'], '', defaultReplaceExtract('NG_'))
+    expect(sut1).toEqual({ NG_KEY1: '1' })
+    expect(sut2).toEqual({ KEY1: '1' })
+  })
 
-  //   const ts = TestBed.get(TransferState) as TransferState
-  //   const onInitFunc = TestBed.get(APP_INITIALIZER)[0]
-  //   const spyTs = spyOn(ts, 'set')
+  it('should use defaults when .config is called but not used', () => {
+    TestBed.configureTestingModule({
+      imports: [NodeEnvTransferServerModule.config()]
+    })
 
-  //   onInitFunc(ts, TestBed.get(ENV), TestBed.get(ENV_CONFIG_TS_KEY))
-
-  //   expect(spyTs).toHaveBeenCalledWith('NODE_ENV', { cool_key: 'cool value!' })
-  // })
+    expect(TestBed.get(ENV_CONFIG_SERVER_EXTRACTOR)).toEqual(DEFAULT_ENV_CONFIG_EXTRACTOR)
+    expect(TestBed.get(ENV_CONFIG_SERVER_SELECTED)).toEqual(DEFAULT_ENV_CONFIG_FILTER_KEYS)
+  })
 
   it('handle default filter case', () => {
     expect(nodeEnvFactory()).toEqual({})

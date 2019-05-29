@@ -1,5 +1,5 @@
 import { AppPage } from './app.po'
-import { browser, by } from 'protractor'
+import { browser, by, element } from 'protractor'
 
 describe('App', () => {
   it('should display welcome message', done => {
@@ -18,6 +18,17 @@ describe('App', () => {
       .navigateTo()
       .then(() => {
         expect(page.getStateTransfer().getTagName()).toEqual('script')
+        done()
+      })
+  })
+
+  it('should have environment variables from node', done => {
+    const page = new AppPage()
+    page
+      .navigateTo()
+      .then(() => page.getId('fromServerTest').getText())
+      .then(txt => {
+        expect(txt).toEqual('POWERED BY NODE')
         done()
       })
   })

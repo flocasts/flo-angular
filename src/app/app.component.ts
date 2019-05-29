@@ -9,7 +9,7 @@ import { ENV } from '@flosportsinc/ng-env-transfer-state'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  constructor(_pwa: PwaService, @Inject(ENV) env: any) {
+  constructor(_pwa: PwaService, @Inject(ENV) public env: any) {
     console.log(env)
   }
 }
