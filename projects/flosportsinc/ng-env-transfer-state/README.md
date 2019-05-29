@@ -64,7 +64,7 @@ import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state
 export class AppServerModule { }
 ```
 
-The collection of strings provided inside the `withSelectedKeys` static method will be plucked from `process.env` and transferred to the client. By default none are provided. Please be aware of the security risks involved when selecting environment variables. Do not expose sensitive information.
+The collection of strings provided inside the `withSelectedKeys` static method will be plucked from `process.env` and transferred to the client. By default variables with a prefix `NG_` are extraced from the server. Please be aware of the security risks involved when selecting environment variables. Do not expose sensitive information.
 
 
 ### Simple Usage
