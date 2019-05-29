@@ -20,7 +20,7 @@
     "postshrinkwrap": "if [ \"`uname`\" = \"Darwin\" ]; then sed -i '' -e 's/http:\\/\\//https:\\/\\//g' package-lock.json; else sed -i -e 's/http:\\/\\//https:\\/\\//g' package-lock.json; fi",
     "ng": "ng",
     "start": "ng serve",
-    "start.ssr": "npm run build.ssr && node dist/server.js",
+    "start.ssr": "npm run build.ssr && node -r dotenv/config dist/server.js",
     "start.prod": "npm run build.prod && node dist/server.js",
     "copy": "ts-node --project tsconfig.tools.json tools/copy.ts",
     "styles.scss": "npm run styles.scss.full && npm run styles.scss.min",
