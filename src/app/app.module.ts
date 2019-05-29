@@ -25,14 +25,12 @@ import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 import { GridListComponent } from './grid-list/grid-list.component'
-import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 
 @NgModule({
   imports: [
     FloGridListModule,
     FloVideoEventsModule,
     FloVideoAutoplayModule,
-    NodeEnvTransferModule,
     WindowModule,
     MseModule,
     FormsModule,
@@ -60,8 +58,4 @@ import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-
     NotFoundComponent,
   ]
 })
-export class AppModule {
-  constructor(env: NodeEnvTransferService) {
-    console.log(env.env)
-  }
-}
+export class AppModule { }

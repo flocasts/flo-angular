@@ -1,5 +1,6 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core'
 import { PwaService } from './pwa.service'
+import { ENV } from '@flosportsinc/ng-env-transfer-state'
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,7 @@ import { PwaService } from './pwa.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
-  constructor(_pwa: PwaService) { }
+  constructor(_pwa: PwaService, @Inject(ENV) env: any) {
+    console.log(env)
+  }
 }
