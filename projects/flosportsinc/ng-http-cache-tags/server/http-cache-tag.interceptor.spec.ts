@@ -6,6 +6,7 @@ import { RESPONSE } from '@nguniversal/express-engine/tokens'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { ICacheTagConfig } from './http-cache-tag.tokens'
+import { Type } from '@angular/core'
 
 describe(HttpCacheTagInterceptor.name, () => {
   afterEach(TestBed.resetTestingModule)
@@ -34,7 +35,7 @@ describe(HttpCacheTagInterceptor.name, () => {
   const httpTestHelpers = () => {
     return {
       http: TestBed.get(HttpClient) as HttpClient,
-      httpMock: TestBed.get(HttpTestingController as any) as HttpTestingController
+      httpMock: TestBed.get<Type<HttpTestingController>>(HttpTestingController as any) as HttpTestingController
     }
   }
 

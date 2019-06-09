@@ -5,6 +5,7 @@ import { SvgTransferStateBrowserModule, SvgTransferStateBrowserModuleConfig } fr
 import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache.service'
 import { ISvgLoaderService } from './svg-transfer-state.interfaces'
 import { SvgTransferStateModule } from '../common/svg-transfer-state.module'
+import { Type } from '@angular/core'
 
 export const setupCommonSvgTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
   TestBed.configureTestingModule({
@@ -29,7 +30,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load without cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
+    const http = TestBed.get<Type<HttpTestingController>>(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any)._cache, 'get').and.returnValue(undefined)
 
@@ -43,7 +44,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load server state cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
+    const http = TestBed.get<Type<HttpTestingController>>(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any), '_getFromTransferCache').and.returnValue('<svg></svg>')
 
@@ -57,7 +58,7 @@ describe(SvgBrowserLoaderCacheService.name, () => {
   it('should load with cache', () => {
     const sut = getSut()
 
-    const http = TestBed.get(HttpTestingController as any) as HttpTestingController
+    const http = TestBed.get<Type<HttpTestingController>>(HttpTestingController as any) as HttpTestingController
 
     spyOn((sut as any)._cache, 'get').and.returnValue('<svg></svg>')
 

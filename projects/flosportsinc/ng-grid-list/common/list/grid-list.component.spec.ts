@@ -37,8 +37,8 @@ const SAMPLE_ITEM_5 = { id: 'id5', src: 'https://commondatastorage.googleapis.co
   `
 })
 export class FloGridListTestComponent {
-  @ViewChild(FloGridListComponent) _listRef: FloGridListComponent<any>
-  @ViewChild(FloGridListViewComponent) _gridRef: FloGridListViewComponent<any>
+  @ViewChild(FloGridListComponent, { static: true }) _listRef: FloGridListComponent<any>
+  @ViewChild(FloGridListViewComponent, { static: true }) _gridRef: FloGridListViewComponent<any>
   items = [
     SAMPLE_ITEM_1,
     SAMPLE_ITEM_2,

@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { NgModule } from '@angular/core'
+import { NgModule, Type } from '@angular/core'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { AdBlockBrowserModule } from './ad-block.browser.module'
 import { AdBlockService } from './ad-block.service'
@@ -14,7 +14,7 @@ import { take } from 'rxjs/operators'
 export class AdBlockBrowserTestModule { }
 
 const getService = () => TestBed.get(AdBlockService) as AdBlockService
-const getHttpMock = () => TestBed.get(HttpTestingController as any) as HttpTestingController
+const getHttpMock = () => TestBed.get<Type<HttpTestingController>>(HttpTestingController as any) as HttpTestingController
 
 describe(AdBlockBrowserModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())

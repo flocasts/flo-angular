@@ -156,7 +156,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   public readonly gridRef?: FloGridListViewComponent<TItem>
   public readonly maybeGridRef = () => maybe(this.gridRef)
 
-  @ContentChild(FloGridListItemDirective, { read: TemplateRef })
+  @ContentChild(FloGridListItemDirective, { read: TemplateRef, static: false })
   public readonly itemTemplate?: TemplateRef<TItem>
 
   readonly trackByFn = (_idx: number, item: TItem) => item.id

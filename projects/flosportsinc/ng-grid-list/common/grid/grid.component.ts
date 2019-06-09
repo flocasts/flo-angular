@@ -303,12 +303,15 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
-  @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
+  @ViewChild('floGridListContainer', { static: false }) readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
 
-  @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
-  @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
-  @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef, static: false })
+  readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef, static: false })
+  readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListOverlayDirective, { read: TemplateRef, static: false })
+  readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   private cursorInsideElement = merge(
     fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
