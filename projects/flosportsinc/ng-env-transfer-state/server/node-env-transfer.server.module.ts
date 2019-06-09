@@ -4,13 +4,16 @@ import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { NodeEnvTransferModule } from './node-env-transfer.common.module'
 import {
   NODE_ENV, ENV, ENV_CONFIG_TS_KEY, ENV_CONFIG_SERVER_EXTRACTOR,
-  ENV_CONFIG_SERVER_REPLACER, ENV_CONFIG_SERVER_SELECTED
+  ENV_CONFIG_SERVER_REPLACER, ENV_CONFIG_SERVER_SELECTED, NODE_ENV_USE_VALUES
 } from './node-env-transfer.tokens'
 
 export const DEFAULT_ENV_CONFIG_FILTER_KEYS: ReadonlyArray<string> = []
 export const DEFAULT_ENV_CONFIG_EXTRACTOR = 'NG_'
+export const DEFAULT_NODE_ENV_USE_VALUES = {}
 
-export function serverEnvConfigFactory(nodeEnv = {}, selectKeys: ReadonlyArray<string>,
+export function serverEnvConfigFactory(nodeEnv = {},
+  defaultValues: { readonly [key: string]: any },
+  selectKeys: ReadonlyArray<string>,
   extractor: string, replacer: (key: string) => string) {
   const keys = Object.keys(nodeEnv)
   const extracted = keys.filter(key => extractor && new RegExp(extractor).test(key))
@@ -22,7 +25,10 @@ export function serverEnvConfigFactory(nodeEnv = {}, selectKeys: ReadonlyArray<s
     .filter((elem, pos, arr) => arr.indexOf(elem) === pos)
     .reduce((acc, curr) => ({ ...acc, [deriveNewKey(curr)]: nodeEnv[curr] }), {})
 
-  return lambda
+  return !Object.keys(defaultValues).length ? lambda : {
+    ...lambda,
+    ...defaultValues
+  }
 }
 
 export function onInit(ts: TransferState, env: any, stateKey: string) {
@@ -42,6 +48,7 @@ export function defaultReplaceExtract(extractionKey: string) {
 export interface INodeEnvTransferServerModuleConfig {
   readonly selectKeys: ReadonlyArray<string>
   readonly extractor: string
+  readonly useValues: { readonly [key: string]: any }
 }
 
 @NgModule({
@@ -50,6 +57,10 @@ export interface INodeEnvTransferServerModuleConfig {
     NodeEnvTransferModule
   ],
   providers: [
+    {
+      provide: NODE_ENV_USE_VALUES,
+      useValue: DEFAULT_NODE_ENV_USE_VALUES
+    },
     {
       provide: NODE_ENV,
       useFactory: nodeEnvFactory
@@ -70,7 +81,7 @@ export interface INodeEnvTransferServerModuleConfig {
     {
       provide: ENV,
       useFactory: serverEnvConfigFactory,
-      deps: [NODE_ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR, ENV_CONFIG_SERVER_REPLACER]
+      deps: [NODE_ENV, NODE_ENV_USE_VALUES, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR, ENV_CONFIG_SERVER_REPLACER]
     },
     {
       provide: APP_INITIALIZER,
@@ -85,6 +96,10 @@ export class NodeEnvTransferServerModule {
     return {
       ngModule: NodeEnvTransferServerModule,
       providers: [
+        {
+          provide: NODE_ENV_USE_VALUES,
+          useValue: config.useValues || DEFAULT_NODE_ENV_USE_VALUES
+        },
         {
           provide: ENV_CONFIG_SERVER_EXTRACTOR,
           useValue: config.extractor || DEFAULT_ENV_CONFIG_EXTRACTOR
