@@ -38,7 +38,7 @@ app.engine('html', ngExpressEngine({
       useValue: cache
     }
   ]
-}))
+}) as any)
 app.set('view engine', 'html')
 app.set('views', baseDirectory)
 
