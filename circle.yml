@@ -161,7 +161,7 @@ jobs:
       - persist_to_workspace:
           root: .
           paths:
-            - cc.ng-svg-transfer-state.json
+            - cc.ng-env-transfer-state.json
   test_ad-block:
     <<: *defaults
     steps:
