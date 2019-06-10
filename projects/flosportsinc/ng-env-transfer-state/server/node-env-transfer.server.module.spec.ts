@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR } from './node-env-transfer.tokens'
+import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR } from '@flosportsinc/ng-env-transfer-state'
 import {
   NodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory,
   DEFAULT_ENV_CONFIG_EXTRACTOR,
