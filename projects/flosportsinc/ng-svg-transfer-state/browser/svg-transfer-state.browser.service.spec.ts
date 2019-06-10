@@ -2,8 +2,7 @@ import { TestBed } from '@angular/core/testing'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { SvgTransferStateBrowserModule, SvgTransferStateBrowserModuleConfig } from './svg-transfer-state.browser.module'
 import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache.service'
-import { ISvgLoaderService, SVG_LOADER } from '@flosportsinc/ng-svg-transfer-state'
-import { SvgTransferStateModule } from '../common/svg-transfer-state.module'
+import { SvgTransferStateModule, SVG_LOADER, ISvgLoaderService } from '@flosportsinc/ng-svg-transfer-state'
 
 export const setupCommonSvgTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {
   TestBed.configureTestingModule({
@@ -12,7 +11,7 @@ export const setupCommonSvgTb = (config?: Partial<SvgTransferStateBrowserModuleC
       SvgTransferStateModule,
       SvgTransferStateBrowserModule.withConfig(config)
     ]
-  })
+  }).compileComponents()
 }
 
 const getSut = () => TestBed.get(SVG_LOADER) as ISvgLoaderService

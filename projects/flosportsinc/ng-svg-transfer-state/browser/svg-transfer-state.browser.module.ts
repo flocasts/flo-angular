@@ -37,7 +37,7 @@ export const DEFAULT_CONFIG: SvgTransferStateBrowserModuleConfig = {
   ]
 })
 export class SvgTransferStateBrowserModule {
-  static withConfig(config: SvgTransferStateBrowserModuleConfig = DEFAULT_CONFIG): ModuleWithProviders {
+  static withConfig(config?: Partial<SvgTransferStateBrowserModuleConfig>): ModuleWithProviders {
     const _config = { ...DEFAULT_CONFIG, ...config }
 
     return {
