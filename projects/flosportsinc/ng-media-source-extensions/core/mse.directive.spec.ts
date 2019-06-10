@@ -4,9 +4,16 @@ import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH } from './mse.tokens'
+import {
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
+} from './mse.tokens'
 import { MseModule } from './mse.module'
-import { HlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientSrcChangeFunction, defaultMseClientDestroyFunction, defaultHlsPatternCheck } from '../hls/hls.module'
+import {
+  HlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction,
+  defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientSrcChangeFunction, defaultMseClientDestroyFunction,
+  defaultHlsPatternCheck
+} from '../hls/hls.module'
 import { DashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
 
