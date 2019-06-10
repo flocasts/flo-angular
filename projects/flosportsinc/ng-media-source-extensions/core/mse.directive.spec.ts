@@ -218,17 +218,17 @@ describe('rewrite these... problems', () => {
   //   expect(spy).toHaveBeenCalled()
   // })
 
-  it('should trigger destroy function when set', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._mseDestroyTask[1]
-    const spy = spyOn(task, 'func').and.callThrough()
-    sut.instance.newClientOnSrcChange = true;
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
-    sut.hoist.detectChanges();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-    expect(spy).toHaveBeenCalled()
-  })
+  // it('should trigger destroy function when set', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._mseDestroyTask[1]
+  //   const spy = spyOn(task, 'func').and.callThrough()
+  //   sut.instance.newClientOnSrcChange = true;
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   expect(spy).toHaveBeenCalled()
+  // })
 
   it('should set src', () => {
     const wrapper = createMseSut()
