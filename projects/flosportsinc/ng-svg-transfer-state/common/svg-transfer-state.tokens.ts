@@ -1,13 +1,13 @@
-import { Type } from '@angular/core'
+import { InjectionToken } from '@angular/core'
 
-export const SVG_LOADER = 'fs.svg.loader' as unknown as Type<any>
-export const SVG_LOADER_HTTP_REQUEST = 'fs.svg.http' as unknown as Type<any>
-export const SVG_LOADER_BROWSER_CACHE = 'fs.svg.brwsr.cache' as unknown as Type<any>
-export const SVG_LOADER_BROWSER_CACHE_MAX_AGE = 'fs.svg.brwsr.cache.ma' as unknown as Type<any>
-export const SVG_REQUEST_PATTERN = 'fs.svg.pattern' as unknown as Type<any>
-export const SVG_REQUEST_PATTERN_BASE = 'fs.svg.svr.pattern.base' as unknown as Type<any>
-export const SVG_TRANSFER_KEY = 'fs.svg.ts.key' as unknown as Type<string>
-export const SVG_DIRECTIVE_DEFAULT_STYLES = 'fs.svg.dir.styles' as unknown as Type<any>
-export const SVG_DIRECTIVE_PARENT_STYLE_KEYS = 'fs.svg.dir.parent-styles' as unknown as Type<any>
-export const SVG_LOADER_ERROR_RETURN_OPERATOR = 'fs.svg.err.operator' as unknown as Type<any>
-export const SVG_SERVER_CACHE = 'fs.svg.svr.cache' as unknown as Type<any>
+export const SVG_LOADER = new InjectionToken('fs.svg.loader')
+export const SVG_LOADER_HTTP_REQUEST = new InjectionToken('fs.svg.http')
+export const SVG_LOADER_BROWSER_CACHE = new InjectionToken('fs.svg.brwsr.cache')
+export const SVG_LOADER_BROWSER_CACHE_MAX_AGE = new InjectionToken('fs.svg.brwsr.cache.ma')
+export const SVG_REQUEST_PATTERN = new InjectionToken('fs.svg.pattern')
+export const SVG_REQUEST_PATTERN_BASE = new InjectionToken('fs.svg.svr.pattern.base')
+export const SVG_TRANSFER_KEY = new InjectionToken<string>('fs.svg.ts.key')
+export const SVG_DIRECTIVE_DEFAULT_STYLES = new InjectionToken('fs.svg.dir.styles')
+export const SVG_DIRECTIVE_PARENT_STYLE_KEYS = new InjectionToken('fs.svg.dir.parent-styles')
+export const SVG_LOADER_ERROR_RETURN_OPERATOR = new InjectionToken('fs.svg.err.operator')
+export const SVG_SERVER_CACHE = new InjectionToken('fs.svg.svr.cache')

@@ -4,7 +4,7 @@ import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache
 import {
   SVG_LOADER, SVG_REQUEST_PATTERN_BASE, SVG_LOADER_BROWSER_CACHE,
   SVG_LOADER_BROWSER_CACHE_MAX_AGE
-} from './svg-transfer-state.tokens'
+} from '@flosportsinc/ng-svg-transfer-state'
 import { BrowserTransferStateModule } from '@angular/platform-browser'
 
 export const DEFAULT_PATH = 'assets/svg'
@@ -37,7 +37,7 @@ export const DEFAULT_CONFIG: SvgTransferStateBrowserModuleConfig = {
   ]
 })
 export class SvgTransferStateBrowserModule {
-  static withConfig(config: SvgTransferStateBrowserModuleConfig = DEFAULT_CONFIG): ModuleWithProviders {
+  static withConfig(config?: Partial<SvgTransferStateBrowserModuleConfig>): ModuleWithProviders {
     const _config = { ...DEFAULT_CONFIG, ...config }
 
     return {

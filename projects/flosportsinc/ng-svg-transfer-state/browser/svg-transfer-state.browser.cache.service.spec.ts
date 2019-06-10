@@ -1,7 +1,6 @@
 import { TestBed } from '@angular/core/testing'
-import { SVG_LOADER_BROWSER_CACHE } from './svg-transfer-state.tokens'
+import { SVG_LOADER_BROWSER_CACHE, ISvgLoaderBrowserCacheService } from '@flosportsinc/ng-svg-transfer-state'
 import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache.service'
-import { ISvgLoaderBrowserCacheService } from './svg-transfer-state.interfaces'
 import { setupCommonSvgTb } from './svg-transfer-state.browser.service.spec'
 
 const getSut = () => TestBed.get(SVG_LOADER_BROWSER_CACHE) as ISvgLoaderBrowserCacheService

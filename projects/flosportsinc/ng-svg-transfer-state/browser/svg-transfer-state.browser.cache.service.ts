@@ -1,6 +1,5 @@
 import { Injectable, Inject, Optional } from '@angular/core'
-import { ISvgLoaderBrowserCacheService } from './svg-transfer-state.interfaces'
-import { SVG_LOADER_BROWSER_CACHE_MAX_AGE } from './svg-transfer-state.tokens'
+import { ISvgLoaderBrowserCacheService, SVG_LOADER_BROWSER_CACHE_MAX_AGE } from '@flosportsinc/ng-svg-transfer-state'
 
 @Injectable()
 export class SvgBrowserLoaderCacheService implements ISvgLoaderBrowserCacheService {

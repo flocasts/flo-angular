@@ -1,1 +1,0 @@
-../common/svg-transfer-state.tokens.ts

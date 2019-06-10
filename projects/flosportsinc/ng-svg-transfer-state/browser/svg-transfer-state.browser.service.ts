@@ -1,7 +1,9 @@
 import { Injectable, Inject, Optional } from '@angular/core'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
-import { SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_BROWSER_CACHE } from './svg-transfer-state.tokens'
-import { ISvgLoaderService, StringDict, ISvgLoaderHttpFunc, ISvgLoaderBrowserCacheService } from './svg-transfer-state.interfaces'
+import {
+  ISvgLoaderService, StringDict, ISvgLoaderHttpFunc, ISvgLoaderBrowserCacheService,
+  SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_BROWSER_CACHE
+} from '@flosportsinc/ng-svg-transfer-state'
 import { of } from 'rxjs'
 import { tap } from 'rxjs/operators'
 
