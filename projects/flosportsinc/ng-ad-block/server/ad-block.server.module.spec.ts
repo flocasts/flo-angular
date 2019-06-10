@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { AdBlockServerModule } from './ad-block.server.module'
-import { AdBlockService } from './ad-block.service'
+import { AdBlockService } from '@flosportsinc/ng-ad-block'
 
 describe(AdBlockServerModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())

@@ -2,8 +2,7 @@ import { NgModule, ModuleWithProviders } from '@angular/core'
 import { HttpClientModule, HttpClient } from '@angular/common/http'
 import { AD_BLOCK_PING_URL } from './ad-block.browser.tokens'
 import { map, catchError, shareReplay } from 'rxjs/operators'
-import { AD_BLOCK_LOADER } from './ad-block.tokens'
-import { AdBlockModule } from './ad-block.module'
+import { AdBlockModule, AD_BLOCK_LOADER } from '@flosportsinc/ng-ad-block'
 import { of } from 'rxjs'
 
 const returnFalse = () => false

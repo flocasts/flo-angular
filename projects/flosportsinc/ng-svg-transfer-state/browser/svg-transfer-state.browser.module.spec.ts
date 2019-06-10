@@ -1,5 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { SVG_REQUEST_PATTERN_BASE, SVG_LOADER_BROWSER_CACHE_MAX_AGE } from './svg-transfer-state.tokens'
+import { SVG_REQUEST_PATTERN_BASE, SVG_LOADER_BROWSER_CACHE_MAX_AGE } from '@flosportsinc/ng-svg-transfer-state'
 import { HttpClientTestingModule } from '@angular/common/http/testing'
 import {
   SvgTransferStateBrowserModule, SvgTransferStateBrowserModuleConfig,

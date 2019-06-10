@@ -12,8 +12,8 @@ export type IWriteResponseHeader =
       (delimiter?: string) => void
 
 export const CACHE_TAG_CONFIG = new InjectionToken<ICacheTagConfig>(
-  'flo.http-cache.config'
+  'fs.hct.cfg'
 )
 export const CACHE_TAG_WRITE_HEADER_FACTORY = new InjectionToken<IWriteResponseHeader>(
-  'flo.http-cache.write-header'
+  'fs.hct.wheader'
 )

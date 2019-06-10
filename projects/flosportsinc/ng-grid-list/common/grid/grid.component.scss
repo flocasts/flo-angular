@@ -8,6 +8,13 @@
     margin: auto;
   }
 
+  &:fullscreen {
+    .flo-grid-list-container {
+      max-width: initial !important;
+      max-height: initial !important;
+    }
+  }
+
   .flo-grid-list-item-container {
     overflow: hidden;
     height: 0;
@@ -42,6 +49,7 @@
     right: 0;
     z-index: 4;
     pointer-events: none;
+
     ::ng-deep>* {
       pointer-events: all;
     }
@@ -63,7 +71,8 @@
   .flo-grid-list-overlay-hide {
     opacity: 0;
   }
-  .flo-grid-list-cursor-hide  {
+
+  .flo-grid-list-cursor-hide {
     cursor: none;
   }
 }

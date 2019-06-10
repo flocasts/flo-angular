@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing'
 import { NgModule, Type } from '@angular/core'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { AdBlockBrowserModule } from './ad-block.browser.module'
-import { AdBlockService } from './ad-block.service'
+import { AdBlockService } from '@flosportsinc/ng-ad-block'
 import { take } from 'rxjs/operators'
 
 @NgModule({

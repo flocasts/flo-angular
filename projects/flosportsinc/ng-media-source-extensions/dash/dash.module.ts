@@ -14,9 +14,9 @@ import {
   IMsePatternCheck,
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
-  IVideoElementSupportsTargetMseCheckContext
-} from './mse.tokens'
-import { MseModule } from './mse.module'
+  IVideoElementSupportsTargetMseCheckContext,
+  MseModule
+} from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
 const exectionKey = 'DASH'
