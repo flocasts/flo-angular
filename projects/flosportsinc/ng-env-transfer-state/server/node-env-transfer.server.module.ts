@@ -9,7 +9,6 @@ import {
 
 export const DEFAULT_ENV_CONFIG_FILTER_KEYS: ReadonlyArray<string> = []
 export const DEFAULT_ENV_CONFIG_EXTRACTOR = 'NG_'
-export const DEFAULT_NODE_ENV_USE_VALUES = {}
 
 export function serverEnvConfigFactory(nodeEnv = {},
   defaultValues: { readonly [key: string]: any },
@@ -48,7 +47,6 @@ export function defaultReplaceExtract(extractionKey: string) {
 export interface INodeEnvTransferServerModuleConfig {
   readonly selectKeys: ReadonlyArray<string>
   readonly extractor: string
-  readonly useValues: { readonly [key: string]: any }
 }
 
 @NgModule({
@@ -57,10 +55,6 @@ export interface INodeEnvTransferServerModuleConfig {
     NodeEnvTransferModule
   ],
   providers: [
-    {
-      provide: NODE_ENV_USE_VALUES,
-      useValue: DEFAULT_NODE_ENV_USE_VALUES
-    },
     {
       provide: NODE_ENV,
       useFactory: nodeEnvFactory
@@ -96,10 +90,6 @@ export class NodeEnvTransferServerModule {
     return {
       ngModule: NodeEnvTransferServerModule,
       providers: [
-        {
-          provide: NODE_ENV_USE_VALUES,
-          useValue: config.useValues || DEFAULT_NODE_ENV_USE_VALUES
-        },
         {
           provide: ENV_CONFIG_SERVER_EXTRACTOR,
           useValue: config.extractor || DEFAULT_ENV_CONFIG_EXTRACTOR
