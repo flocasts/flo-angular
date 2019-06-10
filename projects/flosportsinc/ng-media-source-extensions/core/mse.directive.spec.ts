@@ -4,9 +4,9 @@ import { MseDirective, emitAndUnsubscribe } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from './mse.tokens'
+import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK, MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH } from './mse.tokens'
 import { MseModule } from './mse.module'
-import { HlsModule } from '../hls/hls.module'
+import { HlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientSrcChangeFunction, defaultMseClientDestroyFunction, defaultHlsPatternCheck } from '../hls/hls.module'
 import { DashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
 
@@ -44,7 +44,44 @@ export class HlsTestComponent {
 @NgModule({
   imports: [MseModule, HlsModule, DashModule],
   declarations: [HlsTestComponent],
-  exports: [HlsTestComponent]
+  exports: [HlsTestComponent],
+  providers: [
+    {
+      provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
+      useValue: DEFAULT_MODULE_CONFIG
+    },
+    {
+      provide: SUPPORTS_MSE_TARGET_NATIVELY,
+      useFactory: defaultHlsSupportedNativelyFunction,
+      multi: true
+    },
+    {
+      provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+      useFactory: defaultIsSupportedFactory,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+      useFactory: defaultMseClientInitFunction,
+      deps: [MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG],
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
+      useFactory: defaultMseClientSrcChangeFunction,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
+      useFactory: defaultMseClientDestroyFunction,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+      useFactory: defaultHlsPatternCheck,
+      multi: true
+    }
+  ]
 })
 export class MseTestingModule { }
 
@@ -161,30 +198,30 @@ describe('rewrite these... problems', () => {
   //   expect(spy).toHaveBeenCalled()
   // })
 
-  // it('should trigger destroy function for DI configurations', () => {
-  //   const sut = createMseSut()
-  //   const task = (sut.instance as any)._mseDestroyTask[1]
-  //   const spy = spyOn(task, 'func').and.callThrough()
-  //   sut.instance.newClientOnSrcChange = false;
-  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
-  //   sut.hoist.detectChanges();
-  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-  //   sut.hoist.detectChanges()
-  //   sut.hoist.destroy()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should trigger destroy function for DI configurations', () => {
+    const sut = createMseSut()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = false;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+    sut.hoist.detectChanges()
+    sut.hoist.destroy()
+    expect(spy).toHaveBeenCalled()
+  })
 
-  // it('should trigger destroy function when set', () => {
-  //   const sut = createMseSut()
-  //   const task = (sut.instance as any)._mseDestroyTask[1]
-  //   const spy = spyOn(task, 'func').and.callThrough()
-  //   sut.instance.newClientOnSrcChange = true;
-  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
-  //   sut.hoist.detectChanges();
-  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-  //   sut.hoist.detectChanges()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should trigger destroy function when set', () => {
+    const sut = createMseSut()
+    const task = (sut.instance as any)._mseDestroyTask[1]
+    const spy = spyOn(task, 'func').and.callThrough()
+    sut.instance.newClientOnSrcChange = true;
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+    sut.hoist.detectChanges();
+    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+    sut.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
 
   it('should set src', () => {
     const wrapper = createMseSut()

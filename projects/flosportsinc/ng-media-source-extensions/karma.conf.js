@@ -5,5 +5,5 @@ module.exports = config('../coverage/ng-media-source-extensions')([
   statements: 80,
   lines: 80,
   branches: 80,
-  functions: 65
+  functions: 80
 })
