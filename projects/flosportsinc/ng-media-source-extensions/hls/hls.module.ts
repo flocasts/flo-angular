@@ -13,14 +13,14 @@ import {
   IMsePatternCheck,
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
-  IVideoElementSupportsTargetMseCheckContext
-} from './mse.tokens'
-import { MseModule } from './mse.module'
-import { NgModule, ModuleWithProviders, Type } from '@angular/core'
+  IVideoElementSupportsTargetMseCheckContext,
+  MseModule
+} from '@flosportsinc/ng-media-source-extensions'
+import { NgModule, ModuleWithProviders, Type, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
-export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'fs.mse.lib.hls.init.cfg' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg')
 
 export interface HlsMessage {
   readonly key: keyof typeof Hls.Events

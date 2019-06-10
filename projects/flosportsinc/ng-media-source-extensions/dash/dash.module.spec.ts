@@ -4,7 +4,7 @@ import {
   IMseInitOptions,
   IMseDestroyOptions,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
-} from './mse.tokens'
+} from '@flosportsinc/ng-media-source-extensions'
 import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
 import {

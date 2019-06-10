@@ -18,7 +18,16 @@
     "@angular/core": ">= 6"
   },
   "dependencies": {
-    "typescript-monads": "^3.10.0"
+    "typescript-monads": "^3.13.0"
   },
-  "keywords": ["angular", "universal", "flosports", "hls", "dash", "streaming", "live", "media source"]
+  "keywords": [
+    "angular",
+    "universal",
+    "flosports",
+    "hls",
+    "dash",
+    "streaming",
+    "live",
+    "mse"
+  ]
 }
