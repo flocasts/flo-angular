@@ -20,7 +20,7 @@ import { NgModule, ModuleWithProviders, Type } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
-export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'flo.mse.lib.hls.init.config' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = 'fs.mse.lib.hls.init.cfg' as unknown as Type<any>
 
 export interface HlsMessage {
   readonly key: keyof typeof Hls.Events

@@ -1,12 +1,12 @@
 import { Subject } from 'rxjs'
 import { Type } from '@angular/core'
 
-export const SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION = 'flo.mse.isSupportedViaMediaSource' as unknown as Type<any>
-export const SUPPORTS_MSE_TARGET_NATIVELY = 'flo.mse.hasNativeSupport' as unknown as Type<any>
-export const MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK = 'flo.mse.lib.init' as unknown as Type<any>
-export const MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK = 'flo.mse.lib.src.change' as unknown as Type<any>
-export const MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK = 'flo.mse.lib.create' as unknown as Type<any>
-export const MEDIA_SOURCE_EXTENSION_PATTERN_MATCH = 'flo.mse.lib.pattern' as unknown as Type<any>
+export const SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION = 'fs.mse.mse-supported' as unknown as Type<any>
+export const SUPPORTS_MSE_TARGET_NATIVELY = 'fs.mse.native-supported' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK = 'fs.mse.lib.init' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK = 'fs.mse.lib.src.change' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK = 'fs.mse.lib.create' as unknown as Type<any>
+export const MEDIA_SOURCE_EXTENSION_PATTERN_MATCH = 'fs.mse.lib.pattern' as unknown as Type<any>
 
 export interface IMseExecutionContext<TFunc> {
   readonly exectionKey: string
