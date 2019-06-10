@@ -68,28 +68,6 @@ describe(NodeEnvTransferServerModule.name, () => {
     expect(nodeEnvFactory()).toEqual({})
   })
 
-  it('merge useValues property', () => {
-    setupTestBed({
-      NODE_ENV_VAR: 'SOMETHING',
-      FLO_SERVER_API: 'https://url.ref',
-      FLO_SERVER_API2: 'https://url.ref2',
-    })({
-      useValues: {
-        THIS_IS_ME: 'Yay!',
-        DUDE: 'Sweeeet!'
-      },
-      extractor: 'FLO_'
-    })
-
-    const env = TestBed.get(ENV)
-
-    expect(Object.keys(env).length).toEqual(4)
-    expect(env.SERVER_API).toEqual('https://url.ref')
-    expect(env.SERVER_API2).toEqual('https://url.ref2')
-    expect(env.THIS_IS_ME).toEqual('Yay!')
-    expect(env.DUDE).toEqual('Sweeeet!')
-  })
-
   it('should select by pattern', () => {
     setupTestBed({
       NODE_ENV_VAR: 'SOMETHING',
