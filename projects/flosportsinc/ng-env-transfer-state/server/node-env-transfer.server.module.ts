@@ -1,11 +1,11 @@
 import { NgModule, ModuleWithProviders, APP_INITIALIZER } from '@angular/core'
 import { ServerTransferStateModule } from '@angular/platform-server'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
-import { NodeEnvTransferModule } from './node-env-transfer.common.module'
 import {
   NODE_ENV, ENV, ENV_CONFIG_TS_KEY, ENV_CONFIG_SERVER_EXTRACTOR,
-  ENV_CONFIG_SERVER_REPLACER, ENV_CONFIG_SERVER_SELECTED, NODE_ENV_USE_VALUES
-} from './node-env-transfer.tokens'
+  ENV_CONFIG_SERVER_REPLACER, ENV_CONFIG_SERVER_SELECTED, NODE_ENV_USE_VALUES,
+  NodeEnvTransferModule
+} from '@flosportsinc/ng-env-transfer-state'
 
 export const DEFAULT_ENV_CONFIG_FILTER_KEYS: ReadonlyArray<string> = []
 export const DEFAULT_ENV_CONFIG_EXTRACTOR = 'NG_'

@@ -1,10 +1,10 @@
-import { Type } from '@angular/core'
+import { InjectionToken } from '@angular/core'
 
-export const ENV = 'flo.node-env-transfer.config' as unknown as Type<any>
-export const ENV_CONFIG_DEFAULT = 'flo.node-env-transfer.config-browser-default' as unknown as Type<any>
-export const ENV_CONFIG_TS_KEY = 'flo.node-env-transfer.config-ts-key' as unknown as Type<any>
-export const NODE_ENV = 'flo.node-env-transfer.node-env' as unknown as Type<any>
-export const NODE_ENV_USE_VALUES = 'flo.node-env-transfer.node-env-def' as unknown as Type<any>
-export const ENV_CONFIG_SERVER_EXTRACTOR = 'flo.node-env-transfer.config-extractor' as unknown as Type<any>
-export const ENV_CONFIG_SERVER_REPLACER = 'flo.node-env-transfer.config-replacer' as unknown as Type<any>
-export const ENV_CONFIG_SERVER_SELECTED = 'flo.node-env-transfer.config-selected' as unknown as Type<any>
+export const ENV = new InjectionToken('fs.net.config')
+export const ENV_CONFIG_DEFAULT = new InjectionToken('fs.net.cfg-browser-def')
+export const ENV_CONFIG_TS_KEY = new InjectionToken('fs.net.cfg-ts-key')
+export const NODE_ENV = new InjectionToken('fs.net.node-env')
+export const NODE_ENV_USE_VALUES = new InjectionToken('fs.net.node-env-def')
+export const ENV_CONFIG_SERVER_EXTRACTOR = new InjectionToken('fs.net.cfg-extractor')
+export const ENV_CONFIG_SERVER_REPLACER = new InjectionToken('fs.net.cfg-replacer')
+export const ENV_CONFIG_SERVER_SELECTED = new InjectionToken('fs.net.cfg-selected')
