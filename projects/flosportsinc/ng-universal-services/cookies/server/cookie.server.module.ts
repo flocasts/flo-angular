@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { COOKIE_SERVICE } from './cookie.tokens'
+import { COOKIE_SERVICE } from '@flosportsinc/ng-universal-services/cookies'
 import { CookieServerService } from './cookie.server.service'
 
 @NgModule({
