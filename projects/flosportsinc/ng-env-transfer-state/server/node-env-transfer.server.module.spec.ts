@@ -55,6 +55,13 @@ describe(NodeEnvTransferServerModule.name, () => {
     expect(sut2).toEqual({ KEY1: '1' })
   })
 
+  it('should merge useValues token value', () => {
+    const sut1 = serverEnvConfigFactory({ NG_KEY1: '1' }, {}, ['NG_KEY1'], '', 'thing' as any)
+    const sut2 = serverEnvConfigFactory({ NG_KEY1: '1' }, { val: 2 }, ['NG_KEY1'], '', defaultReplaceExtract('NG_'))
+    expect(sut1).toEqual({ NG_KEY1: '1' })
+    expect(sut2).toEqual({ KEY1: '1', val: 2 })
+  })
+
   it('should use defaults when .config is called but not used', () => {
     TestBed.configureTestingModule({
       imports: [NodeEnvTransferServerModule.config()]
