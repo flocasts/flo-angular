@@ -28,7 +28,8 @@ import {
   FLO_GRID_LIST_ITEMS,
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem,
-  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+  FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
 
 @Component({
@@ -57,7 +58,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_STATIC) private _overlayStatic: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
-    @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean
+    @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
+    @Inject(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO) private _syncServerAspectRatio?: string | boolean
   ) { }
 
   @Input()
@@ -270,6 +272,22 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.dragDropEnabled = enabled
   }
 
+  @Input()
+  get syncServerAspectRatio() {
+    return this._syncServerAspectRatio
+  }
+  set syncServerAspectRatio(percent: string | boolean | undefined) {
+    const _percent = typeof percent === 'string' && percent.includes('%')
+      ? percent
+      : false
+    this._syncServerAspectRatio = _percent
+    this.syncServerAspectRatioChange.next(_percent)
+  }
+
+  isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
+  getNativeAspectRatio = () => `${screen.height / screen.width * 100}%`
+  getAspectRatio = () => !this.syncServerAspectRatio || this.isFullscreen() ? this.getNativeAspectRatio() : this.syncServerAspectRatio
+
   get viewItems() {
     return new Array<IMaybe<TItem>>(this.count)
       .fill(maybe())
@@ -281,7 +299,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
           value: value.valueOrUndefined(),
           isShowingBorder: isSelected && this.count > 1,
           isSelected,
-          isNotSelected: !isSelected
+          isNotSelected: !isSelected,
+          aspectRatio: this.getAspectRatio()
         }
       })
   }
@@ -301,6 +320,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
+  @Output() public readonly syncServerAspectRatioChange = new Subject<string | boolean | undefined>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
