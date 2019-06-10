@@ -1,6 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
-import { WINDOW } from './window.tokens'
-import { WindowModule } from './window.common.module'
+import { WindowModule, WINDOW } from '@flosportsinc/ng-window'
 
 @NgModule({
   imports: [WindowModule]
