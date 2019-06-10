@@ -205,18 +205,18 @@ describe('rewrite these... problems', () => {
   //   expect(spy).toHaveBeenCalled()
   // })
 
-  it('should trigger destroy function for DI configurations', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._mseDestroyTask[1]
-    const spy = spyOn(task, 'func').and.callThrough()
-    sut.instance.newClientOnSrcChange = false;
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
-    sut.hoist.detectChanges();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-    sut.hoist.destroy()
-    expect(spy).toHaveBeenCalled()
-  })
+  // it('should trigger destroy function for DI configurations', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._mseDestroyTask[1]
+  //   const spy = spyOn(task, 'func').and.callThrough()
+  //   sut.instance.newClientOnSrcChange = false;
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   sut.hoist.destroy()
+  //   expect(spy).toHaveBeenCalled()
+  // })
 
   it('should trigger destroy function when set', () => {
     const sut = createMseSut()
