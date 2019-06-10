@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing'
-import { SVG_LOADER } from './svg-transfer-state.tokens'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
 import { SvgTransferStateBrowserModule, SvgTransferStateBrowserModuleConfig } from './svg-transfer-state.browser.module'
 import { SvgBrowserLoaderCacheService } from './svg-transfer-state.browser.cache.service'
-import { ISvgLoaderService } from './svg-transfer-state.interfaces'
+import { ISvgLoaderService, SVG_LOADER } from '@flosportsinc/ng-svg-transfer-state'
 import { SvgTransferStateModule } from '../common/svg-transfer-state.module'
 
 export const setupCommonSvgTb = (config?: Partial<SvgTransferStateBrowserModuleConfig>) => {

@@ -1,5 +1,5 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
-import { SVG_LOADER, SVG_REQUEST_PATTERN_BASE } from './svg-transfer-state.tokens'
+import { SVG_LOADER, SVG_REQUEST_PATTERN_BASE } from '@flosportsinc/ng-svg-transfer-state'
 import { SvgServerLoaderService } from './svg-transfer-state.server.service'
 
 const DEFAULT_PATH = './dist/assets/svg'
