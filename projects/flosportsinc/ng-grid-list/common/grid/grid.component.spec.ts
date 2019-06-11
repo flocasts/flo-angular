@@ -9,7 +9,7 @@ import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
-  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED
+  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -144,6 +144,16 @@ describe(FloGridListViewComponent.name, () => {
     it('should expose setter function', () => testInputPropSetFunc('selectedId', 'setSelectedId', 'awesome-id'))
   })
 
+  describe('syncServerAspectRatio property', () => {
+    it('should double bind', () => testInputProperty('syncServerAspectRatio', '50%'))
+    it('should expose setter function', () => testInputPropSetFunc('syncServerAspectRatio', 'setsyncServerAspectRatio', '50%'))
+    it('should return false if not a percentage string', () => {
+      const sut = createSut().instance
+      sut.setsyncServerAspectRatio('asdkasd')
+      expect(sut.syncServerAspectRatio).toEqual(false)
+    })
+  })
+
   describe('selectedIndex property', () => {
     it('should double bind', () => testInputProperty('selectedIndex', 0))
     it('should expose setter function', () => testInputPropSetFunc('selectedIndex', 'setSelectedIndex', 0))
@@ -233,6 +243,18 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('items', [{ id: '1' }]))
     it('should expose setter function', () => testInputPropSetFunc('items', 'setItems', [{ id: '1' }]))
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
+  })
+
+  describe('aspect ratios', () => {
+    it('should get default', () => {
+      const sut = createSut().instance
+      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO))
+    })
+    it('should get default', () => {
+      const sut = createSut().instance
+      sut.syncServerAspectRatio = false
+      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO))
+    })
   })
 
   describe('when count equals 1', () => {

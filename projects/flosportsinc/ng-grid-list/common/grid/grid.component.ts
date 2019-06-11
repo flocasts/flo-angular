@@ -284,6 +284,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.syncServerAspectRatioChange.next(_percent)
   }
 
+  public setsyncServerAspectRatio(percent: string | boolean | undefined) {
+    this.syncServerAspectRatio = percent
+  }
+
   isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
   getNativeAspectRatio = () => `${screen.height / screen.width * 100}%`
   getAspectRatio = () => !this.syncServerAspectRatio || this.isFullscreen() ? this.getNativeAspectRatio() : this.syncServerAspectRatio
