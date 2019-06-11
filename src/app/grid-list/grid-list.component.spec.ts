@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing'
 import { GridListComponent } from './grid-list.component'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
-import { By } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser'
 
 describe(GridListComponent.name, () => {
   beforeEach(async(() => {
