@@ -1,15 +1,15 @@
 import { async, TestBed } from '@angular/core/testing'
 import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
-import { PLATFORM_ID, Component, NgModule } from '@angular/core'
+import { PLATFORM_ID, Component, NgModule, ChangeDetectorRef } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
-  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED
+  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -142,6 +142,41 @@ describe(FloGridListViewComponent.name, () => {
   describe('selectedId property', () => {
     it('should double bind', () => testInputProperty('selectedId', 'awesome-id'))
     it('should expose setter function', () => testInputPropSetFunc('selectedId', 'setSelectedId', 'awesome-id'))
+  })
+
+  describe('aspectRatio property', () => {
+    it('should double bind', () => testInputProperty('aspectRatio', '50%'))
+    it('should expose setter function', () => testInputPropSetFunc('aspectRatio', 'setAspectRatio', '50%'))
+    it('should return false if not a percentage string', () => {
+      const sut = createSut().instance
+      sut.setAspectRatio('asdkasd')
+      expect(sut.aspectRatio).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
+    })
+    it('should get default', () => {
+      const sut = createSut().instance
+      expect(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO)).toEqual(DEFAULT_FLO_GRID_LIST_ASPECT_RATIO)
+    })
+    it('should get native', () => {
+      const sut = createSut().instance
+      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.height / window.screen.width * 100}%`)
+    })
+    it('should run change detection on fullscreen change', () => {
+      const sut = createSut()
+      const event = new Event('fullscreenchange', { bubbles: true })
+      const spy = spyOn(sut.instance, 'fullscreenchange').and.callThrough()
+      sut.fixture.nativeElement.dispatchEvent(event)
+      expect(spy).toHaveBeenCalled()
+    })
+
+    it('should run native if fullscreen', () => {
+      const sut = createSut()
+      const spy = spyOn(sut.instance, 'isFullscreen').and.returnValue(true)
+      const spy2 = spyOn(sut.instance, 'getNativeAspectRatio').and.callThrough()
+      const ar = sut.instance.getAspectRatio()
+      expect(spy).toHaveBeenCalled()
+      expect(spy2).toHaveBeenCalled()
+      expect(ar).toEqual(sut.instance.getNativeAspectRatio())
+    })
   })
 
   describe('selectedIndex property', () => {
