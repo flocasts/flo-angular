@@ -63,82 +63,25 @@ export function defaultFloGridListGuidGenerator() {
     FloGridListDragDropDirective
   ],
   providers: [
-    {
-      provide: FLO_GRID_LIST_GUID_GEN,
-      useFactory: defaultFloGridListGuidGenerator
-    },
-    {
-      provide: FLO_GRID_LIST_ITEMS,
-      useValue: DEFAULT_FLO_GRID_LIST_ITEMS
-    },
-    {
-      provide: FLO_GRID_LIST_MIN_COUNT,
-      useValue: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT
-    },
-    {
-      provide: FLO_GRID_LIST_MAX_COUNT,
-      useValue: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
-    },
-    {
-      provide: FLO_GRID_LIST_COUNT,
-      useValue: DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT
-    },
-    {
-      provide: FLO_GRID_LIST_MAX_HEIGHT,
-      useValue: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
-    },
-    {
-      provide: FLO_GRID_LIST_SELECTED_INDEX,
-      useValue: 0
-    },
-    {
-      provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-      useValue: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_ENABLED,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_STATIC,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_STATIC
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_START,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_START
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_FADEOUT,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_NG_CLASS,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS
-    },
-    {
-      provide: FLO_GRID_LIST_OVERLAY_NG_STYLE,
-      useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE
-    },
-    {
-      provide: FLO_GRID_LIST_DRAG_DROP_ENABLED,
-      useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED
-    },
-    {
-      provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED,
-      useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
-    },
-    {
-      provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
-      useValue: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD
-    },
-    {
-      provide: FLO_GRID_LIST_ASPECT_RATIO,
-      useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO
-    }
+    { provide: FLO_GRID_LIST_GUID_GEN, useFactory: defaultFloGridListGuidGenerator },
+    { provide: FLO_GRID_LIST_ITEMS, useValue: DEFAULT_FLO_GRID_LIST_ITEMS },
+    { provide: FLO_GRID_LIST_MIN_COUNT, useValue: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT },
+    { provide: FLO_GRID_LIST_MAX_COUNT, useValue: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT },
+    { provide: FLO_GRID_LIST_COUNT, useValue: DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT },
+    { provide: FLO_GRID_LIST_MAX_HEIGHT, useValue: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT },
+    { provide: FLO_GRID_LIST_SELECTED_INDEX, useValue: 0 },
+    { provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, useValue: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY },
+    { provide: FLO_GRID_LIST_OVERLAY_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED },
+    { provide: FLO_GRID_LIST_OVERLAY_STATIC, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_STATIC },
+    { provide: FLO_GRID_LIST_OVERLAY_START, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_START },
+    { provide: FLO_GRID_LIST_OVERLAY_FADEOUT, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT },
+    { provide: FLO_GRID_LIST_OVERLAY_THROTTLE, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE },
+    { provide: FLO_GRID_LIST_OVERLAY_NG_CLASS, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS },
+    { provide: FLO_GRID_LIST_OVERLAY_NG_STYLE, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE },
+    { provide: FLO_GRID_LIST_DRAG_DROP_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED },
+    { provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
+    { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD },
+    { provide: FLO_GRID_LIST_ASPECT_RATIO, useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO }
   ]
 })
 export class FloGridListModule {
@@ -183,74 +126,23 @@ export class FloGridListModule {
     return {
       ngModule: FloGridListModule,
       providers: [
-        {
-          provide: FLO_GRID_LIST_ITEMS,
-          useValue: config.items
-        },
-        {
-          provide: FLO_GRID_LIST_MIN_COUNT,
-          useValue: config.min
-        },
-        {
-          provide: FLO_GRID_LIST_MAX_COUNT,
-          useValue: config.max
-        },
-        {
-          provide: FLO_GRID_LIST_COUNT,
-          useValue: config.count
-        },
-        {
-          provide: FLO_GRID_LIST_MAX_HEIGHT,
-          useValue: config.maxHeight
-        },
-        {
-          provide: FLO_GRID_LIST_SELECTED_INDEX,
-          useValue: config.selectedIndex
-        },
-        {
-          provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-          useValue: config.autoSelectNextEmptyOnCountChange
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_ENABLED,
-          useValue: config.overlay.enabled
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_STATIC,
-          useValue: config.overlay.static
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_START,
-          useValue: config.overlay.start
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_FADEOUT,
-          useValue: config.overlay.fadeout
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_THROTTLE,
-          useValue: config.overlay.throttle
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_NG_CLASS,
-          useValue: config.overlay.ngClass
-        },
-        {
-          provide: FLO_GRID_LIST_OVERLAY_NG_STYLE,
-          useValue: config.overlay.ngStyle
-        },
-        {
-          provide: FLO_GRID_LIST_DRAG_DROP_ENABLED,
-          useValue: config.dragDrop.enabled
-        },
-        {
-          provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED,
-          useValue: config.dragDrop.allowFromLists
-        },
-        {
-          provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
-          useValue: config.list.fillInitialListValues
-        }
+        { provide: FLO_GRID_LIST_ITEMS, useValue: config.items },
+        { provide: FLO_GRID_LIST_MIN_COUNT, useValue: config.min },
+        { provide: FLO_GRID_LIST_MAX_COUNT, useValue: config.max },
+        { provide: FLO_GRID_LIST_COUNT, useValue: config.count },
+        { provide: FLO_GRID_LIST_MAX_HEIGHT, useValue: config.maxHeight },
+        { provide: FLO_GRID_LIST_SELECTED_INDEX, useValue: config.selectedIndex },
+        { provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, useValue: config.autoSelectNextEmptyOnCountChange },
+        { provide: FLO_GRID_LIST_OVERLAY_ENABLED, useValue: config.overlay.enabled },
+        { provide: FLO_GRID_LIST_OVERLAY_STATIC, useValue: config.overlay.static },
+        { provide: FLO_GRID_LIST_OVERLAY_START, useValue: config.overlay.start },
+        { provide: FLO_GRID_LIST_OVERLAY_FADEOUT, useValue: config.overlay.fadeout },
+        { provide: FLO_GRID_LIST_OVERLAY_THROTTLE, useValue: config.overlay.throttle },
+        { provide: FLO_GRID_LIST_OVERLAY_NG_CLASS, useValue: config.overlay.ngClass },
+        { provide: FLO_GRID_LIST_OVERLAY_NG_STYLE, useValue: config.overlay.ngStyle },
+        { provide: FLO_GRID_LIST_DRAG_DROP_ENABLED, useValue: config.dragDrop.enabled },
+        { provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, useValue: config.dragDrop.allowFromLists },
+        { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: config.list.fillInitialListValues }
       ]
     }
   }
