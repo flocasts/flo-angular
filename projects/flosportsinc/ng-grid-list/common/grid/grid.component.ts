@@ -31,7 +31,7 @@ import {
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
-import { DEFAULT_FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
+import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 
 @Component({
   selector: 'flo-grid-list-view',
@@ -278,13 +278,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this._aspectRatio
   }
   set aspectRatio(ratio: string) {
-    const _ratio = typeof ratio === 'string' && ratio.includes('%') ? ratio : DEFAULT_FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
+    const _ratio = typeof ratio === 'string' && ratio.includes('%') ? ratio : DEFAULT_FLO_GRID_LIST_ASPECT_RATIO
     this._aspectRatio = _ratio
-    this.syncServerAspectRatioChange.next(_ratio)
+    this.aspectRatioChange.next(_ratio)
   }
 
-  public setsyncServerAspectRatio(percent: string) {
-    this._aspectRatio = percent
+  public setAspectRatio(percent: string) {
+    this.aspectRatio = percent
   }
 
   isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
@@ -331,7 +331,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
-  @Output() public readonly syncServerAspectRatioChange = new Subject<string | boolean | undefined>()
+  @Output() public readonly aspectRatioChange = new Subject<string>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
