@@ -24,7 +24,7 @@ export const FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED = new InjectionToken('fs
 
 export const FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = new InjectionToken('fs.grid.list.lst.autofill')
 
-export const FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO = new InjectionToken('fs.grid.list.lst.autofill')
+export const FLO_GRID_LIST_ASPECT_RATIO = new InjectionToken('fs.grid.list.lst.aspect')
 
 export interface IFloGridListBaseItem {
   readonly id: string

@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef
+  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, HostListener
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -29,8 +29,9 @@ import {
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
+  FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
+import { DEFAULT_FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 
 @Component({
   selector: 'flo-grid-list-view',
@@ -59,7 +60,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
-    @Inject(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO) private _syncServerAspectRatio?: string | boolean
+    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: string
   ) { }
 
   @Input()
@@ -273,24 +274,30 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   @Input()
-  get syncServerAspectRatio() {
-    return this._syncServerAspectRatio
+  get aspectRatio() {
+    return this._aspectRatio
   }
-  set syncServerAspectRatio(percent: string | boolean | undefined) {
-    const _percent = typeof percent === 'string' && percent.includes('%')
-      ? percent
-      : false
-    this._syncServerAspectRatio = _percent
-    this.syncServerAspectRatioChange.next(_percent)
+  set aspectRatio(ratio: string) {
+    const _ratio = typeof ratio === 'string' && ratio.includes('%') ? ratio : DEFAULT_FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
+    this._aspectRatio = _ratio
+    this.syncServerAspectRatioChange.next(_ratio)
   }
 
-  public setsyncServerAspectRatio(percent: string | boolean | undefined) {
-    this.syncServerAspectRatio = percent
+  public setsyncServerAspectRatio(percent: string) {
+    this._aspectRatio = percent
   }
 
   isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  getNativeAspectRatio = () => `${screen.height / screen.width * 100}%`
-  getAspectRatio = () => !this.syncServerAspectRatio || this.isFullscreen() ? this.getNativeAspectRatio() : this.syncServerAspectRatio
+  getNativeAspectRatio = () => `${window.screen.height / window.screen.width * 100}%`
+  getAspectRatio = () => this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio
+
+  @HostListener('fullscreenchange')
+  @HostListener('webkitfullscreenchange')
+  @HostListener('mozfullscreenchange')
+  @HostListener('MSFullscreenChange')
+  fullscreenchange() {
+    this._cdRef.detectChanges()
+  }
 
   get viewItems() {
     return new Array<IMaybe<TItem>>(this.count)

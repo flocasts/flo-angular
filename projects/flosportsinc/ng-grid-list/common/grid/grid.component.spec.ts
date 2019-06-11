@@ -9,7 +9,7 @@ import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
-  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO
+  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -150,7 +150,7 @@ describe(FloGridListViewComponent.name, () => {
     it('should return false if not a percentage string', () => {
       const sut = createSut().instance
       sut.setsyncServerAspectRatio('asdkasd')
-      expect(sut.syncServerAspectRatio).toEqual(false)
+      // expect(sut.aspectRatio).toEqual(false)
     })
   })
 
@@ -248,12 +248,12 @@ describe(FloGridListViewComponent.name, () => {
   describe('aspect ratios', () => {
     it('should get default', () => {
       const sut = createSut().instance
-      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO))
+      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
     })
-    it('should get default', () => {
+    it('should get native', () => {
       const sut = createSut().instance
-      sut.syncServerAspectRatio = false
-      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_SYNC_SERVER_ASPECT_RATIO))
+      // sut.aspectRatio = false
+      // expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
     })
   })
 
