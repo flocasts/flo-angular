@@ -8,7 +8,7 @@
     <button (click)="gridRef.setCount(4)" [disabled]="gridRef.isCount(4)">4</button>
     <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
     <button (click)="list.autoFill()">AUTOFILL</button>
-    <button (click)="fullscreen(gridRef)">FULLSCREEN</button>
+    <button id="fullscreen" (click)="fullscreen(gridRef)">FULLSCREEN</button>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>

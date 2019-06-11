@@ -19,14 +19,8 @@ export class GridListComponent {
   readonly initialFill = { 0: '789', 3: 'wut' }
 
   fullscreen(ref: any) {
-    console.log(ref)
-    // tslint:disable: no-if-statement
-    if (ref._elmRef.nativeElement.webkitRequestFullscreen) {
-      ref._elmRef.nativeElement.webkitRequestFullscreen()
-    }
-    if (ref._elmRef.nativeElement.requestFullscreen) {
-      ref._elmRef.nativeElement.requestFullscreen()
-    }
-
+    ['webkitRequestFullscreen', 'requestFullscreen']
+      .filter(a => typeof ref._elmRef.nativeElement[a] === 'function')
+      .forEach(a => ref._elmRef.nativeElement[a]())
   }
 }
