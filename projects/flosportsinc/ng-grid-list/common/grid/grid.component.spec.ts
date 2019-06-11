@@ -1,7 +1,7 @@
 import { async, TestBed } from '@angular/core/testing'
 import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from '../ng-grid-list.module.defaults'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
 import { PLATFORM_ID, Component, NgModule, ChangeDetectorRef } from '@angular/core'
 import { By } from '@angular/platform-browser'
@@ -154,7 +154,7 @@ describe(FloGridListViewComponent.name, () => {
     })
     it('should get default', () => {
       const sut = createSut().instance
-      expect(sut.getAspectRatio()).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
+      expect(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO)).toEqual(DEFAULT_FLO_GRID_LIST_ASPECT_RATIO)
     })
     it('should get native', () => {
       const sut = createSut().instance
