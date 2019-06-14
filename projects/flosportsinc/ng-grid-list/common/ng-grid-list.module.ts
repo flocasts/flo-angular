@@ -86,63 +86,27 @@ export function defaultFloGridListGuidGenerator() {
 })
 export class FloGridListModule {
   static config(cfg: Partial<FloGridListModuleConfiguration>): ModuleWithProviders {
-    const config: FloGridListModuleConfiguration = {
-      items: DEFAULT_FLO_GRID_LIST_ITEMS,
-      count: DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
-      max: DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT,
-      min: DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
-      maxHeight: DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
-      autoSelectNextEmptyOnCountChange: DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-      syncServerAspectRatio: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
-      selectedIndex: 0,
-      ...cfg,
-      list: {
-        fillInitialListValues: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
-        ...cfg.list
-      },
-      dragDrop: {
-        enabled: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED,
-        allowFromLists: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED,
-        ...cfg.dragDrop
-      },
-      overlay: {
-        enabled: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED,
-        start: DEFAULT_FLO_GRID_LIST_OVERLAY_START,
-        fadeout: DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT,
-        throttle: DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE,
-        static: DEFAULT_FLO_GRID_LIST_OVERLAY_STATIC,
-        ...cfg.overlay,
-        ngClass: {
-          ...DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS,
-          ...(cfg.overlay || {}).ngClass
-        },
-        ngStyle: {
-          ...DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE,
-          ...(cfg.overlay || {}).ngStyle
-        }
-      }
-    }
-
     return {
       ngModule: FloGridListModule,
       providers: [
-        { provide: FLO_GRID_LIST_ITEMS, useValue: config.items },
-        { provide: FLO_GRID_LIST_MIN_COUNT, useValue: config.min },
-        { provide: FLO_GRID_LIST_MAX_COUNT, useValue: config.max },
-        { provide: FLO_GRID_LIST_COUNT, useValue: config.count },
-        { provide: FLO_GRID_LIST_MAX_HEIGHT, useValue: config.maxHeight },
-        { provide: FLO_GRID_LIST_SELECTED_INDEX, useValue: config.selectedIndex },
-        { provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, useValue: config.autoSelectNextEmptyOnCountChange },
-        { provide: FLO_GRID_LIST_OVERLAY_ENABLED, useValue: config.overlay.enabled },
-        { provide: FLO_GRID_LIST_OVERLAY_STATIC, useValue: config.overlay.static },
-        { provide: FLO_GRID_LIST_OVERLAY_START, useValue: config.overlay.start },
-        { provide: FLO_GRID_LIST_OVERLAY_FADEOUT, useValue: config.overlay.fadeout },
-        { provide: FLO_GRID_LIST_OVERLAY_THROTTLE, useValue: config.overlay.throttle },
-        { provide: FLO_GRID_LIST_OVERLAY_NG_CLASS, useValue: config.overlay.ngClass },
-        { provide: FLO_GRID_LIST_OVERLAY_NG_STYLE, useValue: config.overlay.ngStyle },
-        { provide: FLO_GRID_LIST_DRAG_DROP_ENABLED, useValue: config.dragDrop.enabled },
-        { provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, useValue: config.dragDrop.allowFromLists },
-        { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: config.list.fillInitialListValues }
+        // tslint:disable: max-line-length
+        { provide: FLO_GRID_LIST_ITEMS, useValue: cfg.items !== undefined ? cfg.items : DEFAULT_FLO_GRID_LIST_ITEMS },
+        { provide: FLO_GRID_LIST_MIN_COUNT, useValue: cfg.min !== undefined ? cfg.min : DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT },
+        { provide: FLO_GRID_LIST_MAX_COUNT, useValue: cfg.max !== undefined ? cfg.max : DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT },
+        { provide: FLO_GRID_LIST_COUNT, useValue: cfg.count !== undefined ? cfg.count : DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT },
+        { provide: FLO_GRID_LIST_MAX_HEIGHT, useValue: cfg.maxHeight !== undefined ? cfg.maxHeight : DEFAULT_FLO_GRID_LIST_MAX_HEIGHT },
+        { provide: FLO_GRID_LIST_SELECTED_INDEX, useValue: cfg.selectedIndex !== undefined ? cfg.selectedIndex : 0 },
+        { provide: FLO_GRID_LIST_OVERLAY_ENABLED, useValue: cfg.overlay && cfg.overlay.enabled !== undefined ? cfg.overlay.enabled : DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED },
+        { provide: FLO_GRID_LIST_OVERLAY_STATIC, useValue: cfg.overlay && cfg.overlay.static !== undefined ? cfg.overlay.static : DEFAULT_FLO_GRID_LIST_OVERLAY_STATIC },
+        { provide: FLO_GRID_LIST_OVERLAY_START, useValue: cfg.overlay && cfg.overlay.start !== undefined ? cfg.overlay.start : DEFAULT_FLO_GRID_LIST_OVERLAY_START },
+        { provide: FLO_GRID_LIST_OVERLAY_FADEOUT, useValue: cfg.overlay && cfg.overlay.fadeout !== undefined ? cfg.overlay.fadeout : DEFAULT_FLO_GRID_LIST_OVERLAY_FADEOUT },
+        { provide: FLO_GRID_LIST_OVERLAY_THROTTLE, useValue: cfg.overlay && cfg.overlay.throttle !== undefined ? cfg.overlay.throttle : DEFAULT_FLO_GRID_LIST_OVERLAY_THROTTLE },
+        { provide: FLO_GRID_LIST_OVERLAY_NG_CLASS, useValue: cfg.overlay && cfg.overlay.ngClass !== undefined ? cfg.overlay.ngClass : DEFAULT_FLO_GRID_LIST_OVERLAY_NG_CLASS },
+        { provide: FLO_GRID_LIST_OVERLAY_NG_STYLE, useValue: cfg.overlay && cfg.overlay.ngStyle !== undefined ? cfg.overlay.ngStyle : DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE },
+        { provide: FLO_GRID_LIST_DRAG_DROP_ENABLED, useValue: cfg.dragDrop && cfg.dragDrop.enabled !== undefined ? cfg.dragDrop.enabled : DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED },
+        { provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, useValue: cfg.dragDrop && cfg.dragDrop.allowFromLists !== undefined ? cfg.dragDrop.allowFromLists : DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
+        { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: cfg.list && cfg.list.fillInitialListValues !== undefined ? cfg.list.fillInitialListValues : DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
+        { provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, useValue: cfg.autoSelectNextEmptyOnCountChange !== undefined ? cfg.autoSelectNextEmptyOnCountChange : DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY }
       ]
     }
   }
