@@ -267,6 +267,21 @@ jobs:
           root: .
           paths:
             - cc.ng-grid-list.json
+  test_fullscreen:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test.ci.fullscreen
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-fullscreen.json ./coverage/ng-fullscreen/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-fullscreen.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -275,7 +290,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter sum-coverage ./cc.*.json -p 14 -o ./cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 15 -o ./cc.total.json
             ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
@@ -355,6 +370,10 @@ workflows:
           requires:
               - build
               - prep_coverage
+      - test_fullscreen:
+          requires:
+              - build
+              - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -371,6 +390,7 @@ workflows:
             - test_video-autoplay
             - test_video-events
             - test_grid-list
+            - test_fullscreen
       - publish:
           requires:
             - test_docs_site
@@ -387,6 +407,7 @@ workflows:
             - test_video-autoplay
             - test_video-events
             - test_grid-list
+            - test_fullscreen
             - upload_coverage
             - e2e
           filters:
