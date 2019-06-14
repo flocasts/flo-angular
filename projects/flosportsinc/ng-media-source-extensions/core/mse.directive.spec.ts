@@ -166,35 +166,36 @@ const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
 }
 
 describe('rewrite these... problems', () => {
-  beforeEach(() => setMseTestBed(true)(false))
-  afterEach(() => TestBed.resetTestingModule())
+  // beforeEach(() => setMseTestBed(true)(false) )
+  // afterEach(() => TestBed.resetTestingModule())
 
-  it('should not continue emitAndUnsubscribe when already unsubscribed', () => {
-    const testSub = new Subject<any>()
-    testSub.unsubscribe()
-    const spy1 = spyOn(testSub, 'next')
-    const spy2 = spyOn(testSub, 'unsubscribe')
-    emitAndUnsubscribe(testSub)
-    expect(spy1).not.toHaveBeenCalled()
-    expect(spy2).not.toHaveBeenCalled()
-  })
+  // it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
+  //   const testSub = new Subject<any>()
+  //   testSub.unsubscribe()
+  //   const spy2 = spyOn(testSub, 'unsubscribe').and.callThrough()
+  //   const spy1 = spyOn(testSub, 'next').and.callThrough()
+  //   emitAndUnsubscribe(testSub)
+  //   expect(spy1).not.toHaveBeenCalled()
+  //   expect(spy2).not.toHaveBeenCalled()
+  //   done()
+  // })
 
-  it('should trigger source change task when MSE client is the same type', () => {
-    const sut = createMseSut()
-    sut.instance.srcChange.subscribe(srcChange => {
-      srcChange.current.tap({
-        none: () => expect(true).toEqual(false),
-        some: src => expect(src).toEqual(TEST_SOURCES.HLS.SMALL)
-      })
-      srcChange.previous.tap({
-        none: () => expect(true).toEqual(false),
-        some: src => expect(src).toEqual(TEST_SOURCES.HLS.TINY)
-      })
-    });
-    // tslint:disable-next-line:no-object-mutation
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-  })
+  // it('should trigger source change task when MSE client is the same type', async(() => {
+  //   const sut = createMseSut()
+  //   sut.instance.srcChange.subscribe(srcChange => {
+  //     srcChange.current.tap({
+  //       none: () => expect(true).toEqual(false),
+  //       some: src => expect(src).toEqual(TEST_SOURCES.HLS.SMALL)
+  //     })
+  //     srcChange.previous.tap({
+  //       none: () => expect(true).toEqual(false),
+  //       some: src => expect(src).toEqual(TEST_SOURCES.HLS.TINY)
+  //     })
+  //   });
+  //   // tslint:disable-next-line:no-object-mutation
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  // }))
 
   // it('should trigger source change task when MSE client is the diff type', () => {
   //   const wrapper = createMseSut()
@@ -229,58 +230,57 @@ describe('rewrite these... problems', () => {
   //   sut.hoist.detectChanges()
   //   expect(spy).toHaveBeenCalled()
   // })
+  // it('should set src', () => {
+  //   const wrapper = createMseSut()
+  //   const task = (wrapper.instance as any)
+  //   const spy = spyOn(task, '_setSrc').and.callThrough();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+  //   wrapper.hoist.detectChanges();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+  //   wrapper.hoist.detectChanges()
+  //   expect(spy).toHaveBeenCalled()
+  // })
 
-  it('should set src', () => {
-    const wrapper = createMseSut()
-    const task = (wrapper.instance as any)
-    const spy = spyOn(task, '_setSrc').and.callThrough();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-    wrapper.hoist.detectChanges();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-    wrapper.hoist.detectChanges()
-    expect(spy).toHaveBeenCalled()
-  })
+  // it('should handle input newClientOnSrcChange', () => {
+  //   const sut = createMseSut()
+  //   const instance = (sut.instance as any)
+  //   instance.newClientOnSrcChange = ''
+  //   sut.hoist.detectChanges()
+  //   expect(instance.newClientOnSrcChange).toEqual(true)
 
-  it('should handle input newClientOnSrcChange', () => {
-    const sut = createMseSut()
-    const instance = (sut.instance as any)
-    instance.newClientOnSrcChange = ''
-    sut.hoist.detectChanges()
-    expect(instance.newClientOnSrcChange).toEqual(true)
+  //   instance.newClientOnSrcChange = true
+  //   expect(instance.newClientOnSrcChange).toEqual(true)
 
-    instance.newClientOnSrcChange = true
-    expect(instance.newClientOnSrcChange).toEqual(true)
+  //   instance.newClientOnSrcChange = false
+  //   expect(instance.newClientOnSrcChange).toEqual(false)
+  // })
 
-    instance.newClientOnSrcChange = false
-    expect(instance.newClientOnSrcChange).toEqual(false)
-  })
+  // it('should not push src change when same src value during ngOnChanges', () => {
+  //   const sut = createMseSut()
+  //   const internalSrcChangeRef = (sut.instance as any)._srcChanges$
+  //   const spy = spyOn(internalSrcChangeRef, 'next')
+  //   sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
+  //   expect(spy).not.toHaveBeenCalled()
+  // })
 
-  it('should not push src change when same src value during ngOnChanges', () => {
-    const sut = createMseSut()
-    const internalSrcChangeRef = (sut.instance as any)._srcChanges$
-    const spy = spyOn(internalSrcChangeRef, 'next')
-    sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
-    expect(spy).not.toHaveBeenCalled()
-  })
+  // it('not call isMediaSource supported when other checks do not exist', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._isMediaSourceSupported[0]
+  //   const spy = spyOn(task, 'func');
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   expect(spy).not.toHaveBeenCalled()
+  // })
 
-  it('not call isMediaSource supported when other checks do not exist', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._isMediaSourceSupported[0]
-    const spy = spyOn(task, 'func');
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-    expect(spy).not.toHaveBeenCalled()
-  })
-
-  it('not', () => {
-    TestBed.resetTestingModule()
-    setMseTestBed(false)(false)
-    const sut = createMseSut();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
-    sut.hoist.detectChanges()
-  })
+  // it('not', () => {
+  //   TestBed.resetTestingModule()
+  //   setMseTestBed(false)(false)
+  //   const sut = createMseSut();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
+  //   sut.hoist.detectChanges()
+  // })
 })
 
 describe(`${MseDirective.name} when client supports Media Source Extensions`, () => {

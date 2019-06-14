@@ -1,18 +1,18 @@
 <h1>Grid List</h1>
 
-<flo-grid-list-view #gridRef [count]="4" [maxheight]="400">
+<flo-grid-list-view #gridRef [count]="4">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>
     <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>
     <button (click)="gridRef.setCount(3)" [disabled]="gridRef.isCount(3)">3</button>
     <button (click)="gridRef.setCount(4)" [disabled]="gridRef.isCount(4)">4</button>
     <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
+    <button (click)="list.autoFill()">AUTOFILL</button>
+    <button id="fullscreen" (click)="fullscreen(gridRef)">FULLSCREEN</button>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
-  <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
+  <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
-
-<button (click)="list.autoFill()">AUTOFILL</button>
 
 <flo-grid-list #list [gridRef]="gridRef" [items]="items" [initialFill]="initialFill">
   <div *floGridListItem="let row">

@@ -49,6 +49,11 @@ export interface FloGridListModuleConfiguration {
   /** When view count increases, set selection box to next empty square  */
   readonly autoSelectNextEmptyOnCountChange: boolean
 
+  /** To prevent flickers from server rendered pages, enforce an aspect ratio.
+   *  defaults to 56.65% which is the reverse calculation for a 16/9 ratio
+   */
+  readonly syncServerAspectRatio: string | boolean
+
   /** List configuration */
   readonly list: Partial<ListConfiguration>
 

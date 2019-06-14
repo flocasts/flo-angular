@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ElementRef } from '@angular/core'
 
 @Component({
   selector: 'app-grid-list',
@@ -17,4 +17,10 @@ export class GridListComponent {
   ]
 
   readonly initialFill = { 0: '789', 3: 'wut' }
+
+  fullscreen(ref: any) {
+    ['webkitRequestFullscreen', 'requestFullscreen']
+      .filter(a => typeof ref._elmRef.nativeElement[a] === 'function')
+      .forEach(a => ref._elmRef.nativeElement[a]())
+  }
 }
