@@ -5,7 +5,6 @@ describe(FloFullscreenService.name, () => {
   beforeEach(() => TestBed.configureTestingModule({}))
 
   it('should be created', () => {
-    const service: FloFullscreenService = TestBed.get(FloFullscreenService)
-    expect(service).toBeTruthy()
+    expect(TestBed.get(FloFullscreenService)).toBeTruthy()
   })
 })
