@@ -87,14 +87,28 @@ describe(FloGridListModule.name, () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       imports: [FloGridListModule.config({
+        items: [{}],
         count: 25,
         max: 64,
         min: 4,
+        selectedIndex: 1,
+        maxHeight: 900,
+        autoSelectNextEmptyOnCountChange: false,
+        dragDrop: {
+          enabled: false,
+          allowFromLists: false
+        },
         overlay: {
+          ngClass: {},
+          ngStyle: {},
+          static: true,
           fadeout: 1,
           throttle: 2,
           enabled: false,
           start: false
+        },
+        list: {
+          fillInitialListValues: true
         }
       })]
     }).compileComponents()

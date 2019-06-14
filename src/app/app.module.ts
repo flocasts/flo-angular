@@ -29,7 +29,9 @@ import { GridListComponent } from './grid-list/grid-list.component'
 
 @NgModule({
   imports: [
-    FloGridListModule,
+    FloGridListModule.config({
+      count: 2
+    }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     WindowModule,
