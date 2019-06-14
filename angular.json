@@ -743,6 +743,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-fullscreen/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-fullscreen/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-fullscreen/karma.conf.js"
