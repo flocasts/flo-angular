@@ -1,9 +1,1 @@
-<!-- <flo-fullscreen>
-  <div *floFullscreenOn="let inFull" (click)="inFull.exit()"></div>
-  <div *floFullscreenOff="let outFull" (click)="outFull.enter()"></div>
-</flo-fullscreen>
-
-<div floFullscreen>
-  <div *floFullscreenOn="let inFull" (click)="inFull.exit()"></div>
-  <div *floFullscreenOff="let outFull" (click)="outFull.enter()"></div>
-</div> -->
+<ng-container *ngTemplateOutlet="templateRef$ | async"></ng-container>
