@@ -1,4 +1,4 @@
-import { Directive, ContentChild, TemplateRef, ElementRef, HostListener } from '@angular/core'
+import { Directive, ContentChild, TemplateRef, ElementRef, HostListener, ViewChild, ViewContainerRef, Input } from '@angular/core'
 
 @Directive({
   selector: '[floFullscreenOn]',
@@ -11,14 +11,37 @@ export class FloFullscreenOnDirective<TElement extends HTMLElement> {
   selector: '[floFullscreenOff]',
 })
 export class FloFullscreenOffDirective<TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>) { }
+  constructor(public elmRef: ElementRef<TElement>,
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef) {
+  }
+
+  @Input() floFullscreenOff?: HTMLElement
+
+  ngOnInit() {
+    // if 
+    this.viewContainer.createEmbeddedView(this.templateRef)
+    // console.log(this.floFullscreenOff)
+  }
 }
 
 @Directive({
   selector: '[floFullscreen]'
 })
 export class FloFullscreenDirective {
+  constructor(elmRef: ElementRef<HTMLElement>) {
+  }
 
-  @ContentChild(FloFullscreenOnDirective, { read: TemplateRef }) readonly fullscreenOnTemplateRef: TemplateRef<HTMLElement>
-  @ContentChild(FloFullscreenOffDirective, { read: TemplateRef }) readonly fullscreenOffTemplateRef: TemplateRef<HTMLElement>
+  @ViewChild(FloFullscreenOnDirective) readonly fullscreenOnTemplateRef: TemplateRef<HTMLElement>
+  @ContentChild(FloFullscreenOffDirective) readonly fullscreenOffTemplateRef: TemplateRef<HTMLElement>
+
+  ngOnInit() {
+    console.log(this.fullscreenOffTemplateRef)
+    console.log(this.fullscreenOnTemplateRef)
+  }
+
+  ngAfterViewInit() {
+    console.log(this.fullscreenOffTemplateRef)
+    console.log(this.fullscreenOnTemplateRef)
+  }
 }

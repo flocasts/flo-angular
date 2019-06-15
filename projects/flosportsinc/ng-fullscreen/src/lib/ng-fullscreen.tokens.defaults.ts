@@ -1,4 +1,9 @@
-export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<string> = [
+import {
+  FullscreenRequestEvents, FullscreenExitEvents, FullscreenChangeEvents,
+  FullscreenErrorEvents, FullscreenEnabledKeys, FullscreenElementKeys
+} from './ng-fullscreen.tokens'
+
+export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<FullscreenRequestEvents> = [
   'requestFullscreen',
   'webkitRequestFullscreen',
   'webkitRequestFullScreen',
@@ -6,7 +11,7 @@ export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<string> = [
   'msRequestFullscreen'
 ]
 
-export const DEFAULT_FS_FULLSCREEN_EXIT_EVENTS: ReadonlyArray<string> = [
+export const DEFAULT_FS_FULLSCREEN_EXIT_EVENTS: ReadonlyArray<FullscreenExitEvents> = [
   'exitFullscreen',
   'webkitExitFullscreen',
   'webkitCancelFullScreen',
@@ -14,7 +19,7 @@ export const DEFAULT_FS_FULLSCREEN_EXIT_EVENTS: ReadonlyArray<string> = [
   'msExitFullscreen'
 ]
 
-export const DEFAULT_FS_FULLSCREEN_ELEMENT_ERROR_EVENTS: ReadonlyArray<string> = [
+export const DEFAULT_FS_FULLSCREEN_ELEMENT_ERROR_EVENTS: ReadonlyArray<FullscreenErrorEvents> = [
   'fullscreenerror',
   'webkitfullscreenerror',
   'webkitfullscreenerror',
@@ -22,7 +27,7 @@ export const DEFAULT_FS_FULLSCREEN_ELEMENT_ERROR_EVENTS: ReadonlyArray<string> =
   'MSFullscreenError'
 ]
 
-export const DEFAULT_FS_FULLSCREEN_ELEMENT: ReadonlyArray<string> = [
+export const DEFAULT_FS_FULLSCREEN_ELEMENT: ReadonlyArray<FullscreenElementKeys> = [
   'fullscreenElement',
   'webkitFullscreenElement',
   'webkitCurrentFullScreenElement',
@@ -30,14 +35,14 @@ export const DEFAULT_FS_FULLSCREEN_ELEMENT: ReadonlyArray<string> = [
   'msFullscreenElement'
 ]
 
-export const DEFAULT_FS_FULLSCREEN_ENABLED: ReadonlyArray<string> = [
+export const DEFAULT_FS_FULLSCREEN_ENABLED: ReadonlyArray<FullscreenEnabledKeys> = [
   'fullscreenEnabled',
   'mozFullscreenEnabled',
   'webkitFullscreenEnabled',
   'msFullscreenEnabled'
 ]
 
-export const DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS: ReadonlyArray<string> = [
+export const DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS: ReadonlyArray<FullscreenChangeEvents> = [
   'fullscreenchange',
   'webkitfullscreenchange',
   'mozfullscreenchange',
