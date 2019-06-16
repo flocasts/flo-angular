@@ -13,7 +13,7 @@ export class FullscreenComponent {
   onDestroy = new Subject()
 
   constructor(elmRef: ElementRef, d: FloFullscreenService) {
-    d.isFullscreen$.pipe(takeUntil(this.onDestroy)).subscribe(console.log)
+    d.fullscreen$.pipe(takeUntil(this.onDestroy)).subscribe(console.log, console.error)
   }
 
   ngOnDestroy() {
