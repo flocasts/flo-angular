@@ -12,8 +12,8 @@ import { takeUntil } from 'rxjs/operators';
 export class FullscreenComponent {
   onDestroy = new Subject()
 
-  constructor(elmRef: ElementRef, d: FloFullscreenService) {
-    d.fullscreen$.pipe(takeUntil(this.onDestroy)).subscribe(console.log, console.error)
+  constructor(elmRef: ElementRef, fs: FloFullscreenService) {
+    fs.canGoFullscreen$.subscribe(console.log)
   }
 
   ngOnDestroy() {
