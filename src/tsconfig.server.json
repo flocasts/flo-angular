@@ -93,10 +93,10 @@
         "../dist/flosportsinc/ng-grid-list/*"
       ],
       "@flosportsinc/ng-fullscreen": [
-        "dist/flosportsinc/ng-fullscreen"
+        "../dist/flosportsinc/ng-fullscreen"
       ],
       "@flosportsinc/ng-fullscreen/*": [
-        "dist/flosportsinc/ng-fullscreen/*"
+        "../dist/flosportsinc/ng-fullscreen/*"
       ]
     }
   },

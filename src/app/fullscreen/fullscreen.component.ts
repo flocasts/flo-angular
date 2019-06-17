@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ElementRef, OnDestroy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core'
 import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
 import { Subject } from 'rxjs'
 
