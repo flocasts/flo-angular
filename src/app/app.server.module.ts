@@ -10,6 +10,7 @@ import { AdBlockServerModule } from '@flosportsinc/ng-ad-block/server'
 import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 import { CookieServerModule } from '@flosportsinc/ng-universal-services/cookies/server'
 import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-state/server'
+import { HttpCacheTagExpressServerModule } from '@flosportsinc/ng-http-cache-tags'
 
 @NgModule({
   imports: [
@@ -21,6 +22,9 @@ import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-stat
     WindowServerModule,
     CookieServerModule,
     NodeEnvTransferServerModule,
+    HttpCacheTagExpressServerModule.config({
+      cacheableResponseCodes: [200, 201]
+    }),
     SvgTransferStateServerModule.withSvgAssetRoot('dist/flo-angular/browser/assets/svg')
   ],
   providers: [

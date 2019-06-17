@@ -39,32 +39,18 @@ export interface ISvgTransferStateModuleConfigParams {
   readonly styles: Object
 }
 
-const DEFAULT_CONFIG: ISvgTransferStateModuleConfigParams = {
-  styles: DEFAULT_STYLES,
-  parentStyleKeys: DEFAULT_PARENT_STYLE_KEYS
-}
-
 @NgModule({
   imports: [HttpClientModule],
   declarations: [SvgTransferStateDirective],
   exports: [SvgTransferStateDirective],
   providers: [
-    {
-      provide: SVG_DIRECTIVE_DEFAULT_STYLES,
-      useValue: DEFAULT_STYLES
-    },
-    {
-      provide: SVG_DIRECTIVE_PARENT_STYLE_KEYS,
-      useValue: DEFAULT_PARENT_STYLE_KEYS
-    },
+    { provide: SVG_DIRECTIVE_DEFAULT_STYLES, useValue: DEFAULT_STYLES },
+    { provide: SVG_DIRECTIVE_PARENT_STYLE_KEYS, useValue: DEFAULT_PARENT_STYLE_KEYS },
+    { provide: SVG_LOADER_ERROR_RETURN_OPERATOR, useFactory: standardErrorValReturnFactory },
     {
       provide: SVG_REQUEST_PATTERN,
       useFactory: standardServerReqPatternFactory,
       deps: [SVG_REQUEST_PATTERN_BASE]
-    },
-    {
-      provide: SVG_LOADER_ERROR_RETURN_OPERATOR,
-      useFactory: standardErrorValReturnFactory
     },
     {
       provide: SVG_LOADER_HTTP_REQUEST,
@@ -74,19 +60,17 @@ const DEFAULT_CONFIG: ISvgTransferStateModuleConfigParams = {
   ]
 })
 export class SvgTransferStateModule {
-  static config(config: Partial<ISvgTransferStateModuleConfigParams> = {}): ModuleWithProviders {
-    const _config = { ...DEFAULT_CONFIG, ...config }
-
+  static config(config?: Partial<ISvgTransferStateModuleConfigParams>): ModuleWithProviders {
     return {
       ngModule: SvgTransferStateModule,
       providers: [
         {
           provide: SVG_DIRECTIVE_DEFAULT_STYLES,
-          useValue: _config.styles
+          useValue: config && config.styles || DEFAULT_STYLES
         },
         {
           provide: SVG_DIRECTIVE_PARENT_STYLE_KEYS,
-          useValue: _config.parentStyleKeys
+          useValue: config && config.parentStyleKeys || DEFAULT_PARENT_STYLE_KEYS
         }
       ]
     }
