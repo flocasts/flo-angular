@@ -1,4 +1,7 @@
-import { Directive, ContentChild, TemplateRef, ElementRef, HostListener, ViewChild, ViewContainerRef, Input } from '@angular/core'
+import {
+  Directive, ContentChild, TemplateRef, ElementRef,
+  ViewChild, ViewContainerRef, Input, OnInit, AfterViewInit
+} from '@angular/core'
 
 @Directive({
   selector: '[floFullscreenOn]',
@@ -16,10 +19,11 @@ export class FloFullscreenOffDirective<TElement extends HTMLElement> {
     private viewContainer: ViewContainerRef) {
   }
 
-  @Input() floFullscreenOff?: HTMLElement
+  @Input() readonly floFullscreenOff?: HTMLElement
 
+  // tslint:disable-next-line:use-life-cycle-interface
   ngOnInit() {
-    // if 
+    // if
     this.viewContainer.createEmbeddedView(this.templateRef)
     // console.log(this.floFullscreenOff)
   }
@@ -28,7 +32,7 @@ export class FloFullscreenOffDirective<TElement extends HTMLElement> {
 @Directive({
   selector: '[floFullscreen]'
 })
-export class FloFullscreenDirective {
+export class FloFullscreenDirective implements OnInit, AfterViewInit {
   constructor(elmRef: ElementRef<HTMLElement>) {
   }
 

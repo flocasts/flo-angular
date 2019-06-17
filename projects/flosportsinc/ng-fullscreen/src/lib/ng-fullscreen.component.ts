@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ContentChild, TemplateRef, HostListener, Input } from '@angular/core'
 import { FloFullscreenOnDirective, FloFullscreenOffDirective } from './ng-fullscreen.directive'
-import { map, take, filter, tap } from 'rxjs/operators'
+import { map, take, tap } from 'rxjs/operators'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { merge } from 'rxjs'
 
