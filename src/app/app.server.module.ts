@@ -22,7 +22,7 @@ import { HttpCacheTagExpressServerModule } from '@flosportsinc/ng-http-cache-tag
     WindowServerModule,
     CookieServerModule,
     NodeEnvTransferServerModule,
-    HttpCacheTagExpressServerModule.withConfig({
+    HttpCacheTagExpressServerModule.config({
       cacheableResponseCodes: [200, 201]
     }),
     SvgTransferStateServerModule.withSvgAssetRoot('dist/flo-angular/browser/assets/svg')
