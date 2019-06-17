@@ -1,8 +1,13 @@
 import { NgModule, ModuleWithProviders, Injector } from '@angular/core'
-import { CACHE_TAG_CONFIG, CACHE_TAG_WRITE_HEADER_FACTORY, ICacheTagConfig, IWriteResponseHeader } from './http-cache-tag.tokens'
+import {
+  CACHE_TAG_WRITE_HEADER_FACTORY, IWriteResponseHeader,
+  CACHE_TAG_RESPONSE_CODES, DEFAULT_CACHE_TAG_RESPONSE_CODES,
+  CACHE_TAG_HEADER_KEY, DEFAULT_CACHE_TAG_HEADER_KEY,
+  CACHE_TAG_DELIMITER, DEFAULT_CACHE_TAG_DELIMITER
+} from './http-cache-tag.tokens'
 import { Response } from 'express'
-import { HttpCacheTagServerModule, DEFAULT_CACHE_TAG_CONFIGURATION } from './http-cache-tag.module'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
+import { HttpCacheTagServerModule, IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
 
 export const immutableAppend =
   (str: string) =>
@@ -39,16 +44,21 @@ export function DEFAULT_EXPRESS_WRITE_HEADER_FACTORY(inj: Injector): IWriteRespo
   ]
 })
 export class HttpCacheTagExpressServerModule {
-  static withConfig(config: Partial<ICacheTagConfig> = {}): ModuleWithProviders {
+  static config(config: Partial<IHttpCacheTagServerModuleConfig>): ModuleWithProviders {
     return {
       ngModule: HttpCacheTagExpressServerModule,
       providers: [
         {
-          provide: CACHE_TAG_CONFIG,
-          useValue: {
-            ...DEFAULT_CACHE_TAG_CONFIGURATION,
-            ...config
-          }
+          provide: CACHE_TAG_RESPONSE_CODES,
+          useValue: config.cacheableResponseCodes || DEFAULT_CACHE_TAG_RESPONSE_CODES
+        },
+        {
+          provide: CACHE_TAG_HEADER_KEY,
+          useValue: config.headerKey || DEFAULT_CACHE_TAG_HEADER_KEY
+        },
+        {
+          provide: CACHE_TAG_DELIMITER,
+          useValue: config.delimiter || DEFAULT_CACHE_TAG_DELIMITER
         }
       ]
     }
