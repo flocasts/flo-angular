@@ -11,6 +11,7 @@ import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { GridListComponent } from './grid-list/grid-list.component'
+import { FullscreenComponent } from './fullscreen/fullscreen.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'styles', component: StylesComponent },
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'grid-list', component: GridListComponent },
+  { path: 'fullscreen', component: FullscreenComponent },
   { path: '**', component: NotFoundComponent }
 ]
 

@@ -91,6 +91,12 @@
       ],
       "@flosportsinc/ng-grid-list/*": [
         "../dist/flosportsinc/ng-grid-list/*"
+      ],
+      "@flosportsinc/ng-fullscreen": [
+        "../dist/flosportsinc/ng-fullscreen"
+      ],
+      "@flosportsinc/ng-fullscreen/*": [
+        "../dist/flosportsinc/ng-fullscreen/*"
       ]
     }
   },

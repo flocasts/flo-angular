@@ -1,0 +1,16 @@
+import { InjectionToken } from '@angular/core'
+
+// tslint:disable: max-line-length
+export type FullscreenRequestEvents = 'requestFullscreen' | 'webkitRequestFullscreen' | 'webkitRequestFullScreen' | 'mozRequestFullScreen' | 'msRequestFullscreen'
+export type FullscreenExitEvents = 'exitFullscreen' | 'webkitExitFullscreen' | 'webkitCancelFullScreen' | 'mozCancelFullScreen' | 'msExitFullscreen'
+export type FullscreenChangeEvents = 'fullscreenchange' | 'webkitfullscreenchange' | 'mozfullscreenchange' | 'MSFullscreenChange'
+export type FullscreenErrorEvents = 'fullscreenerror' | 'webkitfullscreenerror' | 'webkitfullscreenerror' | 'mozfullscreenerror' | 'MSFullscreenError'
+export type FullscreenElementKeys = 'fullscreenElement' | 'webkitFullscreenElement' | 'webkitCurrentFullScreenElement' | 'mozFullScreenElement' | 'msFullscreenElement'
+export type FullscreenEnabledKeys = 'fullscreenEnabled' | 'mozFullscreenEnabled' | 'webkitFullscreenEnabled' | 'msFullscreenEnabled'
+
+export const FS_FULLSCREEN_REQUEST_EVENTS = new InjectionToken<ReadonlyArray<FullscreenRequestEvents>>('fs.fullscreen.request')
+export const FS_FULLSCREEN_EXIT_EVENTS = new InjectionToken<ReadonlyArray<FullscreenExitEvents>>('fs.fullscreen.exit')
+export const FS_FULLSCREEN_CHANGE_EVENTS = new InjectionToken<ReadonlyArray<FullscreenChangeEvents>>('fs.fullscreen.change')
+export const FS_FULLSCREEN_ELEMENT_ERROR_EVENTS = new InjectionToken<ReadonlyArray<FullscreenErrorEvents>>('fs.fullscreen.error')
+export const FS_FULLSCREEN_ELEMENT = new InjectionToken<ReadonlyArray<FullscreenElementKeys>>('fs.fullscreen.element')
+export const FS_FULLSCREEN_ENABLED = new InjectionToken<ReadonlyArray<FullscreenEnabledKeys>>('fs.fullscreen.enabled')

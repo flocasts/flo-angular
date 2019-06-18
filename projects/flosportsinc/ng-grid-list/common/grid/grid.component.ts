@@ -41,7 +41,7 @@ import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defau
 })
 export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
   constructor(
-    private _elmRef: ElementRef<HTMLElement>,
+    public elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
     private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
@@ -342,9 +342,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   private cursorInsideElement = merge(
-    fromEvent(this._elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
-    fromEvent(this._elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
-    fromEvent(this._elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
+    fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
+    fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
+    fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart))
 
   private readonly fadeoutIntervalReset = new Subject<boolean>()
@@ -361,7 +361,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private toggleCursor = (show: boolean) => this._elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
 
   public readonly trySelectNextEmpty = () =>
     maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
