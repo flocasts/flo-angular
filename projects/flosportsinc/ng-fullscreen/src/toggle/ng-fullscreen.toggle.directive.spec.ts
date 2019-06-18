@@ -1,22 +1,61 @@
-// import { Component } from '@angular/core'
-// import { TestBed } from '@angular/core/testing'
-// import { FloFullscreenTestModule } from '../ng-fullscreen.module.spec'
+import { Component, NgModule } from '@angular/core'
+import { FloFullscreenToggleModule } from './ng-fullscreen.toggle.module'
+import { FloClickToEnterFullscreenDirective, FloClickToExitFullscreenDirective } from './ng-fullscreen.toggle.directive'
+import { TestBed, async, fakeAsync, tick } from '@angular/core/testing'
+import { By } from '@angular/platform-browser'
+import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
-// @Component({
-//   selector: 'flo-test-component',
-//   template: `<span>I indicate fullscreen CTA</span>`
-// })
-// export class FloTestComponent { }
+@Component({
+  selector: 'flo-test-component',
+  template: `<div id="container" #ref>
+    <button [floClickToEnterFullscreen]="ref">ENTER</button>
+    <button floClickToExitFullscreen>EXIT</button>
+  </div>`
+})
+export class FloTestComponent { }
 
-// @NgModule({
-//   declarations: [FloTestComponent],
-//   imports: [FloFullscreenCommonModule],
-//   exports: [FloFullscreenCommonModule, FloTestComponent],
-// })
-// export class FloFullscreenTestModule { }
+@NgModule({
+  declarations: [FloTestComponent],
+  imports: [FloFullscreenToggleModule],
+  exports: [FloFullscreenToggleModule],
+})
+export class FloFullscreenTestModule { }
 
+describe(FloFullscreenToggleModule.name, () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [FloFullscreenTestModule]
+    })
+  })
 
-// describe(FloFullscreenDirective.name, () => {
-//   it('should compile', () => {
-//   })
-// })
+  afterEach(() => TestBed.resetTestingModule())
+
+  describe(FloClickToExitFullscreenDirective.name, () => {
+    it('should click to fullscreen', async(() => {
+      const sut = TestBed.createComponent(FloTestComponent).debugElement.query(By.directive(FloClickToExitFullscreenDirective))
+
+      const spy = spyOn(document, 'exitFullscreen')
+
+      sut.nativeElement.click()
+
+      expect(spy).toHaveBeenCalled()
+    }))
+  })
+
+  describe(FloClickToEnterFullscreenDirective.name, () => {
+    it('should enter to fullscreen', fakeAsync(() => {
+      const comp = TestBed.createComponent(FloTestComponent)
+      const service = TestBed.get(FloFullscreenService) as FloFullscreenService
+      const sut = comp.debugElement.query(By.directive(FloClickToEnterFullscreenDirective)).nativeElement as HTMLButtonElement
+      const container = comp.debugElement.query(By.css('#container')).nativeElement as HTMLDivElement
+      const spy = spyOn(service, 'goFullscreen').and.callThrough()
+      comp.detectChanges()
+
+      sut.click()
+      tick(200)
+
+      expect(spy).toHaveBeenCalledWith(container)
+    }))
+  })
+})
+

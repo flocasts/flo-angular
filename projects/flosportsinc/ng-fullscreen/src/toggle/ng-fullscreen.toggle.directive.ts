@@ -28,7 +28,9 @@ export class FloClickToEnterFullscreenDirective {
 
   @HostListener('click', []) click() {
     this.fs.isNotFullscreen$.pipe(tap(_ => {
-      setTimeout(() => this.fs.goFullscreen(this.floClickToEnterFullscreen))
+      setTimeout(() => {
+        this.fs.goFullscreen(this.floClickToEnterFullscreen)
+      })
     })).pipe(take(1)).subscribe()
   }
 }
