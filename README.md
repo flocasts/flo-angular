@@ -32,6 +32,7 @@
 | [ng-styles](projects/flosportsinc/ng-styles) | FloSports Stylesheets | [![](https://img.shields.io/npm/v/@flosportsinc/ng-styles.svg)](https://www.npmjs.com/package/@flosportsinc/ng-styles)
 | [ng-icons](projects/flosportsinc/ng-icons) | FloSports Icons | [![](https://img.shields.io/npm/v/@flosportsinc/ng-icons.svg)](https://www.npmjs.com/package/@flosportsinc/ng-icons)
 | [ng-window](projects/flosportsinc/ng-window) | Window object for Node and unit testing | [![](https://img.shields.io/npm/v/@flosportsinc/ng-window.svg)](https://www.npmjs.com/package/@flosportsinc/ng-window)
+| [ng-fullscreen](projects/flosportsinc/ng-fullscreen) | HTML5 Fullscreen utilities | [![](https://img.shields.io/npm/v/@flosportsinc/ng-fullscreen.svg)](https://www.npmjs.com/package/@flosportsinc/ng-fullscreen)
 | [ng-ad-block](projects/flosportsinc/ng-ad-block) | For detecting ad blockers | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ad-block.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ad-block)
 | [ng-http-cache-tags](projects/flosportsinc/ng-http-cache-tags) | HTTP tag caching | [![](https://img.shields.io/npm/v/@flosportsinc/ng-http-cache-tags.svg)](https://www.npmjs.com/package/@flosportsinc/ng-http-cache-tags)
 | [ng-universal-services](projects/flosportsinc/ng-universal-services) | Common services for Angular Universal | [![](https://img.shields.io/npm/v/@flosportsinc/ng-universal-services.svg)](https://www.npmjs.com/package/@flosportsinc/ng-universal-services)
