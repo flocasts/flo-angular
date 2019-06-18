@@ -1,26 +1,14 @@
 <h2>Fullscreen!</h2>
 
-<div #takeMeFullscreen>
+<div #takeMeFullscreen1>
   <h3>I am the target of the fullscreen action!</h3>
   <h4>My container will be taken fullscreen</h4>
   <button *floIfFullscreen floClickToExitFullscreen>Exit Fullscreen</button>
-  <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen">Enter Fullscreen</button>
+  <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen1">Enter Fullscreen</button>
 </div>
-<!-- <div #elmRef2>
+<div #takeMeFullscreen2>
   <h3>I am the target of the fullscreen action!</h3>
   <h4>My container will be taken fullscreen</h4>
-  <flo-fullscreen [targetRef]="elmRef2">
-    <button *floFullscreenOn>Exit Fullscreen</button>
-    <button *floFullscreenOff>Enter Fullscreen</button>
-  </flo-fullscreen>
-</div> -->
-
-<!-- <flo-fullscreen></flo-fullscreen>
-<flo-fullscreen-video-toggle></flo-fullscreen-video-toggle> -->
-
-<!-- <div floFullscreen>
-  <h3>I am the target of the fullscreen action!</h3>
-  <h4>My container will be taken fullscreen</h4>
-  <button *floFullscreenOn>Exit Fullscreen</button>
-  <button *floFullscreenOff>Enter Fullscreen</button>
-</div> -->
+  <button *floIfFullscreen floClickToExitFullscreen>Exit Fullscreen</button>
+  <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen2">Enter Fullscreen</button>
+</div>
