@@ -64,7 +64,7 @@ export class FloFullscreenService implements IFloFullscreenService {
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
   public readonly isNotFullscreen$ = this.fullscreen$.pipe(filter(v => v === false))
-  public readonly goFullscreen = (elm: HTMLElement | HTMLDocument = this.doc) => filterAndExecute(elm)(this.requestEventKeys)
+  public readonly goFullscreen = (elm: HTMLElement | HTMLDocument = this.doc.body) => filterAndExecute(elm)(this.requestEventKeys)
   public readonly exitFullscreen = () => filterAndExecute(this.doc)(this.exitEventKeys)
   public readonly fullscreenIsSupported = () => isPlatformServer(this.platformId) ? false : isKeyTrue(this.enabledKeys)(this.doc)
   public readonly canGoFullscreen$ = isPlatformServer(this.platformId)
