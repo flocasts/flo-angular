@@ -10,19 +10,6 @@ import {
   DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS, DEFAULT_FS_FULLSCREEN_ENABLED
 } from './ng-fullscreen.tokens.defaults'
 
-// @Component({
-//   selector: 'flo-test-component',
-//   template: `<span>I indicate fullscreen CTA</span>`
-// })
-// export class FloTestComponent { }
-
-// @NgModule({
-//   declarations: [FloTestComponent],
-//   imports: [FloFullscreenCommonModule],
-//   exports: [FloFullscreenCommonModule, FloTestComponent],
-// })
-// export class FloFullscreenTestModule { }
-
 describe(FloFullscreenCommonModule.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
