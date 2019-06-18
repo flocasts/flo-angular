@@ -1,7 +1,7 @@
 import { NgModule, Component } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { FloFullscreenService } from './ng-fullscreen.service'
-import { FloFullscreenModule } from './ng-fullscreen.module'
+import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 
 @Component({
   selector: 'flo-test-component',
@@ -11,12 +11,12 @@ export class FloTestComponent { }
 
 @NgModule({
   declarations: [FloTestComponent],
-  imports: [FloFullscreenModule],
-  exports: [FloFullscreenModule, FloTestComponent],
+  imports: [FloFullscreenCommonModule],
+  exports: [FloFullscreenCommonModule, FloTestComponent],
 })
 export class FloFullscreenTestModule { }
 
-describe(FloFullscreenModule.name, () => {
+describe(FloFullscreenCommonModule.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule]
