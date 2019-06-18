@@ -729,7 +729,7 @@
     },
     "@flosportsinc/ng-fullscreen": {
       "root": "projects/flosportsinc/ng-fullscreen",
-      "sourceRoot": "projects/flosportsinc/ng-fullscreen/src",
+      "sourceRoot": "projects/flosportsinc/ng-fullscreen",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -744,7 +744,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/ng-fullscreen/src/test.ts",
+            "main": "projects/flosportsinc/ng-fullscreen/test.ts",
             "tsConfig": "projects/flosportsinc/ng-fullscreen/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-fullscreen/karma.conf.js"
           }
