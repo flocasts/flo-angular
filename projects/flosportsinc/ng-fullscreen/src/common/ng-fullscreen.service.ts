@@ -1,6 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of } from 'rxjs'
-import { debounceTime, map, startWith, shareReplay, filter, mergeMap } from 'rxjs/operators'
+import { debounceTime, map, startWith, shareReplay, filter } from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
@@ -54,9 +54,9 @@ export class FloFullscreenService implements IFloFullscreenService {
   public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
     isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc)
 
-  private readonly fullscreenChangeError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(mergeMap(e => throwError(e)))
+  public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
-  public readonly fullscreen$ = merge(...this.changeEventKeys.map(key => fromEvent(this.doc, key)), this.fullscreenChangeError$).pipe(
+  public readonly fullscreen$ = merge(...this.changeEventKeys.map(key => fromEvent(this.doc, key)), this.fullscreenError$).pipe(
     debounceTime(0),
     map(_ => this.isFullscreen()),
     startWith(this.isFullscreen()),
