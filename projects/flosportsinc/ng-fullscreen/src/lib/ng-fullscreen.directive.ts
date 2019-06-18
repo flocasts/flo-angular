@@ -1,51 +1,90 @@
-import {
-  Directive, ContentChild, TemplateRef, ElementRef,
-  ViewChild, ViewContainerRef, Input, OnInit, AfterViewInit
-} from '@angular/core'
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, ElementRef, HostListener, Input, Inject } from '@angular/core'
+import { FloFullscreenService } from './ng-fullscreen.service'
+import { takeUntil, tap, take } from 'rxjs/operators'
+import { Subject, merge } from 'rxjs'
+import { DOCUMENT } from '@angular/common'
 
-@Directive({
-  selector: '[floFullscreenOn]',
-})
-export class FloFullscreenOnDirective<TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>) { }
+// tslint:disable: no-if-statement
+// tslint:disable: readonly-keyword
+export abstract class FloFullscreenDirective implements OnDestroy, OnInit {
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) { }
+
+  protected readonly ngOnDestroy$ = new Subject()
+  protected showWhenFullscreen = false
+
+  ngOnInit() {
+    this.fs.fullscreen$.pipe(takeUntil(this.ngOnDestroy$)).subscribe(isFullscreen => {
+      if (this.showWhenFullscreen && isFullscreen) {
+        this.vc.createEmbeddedView(this.tr)
+      } else if (!isFullscreen && !this.showWhenFullscreen) {
+        this.vc.createEmbeddedView(this.tr)
+      } else {
+        this.vc.clear()
+      }
+    })
+  }
+
+  ngOnDestroy() {
+    this.ngOnDestroy$.next()
+    this.ngOnDestroy$.complete()
+  }
 }
 
 @Directive({
-  selector: '[floFullscreenOff]',
+  selector: '[floIfFullscreen]',
 })
-export class FloFullscreenOffDirective<TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>,
-    private templateRef: TemplateRef<any>,
-    private viewContainer: ViewContainerRef) {
-  }
-
-  @Input() readonly floFullscreenOff?: HTMLElement
-
-  // tslint:disable-next-line:use-life-cycle-interface
-  ngOnInit() {
-    // if
-    this.viewContainer.createEmbeddedView(this.templateRef)
-    // console.log(this.floFullscreenOff)
+export class FloFullscreenOnDirective extends FloFullscreenDirective {
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
+    super(tr, vc, fs)
+    this.showWhenFullscreen = true
   }
 }
 
 @Directive({
-  selector: '[floFullscreen]'
+  selector: '[floIfNotFullscreen]',
 })
-export class FloFullscreenDirective implements OnInit, AfterViewInit {
-  constructor(elmRef: ElementRef<HTMLElement>) {
+export class FloFullscreenOffDirective extends FloFullscreenDirective {
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
+    super(tr, vc, fs)
+    this.showWhenFullscreen = false
+  }
+}
+
+// tslint:disable: no-object-mutation
+@Directive({
+  selector: '[floClickToEnterFullscreen]',
+})
+export class FloClickToEnterFullscreenDirective {
+  constructor(private fs: FloFullscreenService, @Inject(DOCUMENT) private doc: any) { }
+
+  private _thing: HTMLElement | HTMLDocument
+
+  @Input()
+  get floClickToEnterFullscreen() {
+    return this._thing
+  }
+  set floClickToEnterFullscreen(val: any) {
+    if (val instanceof HTMLElement) {
+      this._thing = val
+    } else {
+      this._thing = this.doc.body
+    }
   }
 
-  @ViewChild(FloFullscreenOnDirective) readonly fullscreenOnTemplateRef: TemplateRef<HTMLElement>
-  @ContentChild(FloFullscreenOffDirective) readonly fullscreenOffTemplateRef: TemplateRef<HTMLElement>
-
-  ngOnInit() {
-    console.log(this.fullscreenOffTemplateRef)
-    console.log(this.fullscreenOnTemplateRef)
+  @HostListener('click', []) click() {
+    this.fs.isNotFullscreen$.pipe(tap(_ => {
+      setTimeout(() => this.fs.goFullscreen(this.floClickToEnterFullscreen))
+    })).pipe(take(1)).subscribe()
   }
+}
 
-  ngAfterViewInit() {
-    console.log(this.fullscreenOffTemplateRef)
-    console.log(this.fullscreenOnTemplateRef)
+@Directive({
+  selector: '[floClickToExitFullscreen]',
+})
+export class FloClickToExitFullscreenDirective {
+  constructor(private fs: FloFullscreenService) { }
+
+  @HostListener('click', []) click() {
+    this.fs.exitFullscreen()
   }
 }

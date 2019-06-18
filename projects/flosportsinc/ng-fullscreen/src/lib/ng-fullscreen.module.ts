@@ -1,5 +1,8 @@
 import { NgModule } from '@angular/core'
-import { FloFullscreenDirective, FloFullscreenOnDirective, FloFullscreenOffDirective } from './ng-fullscreen.directive'
+import {
+  FloFullscreenOnDirective, FloFullscreenOffDirective,
+  FloClickToEnterFullscreenDirective, FloClickToExitFullscreenDirective
+} from './ng-fullscreen.directive'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { FloFullscreenComponent } from './ng-fullscreen.component'
 import { CommonModule } from '@angular/common'
@@ -15,15 +18,17 @@ import {
 @NgModule({
   imports: [CommonModule],
   declarations: [
-    FloFullscreenDirective,
     FloFullscreenOnDirective,
     FloFullscreenOffDirective,
+    FloClickToEnterFullscreenDirective,
+    FloClickToExitFullscreenDirective,
     FloFullscreenComponent
   ],
   exports: [
-    FloFullscreenDirective,
     FloFullscreenOnDirective,
     FloFullscreenOffDirective,
+    FloClickToEnterFullscreenDirective,
+    FloClickToExitFullscreenDirective,
     FloFullscreenComponent
   ],
   providers: [

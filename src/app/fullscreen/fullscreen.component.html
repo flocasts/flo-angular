@@ -1,12 +1,10 @@
 <h2>Fullscreen!</h2>
 
-<div #elmRef>
+<div #takeMeFullscreen>
   <h3>I am the target of the fullscreen action!</h3>
   <h4>My container will be taken fullscreen</h4>
-  <flo-fullscreen [targetRef]="elmRef">
-    <button *floFullscreenOn>Exit Fullscreen</button>
-    <button *floFullscreenOff>Enter Fullscreen</button>
-  </flo-fullscreen>
+  <button *floIfFullscreen floClickToExitFullscreen>Exit Fullscreen</button>
+  <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen">Enter Fullscreen</button>
 </div>
 <!-- <div #elmRef2>
   <h3>I am the target of the fullscreen action!</h3>
