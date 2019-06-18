@@ -1,7 +1,7 @@
-import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, ElementRef, HostListener, Input, Inject } from '@angular/core'
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, HostListener, Input, Inject } from '@angular/core'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { takeUntil, tap, take } from 'rxjs/operators'
-import { Subject, merge } from 'rxjs'
+import { Subject } from 'rxjs'
 import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: no-if-statement
