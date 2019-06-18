@@ -34,6 +34,7 @@ export interface IFloFullscreenService {
   readonly fullscreenIsSupported: () => boolean
   readonly goFullscreen: () => void
   readonly exitFullscreen: () => void
+  readonly isFullscreen: (elmOrDoc: HTMLDocument | HTMLElement) => boolean
 }
 
 @Injectable({ providedIn: 'root' })
@@ -72,4 +73,3 @@ export class FloFullscreenService implements IFloFullscreenService {
       ? this.fullscreen$.pipe(map(isfs => isfs ? false : true))
       : of(false)
 }
-
