@@ -1,8 +1,7 @@
 import { TestBed, async } from '@angular/core/testing'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { FloFullscreenCommonModule } from './ng-fullscreen.module'
-import { PLATFORM_ID } from '@angular/core';
-import { take, skip } from 'rxjs/operators';
+import { PLATFORM_ID } from '@angular/core'
 
 describe(FloFullscreenService.name, () => {
   // tslint:disable-next-line: no-let
