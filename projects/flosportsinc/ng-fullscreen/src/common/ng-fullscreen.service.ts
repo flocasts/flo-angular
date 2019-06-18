@@ -12,7 +12,7 @@ import {
 
 const isKeyTrue =
   (platformKeys: ReadonlyArray<string>) =>
-    (doc: HTMLDocument) =>
+    (doc: HTMLDocument | HTMLElement) =>
       platformKeys.reduce((acc, curr) => acc || doc[curr] ? true : false, false)
 
 const fullscreenChangeError =
@@ -50,15 +50,15 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[]
   ) { }
 
-  public readonly computeIsDocumentFullscreen = (doc: HTMLDocument = this.doc) =>
+  public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
     isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc)
 
   private readonly fullscreenChangeError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(mergeMap(e => throwError(e)))
 
   public readonly fullscreen$ = merge(...this.changeEventKeys.map(key => fromEvent(this.doc, key)), this.fullscreenChangeError$).pipe(
     debounceTime(0),
-    map(_ => this.computeIsDocumentFullscreen()),
-    startWith(this.computeIsDocumentFullscreen()),
+    map(_ => this.isFullscreen()),
+    startWith(this.isFullscreen()),
     shareReplay(1))
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
