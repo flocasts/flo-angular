@@ -30,12 +30,13 @@ describe(FloFullscreenService.name, () => {
       expect(service.fullscreenIsSupported()).toEqual(true)
     }))
 
-    it('should default fullscreen obs', done => {
-      service.fullscreen$.pipe(take(1)).subscribe(c => {
-        expect(c).toEqual(false)
-        done()
-      })
-    })
+    // it('should default fullscreen obs', done => {
+    //   service.fullscreen$.pipe(take(1)).subscribe(c => {
+    //     expect(c).toEqual(false)
+    //     done()
+    //   })
+    // })
+
     it('should return true obs when in fullscreen', done => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
@@ -73,13 +74,20 @@ describe(FloFullscreenService.name, () => {
       })
     })
 
-    // it('should request fullscreen on a specific element', () => {
-    //   const doc = TestBed.get(DOCUMENT)
-    //   const spy = spyOn(doc, 'requestFullscreen')
-    //   service.goFullscreen()
+    it('should request fullscreen on a default element', () => {
+      const doc = TestBed.get(DOCUMENT)
+      const spy = spyOn(doc.body, 'requestFullscreen')
+      service.goFullscreen()
 
-    //   expect(spy).toHaveBeenCalled()
-    // })
+      expect(spy).toHaveBeenCalled()
+    })
+
+    it('canGoFullscreen$ should return true when fullscreen is supported and not in fullscreen ', done => {
+      service.canGoFullscreen$.pipe(take(1)).subscribe(val => {
+        expect(val).toEqual(true)
+        done()
+      })
+    })
 
     it('should continue returning after initial', done => {
       service.fullscreen$.pipe(skip(1)).subscribe(c => {
