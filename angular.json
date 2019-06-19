@@ -762,6 +762,76 @@
           }
         }
       }
+    },
+    "@flosprotsinc/ng-cookies": {
+      "root": "projects/flosprotsinc/ng-cookies",
+      "sourceRoot": "projects/flosprotsinc/ng-cookies/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosprotsinc/ng-cookies/tsconfig.lib.json",
+            "project": "projects/flosprotsinc/ng-cookies/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/flosprotsinc/ng-cookies/src/test.ts",
+            "tsConfig": "projects/flosprotsinc/ng-cookies/tsconfig.spec.json",
+            "karmaConfig": "projects/flosprotsinc/ng-cookies/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosprotsinc/ng-cookies/tsconfig.lib.json",
+              "projects/flosprotsinc/ng-cookies/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "@flosportsinc/ng-cookies": {
+      "root": "projects/flosportsinc/ng-cookies",
+      "sourceRoot": "projects/flosportsinc/ng-cookies/src",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-cookies/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-cookies/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "projects/flosportsinc/ng-cookies/src/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-cookies/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-cookies/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-cookies/tsconfig.lib.json",
+              "projects/flosportsinc/ng-cookies/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"

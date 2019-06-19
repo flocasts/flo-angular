@@ -112,6 +112,18 @@
       ],
       "@flosportsinc/ng-fullscreen/*": [
         "dist/flosportsinc/ng-fullscreen/*"
+      ],
+      "@flosprotsinc/ng-cookies": [
+        "dist/flosprotsinc/ng-cookies"
+      ],
+      "@flosprotsinc/ng-cookies/*": [
+        "dist/flosprotsinc/ng-cookies/*"
+      ],
+      "@flosportsinc/ng-cookies": [
+        "dist/flosportsinc/ng-cookies"
+      ],
+      "@flosportsinc/ng-cookies/*": [
+        "dist/flosportsinc/ng-cookies/*"
       ]
     }
   }
