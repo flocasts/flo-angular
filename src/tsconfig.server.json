@@ -97,6 +97,12 @@
       ],
       "@flosportsinc/ng-fullscreen/*": [
         "../dist/flosportsinc/ng-fullscreen/*"
+      ],
+      "@flosportsinc/ng-cookies": [
+        "../dist/flosportsinc/ng-cookies"
+      ],
+      "@flosportsinc/ng-cookies/*": [
+        "../dist/flosportsinc/ng-cookies/*"
       ]
     }
   },
