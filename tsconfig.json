@@ -112,6 +112,12 @@
       ],
       "@flosportsinc/ng-fullscreen/*": [
         "dist/flosportsinc/ng-fullscreen/*"
+      ],
+      "@flosportsinc/ng-video-player": [
+        "dist/flosportsinc/ng-video-player"
+      ],
+      "@flosportsinc/ng-video-player/*": [
+        "dist/flosportsinc/ng-video-player/*"
       ]
     }
   }

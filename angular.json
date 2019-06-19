@@ -762,6 +762,42 @@
           }
         }
       }
+    },
+    "@flosportsinc/ng-video-player": {
+      "root": "projects/flosportsinc/ng-video-player",
+      "sourceRoot": "projects/flosportsinc/ng-video-player",
+      "projectType": "library",
+      "prefix": "lib",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "projects/flosportsinc/ng-video-player/tsconfig.lib.json",
+            "project": "projects/flosportsinc/ng-video-player/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "codeCoverage": true,
+            "main": "projects/flosportsinc/ng-video-player/test.ts",
+            "tsConfig": "projects/flosportsinc/ng-video-player/tsconfig.spec.json",
+            "karmaConfig": "projects/flosportsinc/ng-video-player/karma.conf.js"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "projects/flosportsinc/ng-video-player/tsconfig.lib.json",
+              "projects/flosportsinc/ng-video-player/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
     }
   },
   "defaultProject": "flo-angular"
