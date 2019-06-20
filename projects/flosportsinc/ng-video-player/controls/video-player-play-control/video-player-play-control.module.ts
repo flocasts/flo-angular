@@ -3,12 +3,8 @@ import { FloVideoPlayerPlayControlDirective } from './video-player-play-control.
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, defaultPlayFactoryFunction } from './video-player-play-control.tokens'
 
 @NgModule({
-  declarations: [
-    FloVideoPlayerPlayControlDirective
-  ],
-  exports: [
-    FloVideoPlayerPlayControlDirective
-  ],
+  declarations: [FloVideoPlayerPlayControlDirective],
+  exports: [FloVideoPlayerPlayControlDirective],
   providers: [
     { provide: VIDEO_PLAYER_CONTROLS_PLAY_FUNC, useFactory: defaultPlayFactoryFunction }
   ]
