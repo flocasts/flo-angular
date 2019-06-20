@@ -66,7 +66,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test flo-angular -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test flo-angular -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.flo-angular.json ./coverage/flo-angular/lcov.info
       - persist_to_workspace:
           root: .
@@ -81,7 +81,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-media-source-extensions -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-media-source-extensions -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-media-source-extensions.json ./coverage/ng-media-source-extensions/lcov.info
       - persist_to_workspace:
           root: .
@@ -96,7 +96,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-universal-services -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-universal-services -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-universal-services.json ./coverage/ng-universal-services/lcov.info
       - persist_to_workspace:
           root: .
@@ -111,7 +111,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-icons -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-icons -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-icons.json ./coverage/ng-icons/lcov.info
       - persist_to_workspace:
           root: .
@@ -126,7 +126,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-styles -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-styles -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-styles.json ./coverage/ng-styles/lcov.info
       - persist_to_workspace:
           root: .
@@ -141,7 +141,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-svg-transfer-state -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-svg-transfer-state -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-svg-transfer-state.json ./coverage/ng-svg-transfer-state/lcov.info
       - persist_to_workspace:
           root: .
@@ -156,7 +156,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-env-transfer-state -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-env-transfer-state -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-env-transfer-state.json ./coverage/ng-env-transfer-state/lcov.info
       - persist_to_workspace:
           root: .
@@ -171,7 +171,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-ad-block -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-ad-block -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-ad-block.json ./coverage/ng-ad-block/lcov.info
       - persist_to_workspace:
           root: .
@@ -186,7 +186,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-http-cache-tags -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-http-cache-tags -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-http-cache-tags.json ./coverage/ng-http-cache-tags/lcov.info
       - persist_to_workspace:
           root: .
@@ -201,7 +201,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-ima -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-ima -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-ima.json ./coverage/ng-ima/lcov.info
       - persist_to_workspace:
           root: .
@@ -216,7 +216,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-tabs -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-tabs -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-tabs.json ./coverage/ng-tabs/lcov.info
       - persist_to_workspace:
           root: .
@@ -231,7 +231,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-video-autoplay -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-video-autoplay -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-video-autoplay.json ./coverage/ng-video-autoplay/lcov.info
       - persist_to_workspace:
           root: .
@@ -246,7 +246,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-video-events -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-video-events -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-video-events.json ./coverage/ng-video-events/lcov.info
       - persist_to_workspace:
           root: .
@@ -261,7 +261,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-grid-list -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-grid-list -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-grid-list.json ./coverage/ng-grid-list/lcov.info
       - persist_to_workspace:
           root: .
@@ -276,7 +276,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-fullscreen -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-fullscreen -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-fullscreen.json ./coverage/ng-fullscreen/lcov.info
       - persist_to_workspace:
           root: .
@@ -291,7 +291,7 @@ jobs:
       - run:
           name: Test
           command: |
-            npm run ng test @flosportsinc/ng-video-player -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            npm run test @flosportsinc/ng-video-player -- --watch=false --progress=false --browsers=ChromeHeadlessCI
             ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-video-player.json ./coverage/ng-video-player/lcov.info
       - persist_to_workspace:
           root: .
