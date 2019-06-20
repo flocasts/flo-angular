@@ -1,5 +1,5 @@
 // import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, defaultPauseFactoryFunction } from './vpc-pause.tokens'
-import { FloVideoPlayerControlVolumeDirective } from './vpc-pause.directive'
+import { FloVideoPlayerControlVolumeDirective } from './vpc-volume.directive'
 import { NgModule } from '@angular/core'
 
 @NgModule({

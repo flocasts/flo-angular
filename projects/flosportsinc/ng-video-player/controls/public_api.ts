@@ -8,3 +8,6 @@ export * from './vpc-play/vpc-play.directive'
 
 export * from './vpc-pip/vpc-pip.module'
 export * from './vpc-pip/vpc-pip.directive'
+
+export * from './vpc-volume/vpc-volume.module'
+export * from './vpc-volume/vpc-volume.directive'
