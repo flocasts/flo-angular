@@ -1,9 +1,9 @@
 import { Component, NgModule } from '@angular/core'
-import { FloVideoPlayerPlayControlsModule } from './video-player-play-control.module'
+import { FloVideoPlayerPlayControlsModule } from './vpc-play.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPlayControlDirective } from './video-player-play-control.directive'
+import { FloVideoPlayerPlayControlDirective } from './vpc-play.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
