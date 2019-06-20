@@ -10,7 +10,7 @@ import { FloVideoPlayerPauseControlDirective } from './vpc-pause.directive'
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floVpcPause]="videoRef" [floVpcPauseMeta]="meta">PLAY</button>`
+  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcMeta]="meta" floVpcPause>PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }

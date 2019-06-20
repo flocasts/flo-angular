@@ -1,23 +1,34 @@
 import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
 import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './vpc-pause.tokens'
-import { isPlatformBrowser } from '@angular/common'
+import { FloVideoPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 
 @Directive({
-  selector: '[floVpcPause]',
+  selector: '[floVpc][floVpcPause]'
 })
-export class FloVideoPlayerPauseControlDirective<TMeta = any> {
+export class FloVideoPlayerPauseControlDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction,
-    @Inject(PLATFORM_ID) private platformId: string) { }
+    @Inject(PLATFORM_ID) protected platformId: string) {
+    super(platformId)
+  }
 
-  @Input() readonly floVpcPause?: HTMLVideoElement
-  @Input() readonly floVpcPauseMeta?: TMeta
+  // tslint:disable-next-line: readonly-keyword
+  private _play?: string | boolean
 
-  @HostListener('click', [])
+  @Input()
+  get floVpcPause() {
+    return this._play
+  }
+  set floVpcPause(val: any) {
+    // tslint:disable-next-line: no-object-mutation
+    this._play = coerceInputToBoolean(val)
+  }
+
+  @HostListener('click')
   click() {
     // tslint:disable-next-line: no-if-statement
-    if (this.floVpcPause && isPlatformBrowser(this.platformId) && this.floVpcPause instanceof HTMLVideoElement) {
-      this.func(this.floVpcPause, this.elmRef, this.floVpcPauseMeta)
-    }
+    if (!this.floVpcPause) { return }
+
+    this.maybeVideoElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
   }
 }

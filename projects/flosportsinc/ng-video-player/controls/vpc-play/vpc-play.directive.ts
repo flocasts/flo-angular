@@ -1,24 +1,37 @@
 import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
+import { FloVideoPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play.tokens'
-import { isPlatformBrowser } from '@angular/common'
+// import { isPlatformBrowser } from '@angular/common'
 
 // tslint:disable: no-if-statement
 
 @Directive({
-  selector: '[floVpcPlay]',
+  selector: '[floVpc][floVpcPlay]',
 })
-export class FloVideoPlayerPlayControlDirective<TMeta = any> {
+export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,
-    @Inject(PLATFORM_ID) private platformId: string) { }
+    @Inject(PLATFORM_ID) protected platformId: string) {
+    super(platformId)
+  }
 
-  @Input() readonly floVpcPlay?: HTMLVideoElement
-  @Input() readonly floVpcPlayMeta?: TMeta
+  // tslint:disable-next-line: readonly-keyword
+  private _play?: string | boolean
 
-  @HostListener('click', [])
+  @Input()
+  get floVpcPlay() {
+    return this._play
+  }
+  set floVpcPlay(val: any) {
+    // tslint:disable-next-line: no-object-mutation
+    this._play = coerceInputToBoolean(val)
+  }
+
+  @HostListener('click')
   click() {
-    if (this.floVpcPlay && isPlatformBrowser(this.platformId) && this.floVpcPlay instanceof HTMLVideoElement) {
-      this.func(this.floVpcPlay, this.elmRef, this.floVpcPlayMeta)
-    }
+    // tslint:disable-next-line: no-if-statement
+    if (!this.floVpcPlay) { return }
+
+    this.maybeVideoElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
   }
 }

@@ -10,7 +10,7 @@ import { FloVideoPlayerPlayControlDirective } from './vpc-play.directive'
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floVpcPlay]="videoRef" [floVpcPlayMeta]="meta">PLAY</button>`
+  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcMeta]="meta" floVpcPlay>PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }
