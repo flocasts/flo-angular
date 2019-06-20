@@ -1,0 +1,13 @@
+<h2>video-player!</h2>
+
+<h3>Controls</h3>
+<video #vid floVideoAutoplay playsinline src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4" width="600"></video>
+
+<div>
+  <button [floVpcPlay]="vid">Play</button>
+  <button [floVpcPause]="vid">Pause</button>
+  <!-- <button [floVpcSkip]="vid" [(floVpcSkipBackward)]="15">Back 15</button>
+  <button [floVpcSkip]="vid" [(floVpcSkipBackward)]="15">Forward 15</button> -->
+  <!-- <button [floVpcMute]="vid">Mute</button> -->
+  <!-- <input [floVpcVolume]="vid" type="range"></input> -->
+</div>

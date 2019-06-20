@@ -12,6 +12,7 @@ import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
+import { VideoPlayerComponent } from './video-player/video-player.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'grid-list', component: GridListComponent },
   { path: 'fullscreen', component: FullscreenComponent },
+  { path: 'video-player', component: VideoPlayerComponent },
   { path: '**', component: NotFoundComponent }
 ]
 

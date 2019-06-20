@@ -28,6 +28,8 @@ import { NodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
+import { VideoPlayerComponent } from './video-player/video-player.component'
+import { FloVideoPlayerModule } from '@flosportsinc/ng-video-player'
 
 @NgModule({
   imports: [
@@ -37,6 +39,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     FloFullscreenModule,
+    FloVideoPlayerModule,
     WindowModule,
     MseModule,
     FormsModule,
@@ -67,6 +70,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     AutoplayComponent,
     GridListComponent,
     FullscreenComponent,
+    VideoPlayerComponent,
     NotFoundComponent,
   ]
 })
