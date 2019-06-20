@@ -1,5 +1,5 @@
 import { FloVideoPlayerControlDirectiveBase } from '../vpc-base.directive'
-import { Directive, HostListener, ElementRef, Inject, PLATFORM_ID, OnDestroy, OnChanges, SimpleChanges } from '@angular/core'
+import { Directive, HostListener, ElementRef, Inject, PLATFORM_ID, OnDestroy, OnChanges, SimpleChanges, Input } from '@angular/core'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 
@@ -15,14 +15,33 @@ export class FloVideoPlayerControlVolumeDirective<TMeta = any> extends FloVideoP
     super(platformId)
   }
 
+  @Input() readonly min = '0'
+  @Input() readonly max = '1'
+  @Input() readonly step = '.01'
+
   private readonly ngOnDestroy$ = new Subject()
   private readonly ngOnChange$ = new Subject()
 
-  private readonly setVideoVolume = (vol: number) => this.maybeVideoElement().tapSome(ve => ve.volume = vol)
   private readonly setInputValue = (value: string) => this.elmRef.nativeElement.value = value
   private readonly getCurrentInputValue = () => +this.elmRef.nativeElement.value
+  private readonly setVideoVolume = (vol: number) => this.maybeVideoElement().tapSome(ve => {
+    if (ve.muted) {
+      ve.volume = 0
+      ve.muted = false
+    } else {
+      ve.volume = vol
+    }
+  })
+
+  private readonly updateNativeAttributes = () => {
+    this.elmRef.nativeElement.min = this.min
+    this.elmRef.nativeElement.max = this.max
+    this.elmRef.nativeElement.step = this.step
+  }
 
   ngOnChanges(_changes: SimpleChanges) {
+    this.updateNativeAttributes()
+
     this.ngOnChange$.next()
 
     this.maybeVideoElement().tapSome(ve => {

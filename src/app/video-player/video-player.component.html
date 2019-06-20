@@ -1,8 +1,8 @@
 <h2>video-player!</h2>
 
 <h3>Controls</h3>
-<video #vidRef floVideoAutoplay playsinline width="600" type="video/mp4"
-  src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">
+<video #vidRef floMse floVideoAutoplay playsinline controls width="600" type="video/mp4"
+  src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8">
 </video>
 
 <div>
@@ -10,6 +10,7 @@
   <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
   <button [floVpc]="vidRef" floVpcPlay>Play</button>
   <button [floVpc]="vidRef" floVpcPause>Pause</button>
+  <button [floVpc]="vidRef" floVpcPip>Picture-in-picture</button>
 
   <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
   <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button>
@@ -18,5 +19,5 @@
   <button [floVpc]="vidRef" floVpcExitPip></button>
   <button [floVpc]="vidRef" floVpcMute>Mute</button>
   <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
-  <input [floVpc]="vidRef" floVpcVolume type="range" min="0" max="1" step=".01">
+  <input type="range" [floVpc]="vidRef" floVpcVolume>
 </div>

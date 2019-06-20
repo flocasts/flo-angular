@@ -2,17 +2,20 @@ import { NgModule } from '@angular/core'
 import { FloVideoPlayerControlsPlayModule } from './vpc-play/vpc-play.module'
 import { FloVideoPlayerControlsPauseModule } from './vpc-pause/vpc-pause.module'
 import { FloVideoPlayerControlsVolumeModule } from './vpc-volume/vpc-pause.module'
+import { FloVideoPlayerControlsPipModule } from './vpc-pip/vpc-pip.module'
 
 @NgModule({
   imports: [
     FloVideoPlayerControlsPlayModule,
     FloVideoPlayerControlsPauseModule,
-    FloVideoPlayerControlsVolumeModule
+    FloVideoPlayerControlsVolumeModule,
+    FloVideoPlayerControlsPipModule
   ],
   exports: [
     FloVideoPlayerControlsPlayModule,
     FloVideoPlayerControlsPauseModule,
-    FloVideoPlayerControlsVolumeModule
+    FloVideoPlayerControlsVolumeModule,
+    FloVideoPlayerControlsPipModule
   ]
 })
 export class FloVideoPlayerControlsModule { }
