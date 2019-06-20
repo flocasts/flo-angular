@@ -1,17 +1,21 @@
 <h2>video-player!</h2>
 
 <h3>Controls</h3>
-<video #vidRef floVideoAutoplay playsinline width="600"
+<video #vidRef floVideoAutoplay playsinline width="600" type="video/mp4"
   src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4">
 </video>
 
 <div>
+  <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
+  <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
   <button [floVpc]="vidRef" floVpcPlay>Play</button>
   <button [floVpc]="vidRef" floVpcPause>Pause</button>
 
   <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
   <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button>
 
+  <button [floVpc]="vidRef" floVpcEnterPip></button>
+  <button [floVpc]="vidRef" floVpcExitPip></button>
   <button [floVpc]="vidRef" floVpcMute>Mute</button>
   <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
   <input type="range" min="0" max="1" step=".01">
