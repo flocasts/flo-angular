@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
-import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, Te as PlayControlFunction } from './video-player-play-control.tokens'
+import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './video-player-play-control.tokens'
 import { isPlatformBrowser } from '@angular/common'
 
 // tslint:disable: no-if-statement
