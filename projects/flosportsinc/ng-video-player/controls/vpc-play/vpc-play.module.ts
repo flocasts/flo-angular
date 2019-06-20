@@ -9,4 +9,4 @@ import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, defaultPlayFactoryFunction } from './v
     { provide: VIDEO_PLAYER_CONTROLS_PLAY_FUNC, useFactory: defaultPlayFactoryFunction }
   ]
 })
-export class FloVideoPlayerPlayControlsModule { }
+export class FloVideoPlayerControlsPlayModule { }

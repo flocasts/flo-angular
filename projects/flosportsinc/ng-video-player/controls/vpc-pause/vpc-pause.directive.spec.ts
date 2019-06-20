@@ -1,16 +1,16 @@
 import { Component, NgModule } from '@angular/core'
-import { FloVideoPlayerControlsPlayModule } from './vpc-play.module'
+import { FloVideoPlayerControlsPauseModule } from './vpc-pause.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPlayControlDirective } from './vpc-play.directive'
+import { FloVideoPlayerPauseControlDirective } from './vpc-pause.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floVpcPlay]="videoRef" [floVpcPlayMeta]="meta">PLAY</button>`
+  template: `<video #videoRef></video><button [floVpcPause]="videoRef" [floVpcPauseMeta]="meta">PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }
@@ -18,7 +18,7 @@ export class FloTestComponent {
 
 @NgModule({
   declarations: [FloTestComponent],
-  imports: [CommonModule, FloVideoPlayerControlsPlayModule]
+  imports: [CommonModule, FloVideoPlayerControlsPauseModule]
 })
 export class TestModule { }
 
@@ -34,7 +34,7 @@ const createsut = () => {
   }
 }
 
-describe(FloVideoPlayerPlayControlDirective.name, () => {
+describe(FloVideoPlayerPauseControlDirective.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule]
@@ -47,7 +47,7 @@ describe(FloVideoPlayerPlayControlDirective.name, () => {
 
   it('should play video when clicked', () => {
     const sut = createsut()
-    const spy = spyOn(sut.videoElement, 'play').and.callThrough()
+    const spy = spyOn(sut.videoElement, 'pause').and.callThrough()
     sut.btnElement.click()
     expect(spy).toHaveBeenCalled()
   })
