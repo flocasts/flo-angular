@@ -9,20 +9,3 @@ export function defaultPipFactoryFunction(): PipControlFunction {
   }
   return lambda
 }
-
-
-// SAFARI
-// if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
-//   // Toggle PiP when the user clicks the button.
-//   pipButtonElement.addEventListener("click", function(event) {
-//       video.webkitSetPresentationMode(video.webkitPresentationMode === "picture-in-picture" ? "inline" : "picture-in-picture");
-//   });
-// } else {
-//   pipButtonElement.disabled = true;
-// }
-
-// CHROME 
-// 'pictureInPictureEnabled' in document
-// enterpictureinpicture
-// leavepictureinpicture
-// 
