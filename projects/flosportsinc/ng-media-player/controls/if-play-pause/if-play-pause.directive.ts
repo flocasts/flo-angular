@@ -52,6 +52,7 @@ const IF_MEDIA_PAUSED_SELECTOR = 'floIfMediaPaused'
 
 @Directive({
   selector: `[${IF_MEDIA_PAUSED_SELECTOR}]`,
+  inputs: [IF_MEDIA_PAUSED_SELECTOR]
 })
 export class FloMediaIfPausedDirective extends FloMediaPlayPauseBaseDirective {
   constructor(protected tr: TemplateRef<HTMLElement>, protected vc: ViewContainerRef) {
@@ -59,14 +60,13 @@ export class FloMediaIfPausedDirective extends FloMediaPlayPauseBaseDirective {
   }
   protected biasRight = true
   protected inputKey = IF_MEDIA_PAUSED_SELECTOR
-
-  @Input() readonly floIfMediaPaused?: HTMLMediaElement
 }
 
 const IF_MEDIA_PLAYING_SELECTOR = 'floIfMediaPlaying'
 
 @Directive({
   selector: `[${IF_MEDIA_PLAYING_SELECTOR}]`,
+  inputs: [IF_MEDIA_PLAYING_SELECTOR]
 })
 export class FloMediaIfPlayingDirective extends FloMediaPlayPauseBaseDirective {
   constructor(protected tr: TemplateRef<HTMLElement>, protected vc: ViewContainerRef) {
@@ -74,6 +74,4 @@ export class FloMediaIfPlayingDirective extends FloMediaPlayPauseBaseDirective {
   }
   protected biasRight = false
   protected inputKey = IF_MEDIA_PLAYING_SELECTOR
-
-  @Input() readonly floIfMediaPlaying?: HTMLMediaElement
 }
