@@ -1,4 +1,4 @@
-import { FloVideoPlayerControlDirectiveBase } from '../vpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase } from '../vpc-base.directive'
 import { Directive, HostListener, ElementRef, Inject, PLATFORM_ID, OnDestroy, OnChanges, SimpleChanges, Input } from '@angular/core'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
@@ -9,7 +9,7 @@ import { takeUntil } from 'rxjs/operators'
 @Directive({
   selector: 'input[type="range"][floVpc][floVpcVolume]'
 })
-export class FloVideoPlayerControlVolumeDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta>
+export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
   implements OnChanges, OnDestroy {
   constructor(private elmRef: ElementRef<HTMLInputElement>, @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
@@ -24,7 +24,7 @@ export class FloVideoPlayerControlVolumeDirective<TMeta = any> extends FloVideoP
 
   private readonly setInputValue = (value: string) => this.elmRef.nativeElement.value = value
   private readonly getCurrentInputValue = () => +this.elmRef.nativeElement.value
-  private readonly setVideoVolume = (vol: number) => this.maybeVideoElement().tapSome(ve => {
+  private readonly setVideoVolume = (vol: number) => this.maybeMediaElement().tapSome(ve => {
     if (ve.muted) {
       ve.volume = 0
       ve.muted = false
@@ -44,7 +44,7 @@ export class FloVideoPlayerControlVolumeDirective<TMeta = any> extends FloVideoP
 
     this.ngOnChange$.next()
 
-    this.maybeVideoElement().tapSome(ve => {
+    this.maybeMediaElement().tapSome(ve => {
       fromEvent(ve, 'volumechange').pipe(takeUntil(this.ngOnChange$))
         .subscribe(_ => {
           if (ve.muted) {

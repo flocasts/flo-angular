@@ -1,26 +1,26 @@
 import { NgModule } from '@angular/core'
-import { FloVideoPlayerControlsPlayModule } from './vpc-play/vpc-play.module'
-import { FloVideoPlayerControlsPauseModule } from './vpc-pause/vpc-pause.module'
-import { FloVideoPlayerControlsVolumeModule } from './vpc-volume/vpc-volume.module'
-import { FloVideoPlayerControlsPipModule } from './vpc-pip/vpc-pip.module'
-import { FloVideoIfCanPlayModule } from './if-play/if-can-play.module'
+import { FloMediaPlayerControlsPlayModule } from './vpc-play/vpc-play.module'
+import { FloMediaPlayerControlsPauseModule } from './vpc-pause/vpc-pause.module'
+import { FloMediaPlayerControlsVolumeModule } from './vpc-volume/vpc-volume.module'
+import { FloMediaPlayerControlsPipModule } from './vpc-pip/vpc-pip.module'
+import { FloMediaIfPlayPauseModule } from './if-play-pause/if-play-pause.module'
 
 @NgModule({
   imports: [
-    FloVideoPlayerControlsPlayModule,
-    FloVideoPlayerControlsPauseModule,
-    FloVideoPlayerControlsVolumeModule,
-    FloVideoPlayerControlsPipModule,
+    FloMediaPlayerControlsPlayModule,
+    FloMediaPlayerControlsPauseModule,
+    FloMediaPlayerControlsVolumeModule,
+    FloMediaPlayerControlsPipModule,
 
-    FloVideoIfCanPlayModule
+    FloMediaIfPlayPauseModule
   ],
   exports: [
-    FloVideoPlayerControlsPlayModule,
-    FloVideoPlayerControlsPauseModule,
-    FloVideoPlayerControlsVolumeModule,
-    FloVideoPlayerControlsPipModule,
+    FloMediaPlayerControlsPlayModule,
+    FloMediaPlayerControlsPauseModule,
+    FloMediaPlayerControlsVolumeModule,
+    FloMediaPlayerControlsPipModule,
 
-    FloVideoIfCanPlayModule
+    FloMediaIfPlayPauseModule
   ]
 })
-export class FloVideoPlayerControlsModule { }
+export class FloMediaPlayerControlsModule { }

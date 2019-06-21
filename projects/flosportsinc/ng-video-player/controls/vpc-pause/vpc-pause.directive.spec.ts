@@ -1,9 +1,9 @@
 import { Component, NgModule } from '@angular/core'
-import { FloVideoPlayerControlsPauseModule } from './vpc-pause.module'
+import { FloMediaPlayerControlsPauseModule } from './vpc-pause.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPauseControlDirective } from './vpc-pause.directive'
+import { FloMediaPlayerPauseControlDirective } from './vpc-pause.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -18,7 +18,7 @@ export class FloTestComponent {
 
 @NgModule({
   declarations: [FloTestComponent],
-  imports: [CommonModule, FloVideoPlayerControlsPauseModule]
+  imports: [CommonModule, FloMediaPlayerControlsPauseModule]
 })
 export class TestModule { }
 
@@ -34,7 +34,7 @@ const createsut = () => {
   }
 }
 
-describe(FloVideoPlayerPauseControlDirective.name, () => {
+describe(FloMediaPlayerPauseControlDirective.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule]

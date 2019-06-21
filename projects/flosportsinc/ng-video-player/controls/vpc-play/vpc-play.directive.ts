@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'
-import { FloVideoPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play.tokens'
 
 // tslint:disable: no-if-statement
@@ -7,7 +7,7 @@ import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play
 @Directive({
   selector: '[floVpc][floVpcPlay]',
 })
-export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta> {
+export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,
@@ -33,6 +33,6 @@ export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloVideoPla
 
     if (!this.floVpcPlay) { return }
 
-    this.maybeVideoElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
+    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
   }
 }

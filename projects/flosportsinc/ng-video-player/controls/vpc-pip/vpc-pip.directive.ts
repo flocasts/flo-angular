@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
-import { VIDEO_PLAYER_CONTROLS_PIP_FUNC, PipControlFunction } from './vpc-pip.tokens'
-import { FloVideoPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
+import { MEDIA_PLAYER_CONTROLS_PIP_FUNC, PipControlFunction } from './vpc-pip.tokens'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: no-if-statement
@@ -15,9 +15,9 @@ export enum SAFARI_PIP_STATES {
 @Directive({
   selector: '[floVpc][floVpcPip]'
 })
-export class FloVideoPlayerControlPipDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
-    @Inject(VIDEO_PLAYER_CONTROLS_PIP_FUNC) private func: PipControlFunction,
+    @Inject(MEDIA_PLAYER_CONTROLS_PIP_FUNC) private func: PipControlFunction,
     @Inject(PLATFORM_ID) protected platformId: string,
     @Inject(DOCUMENT) private doc: any) {
     super(platformId)
@@ -55,7 +55,7 @@ export class FloVideoPlayerControlPipDirective<TMeta = any> extends FloVideoPlay
   @HostListener('click')
   click() {
     if (!this.floVpcPip) { return }
-    this.maybeVideoElement().tapSome(ve => {
+    this.maybeMediaElement().tapSome(ve => {
       this.enterPip(ve)
     })
   }

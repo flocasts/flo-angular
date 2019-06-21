@@ -1,5 +1,5 @@
 import { Component, NgModule } from '@angular/core'
-import { FloVideoPlayerControlsPlayModule } from './vpc-play.module'
+import { FloMediaPlayerControlsPlayModule } from './vpc-play.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
@@ -18,14 +18,14 @@ export class FloTestComponent {
 
 @NgModule({
   declarations: [FloTestComponent],
-  imports: [CommonModule, FloVideoPlayerControlsPlayModule]
+  imports: [CommonModule, FloMediaPlayerControlsPlayModule]
 })
 export class TestModule { }
 
 const createsut = () => {
   const fixture = TestBed.createComponent(FloTestComponent)
   fixture.detectChanges()
-  const videoElement = fixture.debugElement.query(By.css('video')).nativeElement as HTMLVideoElement
+  const videoElement = fixture.debugElement.query(By.css('video')).nativeElement as HTMLVideoElement | HTMLAudioElement
   const btnElement = fixture.debugElement.query(By.css('button')).nativeElement as HTMLButtonElement
   return {
     fixture,

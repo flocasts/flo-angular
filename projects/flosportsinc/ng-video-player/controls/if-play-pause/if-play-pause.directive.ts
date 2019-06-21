@@ -1,11 +1,11 @@
-import { Directive, TemplateRef, ViewContainerRef, OnDestroy, Input, OnChanges, SimpleChanges } from '@angular/core'
+import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, Input } from '@angular/core'
 import { Subject, fromEvent, merge } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 
-export abstract class DDD implements OnDestroy, OnChanges {
+export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnChanges {
   constructor(protected tr: TemplateRef<HTMLElement>, protected vc: ViewContainerRef) { }
 
   private readonly ngOnChanges$ = new Subject()
@@ -13,11 +13,11 @@ export abstract class DDD implements OnDestroy, OnChanges {
   protected abstract inputKey: string
 
   ngOnChanges(change: SimpleChanges) {
-    const videoRefInput = change[this.inputKey].currentValue
-    if (videoRefInput) {
+    const mediaRefInput = change[this.inputKey].currentValue
+    if (mediaRefInput) {
       this.ngOnChanges$.next()
-      if (videoRefInput instanceof HTMLVideoElement) {
-        fromEvent(videoRefInput, 'pause')
+      if (mediaRefInput instanceof HTMLMediaElement) {
+        fromEvent(mediaRefInput, 'pause')
           .pipe(takeUntil(this.ngOnChanges$))
           .subscribe(() => {
             if (this.biasRight) {
@@ -27,7 +27,7 @@ export abstract class DDD implements OnDestroy, OnChanges {
             }
           })
 
-        merge(fromEvent(videoRefInput, 'play'), fromEvent(videoRefInput, 'playing'))
+        merge(fromEvent(mediaRefInput, 'play'), fromEvent(mediaRefInput, 'playing'))
           .pipe(takeUntil(this.ngOnChanges$))
           .subscribe(() => {
             if (this.biasRight) {
@@ -53,14 +53,14 @@ const IF_MEDIA_PAUSED_SELECTOR = 'floIfMediaPaused'
 @Directive({
   selector: `[${IF_MEDIA_PAUSED_SELECTOR}]`,
 })
-export class FloIfPlayVideoControlDirective extends DDD {
+export class FloMediaIfPausedDirective extends FloMediaPlayPauseBaseDirective {
   constructor(protected tr: TemplateRef<HTMLElement>, protected vc: ViewContainerRef) {
     super(tr, vc)
   }
   protected biasRight = true
   protected inputKey = IF_MEDIA_PAUSED_SELECTOR
 
-  @Input() readonly floIfMediaPaused?: HTMLVideoElement
+  @Input() readonly floIfMediaPaused?: HTMLMediaElement
 }
 
 const IF_MEDIA_PLAYING_SELECTOR = 'floIfMediaPlaying'
@@ -68,12 +68,12 @@ const IF_MEDIA_PLAYING_SELECTOR = 'floIfMediaPlaying'
 @Directive({
   selector: `[${IF_MEDIA_PLAYING_SELECTOR}]`,
 })
-export class FloIfNotPlayVideoControlDirective extends DDD {
+export class FloMediaIfPlayingDirective extends FloMediaPlayPauseBaseDirective {
   constructor(protected tr: TemplateRef<HTMLElement>, protected vc: ViewContainerRef) {
     super(tr, vc)
   }
   protected biasRight = false
   protected inputKey = IF_MEDIA_PLAYING_SELECTOR
 
-  @Input() readonly floIfMediaPlaying?: HTMLVideoElement
+  @Input() readonly floIfMediaPlaying?: HTMLMediaElement
 }
