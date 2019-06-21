@@ -12,7 +12,6 @@ export function defaultPipFactoryFunction(): PipControlFunction {
 
 
 // SAFARI
-// video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function"
 // if (video.webkitSupportsPresentationMode && typeof video.webkitSetPresentationMode === "function") {
 //   // Toggle PiP when the user clicks the button.
 //   pipButtonElement.addEventListener("click", function(event) {
@@ -24,3 +23,6 @@ export function defaultPipFactoryFunction(): PipControlFunction {
 
 // CHROME 
 // 'pictureInPictureEnabled' in document
+// enterpictureinpicture
+// leavepictureinpicture
+// 

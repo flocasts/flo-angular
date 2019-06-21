@@ -1,7 +1,7 @@
 <h2>video-player!</h2>
 
 <h3>Controls</h3>
-<video #vidRef floMse floVideoAutoplay playsinline controls width="600" type="video/mp4"
+<video #vidRef floMse floVideoAutoplay playsinline controls width="600"
   src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8">
 </video>
 
@@ -21,3 +21,17 @@
   <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
   <input type="range" [floVpc]="vidRef" floVpcVolume>
 </div>
+
+<!-- <h3>Controls</h3>
+<video #vidRef2 floMse floVideoAutoplay playsinline controls width="600"
+  src="https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8">
+</video>
+
+<div>
+  <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
+  <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef2">Fullscreen</button>
+  <button [floVpc]="vidRef2" floVpcPlay>Play</button>
+  <button [floVpc]="vidRef2" floVpcPause>Pause</button>
+  <button [floVpc]="vidRef2" floVpcPip>Picture-in-picture</button>
+  <input type="range" [floVpc]="vidRef2" floVpcVolume>
+</div> -->
