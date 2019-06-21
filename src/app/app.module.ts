@@ -29,7 +29,7 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 import { VideoPlayerComponent } from './video-player/video-player.component'
-import { FloVideoPlayerModule } from '@flosportsinc/ng-video-player'
+import { FloMediaPlayerModule } from '@flosportsinc/ng-media-player'
 
 @NgModule({
   imports: [
@@ -39,7 +39,7 @@ import { FloVideoPlayerModule } from '@flosportsinc/ng-video-player'
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     FloFullscreenModule,
-    FloVideoPlayerModule,
+    FloMediaPlayerModule,
     WindowModule,
     MseModule,
     FormsModule,

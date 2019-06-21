@@ -113,11 +113,11 @@
       "@flosportsinc/ng-fullscreen/*": [
         "dist/flosportsinc/ng-fullscreen/*"
       ],
-      "@flosportsinc/ng-video-player": [
-        "dist/flosportsinc/ng-video-player"
+      "@flosportsinc/ng-media-player": [
+        "dist/flosportsinc/ng-media-player"
       ],
-      "@flosportsinc/ng-video-player/*": [
-        "dist/flosportsinc/ng-video-player/*"
+      "@flosportsinc/ng-media-player/*": [
+        "dist/flosportsinc/ng-media-player/*"
       ]
     }
   }

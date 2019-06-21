@@ -1,5 +1,5 @@
 {
-  "name": "@flosportsinc/ng-fullscreen",
+  "name": "@flosportsinc/ng-media-player",
   "version": "0.0.1",
   "peerDependencies": {
     "@angular/common": ">= 6",

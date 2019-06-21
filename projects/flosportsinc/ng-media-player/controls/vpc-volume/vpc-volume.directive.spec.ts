@@ -1,8 +1,8 @@
-// import { Component, NgModule } from 'projects/flosportsinc/ng-video-player/controls/vpc-volume/node_modules/@angular/core'
+// import { Component, NgModule } from 'projects/flosportsinc/ng-media-player/controls/vpc-volume/node_modules/@angular/core'
 // import { FloVideoPlayerControlsPauseModule } from './vpc-pause.module'
-// import { TestBed } from 'projects/flosportsinc/ng-video-player/controls/vpc-volume/node_modules/@angular/core/testing'
-// import { By } from 'projects/flosportsinc/ng-video-player/controls/vpc-volume/node_modules/@angular/platform-browser'
-// import { CommonModule } from 'projects/flosportsinc/ng-video-player/controls/vpc-volume/node_modules/@angular/common'
+// import { TestBed } from 'projects/flosportsinc/ng-media-player/controls/vpc-volume/node_modules/@angular/core/testing'
+// import { By } from 'projects/flosportsinc/ng-media-player/controls/vpc-volume/node_modules/@angular/platform-browser'
+// import { CommonModule } from 'projects/flosportsinc/ng-media-player/controls/vpc-volume/node_modules/@angular/common'
 // import { FloVideoPlayerPauseControlDirective } from './vpc-pause.directive'
 
 // // tslint:disable: readonly-keyword
