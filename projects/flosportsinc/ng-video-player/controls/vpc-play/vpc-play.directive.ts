@@ -1,7 +1,6 @@
-import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
+import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'
 import { FloVideoPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play.tokens'
-// import { isPlatformBrowser } from '@angular/common'
 
 // tslint:disable: no-if-statement
 
@@ -10,6 +9,7 @@ import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play
 })
 export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloVideoPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
+    private cd: ChangeDetectorRef,
     @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,
     @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
@@ -29,7 +29,8 @@ export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloVideoPla
 
   @HostListener('click')
   click() {
-    // tslint:disable-next-line: no-if-statement
+    this.cd.detectChanges()
+
     if (!this.floVpcPlay) { return }
 
     this.maybeVideoElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))

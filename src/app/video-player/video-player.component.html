@@ -8,8 +8,8 @@
 <div>
   <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
   <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
-  <button [floVpc]="vidRef" floVpcPlay>Play</button>
-  <button [floVpc]="vidRef" floVpcPause>Pause</button>
+  <button *floIfMediaPaused="vidRef" [floVpc]="vidRef" floVpcPlay>Play</button>
+  <button *floIfMediaPlaying="vidRef" [floVpc]="vidRef" floVpcPause>Pause</button>
   <button [floVpc]="vidRef" floVpcPip>Picture-in-picture</button>
 
   <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
