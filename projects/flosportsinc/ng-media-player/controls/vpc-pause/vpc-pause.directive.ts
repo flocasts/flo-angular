@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef } from '@angular/core'
+import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
 import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './vpc-pause.tokens'
 import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 
@@ -12,8 +12,9 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc
 export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
-    @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction) {
-    super()
+    @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction,
+    @Inject(PLATFORM_ID) protected platformId: string) {
+    super(platformId)
   }
 
   private _play?: string | boolean
