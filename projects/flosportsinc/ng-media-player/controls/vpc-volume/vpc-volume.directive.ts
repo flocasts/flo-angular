@@ -19,7 +19,6 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
   @Input() readonly max = '1'
   @Input() readonly step = '.01'
 
-  private readonly ngOnDestroy$ = new Subject()
   private readonly ngOnChange$ = new Subject()
 
   private readonly setInputValue = (value: string) => this.elmRef.nativeElement.value = value
@@ -50,7 +49,7 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
           if (ve.muted) {
             this.setInputValue('0')
           } else {
-            this.setInputValue('' + ve.volume)
+            this.setInputValue(`${ve.volume}`)
           }
         })
     })
@@ -68,7 +67,5 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
 
   ngOnDestroy() {
     this.ngOnChange$.complete()
-    this.ngOnDestroy$.next()
-    this.ngOnDestroy$.complete()
   }
 }

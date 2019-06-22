@@ -1,4 +1,4 @@
-import { Component, NgModule, Type } from '@angular/core'
+import { Component, NgModule, Type, PLATFORM_ID } from '@angular/core'
 import { FloMediaPlayerControlsPlayModule } from './vpc-play.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
@@ -34,7 +34,7 @@ export class FloTestA3Component { }
 })
 export class TestModule { }
 
-const createsut = (type: Type<any>) => {
+const createsut = <T>(type: Type<T>) => {
   const fixture = TestBed.createComponent(type)
   fixture.detectChanges()
   const videoElement = fixture.debugElement.query(By.css('video')).nativeElement as HTMLVideoElement | HTMLAudioElement
@@ -73,6 +73,23 @@ describe(FloVideoPlayerPlayControlDirective.name, () => {
 
   it('should do nothing when clicked and input set to false', () => {
     const sut = createsut(FloTestA3Component)
+    const spy = spyOn(sut.videoElement, 'play').and.callThrough()
+    sut.btnElement.click()
+    expect(spy).not.toHaveBeenCalled()
+  })
+
+  it('should not process on server', () => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [TestModule],
+      providers: [
+        {
+          provide: PLATFORM_ID,
+          useValue: 'server'
+        }
+      ]
+    })
+    const sut = createsut(FloTestA2Component)
     const spy = spyOn(sut.videoElement, 'play').and.callThrough()
     sut.btnElement.click()
     expect(spy).not.toHaveBeenCalled()

@@ -42,7 +42,7 @@ describe(FloMediaIfPlayPauseModule.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule]
-    }).compileComponents()
+    })
   })
 
   afterEach(() => TestBed.resetTestingModule())
