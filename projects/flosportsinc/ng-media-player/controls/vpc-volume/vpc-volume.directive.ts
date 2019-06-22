@@ -1,7 +1,10 @@
 import { FloMediaPlayerControlDirectiveBase } from '../vpc-base.directive'
-import { Directive, HostListener, ElementRef, Inject, PLATFORM_ID, OnDestroy, OnChanges, SimpleChanges, Input } from '@angular/core'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
+import {
+  Directive, HostListener, ElementRef, Inject, PLATFORM_ID,
+  OnDestroy, OnChanges, SimpleChanges, Input, ChangeDetectorRef
+} from '@angular/core'
 
 // tslint:disable: no-object-mutation
 // tslint:disable: no-if-statement
@@ -11,7 +14,9 @@ import { takeUntil } from 'rxjs/operators'
 })
 export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
   implements OnChanges, OnDestroy {
-  constructor(private elmRef: ElementRef<HTMLInputElement>, @Inject(PLATFORM_ID) protected platformId: string) {
+  constructor(private elmRef: ElementRef<HTMLInputElement>,
+    private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
@@ -23,14 +28,17 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
 
   private readonly setInputValue = (value: string) => this.elmRef.nativeElement.value = value
   private readonly getCurrentInputValue = () => +this.elmRef.nativeElement.value
-  private readonly setVideoVolume = (vol: number) => this.maybeMediaElement().tapSome(ve => {
-    if (ve.muted) {
-      ve.volume = 0
-      ve.muted = false
-    } else {
-      ve.volume = vol
-    }
-  })
+  private readonly setVideoVolume = (vol: number) => {
+    this.cd.detectChanges()
+    this.maybeMediaElement().tapSome(ve => {
+      if (ve.muted) {
+        ve.volume = 0
+        ve.muted = false
+      } else {
+        ve.volume = vol
+      }
+    })
+  }
 
   private readonly updateNativeAttributes = () => {
     this.elmRef.nativeElement.min = this.min

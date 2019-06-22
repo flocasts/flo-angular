@@ -29,9 +29,9 @@ export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPl
 
   @HostListener('click')
   click() {
-    if (!this.floVpcPause) { return }
-
     this.cd.detectChanges()
+
+    if (!this.floVpcPause) { return }
 
     this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
   }

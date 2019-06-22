@@ -29,9 +29,9 @@ export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPla
 
   @HostListener('click')
   click() {
-    if (!this.floVpcPlay) { return }
-
     this.cd.detectChanges()
+
+    if (!this.floVpcPlay) { return }
 
     this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floVpcMeta))
   }
