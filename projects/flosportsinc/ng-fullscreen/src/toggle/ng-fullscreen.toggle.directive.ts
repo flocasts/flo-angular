@@ -1,6 +1,6 @@
-import { Directive, HostListener, Input, Inject } from '@angular/core'
+import { Directive, HostListener, Input, Inject, ChangeDetectorRef } from '@angular/core'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
-import { tap, take } from 'rxjs/operators'
+import { take } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: no-if-statement
@@ -10,7 +10,7 @@ import { DOCUMENT } from '@angular/common'
   selector: '[floClickToEnterFullscreen]',
 })
 export class FloClickToEnterFullscreenDirective {
-  constructor(private fs: FloFullscreenService, @Inject(DOCUMENT) private doc: any) { }
+  constructor(private fs: FloFullscreenService, @Inject(DOCUMENT) private doc: any, private cd: ChangeDetectorRef) { }
 
   private _thing: HTMLElement | HTMLDocument
 
@@ -27,11 +27,10 @@ export class FloClickToEnterFullscreenDirective {
   }
 
   @HostListener('click', []) click() {
-    this.fs.isNotFullscreen$.pipe(tap(_ => {
-      setTimeout(() => {
-        this.fs.goFullscreen(this.floClickToEnterFullscreen)
-      })
-    })).pipe(take(1)).subscribe()
+    this.cd.detectChanges()
+    this.fs.isNotFullscreen$.pipe(take(1)).subscribe(_ => {
+      this.fs.goFullscreen(this.floClickToEnterFullscreen)
+    })
   }
 }
 
