@@ -1,5 +1,4 @@
-import { Directive, Input, HostListener, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
-import { MEDIA_PLAYER_CONTROLS_PIP_FUNC, PipControlFunction } from './vpc-pip.tokens'
+import { Directive, Input, HostListener, Inject, PLATFORM_ID } from '@angular/core'
 import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
 import { DOCUMENT } from '@angular/common'
 
@@ -13,24 +12,22 @@ export enum SAFARI_PIP_STATES {
 }
 
 @Directive({
-  selector: '[floVpc][floVpcPip]'
+  selector: '[floMpc][floMpcEnterPip]'
 })
 export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  constructor(private elmRef: ElementRef<HTMLElement>,
-    @Inject(MEDIA_PLAYER_CONTROLS_PIP_FUNC) private func: PipControlFunction,
-    @Inject(PLATFORM_ID) protected platformId: string,
+  constructor(@Inject(PLATFORM_ID) protected platformId: string,
     @Inject(DOCUMENT) private doc: any) {
     super(platformId)
   }
 
-  private _pip?: string | boolean
+  private _floMpcEnterPip?: string | boolean
 
   @Input()
-  get floVpcPip() {
-    return this._pip
+  get floMpcEnterPip() {
+    return this._floMpcEnterPip
   }
-  set floVpcPip(val: any) {
-    this._pip = coerceInputToBoolean(val)
+  set floMpcEnterPip(val: any) {
+    this._floMpcEnterPip = coerceInputToBoolean(val)
   }
 
   readonly useChromeVariant = () => 'pictureInPictureEnabled' in this.doc
@@ -54,7 +51,7 @@ export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlay
 
   @HostListener('click')
   click() {
-    if (!this.floVpcPip) { return }
+    if (!this.floMpcEnterPip) { return }
     this.maybeMediaElement().tapSome(ve => {
       this.enterPip(ve)
     })

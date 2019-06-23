@@ -6,32 +6,22 @@
 </video>
 
 <div>
-  <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
-  <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
-  <button *floIfMediaPaused="vidRef" [floVpc]="vidRef" floVpcPlay>Play</button>
-  <button *floIfMediaPlaying="vidRef" [floVpc]="vidRef" floVpcPause>Pause</button>
-  <button [floVpc]="vidRef" floVpcPip>Picture-in-picture</button>
-
+  <span>
+    <button *floIfMediaPaused="vidRef" [floMpc]="vidRef" floMpcPlay>Play</button>
+    <button *floIfMediaPlaying="vidRef" [floMpc]="vidRef" floMpcPause>Pause</button>
+  </span>
+  <span>
+    <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
+    <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
+  </span>
+  <span>
+    <button [floMpc]="vidRef" floMpcEnterPip>Picture-in-picture</button>
+  </span>
+  
   <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
   <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button>
-
-  <button [floVpc]="vidRef" floVpcEnterPip></button>
   <button [floVpc]="vidRef" floVpcExitPip></button>
   <button [floVpc]="vidRef" floVpcMute>Mute</button>
   <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
-  <input type="range" [floVpc]="vidRef" floVpcVolume>
+  <input type="range" [floMpc]="vidRef" floMpcVolume>
 </div>
-
-<!-- <h3>Controls</h3>
-<video #vidRef2 floMse floVideoAutoplay playsinline controls width="600"
-  src="https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8">
-</video>
-
-<div>
-  <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
-  <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef2">Fullscreen</button>
-  <button [floVpc]="vidRef2" floVpcPlay>Play</button>
-  <button [floVpc]="vidRef2" floVpcPause>Pause</button>
-  <button [floVpc]="vidRef2" floVpcPip>Picture-in-picture</button>
-  <input type="range" [floVpc]="vidRef2" floVpcVolume>
-</div> -->

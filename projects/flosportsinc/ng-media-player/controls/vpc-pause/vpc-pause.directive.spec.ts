@@ -10,7 +10,7 @@ import { FloMediaPlayerPauseControlDirective } from './vpc-pause.directive'
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcMeta]="meta" floVpcPause>PLAY</button>`
+  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcMeta]="meta" floMpcPause>PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }
@@ -18,13 +18,13 @@ export class FloTestComponent {
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button floVpc floVpcPause>PLAY</button>`
+  template: `<video #videoRef></video><button floMpc floMpcPause>PLAY</button>`
 })
 export class FloTestA1Component { }
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcPause]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcPause]="false">PLAY</button>`
 })
 export class FloTestA2Component { }
 

@@ -5,11 +5,11 @@ import { maybe } from 'typescript-monads'
 export abstract class FloMediaPlayerControlDirectiveBase<TMeta = any> {
   constructor(@Inject(PLATFORM_ID) protected platformId: string) { }
 
-  @Input() readonly floVpc?: HTMLMediaElement
-  @Input() readonly floVpcMeta?: TMeta
+  @Input() readonly floMpc?: HTMLMediaElement
+  @Input() readonly floMpcMeta?: TMeta
 
   protected readonly maybeMediaElement = () => isPlatformBrowser(this.platformId)
-    ? maybe(this.floVpc).filter(ve => ve instanceof HTMLMediaElement)
+    ? maybe(this.floMpc).filter(ve => ve instanceof HTMLMediaElement)
     : maybe<HTMLMediaElement>()
 }
 

@@ -10,7 +10,7 @@ import { FloVideoPlayerPlayControlDirective } from './vpc-play.directive'
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcMeta]="meta" floVpcPlay>PLAY</button>`
+  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcMeta]="meta" floMpcPlay>PLAY</button>`
 })
 export class FloTestA1Component {
   meta: { test: 123 }
@@ -18,13 +18,13 @@ export class FloTestA1Component {
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button floVpc floVpcPlay>PLAY</button>`
+  template: `<video #videoRef></video><button floMpc floMpcPlay>PLAY</button>`
 })
 export class FloTestA2Component { }
 
 @Component({
   selector: 'flo-test-component-a3',
-  template: `<video #videoRef></video><button [floVpc]="videoRef" [floVpcPlay]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcPlay]="false">PLAY</button>`
 })
 export class FloTestA3Component { }
 
