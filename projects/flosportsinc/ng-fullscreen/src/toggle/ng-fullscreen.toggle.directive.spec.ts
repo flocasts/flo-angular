@@ -1,7 +1,7 @@
-import { Component, NgModule, ViewChild } from '@angular/core'
+import { Component, NgModule } from '@angular/core'
 import { FloFullscreenToggleModule } from './ng-fullscreen.toggle.module'
 import { FloClickToEnterFullscreenDirective, FloClickToExitFullscreenDirective } from './ng-fullscreen.toggle.directive'
-import { TestBed, async, fakeAsync, tick } from '@angular/core/testing'
+import { TestBed, async } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { DOCUMENT } from '@angular/common'
@@ -53,7 +53,7 @@ describe(FloFullscreenToggleModule.name, () => {
   })
 
   describe(FloClickToEnterFullscreenDirective.name, () => {
-    it('should enter to fullscreen', fakeAsync(() => {
+    it('should enter to fullscreen', () => {
       const comp = TestBed.createComponent(FloTestComponent)
       const service = TestBed.get(FloFullscreenService) as FloFullscreenService
       const sut = comp.debugElement.query(By.directive(FloClickToEnterFullscreenDirective)).nativeElement as HTMLButtonElement
@@ -62,12 +62,11 @@ describe(FloFullscreenToggleModule.name, () => {
       comp.detectChanges()
 
       sut.click()
-      tick(1)
 
       expect(spy).toHaveBeenCalledWith(container)
-    }))
+    })
 
-    it('should enter to fullscreen', fakeAsync(() => {
+    it('should enter to fullscreen', () => {
       const comp = TestBed.createComponent(FloTestEmptyComponent)
       const service = TestBed.get(FloFullscreenService) as FloFullscreenService
       const sut = comp.debugElement.query(By.directive(FloClickToEnterFullscreenDirective)).nativeElement as HTMLButtonElement
@@ -75,10 +74,9 @@ describe(FloFullscreenToggleModule.name, () => {
       comp.detectChanges()
 
       sut.click()
-      tick(1)
 
       expect(spy).toHaveBeenCalledWith(TestBed.get(DOCUMENT).body)
-    }))
+    })
   })
 })
 
