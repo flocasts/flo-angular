@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerControlsPlayModule } from './vpc-play/vpc-play.module'
-import { FloMediaPlayerControlsPauseModule } from './vpc-pause/vpc-pause.module'
-import { FloMediaPlayerControlsVolumeModule } from './vpc-volume/vpc-volume.module'
-import { FloMediaPlayerControlsPipModule } from './vpc-pip/vpc-pip.module'
+import { FloMediaPlayerControlsPlayModule } from './mpc-play/vpc-play.module'
+import { FloMediaPlayerControlsPauseModule } from './mpc-pause/mpc-pause.module'
+import { FloMediaPlayerControlsVolumeModule } from './mpc-volume/vpc-volume.module'
+import { FloMediaPlayerControlsPipNativeModule } from './mpc-pip-native/mpc-pip-native.module'
 import { FloMediaIfPlayPauseModule } from './if-play-pause/if-play-pause.module'
 
 @NgModule({
@@ -10,7 +10,7 @@ import { FloMediaIfPlayPauseModule } from './if-play-pause/if-play-pause.module'
     FloMediaPlayerControlsPlayModule,
     FloMediaPlayerControlsPauseModule,
     FloMediaPlayerControlsVolumeModule,
-    FloMediaPlayerControlsPipModule,
+    FloMediaPlayerControlsPipNativeModule,
 
     FloMediaIfPlayPauseModule
   ],
@@ -18,7 +18,7 @@ import { FloMediaIfPlayPauseModule } from './if-play-pause/if-play-pause.module'
     FloMediaPlayerControlsPlayModule,
     FloMediaPlayerControlsPauseModule,
     FloMediaPlayerControlsVolumeModule,
-    FloMediaPlayerControlsPipModule,
+    FloMediaPlayerControlsPipNativeModule,
 
     FloMediaIfPlayPauseModule
   ]

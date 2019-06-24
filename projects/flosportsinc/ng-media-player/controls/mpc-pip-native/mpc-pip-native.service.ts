@@ -1,7 +1,7 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 
-export interface IFloPictureInPictureService {
+export interface IFloPictureInPictureNativeService {
   readonly platformSupportsPip: () => boolean
   readonly enterPip: (media: HTMLMediaElement) => void
   readonly exitPip: (media: HTMLMediaElement) => void
@@ -10,7 +10,7 @@ export interface IFloPictureInPictureService {
 }
 
 @Injectable({ providedIn: 'root' })
-export class FloPictureInPictureService implements IFloPictureInPictureService {
+export class FloPictureInPictureNativeService implements IFloPictureInPictureNativeService {
   constructor(
     @Inject(DOCUMENT) private doc: any,
     @Inject(PLATFORM_ID) private platformId: string

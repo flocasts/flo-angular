@@ -1,9 +1,9 @@
 import { Component, NgModule, Type } from '@angular/core'
-import { FloMediaPlayerControlsPauseModule } from './vpc-pause.module'
+import { FloMediaPlayerControlsPauseModule } from './mpc-pause.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloMediaPlayerPauseControlDirective } from './vpc-pause.directive'
+import { FloMediaPlayerPauseControlDirective } from './mpc-pause.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation

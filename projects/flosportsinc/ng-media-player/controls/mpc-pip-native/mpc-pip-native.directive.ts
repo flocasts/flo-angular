@@ -12,22 +12,22 @@ export enum SAFARI_PIP_STATES {
 }
 
 @Directive({
-  selector: '[floMpc][floMpcEnterPip]'
+  selector: '[floMpc][floMpcPipNativeEnter]'
 })
-export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(@Inject(PLATFORM_ID) protected platformId: string,
     @Inject(DOCUMENT) private doc: any) {
     super(platformId)
   }
 
-  private _floMpcEnterPip?: string | boolean
+  private _floMpcPipNativeEnter?: string | boolean
 
   @Input()
-  get floMpcEnterPip() {
-    return this._floMpcEnterPip
+  get floMpcPipNativeEnter() {
+    return this._floMpcPipNativeEnter
   }
-  set floMpcEnterPip(val: any) {
-    this._floMpcEnterPip = coerceInputToBoolean(val)
+  set floMpcPipNativeEnter(val: any) {
+    this._floMpcPipNativeEnter = coerceInputToBoolean(val)
   }
 
   readonly useChromeVariant = () => 'pictureInPictureEnabled' in this.doc
@@ -51,7 +51,7 @@ export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlay
 
   @HostListener('click')
   click() {
-    if (!this.floMpcEnterPip) { return }
+    if (!this.floMpcPipNativeEnter) { return }
     this.maybeMediaElement().tapSome(ve => {
       this.enterPip(ve)
     })
@@ -59,16 +59,16 @@ export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlay
 }
 
 @Directive({
-  selector: '[floMpc][floMpcExitPip]'
+  selector: '[floMpc][floMpcPipNativeExit]'
 })
-export class FloMediaPlayerControlPipExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  private _floMpcExitPip?: string | boolean
+export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+  private _floMpcPipNativeExit?: string | boolean
 
   @Input()
-  get floMpcExitPip() {
-    return this._floMpcExitPip
+  get floMpcPipNativeExit() {
+    return this._floMpcPipNativeExit
   }
-  set floMpcExitPip(val: any) {
-    this._floMpcExitPip = coerceInputToBoolean(val)
+  set floMpcPipNativeExit(val: any) {
+    this._floMpcPipNativeExit = coerceInputToBoolean(val)
   }
 }
