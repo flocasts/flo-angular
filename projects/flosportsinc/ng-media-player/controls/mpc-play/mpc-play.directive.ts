@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
-import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './vpc-play.tokens'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc-base.directive'
+import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mpc-play.tokens'
 
 // tslint:disable: no-if-statement
 // tslint:disable: no-object-mutation

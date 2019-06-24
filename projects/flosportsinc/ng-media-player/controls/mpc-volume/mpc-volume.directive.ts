@@ -1,4 +1,4 @@
-import { FloMediaPlayerControlDirectiveBase } from '../vpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase } from '../mpc-base.directive'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import {

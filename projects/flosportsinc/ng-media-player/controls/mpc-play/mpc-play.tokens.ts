@@ -1,6 +1,6 @@
 import { ElementRef, InjectionToken } from '@angular/core'
 
-export type PlayControlFunction<TMeta = any> = (videoRef: HTMLMediaElement, elmRef: ElementRef<HTMLElement>, meta?: TMeta) => void
+export type PlayControlFunction<TMeta = any> = (mediaRef: HTMLMediaElement, elmRef: ElementRef<HTMLElement>, meta?: TMeta) => void
 export const VIDEO_PLAYER_CONTROLS_PLAY_FUNC = new InjectionToken('fs.vp.ctrl.play')
 
 export function defaultPlayFactoryFunction(): PlayControlFunction {

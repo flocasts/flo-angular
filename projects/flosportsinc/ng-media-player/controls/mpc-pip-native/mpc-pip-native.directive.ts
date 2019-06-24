@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, Inject, PLATFORM_ID } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc-base.directive'
 import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: no-if-statement

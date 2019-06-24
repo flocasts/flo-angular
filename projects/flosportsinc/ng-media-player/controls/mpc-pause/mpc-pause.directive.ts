@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
 import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './mpc-pause.tokens'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../vpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc-base.directive'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword

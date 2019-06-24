@@ -1,9 +1,9 @@
 import { Component, NgModule, Type, PLATFORM_ID } from '@angular/core'
-import { FloMediaPlayerControlsPlayModule } from './vpc-play.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPlayControlDirective } from './vpc-play.directive'
+import { FloVideoPlayerPlayControlDirective } from './mpc-play.directive'
+import { FloMediaPlayerControlsPlayModule } from './mpc-play.module'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
