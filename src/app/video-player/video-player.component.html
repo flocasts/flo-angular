@@ -11,17 +11,20 @@
     <button *floIfMediaPlaying="vidRef" [floMpc]="vidRef" floMpcPause>Pause</button>
   </span>
   <span>
+    <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
+    <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button> -->
+  </span>
+  <span>
     <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
     <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
   </span>
   <span>
     <button [floMpc]="vidRef" floMpcPipNativeEnter>Picture-in-picture</button>
+    <!-- <button [floMpc]="vidRef" floMpcPipNativeExit>Exit Picture-in-picture</button> -->
   </span>
-  
-  <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
-  <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button>
-  <button [floVpc]="vidRef" floVpcExitPip></button>
-  <button [floVpc]="vidRef" floVpcMute>Mute</button>
-  <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
-  <input type="range" [floMpc]="vidRef" floMpcVolume>
+  <span>
+    <input type="range" [floMpc]="vidRef" floMpcVolume>
+    <!-- <button [floVpc]="vidRef" floVpcMute>Mute</button>
+    <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
+  </span>
 </div>
