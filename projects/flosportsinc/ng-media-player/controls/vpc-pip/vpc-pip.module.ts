@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerControlPipDirective } from './vpc-pip.directive'
+import { FloMediaPlayerControlPipDirective, FloMediaPlayerControlPipExitDirective } from './vpc-pip.directive'
+import { FloPictureInPictureService } from './vpc-pip.service'
 
 @NgModule({
-  declarations: [FloMediaPlayerControlPipDirective],
-  exports: [FloMediaPlayerControlPipDirective]
+  declarations: [FloMediaPlayerControlPipDirective, FloMediaPlayerControlPipExitDirective],
+  exports: [FloMediaPlayerControlPipDirective, FloMediaPlayerControlPipExitDirective],
+  providers: [FloPictureInPictureService]
 })
 export class FloMediaPlayerControlsPipModule { }

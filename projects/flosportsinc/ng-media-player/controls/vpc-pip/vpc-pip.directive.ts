@@ -57,3 +57,18 @@ export class FloMediaPlayerControlPipDirective<TMeta = any> extends FloMediaPlay
     })
   }
 }
+
+@Directive({
+  selector: '[floMpc][floMpcExitPip]'
+})
+export class FloMediaPlayerControlPipExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+  private _floMpcExitPip?: string | boolean
+
+  @Input()
+  get floMpcExitPip() {
+    return this._floMpcExitPip
+  }
+  set floMpcExitPip(val: any) {
+    this._floMpcExitPip = coerceInputToBoolean(val)
+  }
+}
