@@ -160,6 +160,17 @@ describe(FloGridListViewComponent.name, () => {
       const sut = createSut().instance
       expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.height / window.screen.width * 100}%`)
     })
+
+    it('should get native when orientation is landscape', () => {
+      const sut = createSut().instance
+      const { width, height } = (<any>window).screen;
+      (<any>window).screen = { width: 300, height: 400 }
+      expect(window.screen.height).toEqual(400)
+      expect(window.screen.width).toEqual(300)
+      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.width / window.screen.height * 100}%`);
+      (<any>window).screen = { width, height } // reset window object
+    })
+
     it('should run change detection on fullscreen change', () => {
       const sut = createSut()
       const event = new Event('fullscreenchange', { bubbles: true })
