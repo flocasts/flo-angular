@@ -2,7 +2,7 @@
   display: block;
   position: relative;
   width: 100%;
-  background: black; // move to js
+  background: black; // TODO: move to JS land
 
   .flo-grid-list-container {
     display: grid;
@@ -20,7 +20,7 @@
     overflow: hidden;
     height: 0;
     position: relative;
-    color: white;
+    color: white; // TODO: move to JS land
 
     ::ng-deep > :first-child, ::ng-deep > video {
       position: absolute;
