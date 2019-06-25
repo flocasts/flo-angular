@@ -1,7 +1,7 @@
 import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, Inject } from '@angular/core'
-import { Subject, fromEvent, merge } from 'rxjs'
-import { takeUntil, filter, debounceTime } from 'rxjs/operators'
+import { takeUntil, filter, shareReplay, map, distinctUntilChanged } from 'rxjs/operators'
 import { FloPictureInPictureNativeService } from '../mpc-pip-native/mpc-pip-native.service'
+import { Subject, fromEvent, merge } from 'rxjs'
 import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: no-if-statement
@@ -22,11 +22,11 @@ export abstract class FloMediaPipNativeBaseDirective implements OnDestroy, OnCha
       this.ngOnChanges$.next()
 
       if (mediaRefInput instanceof HTMLMediaElement) {
-        const safariEnteredPip = fromEvent(mediaRefInput, 'webkitpresentationmodechanged')
-          .pipe(filter(_ => this.ps.isPipActive()), debounceTime(0))
+        const safariPresentationMode = fromEvent(mediaRefInput, 'webkitpresentationmodechanged').pipe(
+          map(_ => this.ps.isPipActive()), distinctUntilChanged(), shareReplay(1))
 
-        const safariLeavePip = fromEvent(mediaRefInput, 'webkitpresentationmodechanged')
-          .pipe(filter(_ => !this.ps.isPipActive()), debounceTime(0))
+        const safariEnteredPip = safariPresentationMode.pipe(filter(a => a === true))
+        const safariLeavePip = safariPresentationMode.pipe(filter(a => a === false))
 
         merge(fromEvent(mediaRefInput, 'loadedmetadata'), fromEvent(mediaRefInput, 'leavepictureinpicture'), safariLeavePip)
           .pipe(takeUntil(this.ngOnChanges$))
