@@ -288,7 +288,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  getNativeAspectRatio = () => `${window.screen.height / window.screen.width * 100}%`
+  getNativeAspectRatio = () => window.screen.height > window.screen.width
+    ? `${window.screen.width / window.screen.height * 100}%`
+    : `${window.screen.height / window.screen.width * 100}%`
+
   getAspectRatio = () => this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio
 
   @HostListener('fullscreenchange')
