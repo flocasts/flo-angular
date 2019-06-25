@@ -23,8 +23,7 @@
     <button *floIfMediaCanExitPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeExit>Exit PiP</button>
   </span>
   <span>
-    <input type="range" [floMpc]="vidRef" floMpcVolume>
-    <!-- *floIfMediaAdjustableVolume="vidRef"  -->
+    <input type="range" *floIfMediaAdjustableVolume [floMpc]="vidRef" floMpcVolume>
     <!-- <button [floVpc]="vidRef" floVpcMute>Mute</button>
     <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
   </span>
