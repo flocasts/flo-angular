@@ -22,17 +22,16 @@
     position: relative;
     color: white;
 
-    ::ng-deep :first-child {
+    ::ng-deep > :first-child, ::ng-deep > video {
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
       width: 100%;
+    }
+    ::ng-deep video {
       max-width: 100%;
       object-fit: cover;
-      display: flex;
-      align-items: center;
-      justify-content: center;
     }
   }
 
