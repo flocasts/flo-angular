@@ -20,7 +20,7 @@ export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnCha
         fromEvent(mediaRefInput, 'pause')
           .pipe(takeUntil(this.ngOnChanges$))
           .subscribe(() => {
-            if (this.biasRight) {
+            if (this.biasRight && this.vc.length === 0) {
               this.vc.createEmbeddedView(this.tr)
             } else {
               this.vc.clear()
@@ -32,10 +32,8 @@ export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnCha
           .subscribe(() => {
             if (this.biasRight) {
               this.vc.clear()
-            } else {
-              if (!this.vc.get(0)) {
-                this.vc.createEmbeddedView(this.tr)
-              }
+            } else if (this.vc.length === 0) {
+              this.vc.createEmbeddedView(this.tr)
             }
           })
       }

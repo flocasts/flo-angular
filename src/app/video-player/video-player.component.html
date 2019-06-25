@@ -19,8 +19,8 @@
     <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
   </span>
   <span>
-    <button [floMpc]="vidRef" floMpcPipNativeEnter>Picture-in-picture</button>
-    <button [floMpc]="vidRef" floMpcPipNativeExit>Exit Picture-in-picture</button>
+    <button *floIfMediaCanEnterPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeEnter>PiP</button>
+    <button *floIfMediaCanExitPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeExit>Exit PiP</button>
   </span>
   <span>
     <input type="range" [floMpc]="vidRef" floMpcVolume>

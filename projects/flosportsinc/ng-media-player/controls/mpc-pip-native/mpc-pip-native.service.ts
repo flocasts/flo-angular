@@ -13,7 +13,8 @@ export interface IFloPictureInPictureNativeService {
 
 export enum SAFARI_PIP_STATES {
   PIP = 'picture-in-picture',
-  INLINE = 'inline'
+  INLINE = 'inline',
+  FULLSCREEN = 'fullscreen'
 }
 
 export type WebPipStandardHTMLMediaElement = HTMLMediaElement & {
@@ -53,7 +54,7 @@ export class FloPictureInPictureNativeService implements IFloPictureInPictureNat
 
   readonly enterPip = (media: HTMLMediaElement) => {
     if (this.useWebStandardVariant(media as WebPipStandardHTMLMediaElement)) {
-      (media as WebPipStandardHTMLMediaElement).requestPictureInPicture().catch(console.error)
+      (media as WebPipStandardHTMLMediaElement).requestPictureInPicture().catch()
     } else if (this.useSafariStandardVariant(media as SafariPipStandardHTMLMediaElement)) {
       (media as SafariPipStandardHTMLMediaElement).webkitSetPresentationMode(SAFARI_PIP_STATES.PIP)
     }
@@ -61,7 +62,7 @@ export class FloPictureInPictureNativeService implements IFloPictureInPictureNat
 
   readonly exitPip = (media: HTMLMediaElement) => {
     if (this.useWebStandardVariant(media as WebPipStandardHTMLMediaElement)) {
-      (this.doc as WebPipStandardHTMLDocument).exitPictureInPicture().catch(console.log)
+      (this.doc as WebPipStandardHTMLDocument).exitPictureInPicture().catch()
     } else if (this.useSafariStandardVariant(media as SafariPipStandardHTMLMediaElement)) {
       (media as SafariPipStandardHTMLMediaElement).webkitSetPresentationMode(SAFARI_PIP_STATES.INLINE)
     }
@@ -79,5 +80,6 @@ export class FloPictureInPictureNativeService implements IFloPictureInPictureNat
       this.useWebStandardVariant() || this.useSafariStandardVariant(mediaElement as SafariPipStandardHTMLMediaElement)
 
   readonly isPipActive = () => this.getPipElement() !== undefined
+
   readonly canEnterPip = () => false
 }

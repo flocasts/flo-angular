@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, Inject, PLATFORM_ID } from '@angular/core'
+import { Directive, Input, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'
 import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc-base.directive'
 import { FloPictureInPictureNativeService } from './mpc-pip-native.service'
 
@@ -10,7 +10,8 @@ import { FloPictureInPictureNativeService } from './mpc-pip-native.service'
   selector: '[floMpc][floMpcPipNativeEnter]'
 })
 export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  constructor(private ps: FloPictureInPictureNativeService, @Inject(PLATFORM_ID) protected platformId: string) {
+  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
@@ -26,7 +27,10 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 
   @HostListener('click')
   click() {
+    this.cd.detectChanges()
+
     if (!this.floMpcPipNativeEnter) { return }
+
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
@@ -41,7 +45,7 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   private _floMpcPipNativeExit?: string | boolean
 
-  constructor(private ps: FloPictureInPictureNativeService, @Inject(PLATFORM_ID) platformId: string) {
+  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: string) {
     super(platformId)
   }
 
@@ -55,7 +59,10 @@ export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends Fl
 
   @HostListener('click')
   click() {
+    this.cd.detectChanges()
+
     if (!this.floMpcPipNativeExit) { return }
+
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
