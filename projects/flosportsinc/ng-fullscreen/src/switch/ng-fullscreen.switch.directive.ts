@@ -1,4 +1,4 @@
-import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy } from '@angular/core'
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, Input } from '@angular/core'
 import { takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
@@ -12,6 +12,7 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit {
   protected showWhenFullscreen = false
 
   ngOnInit() {
+    if (!this.fs.fullscreenIsSupported()) { return }
     this.fs.fullscreen$.pipe(takeUntil(this.ngOnDestroy$)).subscribe(isFullscreen => {
       if (this.showWhenFullscreen && isFullscreen) {
         this.vc.createEmbeddedView(this.tr)

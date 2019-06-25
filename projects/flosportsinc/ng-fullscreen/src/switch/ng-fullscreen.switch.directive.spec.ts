@@ -51,7 +51,7 @@ describe(FloFullscreenDirective.name, () => {
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule],
       providers: [
-        { provide: FloFullscreenService, useValue: { fullscreen$: of(true) } }
+        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => true } }
       ]
     })
 
@@ -60,5 +60,21 @@ describe(FloFullscreenDirective.name, () => {
     const container = sut.debugElement.query(By.css('#container'))
     const tag = container.query(By.css('button'))
     expect(tag.nativeElement.innerText).toEqual('EXIT')
+  })
+
+  it('should not render when fullscreenIsSupported returns false', () => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [FloFullscreenTestModule],
+      providers: [
+        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => false } }
+      ]
+    })
+
+    const sut = createSut()
+    sut.detectChanges()
+    const container = sut.debugElement.query(By.css('#container'))
+    const tag = container.query(By.css('button'))
+    expect(tag).toBeFalsy()
   })
 })
