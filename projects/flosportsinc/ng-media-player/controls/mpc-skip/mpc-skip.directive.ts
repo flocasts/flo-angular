@@ -5,25 +5,20 @@ import { FloMediaPlayerControlDirectiveBase } from '../mpc-base.directive'
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
-@Directive({
-  selector: '[floMp][floMpClickToSkipBack]'
-})
-export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  constructor(private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
+export abstract class FloMediaPlayerControlSkipDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
-  private _floMpClickToSkipBack: number
+  protected abstract skipTimeFunc: (videoElement: HTMLVideoElement) => void
+  protected abstract inputKey: string
 
-  @Input()
-  get floMpClickToSkipBack() {
-    return this._floMpClickToSkipBack
-  }
-  set floMpClickToSkipBack(val: number) {
-    if (val && typeof val === 'number') {
-      this._floMpClickToSkipBack = val / 1000
+  protected getInput = () => {
+    const ref = this[this.inputKey]
+    if (ref && typeof ref === 'number') {
+      return ref / 1000
     } else {
-      this._floMpClickToSkipBack = 0
+      return 0
     }
   }
 
@@ -31,48 +26,40 @@ export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMedi
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpClickToSkipBack) { return }
+    const input = this.getInput()
+
+    if (!input) { return }
 
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
-      .tapSome((ve: HTMLVideoElement) => {
-        ve.currentTime = ve.currentTime - this.floMpClickToSkipBack
-      })
+      .tapSome(this.skipTimeFunc)
   }
 }
 
+const SKIP_BACK_SELECTOR = 'floMpClickToSkipBack'
+
 @Directive({
-  selector: '[floMp][floMpClickToSkipForward]'
+  selector: `[floMp][${SKIP_BACK_SELECTOR}]`,
+  inputs: [SKIP_BACK_SELECTOR]
 })
-export class FloMediaPlayerControlSkipForwardDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  constructor(private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMediaPlayerControlSkipDirective<TMeta> {
+  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
+    super(cd, platformId)
   }
+  protected skipTimeFunc = (ve: HTMLVideoElement) => ve.currentTime = ve.currentTime - this.getInput()
+  protected inputKey = SKIP_BACK_SELECTOR
+}
 
-  private _floMpClickToSkipForward: number
+const SKIP_FORWARD_SELECTOR = 'floMpClickToSkipForward'
 
-  @Input()
-  get floMpClickToSkipForward() {
-    return this._floMpClickToSkipForward
+@Directive({
+  selector: `[floMp][${SKIP_FORWARD_SELECTOR}]`,
+  inputs: [SKIP_FORWARD_SELECTOR]
+})
+export class FloMediaPlayerControlSkipForwardDirective<TMeta = any> extends FloMediaPlayerControlSkipDirective<TMeta> {
+  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
+    super(cd, platformId)
   }
-  set floMpClickToSkipForward(val: number) {
-    if (val && typeof val === 'number') {
-      this._floMpClickToSkipForward = val / 1000
-    } else {
-      this._floMpClickToSkipForward = 0
-    }
-  }
-
-  @HostListener('click')
-  click() {
-    this.cd.detectChanges()
-
-    if (!this.floMpClickToSkipForward) { return }
-
-    this.maybeMediaElement()
-      .filter(a => a instanceof HTMLVideoElement)
-      .tapSome((ve: HTMLVideoElement) => {
-        ve.currentTime = ve.currentTime + this.floMpClickToSkipForward
-      })
-  }
+  protected skipTimeFunc = (ve: HTMLVideoElement) => ve.currentTime = ve.currentTime + this.getInput()
+  protected inputKey = SKIP_FORWARD_SELECTOR
 }
