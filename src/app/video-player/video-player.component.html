@@ -25,8 +25,8 @@
     <button *floIfMediaCanExitPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeExit>Exit PiP</button>
   </span>
   <span>
-    <button *floIfMediaUnmuted="vidRef" floVpcMute>Mute</button>
-    <button *floIfMediaMuted="vidRef" floVpcUnmute>Unmute</button>
+    <button *floIfMediaUnmuted="vidRef" [floMpc]="vidRef" floMpcMute>Mute</button>
+    <button *floIfMediaMuted="vidRef" floMpcUnmute>Unmute</button>
     <input type="range" *floIfMediaAdjustableVolume [floMpc]="vidRef" floMpcVolume>
     <!--
       <button *floIfMediaUnmuted [floVpc]="vidRef" floVpcMute>Mute</button>

@@ -12,6 +12,9 @@ export * from './mpc-pip-native/mpc-pip-native.directive'
 export * from './mpc-volume/mpc-volume.module'
 export * from './mpc-volume/mpc-volume.directive'
 
+export * from './mpc-mute/mpc-mute.directive'
+export * from './mpc-mute/mpc-mute.module'
+
 export * from './if-adjustable-volume/if-adjustable-volume.directive'
 export * from './if-adjustable-volume/if-adjustable-volume.module'
 
