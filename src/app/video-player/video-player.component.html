@@ -7,25 +7,25 @@
 
 <div>
   <span>
-    <button *floIfMediaPaused="vidRef" [floMpc]="vidRef" floMpcPlay>Play</button>
-    <button *floIfMediaPlaying="vidRef" [floMpc]="vidRef" floMpcPause>Pause</button>
+    <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>Play</button>
+    <button *floIfMediaPlaying="vidRef" [floMp]="vidRef" floMpClickToPause>Pause</button>
   </span>
   <span>
-    <button [floMpc]="vidRef" [floMpcSkipBack]="15000">-15</button>
-    <button [floMpc]="vidRef" [floMpcSkipForward]="15000">15+</button>
+    <button [floMp]="vidRef" [floMpClickToSkipBack]="15000">-15</button>
+    <button [floMp]="vidRef" [floMpClickToSkipForward]="15000">15+</button>
   </span>
   <span>
     <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
     <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
   </span>
   <span>
-    <button *floIfMediaCanEnterPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeEnter>PiP</button>
-    <button *floIfMediaCanExitPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeExit>Exit PiP</button>
+    <button *floIfMediaCanEnterNativePip="vidRef" [floMp]="vidRef" floMpClickToEnterNativePip>PiP</button>
+    <button *floIfMediaCanExitNativePip="vidRef" [floMp]="vidRef" floMpClickToExitNativePip>Exit PiP</button>
   </span>
   <span>
-    <button *floIfMediaUnmuted="vidRef" [floMpc]="vidRef" floMpcMute>Mute</button>
-    <button *floIfMediaMuted="vidRef" [floMpc]="vidRef" floMpcUnmute>Unmute</button>
-    <input *floIfMediaAdjustableVolume [floMpc]="vidRef" floMpcVolume type="range">
+    <button *floIfMediaUnmuted="vidRef" [floMp]="vidRef" floMpClickToMute>Mute</button>
+    <button *floIfMediaMuted="vidRef" [floMp]="vidRef" floMpClickToUnmute>Unmute</button>
+    <input *floIfMediaAdjustableVolume [floMp]="vidRef" floMpVolume type="range">
     <!--
       <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]">Low</span>
       <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]">Medium</span>
@@ -33,6 +33,12 @@
     -->
   </span>
   <span>
-    <!-- PLAYBACK SPEED -->
+    <!-- TODO: PLAYBACK SPEED -->
+  </span>
+  <span>
+    <!-- TODO: REPEAT/LOOP -->
+  </span>
+  <span>
+    <!-- TODO: PLAY NEXT (SKIP TO NEXT VIDEO) -->
   </span>
 </div>

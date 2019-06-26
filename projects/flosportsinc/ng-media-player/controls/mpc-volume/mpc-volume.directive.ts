@@ -10,7 +10,7 @@ import {
 // tslint:disable: no-if-statement
 
 @Directive({
-  selector: 'input[type="range"][floMpc][floMpcVolume]'
+  selector: 'input[type="range"][floMp][floMpVolume]'
 })
 export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
   implements OnChanges, OnDestroy {

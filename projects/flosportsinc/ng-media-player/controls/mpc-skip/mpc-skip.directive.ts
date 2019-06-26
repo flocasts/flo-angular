@@ -6,24 +6,24 @@ import { FloMediaPlayerControlDirectiveBase } from '../mpc-base.directive'
 // tslint:disable: no-object-mutation
 
 @Directive({
-  selector: '[floMpc][floMpcSkipBack]'
+  selector: '[floMp][floMpClickToSkipBack]'
 })
 export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
-  private _floMpcSkipBack: number
+  private _floMpClickToSkipBack: number
 
   @Input()
-  get floMpcSkipBack() {
-    return this._floMpcSkipBack
+  get floMpClickToSkipBack() {
+    return this._floMpClickToSkipBack
   }
-  set floMpcSkipBack(val: number) {
+  set floMpClickToSkipBack(val: number) {
     if (val && typeof val === 'number') {
-      this._floMpcSkipBack = val / 1000
+      this._floMpClickToSkipBack = val / 1000
     } else {
-      this._floMpcSkipBack = 0
+      this._floMpClickToSkipBack = 0
     }
   }
 
@@ -31,35 +31,35 @@ export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMedi
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcSkipBack) { return }
+    if (!this.floMpClickToSkipBack) { return }
 
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
-        ve.currentTime = ve.currentTime - this.floMpcSkipBack
+        ve.currentTime = ve.currentTime - this.floMpClickToSkipBack
       })
   }
 }
 
 @Directive({
-  selector: '[floMpc][floMpcSkipForward]'
+  selector: '[floMp][floMpClickToSkipForward]'
 })
 export class FloMediaPlayerControlSkipForwardDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
-  private _floMpcSkipForward: number
+  private _floMpClickToSkipForward: number
 
   @Input()
-  get floMpcSkipForward() {
-    return this._floMpcSkipForward
+  get floMpClickToSkipForward() {
+    return this._floMpClickToSkipForward
   }
-  set floMpcSkipForward(val: number) {
+  set floMpClickToSkipForward(val: number) {
     if (val && typeof val === 'number') {
-      this._floMpcSkipForward = val / 1000
+      this._floMpClickToSkipForward = val / 1000
     } else {
-      this._floMpcSkipForward = 0
+      this._floMpClickToSkipForward = 0
     }
   }
 
@@ -67,13 +67,12 @@ export class FloMediaPlayerControlSkipForwardDirective<TMeta = any> extends FloM
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcSkipForward) { return }
+    if (!this.floMpClickToSkipForward) { return }
 
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
-        // ve.rate
-        ve.currentTime = ve.currentTime + this.floMpcSkipForward
+        ve.currentTime = ve.currentTime + this.floMpClickToSkipForward
       })
   }
 }

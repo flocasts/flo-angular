@@ -7,7 +7,7 @@ import { MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC, UnmuteControlFunction } from './mpc-
 // tslint:disable: no-object-mutation
 
 @Directive({
-  selector: '[floMpc][floMpcUnmute]'
+  selector: '[floMp][floMpClickToUnmute]'
 })
 export class FloMediaPlayerUnmuteControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private cd: ChangeDetectorRef, private elmRef: ElementRef<HTMLElement>,
@@ -16,21 +16,21 @@ export class FloMediaPlayerUnmuteControlDirective<TMeta = any> extends FloMediaP
     super(platformId)
   }
 
-  private _floMpcUnmute?: string | boolean
+  private _floMpClickToUnmute?: string | boolean
 
   @Input()
-  get floMpcUnmute() {
-    return this._floMpcUnmute
+  get floMpClickToUnmute() {
+    return this._floMpClickToUnmute
   }
-  set floMpcUnmute(val: any) {
-    this._floMpcUnmute = coerceInputToBoolean(val)
+  set floMpClickToUnmute(val: any) {
+    this._floMpClickToUnmute = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcUnmute) { return }
+    if (!this.floMpClickToUnmute) { return }
 
     this.maybeMediaElement().tapSome(ve => {
       this.func(ve, this.elmRef, this.floMpcMeta)

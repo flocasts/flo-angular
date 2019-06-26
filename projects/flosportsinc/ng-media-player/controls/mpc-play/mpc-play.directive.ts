@@ -7,7 +7,7 @@ import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mpc-play
 // tslint:disable: readonly-keyword
 
 @Directive({
-  selector: '[floMpc][floMpcPlay]',
+  selector: '[floMp][floMpClickToPlay]',
 })
 export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
@@ -17,21 +17,21 @@ export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPla
     super(platformId)
   }
 
-  private _play?: string | boolean
+  private _floMpClickToPlay?: string | boolean
 
   @Input()
-  get floMpcPlay() {
-    return this._play
+  get floMpClickToPlay() {
+    return this._floMpClickToPlay
   }
-  set floMpcPlay(val: any) {
-    this._play = coerceInputToBoolean(val)
+  set floMpClickToPlay(val: any) {
+    this._floMpClickToPlay = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcPlay) { return }
+    if (!this.floMpClickToPlay) { return }
 
     this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpcMeta))
   }

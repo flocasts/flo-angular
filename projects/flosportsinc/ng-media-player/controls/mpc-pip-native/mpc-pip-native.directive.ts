@@ -7,7 +7,7 @@ import { FloPictureInPictureNativeService } from './mpc-pip-native.service'
 // tslint:disable: no-object-mutation
 
 @Directive({
-  selector: '[floMpc][floMpcPipNativeEnter]'
+  selector: '[floMp][floMpClickToEnterNativePip]'
 })
 export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef,
@@ -15,21 +15,21 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
     super(platformId)
   }
 
-  private _floMpcPipNativeEnter?: string | boolean
+  private _floMpClickToEnterNativePip?: string | boolean
 
   @Input()
-  get floMpcPipNativeEnter() {
-    return this._floMpcPipNativeEnter
+  get floMpClickToEnterNativePip() {
+    return this._floMpClickToEnterNativePip
   }
-  set floMpcPipNativeEnter(val: any) {
-    this._floMpcPipNativeEnter = coerceInputToBoolean(val)
+  set floMpClickToEnterNativePip(val: any) {
+    this._floMpClickToEnterNativePip = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcPipNativeEnter) { return }
+    if (!this.floMpClickToEnterNativePip) { return }
 
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)
@@ -40,28 +40,28 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 }
 
 @Directive({
-  selector: '[floMpc][floMpcPipNativeExit]'
+  selector: '[floMp][floMpClickToExitNativePip]'
 })
 export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  private _floMpcPipNativeExit?: string | boolean
+  private _floMpClickToExitNativePip?: string | boolean
 
   constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: string) {
     super(platformId)
   }
 
   @Input()
-  get floMpcPipNativeExit() {
-    return this._floMpcPipNativeExit
+  get floMpClickToExitNativePip() {
+    return this._floMpClickToExitNativePip
   }
-  set floMpcPipNativeExit(val: any) {
-    this._floMpcPipNativeExit = coerceInputToBoolean(val)
+  set floMpClickToExitNativePip(val: any) {
+    this._floMpClickToExitNativePip = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcPipNativeExit) { return }
+    if (!this.floMpClickToExitNativePip) { return }
 
     this.maybeMediaElement()
       .filter(a => a instanceof HTMLVideoElement)

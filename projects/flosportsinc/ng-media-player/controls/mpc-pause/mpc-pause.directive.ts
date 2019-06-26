@@ -7,7 +7,7 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc
 // tslint:disable: no-object-mutation
 
 @Directive({
-  selector: '[floMpc][floMpcPause]'
+  selector: '[floMp][floMpClickToPause]'
 })
 export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
@@ -17,21 +17,21 @@ export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPl
     super(platformId)
   }
 
-  private _play?: string | boolean
+  private _floMpClickToPause?: string | boolean
 
   @Input()
-  get floMpcPause() {
-    return this._play
+  get floMpClickToPause() {
+    return this._floMpClickToPause
   }
-  set floMpcPause(val: any) {
-    this._play = coerceInputToBoolean(val)
+  set floMpClickToPause(val: any) {
+    this._floMpClickToPause = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcPause) { return }
+    if (!this.floMpClickToPause) { return }
 
     this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpcMeta))
   }

@@ -57,7 +57,7 @@ export abstract class FloMediaPipNativeBaseDirective implements OnDestroy, OnCha
   }
 }
 
-const IF_CAN_ENTER_PIP_SELECTOR = 'floIfMediaCanEnterPipNative'
+const IF_CAN_ENTER_PIP_SELECTOR = 'floIfMediaCanEnterNativePip'
 
 @Directive({
   selector: `[${IF_CAN_ENTER_PIP_SELECTOR}]`,
@@ -72,7 +72,7 @@ export class FloMediaIfCanEnterPipNativeDirective extends FloMediaPipNativeBaseD
   protected inputKey = IF_CAN_ENTER_PIP_SELECTOR
 }
 
-const IF_MEDIA_EXIT_PIP_SELECTOR = 'floIfMediaCanExitPipNative'
+const IF_MEDIA_EXIT_PIP_SELECTOR = 'floIfMediaCanExitNativePip'
 
 @Directive({
   selector: `[${IF_MEDIA_EXIT_PIP_SELECTOR}]`,

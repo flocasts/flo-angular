@@ -7,7 +7,7 @@ import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mpc-mute
 // tslint:disable: no-object-mutation
 
 @Directive({
-  selector: '[floMpc][floMpcMute]'
+  selector: '[floMp][floMpClickToMute]'
 })
 export class FloMediaPlayerMuteControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private cd: ChangeDetectorRef, private elmRef: ElementRef<HTMLElement>,
@@ -16,21 +16,21 @@ export class FloMediaPlayerMuteControlDirective<TMeta = any> extends FloMediaPla
     super(platformId)
   }
 
-  private _floMpcMute?: string | boolean
+  private _floMpClickToMute?: string | boolean
 
   @Input()
-  get floMpcMute() {
-    return this._floMpcMute
+  get floMpClickToMute() {
+    return this._floMpClickToMute
   }
-  set floMpcMute(val: any) {
-    this._floMpcMute = coerceInputToBoolean(val)
+  set floMpClickToMute(val: any) {
+    this._floMpClickToMute = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpcMute) { return }
+    if (!this.floMpClickToMute) { return }
 
     this.maybeMediaElement().tapSome(ve => {
       this.func(ve, this.elmRef, this.floMpcMeta)
