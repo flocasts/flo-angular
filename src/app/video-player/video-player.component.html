@@ -11,8 +11,10 @@
     <button *floIfMediaPlaying="vidRef" [floMpc]="vidRef" floMpcPause>Pause</button>
   </span>
   <span>
-    <!-- <button [floVpc]="vidRef" [floVpcSkipBack]="-15">- 15</button>
-    <button [floVpc]="vidRef" [floVpcSkipForward]="15">+ 15</button> -->
+    <!--
+      <button [floVpc]="vidRef" [floVpcSkipBack]="-1500">-15</button>
+      <button [floVpc]="vidRef" [floVpcSkipForward]="1500">+15</button>
+    -->
   </span>
   <span>
     <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
@@ -23,8 +25,27 @@
     <button *floIfMediaCanExitPipNative="vidRef" [floMpc]="vidRef" floMpcPipNativeExit>Exit PiP</button>
   </span>
   <span>
+    <button *floIfMediaUnmuted="vidRef" floVpcMute>Mute</button>
+    <button *floIfMediaMuted="vidRef" floVpcUnmute>Unmute</button>
     <input type="range" *floIfMediaAdjustableVolume [floMpc]="vidRef" floMpcVolume>
-    <!-- <button [floVpc]="vidRef" floVpcMute>Mute</button>
-    <button [floVpc]="vidRef" floVpcUnmute>Unmute</button> -->
+    <!--
+      <button *floIfMediaUnmuted [floVpc]="vidRef" floVpcMute>Mute</button>
+      <button *floIfMediaMuted [floVpc]="vidRef" floVpcUnmute>Unmute</button>
+    -->
+    <!--
+      <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]">Low</span>
+      <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]">Medium</span>
+      <span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]">High</span>
+    -->
+  </span>
+
+  <span>
+    <!-- NATIVE CASTING -->
+  </span>
+  <span>
+    <!-- PLAYBACK SPEED -->
+  </span>
+  <span>
+    <!-- QUALITY SETTINGS -->
   </span>
 </div>

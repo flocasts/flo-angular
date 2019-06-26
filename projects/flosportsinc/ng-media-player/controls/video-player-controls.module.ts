@@ -6,6 +6,7 @@ import { FloMediaPlayerControlsPipNativeModule } from './mpc-pip-native/mpc-pip-
 import { FloMediaIfPlayPauseModule } from './if-play-pause/if-play-pause.module'
 import { FloMediaIfPipNativeModule } from './if-pip-native/if-pip-native.module'
 import { FloMediaIfAdjustableVolumeModule } from './if-adjustable-volume/if-adjustable-volume.module'
+import { FloMediaIfMutedModule } from './if-muted/if-muted.module'
 
 @NgModule({
   imports: [
@@ -16,7 +17,8 @@ import { FloMediaIfAdjustableVolumeModule } from './if-adjustable-volume/if-adju
 
     FloMediaIfPlayPauseModule,
     FloMediaIfPipNativeModule,
-    FloMediaIfAdjustableVolumeModule
+    FloMediaIfAdjustableVolumeModule,
+    FloMediaIfMutedModule
   ],
   exports: [
     FloMediaPlayerControlsPlayModule,
@@ -26,7 +28,8 @@ import { FloMediaIfAdjustableVolumeModule } from './if-adjustable-volume/if-adju
 
     FloMediaIfPlayPauseModule,
     FloMediaIfPipNativeModule,
-    FloMediaIfAdjustableVolumeModule
+    FloMediaIfAdjustableVolumeModule,
+    FloMediaIfMutedModule
   ]
 })
 export class FloMediaPlayerControlsModule { }
