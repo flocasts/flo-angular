@@ -26,12 +26,8 @@
   </span>
   <span>
     <button *floIfMediaUnmuted="vidRef" [floMpc]="vidRef" floMpcMute>Mute</button>
-    <button *floIfMediaMuted="vidRef" floMpcUnmute>Unmute</button>
+    <button *floIfMediaMuted="vidRef" [floMpc]="vidRef" floMpcUnmute>Unmute</button>
     <input type="range" *floIfMediaAdjustableVolume [floMpc]="vidRef" floMpcVolume>
-    <!--
-      <button *floIfMediaUnmuted [floVpc]="vidRef" floVpcMute>Mute</button>
-      <button *floIfMediaMuted [floVpc]="vidRef" floVpcUnmute>Unmute</button>
-    -->
     <!--
       <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]">Low</span>
       <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]">Medium</span>
