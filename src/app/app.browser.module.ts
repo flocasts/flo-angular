@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core'
 import { PwaService } from './pwa.service'
 import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
-import { DashModule } from '@flosportsinc/ng-media-source-extensions/dash'
-import { HlsModule } from '@flosportsinc/ng-media-source-extensions/hls'
+import { FloDashModule } from '@flosportsinc/ng-media-source-extensions/dash'
+import { FloHlsModule } from '@flosportsinc/ng-media-source-extensions/hls'
 import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 import { AdBlockBrowserModule } from '@flosportsinc/ng-ad-block/browser'
 import { AdBlockService } from '@flosportsinc/ng-ad-block'
@@ -15,8 +15,8 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
     AdBlockBrowserModule.usingUrl('/assets/ads.js'),
     CookieBrowserModule,
     AppModule,
-    DashModule,
-    HlsModule.config({
+    FloDashModule,
+    FloHlsModule.config({
       hlsConfig: {
         liveSyncDurationCount: 6
       }

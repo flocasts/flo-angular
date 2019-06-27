@@ -31,10 +31,10 @@ npm i @flosportsinc/ng-media-source-extensions
 Import the module into your angular application
 ```js
 import { NgModule } from '@angular/core'
-import { MseModule } from '@flosportsinc/ng-media-source-extensions'
+import { FloMseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
-  imports: [MseModule]
+  imports: [FloMseModule]
 })
 export class AppModule { }
 ```
@@ -48,13 +48,13 @@ npm i @types/hls.js hls.js
 Import the module into your angular application
 ```js
 import { NgModule } from '@angular/core'
-import { HlsModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
+import { FloHlsModule, FloMseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
   imports: [
-    MseModule,
-    HlsModule, // without config overrides
-    HLsModule.config({
+    FloMseModule,
+    FloHlsModule, // without config overrides
+    FloHLsModule.config({
       floConfig: {
         selfHeal: true // attempts to fix errors automatically
       },
@@ -79,12 +79,12 @@ npm i dashjs
 Import the module into your angular application
 ```js
 import { NgModule } from '@angular/core'
-import { DashModule, MseModule } from '@flosportsinc/ng-media-source-extensions'
+import { FloDashModule, FloMseModule } from '@flosportsinc/ng-media-source-extensions'
 
 @NgModule({
   imports: [
-    MseModule,
-    DashModule
+    FloMseModule,
+    FloDashModule
   ]
 })
 export class AppModule { } // If you are using Angular Universal, this MUST be in your AppBrowserModule
@@ -103,10 +103,13 @@ The `floMse` directive emits 3 keys events `srcChange, mseClient, mseClientMessa
 - (mseClientMessage): the clients usually have a way to log messages, this event forwards those message through the directive.
 
 ```html
+<!-- You are able to double bind to "src" and "floMseClient" attributes or simply use (srcChange) and (floMseClientChange) -->
 <video floMse 
+  [(src)]="src"
   (srcChange)="sourceChanged($event)" 
-  (mseClient)="clientReady($event)" 
-  (mseClientMessage)="message($event)" 
+  [(floMseClient)]="mseClient"
+  (floMseClientChange)="mseClientChange($event)" 
+  (floMseClientMessageChange)="message($event)" 
   src="https://dash.akamaized.net/envivio/EnvivioDash3/manifest.mpd">
 </video>
 ```
@@ -116,8 +119,8 @@ import { NgModule } from '@angular/core'
 
 @NgModule({
   imports: [
-    MseModule,
-    DashModule
+    FloMseModule,
+    FloDashModule
   ]
 })
 export class MyComponent {
@@ -126,14 +129,14 @@ export class MyComponent {
     // do something with the url
   }
 
-  clientReady(evt: MseClientContext<TMseClient>) {
+  mseClientChange(evt: MseClientContext<TMseClient>) {
     evt.contextKey.tapSome(console.log) // if exists, will print "hls"
     evt.mseClient.tapSome(client => {
       client.performLibraryMagic // this would be the hls.js instance with associated video already setup.
     })
   }
 
-  mseClientMessage(evt: any) {
+  message(evt: any) {
     // do something with the messages
   }
 }

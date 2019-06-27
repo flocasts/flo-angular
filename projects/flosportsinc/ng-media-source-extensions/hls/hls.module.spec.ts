@@ -1,5 +1,5 @@
 import {
-  HlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
+  FloHlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
   MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
   DEFAULT_MODULE_CONFIG,
   selfHealSwitch
@@ -29,7 +29,7 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [HlsModule],
+  imports: [FloHlsModule],
   declarations: [HlsTestComponent],
   exports: [HlsTestComponent]
 })
@@ -75,7 +75,7 @@ const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
   wrapper.hoist.destroy()
 })
 
-describe(HlsModule.name, () => {
+describe(FloHlsModule.name, () => {
   describe(`exposed ${defaultHlsSupportedNativelyFunction.name} factory function`, () => {
     it('when default test environment (no native support)', () => {
       const videElement = window.document.createElement('video')
@@ -148,7 +148,7 @@ describe(HlsModule.name, () => {
 
   describe('when using module config', () => {
     it('should handle empty config object', done => {
-      TestBed.configureTestingModule({ imports: [HlsModule.config()], declarations: [HlsTestComponent] })
+      TestBed.configureTestingModule({ imports: [FloHlsModule.config()], declarations: [HlsTestComponent] })
 
       const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
       expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
@@ -157,7 +157,7 @@ describe(HlsModule.name, () => {
 
     it('should handle config object', done => {
       TestBed.configureTestingModule({
-        imports: [HlsModule.config({})],
+        imports: [FloHlsModule.config({})],
         declarations: [HlsTestComponent]
       })
 

@@ -45,4 +45,4 @@ const useValue = { func: falseFunc, exectionKey }
     }
   ]
 })
-export class MseModule { }
+export class FloMseModule { }

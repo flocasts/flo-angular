@@ -8,13 +8,13 @@ import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
 } from './mse.tokens'
-import { MseModule } from './mse.module'
+import { FloMseModule } from './mse.module'
 import {
-  HlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction,
+  FloHlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction,
   defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientDestroyFunction,
   defaultHlsPatternCheck
 } from '../hls/hls.module'
-import { DashModule } from '../dash/dash.module'
+import { FloDashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
 
 // tslint:disable: no-object-mutation
@@ -49,7 +49,7 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [MseModule, HlsModule, DashModule],
+  imports: [FloMseModule, FloHlsModule, FloDashModule],
   declarations: [HlsTestComponent],
   exports: [HlsTestComponent],
   providers: [

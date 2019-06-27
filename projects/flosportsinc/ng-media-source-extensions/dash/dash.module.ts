@@ -12,7 +12,7 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  MseModule
+  FloMseModule
 } from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
@@ -76,8 +76,8 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
 }
 
 @NgModule({
-  imports: [MseModule],
-  exports: [MseModule],
+  imports: [FloMseModule],
+  exports: [FloMseModule],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
@@ -106,4 +106,4 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
     }
   ]
 })
-export class DashModule { }
+export class FloDashModule { }

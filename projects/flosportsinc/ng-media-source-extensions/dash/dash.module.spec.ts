@@ -7,7 +7,7 @@ import {
 import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
 import {
-  DashModule, defaultDashSupportedNativelyFunction,
+  FloDashModule, defaultDashSupportedNativelyFunction,
   defaultDashIsSupportedFactory, defaultDashPatternCheck,
   DashMessage, defaultDashClientDestroyFunction
 } from './dash.module'
@@ -26,13 +26,13 @@ export class DashTestComponent {
 }
 
 @NgModule({
-  imports: [DashModule],
+  imports: [FloDashModule],
   declarations: [DashTestComponent],
   exports: [DashTestComponent]
 })
 export class HlsTestingModule { }
 
-describe(DashModule.name, () => {
+describe(FloDashModule.name, () => {
   it('should construct', () => {
     TestBed.configureTestingModule({
       imports: [HlsTestingModule]

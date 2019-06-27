@@ -11,7 +11,7 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  MseModule
+  FloMseModule
 } from '@flosportsinc/ng-media-source-extensions'
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
@@ -123,8 +123,8 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 }
 
 @NgModule({
-  imports: [MseModule],
-  exports: [MseModule],
+  imports: [FloMseModule],
+  exports: [FloMseModule],
   providers: [
     {
       provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
@@ -158,10 +158,10 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     }
   ]
 })
-export class HlsModule {
+export class FloHlsModule {
   static config(config: Partial<IHlsModuleConfig> = DEFAULT_MODULE_CONFIG): ModuleWithProviders {
     return {
-      ngModule: HlsModule,
+      ngModule: FloHlsModule,
       providers: [
         {
           provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
