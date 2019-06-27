@@ -260,13 +260,35 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   it('should compile the test component', shouldCompileTestComponent)
   it('should compile the directive under test', shouldCompilerDirective)
 
-  // it('should skip src change when value is same', () => {
-  //   skipSrcChangeWhenValueIs(new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false))
-  // })
+  it('should skip src change when value is same', () => {
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false)
+    })
+    expect(spy).not.toHaveBeenCalled()
+  })
 
-  // it('should skip src change when value is undefined', () => {
-  //   skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
-  // })
+  it('should... ', () => {
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, TEST_SOURCES.HLS.SMALL, false)
+    })
+    expect(spy).toHaveBeenCalled()
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(TEST_SOURCES.HLS.SMALL, PRIMARY_SRC, false)
+    })
+  })
+
+  it('should... ', () => {
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, TEST_SOURCES.MP4.BUNNY, false)
+    })
+    expect(spy).toHaveBeenCalled()
+  })
 })
 
 describe(`${MseDirective.name} when supports mse client natively`, () => {
