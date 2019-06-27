@@ -1,4 +1,4 @@
-import { NodeEnvTransferBrowserModule, INodeEnvTransferBrowserModuleConfig } from './node-env-transfer.browser.module'
+import { FloNodeEnvTransferBrowserModule, INodeEnvTransferBrowserModuleConfig } from './node-env-transfer.browser.module'
 import { TestBed } from '@angular/core/testing'
 import { ENV, ENV_CONFIG_TS_KEY } from '@flosportsinc/ng-env-transfer-state'
 import { TransferState } from '@angular/platform-browser'
@@ -6,12 +6,12 @@ import { TransferState } from '@angular/platform-browser'
 const setupTestBed = (config?: INodeEnvTransferBrowserModuleConfig) => {
   TestBed.configureTestingModule({
     imports: [
-      NodeEnvTransferBrowserModule.config(config)
+      FloNodeEnvTransferBrowserModule.config(config)
     ]
   })
 }
 
-describe(NodeEnvTransferBrowserModule.name, () => {
+describe(FloNodeEnvTransferBrowserModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   it('should construct with correct default values', () => {

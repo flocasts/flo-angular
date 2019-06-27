@@ -1,15 +1,15 @@
 import { TestBed } from '@angular/core/testing'
-import { AdBlockModule } from './ad-block.module'
+import { FloAdBlockModule } from './ad-block.module'
 import { AdBlockService } from './ad-block.service'
 import { of } from 'rxjs'
 import { AD_BLOCK_LOADER } from './ad-block.tokens'
 
-describe(AdBlockModule.name, () => {
+describe(FloAdBlockModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AdBlockModule]
+      imports: [FloAdBlockModule]
     })
   })
 
@@ -19,7 +19,7 @@ describe(AdBlockModule.name, () => {
 
   it('should construct w/ loader', () => {
     TestBed.configureTestingModule({
-      imports: [AdBlockModule],
+      imports: [FloAdBlockModule],
       providers: [
         { provide: AD_BLOCK_LOADER, useValue: of(false) }
       ]

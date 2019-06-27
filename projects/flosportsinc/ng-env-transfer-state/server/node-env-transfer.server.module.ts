@@ -4,7 +4,7 @@ import { TransferState, makeStateKey } from '@angular/platform-browser'
 import {
   NODE_ENV, ENV, ENV_CONFIG_TS_KEY, ENV_CONFIG_SERVER_EXTRACTOR,
   ENV_CONFIG_SERVER_REPLACER, ENV_CONFIG_SERVER_SELECTED, NODE_ENV_USE_VALUES,
-  NodeEnvTransferModule
+  FloNodeEnvTransferModule
 } from '@flosportsinc/ng-env-transfer-state'
 
 export const DEFAULT_ENV_CONFIG_FILTER_KEYS: ReadonlyArray<string> = []
@@ -52,7 +52,7 @@ export interface INodeEnvTransferServerModuleConfig {
 @NgModule({
   imports: [
     ServerTransferStateModule,
-    NodeEnvTransferModule
+    FloNodeEnvTransferModule
   ],
   providers: [
     {
@@ -85,10 +85,10 @@ export interface INodeEnvTransferServerModuleConfig {
     }
   ]
 })
-export class NodeEnvTransferServerModule {
+export class FloNodeEnvTransferServerModule {
   static config(config: Partial<INodeEnvTransferServerModuleConfig> = {}): ModuleWithProviders {
     return {
-      ngModule: NodeEnvTransferServerModule,
+      ngModule: FloNodeEnvTransferServerModule,
       providers: [
         {
           provide: ENV_CONFIG_SERVER_EXTRACTOR,

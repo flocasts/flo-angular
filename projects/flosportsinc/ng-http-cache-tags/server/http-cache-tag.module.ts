@@ -36,10 +36,10 @@ export function DEFAULT_WRITE_HEADER_FACTORY(): IWriteResponseHeader {
     { provide: HTTP_INTERCEPTORS, useExisting: HttpCacheTagInterceptor, multi: true }
   ]
 })
-export class HttpCacheTagServerModule {
+export class FloHttpCacheTagServerModule {
   static config(config: Partial<IHttpCacheTagServerModuleConfig>): ModuleWithProviders {
     return {
-      ngModule: HttpCacheTagServerModule,
+      ngModule: FloHttpCacheTagServerModule,
       providers: [
         {
           provide: CACHE_TAG_RESPONSE_CODES,
