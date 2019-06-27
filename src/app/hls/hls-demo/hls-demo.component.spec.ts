@@ -1,12 +1,12 @@
 import { async, TestBed } from '@angular/core/testing'
 import { HlsDemoComponent } from './hls-demo.component'
 import { SharedTestingModule } from '../../shared.testing.module'
-import { HlsModule } from '@flosportsinc/ng-media-source-extensions/hls'
+import { FloHlsModule } from '@flosportsinc/ng-media-source-extensions/hls'
 
 describe('HlsDemoComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [SharedTestingModule, HlsModule],
+      imports: [SharedTestingModule, FloHlsModule],
       declarations: [HlsDemoComponent]
     }).compileComponents()
   }))

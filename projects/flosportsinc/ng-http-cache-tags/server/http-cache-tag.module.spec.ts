@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
-import { HttpCacheTagServerModule, IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
+import { FloHttpCacheTagServerModule, IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
 import {
   CACHE_TAG_WRITE_HEADER_FACTORY, CACHE_TAG_RESPONSE_CODES,
   DEFAULT_CACHE_TAG_RESPONSE_CODES, CACHE_TAG_HEADER_KEY,
@@ -8,12 +8,12 @@ import {
   DEFAULT_CACHE_TAG_DELIMITER
 } from './http-cache-tag.tokens'
 
-describe(HttpCacheTagServerModule.name, () => {
+describe(FloHttpCacheTagServerModule.name, () => {
   afterEach(TestBed.resetTestingModule)
 
   it('should construct with default values', () => {
     TestBed.configureTestingModule({
-      imports: [HttpCacheTagServerModule]
+      imports: [FloHttpCacheTagServerModule]
     })
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_RESPONSE_CODES)).toEqual(DEFAULT_CACHE_TAG_RESPONSE_CODES)
@@ -29,7 +29,7 @@ describe(HttpCacheTagServerModule.name, () => {
       delimiter: '-'
     }
     TestBed.configureTestingModule({
-      imports: [HttpCacheTagServerModule.config(config)]
+      imports: [FloHttpCacheTagServerModule.config(config)]
     })
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_HEADER_KEY)).toEqual('X-Cache')
@@ -40,7 +40,7 @@ describe(HttpCacheTagServerModule.name, () => {
   it('should construct with partial', () => {
     const config: Partial<IHttpCacheTagServerModuleConfig> = { }
     TestBed.configureTestingModule({
-      imports: [HttpCacheTagServerModule.config(config)]
+      imports: [FloHttpCacheTagServerModule.config(config)]
     })
     expect(TestBed.get(HttpCacheTagInterceptor)).toBeTruthy()
     expect(TestBed.get(CACHE_TAG_RESPONSE_CODES)).toEqual(DEFAULT_CACHE_TAG_RESPONSE_CODES)
