@@ -1,7 +1,10 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
 import { BrowserTransferStateModule } from '@angular/platform-browser'
-import { FloNodeEnvTransferModule, ENV, ENV_CONFIG_TS_KEY, ENV_CONFIG_DEFAULT, NODE_ENV_USE_VALUES } from '@flosportsinc/ng-env-transfer-state'
+import {
+  FloNodeEnvTransferModule, ENV, ENV_CONFIG_TS_KEY,
+  ENV_CONFIG_DEFAULT, NODE_ENV_USE_VALUES
+} from '@flosportsinc/ng-env-transfer-state'
 
 export function defaultBrowserFactory(ts: TransferState, stateKey: string, merge: Object, sharedMerge: Object) {
   return {
