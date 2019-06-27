@@ -1,7 +1,5 @@
 import {
   HlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
-  defaultMseClientSrcChangeFunction,
-  selfHealFunc,
   MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
   DEFAULT_MODULE_CONFIG,
   selfHealSwitch
@@ -123,25 +121,25 @@ describe(HlsModule.name, () => {
     })
   })
 
-  describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
-    it('should reset HLS client with new source', () => {
-      const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<Hls> = {
-        clientRef: {
-          loadSource: () => { },
-          detachMedia: () => { },
-          attachMedia: () => { }
-        } as any, src: '/new-url', videoElement
-      }
-      const spy1 = spyOn(event.clientRef, 'detachMedia')
-      const spy2 = spyOn(event.clientRef, 'loadSource')
-      const spy3 = spyOn(event.clientRef, 'attachMedia')
-      defaultMseClientSrcChangeFunction().func(event)
-      expect(spy1).toHaveBeenCalled()
-      expect(spy2).toHaveBeenCalledWith(event.src)
-      expect(spy3).toHaveBeenCalledWith(event.videoElement)
-    })
-  })
+  // describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
+  //   it('should reset HLS client with new source', () => {
+  //     const videoElement = document.createElement('video')
+  //     const event: IMseSrcChangeOptions<Hls> = {
+  //       clientRef: {
+  //         loadSource: () => { },
+  //         detachMedia: () => { },
+  //         attachMedia: () => { }
+  //       } as any, src: '/new-url', videoElement
+  //     }
+  //     const spy1 = spyOn(event.clientRef, 'detachMedia')
+  //     const spy2 = spyOn(event.clientRef, 'loadSource')
+  //     const spy3 = spyOn(event.clientRef, 'attachMedia')
+  //     defaultMseClientSrcChangeFunction().func(event)
+  //     expect(spy1).toHaveBeenCalled()
+  //     expect(spy2).toHaveBeenCalledWith(event.src)
+  //     expect(spy3).toHaveBeenCalledWith(event.videoElement)
+  //   })
+  // })
 
   describe(`when supports mse client natively`, () => {
     beforeEach(() => setTestBed(false)(true))

@@ -9,7 +9,7 @@ import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
 import {
   DashModule, defaultDashSupportedNativelyFunction,
-  defaultDashIsSupportedFactory, defaultDashClientSrcChangeFunction, defaultDashPatternCheck,
+  defaultDashIsSupportedFactory, defaultDashPatternCheck,
   DashMessage, defaultDashClientInitFunction, defaultDashClientDestroyFunction
 } from './dash.module'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
@@ -97,20 +97,6 @@ describe(DashModule.name, () => {
     //   }
     //   expect(defaultDashIsSupportedFactory().func()).toEqual(true)
     // })
-  })
-
-  describe(`exposed ${defaultDashClientSrcChangeFunction.name} factory function`, () => {
-    it('should reset DASH client with new source', () => {
-      const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<MediaPlayerClass> = { clientRef: MediaPlayer().create(), src: '/new-url', videoElement }
-      const spy1 = spyOn(event.clientRef, 'reset')
-      const spy2 = spyOn(event.clientRef, 'attachView')
-      const spy3 = spyOn(event.clientRef, 'attachSource')
-      defaultDashClientSrcChangeFunction().func(event)
-      expect(spy1).toHaveBeenCalled()
-      expect(spy2).toHaveBeenCalledWith(event.videoElement)
-      expect(spy3).toHaveBeenCalledWith(event.src)
-    })
   })
 
   it('should execute defaultDashClientDestroyFunction correctly', () => {
