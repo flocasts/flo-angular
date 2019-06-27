@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing'
 import {
-  IMseSrcChangeOptions,
   IMseInitOptions,
   IMseDestroyOptions,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
@@ -10,7 +9,7 @@ import { Subject } from 'rxjs'
 import {
   DashModule, defaultDashSupportedNativelyFunction,
   defaultDashIsSupportedFactory, defaultDashPatternCheck,
-  DashMessage, defaultDashClientInitFunction, defaultDashClientDestroyFunction
+  DashMessage, defaultDashClientDestroyFunction
 } from './dash.module'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 import { TEST_SOURCES } from '../core/mse.directive.spec'

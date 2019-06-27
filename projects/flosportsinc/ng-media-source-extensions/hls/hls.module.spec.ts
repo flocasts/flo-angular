@@ -7,7 +7,7 @@ import {
 import { TestBed, async } from '@angular/core/testing'
 import * as Hls from 'hls.js'
 import {
-  IMseSrcChangeOptions, SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   SUPPORTS_MSE_TARGET_NATIVELY,
   MseDirective
 } from '@flosportsinc/ng-media-source-extensions'
