@@ -7,7 +7,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
 import { FloWindowServerModule } from '@flosportsinc/ng-window/server'
 import { FloAdBlockServerModule } from '@flosportsinc/ng-ad-block/server'
-import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
+import { FloNodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 import { CookieServerModule } from '@flosportsinc/ng-universal-services/cookies/server'
 import { SvgTransferStateServerModule } from '@flosportsinc/ng-svg-transfer-state/server'
 import { HttpCacheTagExpressServerModule } from '@flosportsinc/ng-http-cache-tags'
@@ -21,7 +21,7 @@ import { HttpCacheTagExpressServerModule } from '@flosportsinc/ng-http-cache-tag
     AppModule,
     FloWindowServerModule,
     CookieServerModule,
-    NodeEnvTransferServerModule,
+    FloNodeEnvTransferServerModule,
     HttpCacheTagExpressServerModule.config({
       cacheableResponseCodes: [200, 201]
     }),

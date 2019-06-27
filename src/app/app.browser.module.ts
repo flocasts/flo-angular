@@ -4,7 +4,7 @@ import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
 import { FloDashModule } from '@flosportsinc/ng-media-source-extensions/dash'
 import { FloHlsModule } from '@flosportsinc/ng-media-source-extensions/hls'
-import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
+import { FloNodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 import { FloAdBlockBrowserModule } from '@flosportsinc/ng-ad-block/browser'
 import { AdBlockService } from '@flosportsinc/ng-ad-block'
 import { CookieBrowserModule } from '@flosportsinc/ng-universal-services/cookies/browser'
@@ -21,7 +21,7 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
         liveSyncDurationCount: 6
       }
     }),
-    NodeEnvTransferBrowserModule.config({
+    FloNodeEnvTransferBrowserModule.config({
       mergeWithServer: {
         browserOnly: 'testing-123'
       }

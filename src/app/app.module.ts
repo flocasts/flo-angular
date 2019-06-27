@@ -24,7 +24,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
-import { NodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
+import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
@@ -45,7 +45,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     TransferHttpCacheModule,
     HttpClientModule,
     SvgTransferStateModule,
-    NodeEnvTransferModule.config({
+    FloNodeEnvTransferModule.config({
       useValues: {
         manuallyShared: 'yay!'
       }
