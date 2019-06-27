@@ -5,7 +5,7 @@ import { AppModule } from './app.module'
 import { AppComponent } from './app.component'
 import { HTTP_INTERCEPTORS } from '@angular/common/http'
 import { HttpRelativeInterceptor } from './relative'
-import { WindowServerModule } from '@flosportsinc/ng-window/server'
+import { FloWindowServerModule } from '@flosportsinc/ng-window/server'
 import { AdBlockServerModule } from '@flosportsinc/ng-ad-block/server'
 import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 import { CookieServerModule } from '@flosportsinc/ng-universal-services/cookies/server'
@@ -19,7 +19,7 @@ import { HttpCacheTagExpressServerModule } from '@flosportsinc/ng-http-cache-tag
     ServerTransferStateModule,
     AdBlockServerModule,
     AppModule,
-    WindowServerModule,
+    FloWindowServerModule,
     CookieServerModule,
     NodeEnvTransferServerModule,
     HttpCacheTagExpressServerModule.config({

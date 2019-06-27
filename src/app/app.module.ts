@@ -16,7 +16,7 @@ import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { FloMseModule } from '@flosportsinc/ng-media-source-extensions'
-import { WindowModule } from '@flosportsinc/ng-window'
+import { FloWindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
@@ -38,7 +38,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     FloVideoAutoplayModule,
     FloFullscreenModule,
     FloMseModule,
-    WindowModule,
+    FloWindowModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
