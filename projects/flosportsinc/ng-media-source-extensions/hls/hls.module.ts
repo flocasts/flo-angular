@@ -5,18 +5,15 @@ import {
   SUPPORTS_MSE_TARGET_NATIVELY,
   IMseInitFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-  IMseSrcChangeFunc,
   IMseDestroy,
   IMseInit,
-  IMseSrcChange,
   IMsePatternCheck,
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  MseModule
+  FloMseModule
 } from '@flosportsinc/ng-media-source-extensions'
-import { NgModule, ModuleWithProviders, Type, InjectionToken } from '@angular/core'
+import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
@@ -53,8 +50,7 @@ export function defaultIsSupportedFactory() {
 
 export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
   const func: IVideoElementSupportsTargetMseCheck = ve =>
-    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') === 'probably' &&
-      !defaultIsSupportedFactory().func() ? true : false
+    typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') === 'probably'
   return {
     exectionKey,
     func
@@ -106,19 +102,6 @@ export function defaultMseClientInitFunction(config: IHlsModuleConfig): IMseInit
   }
 }
 
-export function defaultMseClientSrcChangeFunction(): IMseSrcChange<Hls> {
-  const func: IMseSrcChangeFunc<Hls> = srcChangeEvent => {
-    srcChangeEvent.videoElement.pause()
-    srcChangeEvent.clientRef.detachMedia()
-    srcChangeEvent.clientRef.loadSource(srcChangeEvent.src)
-    srcChangeEvent.clientRef.attachMedia(srcChangeEvent.videoElement)
-  }
-  return {
-    exectionKey,
-    func
-  }
-}
-
 export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
   const func: IMseDestroyFunc<Hls> = destroyEvent => {
     destroyEvent.clientRef.stopLoad()
@@ -140,8 +123,8 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 }
 
 @NgModule({
-  imports: [MseModule],
-  exports: [MseModule],
+  imports: [FloMseModule],
+  exports: [FloMseModule],
   providers: [
     {
       provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
@@ -164,11 +147,6 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
       multi: true
     },
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-      useFactory: defaultMseClientSrcChangeFunction,
-      multi: true
-    },
-    {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
       useFactory: defaultMseClientDestroyFunction,
       multi: true
@@ -180,10 +158,10 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     }
   ]
 })
-export class HlsModule {
+export class FloHlsModule {
   static config(config: Partial<IHlsModuleConfig> = DEFAULT_MODULE_CONFIG): ModuleWithProviders {
     return {
-      ngModule: HlsModule,
+      ngModule: FloHlsModule,
       providers: [
         {
           provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,

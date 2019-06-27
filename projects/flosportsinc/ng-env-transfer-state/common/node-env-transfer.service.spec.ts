@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { NodeEnvTransferService } from './node-env-transfer.service'
-import { NodeEnvTransferModule } from './node-env-transfer.common.module'
+import { FloNodeEnvTransferModule } from './node-env-transfer.common.module'
 import { ENV } from './node-env-transfer.tokens'
 
 interface OurConfig {
@@ -12,7 +12,7 @@ describe(NodeEnvTransferService.name, () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferModule],
+      imports: [FloNodeEnvTransferModule],
       providers: [
         {
           provide: ENV,

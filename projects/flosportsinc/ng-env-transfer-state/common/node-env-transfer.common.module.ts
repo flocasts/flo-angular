@@ -22,10 +22,10 @@ export interface INodeEnvTransferModuleConfig {
     }
   ]
 })
-export class NodeEnvTransferModule {
+export class FloNodeEnvTransferModule {
   static config(config: Partial<INodeEnvTransferModuleConfig> = {}): ModuleWithProviders {
     return {
-      ngModule: NodeEnvTransferModule,
+      ngModule: FloNodeEnvTransferModule,
       providers: [
         {
           provide: NODE_ENV_USE_VALUES,

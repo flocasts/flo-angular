@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { AdBlockModule, AD_BLOCK_LOADER } from '@flosportsinc/ng-ad-block'
+import { FloAdBlockModule, AD_BLOCK_LOADER } from '@flosportsinc/ng-ad-block'
 import { shareReplay } from 'rxjs/operators'
 import { of } from 'rxjs'
 
@@ -8,7 +8,7 @@ export function defaultServerLoader() {
 }
 
 @NgModule({
-  imports: [AdBlockModule],
+  imports: [FloAdBlockModule],
   providers: [
     {
       provide: AD_BLOCK_LOADER,
@@ -16,4 +16,4 @@ export function defaultServerLoader() {
     }
   ]
 })
-export class AdBlockServerModule { }
+export class FloAdBlockServerModule { }

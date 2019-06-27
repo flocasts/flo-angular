@@ -11,11 +11,11 @@ Inside your `AppModule` install `WindowModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { WindowModule } from '@flosportsinc/ng-window'
+import { FloWindowModule } from '@flosportsinc/ng-window'
 
 @NgModule({
   imports: [
-    WindowModule
+    FloWindowModule
   ]
 })
 export class AppModule { }
@@ -26,11 +26,11 @@ Inside your `AppModule` install `WindowModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { WindowServerModule } from '@flosportsinc/ng-window/server'
+import { FloWindowServerModule } from '@flosportsinc/ng-window/server'
 
 @NgModule({
   imports: [
-    WindowServerModule
+    FloWindowServerModule
   ]
 })
 export class AppServerModule { }

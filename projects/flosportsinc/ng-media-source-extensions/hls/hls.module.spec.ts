@@ -1,7 +1,5 @@
 import {
-  HlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
-  defaultMseClientSrcChangeFunction,
-  selfHealFunc,
+  FloHlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
   MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
   DEFAULT_MODULE_CONFIG,
   selfHealSwitch
@@ -9,12 +7,12 @@ import {
 import { TestBed, async } from '@angular/core/testing'
 import * as Hls from 'hls.js'
 import {
-  IMseSrcChangeOptions, SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   SUPPORTS_MSE_TARGET_NATIVELY,
   MseDirective
 } from '@flosportsinc/ng-media-source-extensions'
 import { Component, Input, NgModule } from '@angular/core'
-import { take, filter } from 'rxjs/operators'
+import { take } from 'rxjs/operators'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { By } from '@angular/platform-browser'
 import { TEST_SOURCES } from '../core/mse.directive.spec'
@@ -31,7 +29,7 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [HlsModule],
+  imports: [FloHlsModule],
   declarations: [HlsTestComponent],
   exports: [HlsTestComponent]
 })
@@ -77,7 +75,7 @@ const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
   wrapper.hoist.destroy()
 })
 
-describe(HlsModule.name, () => {
+describe(FloHlsModule.name, () => {
   describe(`exposed ${defaultHlsSupportedNativelyFunction.name} factory function`, () => {
     it('when default test environment (no native support)', () => {
       const videElement = window.document.createElement('video')
@@ -123,36 +121,34 @@ describe(HlsModule.name, () => {
     })
   })
 
-  describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
-    it('should reset HLS client with new source', () => {
-      const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<Hls> = {
-        clientRef: {
-          loadSource: () => { },
-          detachMedia: () => { },
-          attachMedia: () => { }
-        } as any, src: '/new-url', videoElement
-      }
-      const spy1 = spyOn(event.clientRef, 'detachMedia')
-      const spy2 = spyOn(event.clientRef, 'loadSource')
-      const spy3 = spyOn(event.clientRef, 'attachMedia')
-      defaultMseClientSrcChangeFunction().func(event)
-      expect(spy1).toHaveBeenCalled()
-      expect(spy2).toHaveBeenCalledWith(event.src)
-      expect(spy3).toHaveBeenCalledWith(event.videoElement)
-    })
-  })
+  // describe(`exposed ${defaultMseClientSrcChangeFunction.name} factory function`, () => {
+  //   it('should reset HLS client with new source', () => {
+  //     const videoElement = document.createElement('video')
+  //     const event: IMseSrcChangeOptions<Hls> = {
+  //       clientRef: {
+  //         loadSource: () => { },
+  //         detachMedia: () => { },
+  //         attachMedia: () => { }
+  //       } as any, src: '/new-url', videoElement
+  //     }
+  //     const spy1 = spyOn(event.clientRef, 'detachMedia')
+  //     const spy2 = spyOn(event.clientRef, 'loadSource')
+  //     const spy3 = spyOn(event.clientRef, 'attachMedia')
+  //     defaultMseClientSrcChangeFunction().func(event)
+  //     expect(spy1).toHaveBeenCalled()
+  //     expect(spy2).toHaveBeenCalledWith(event.src)
+  //     expect(spy3).toHaveBeenCalledWith(event.videoElement)
+  //   })
+  // })
 
   describe(`when supports mse client natively`, () => {
     beforeEach(() => setTestBed(false)(true))
     afterEach(() => TestBed.resetTestingModule())
-    it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission',
-      shouldUnsubscribeFromInternalNgAfterViewInit)
   })
 
   describe('when using module config', () => {
     it('should handle empty config object', done => {
-      TestBed.configureTestingModule({ imports: [HlsModule.config()], declarations: [HlsTestComponent] })
+      TestBed.configureTestingModule({ imports: [FloHlsModule.config()], declarations: [HlsTestComponent] })
 
       const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
       expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
@@ -161,7 +157,7 @@ describe(HlsModule.name, () => {
 
     it('should handle config object', done => {
       TestBed.configureTestingModule({
-        imports: [HlsModule.config({})],
+        imports: [FloHlsModule.config({})],
         declarations: [HlsTestComponent]
       })
 

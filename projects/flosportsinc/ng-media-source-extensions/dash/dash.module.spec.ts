@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing'
 import {
-  IMseSrcChangeOptions,
   IMseInitOptions,
   IMseDestroyOptions,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK
@@ -8,9 +7,9 @@ import {
 import { Component, Input, NgModule } from '@angular/core'
 import { Subject } from 'rxjs'
 import {
-  DashModule, defaultDashSupportedNativelyFunction,
-  defaultDashIsSupportedFactory, defaultDashClientSrcChangeFunction, defaultDashPatternCheck,
-  DashMessage, defaultDashClientInitFunction, defaultDashClientDestroyFunction
+  FloDashModule, defaultDashSupportedNativelyFunction,
+  defaultDashIsSupportedFactory, defaultDashPatternCheck,
+  DashMessage, defaultDashClientDestroyFunction
 } from './dash.module'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 import { TEST_SOURCES } from '../core/mse.directive.spec'
@@ -27,13 +26,13 @@ export class DashTestComponent {
 }
 
 @NgModule({
-  imports: [DashModule],
+  imports: [FloDashModule],
   declarations: [DashTestComponent],
   exports: [DashTestComponent]
 })
 export class HlsTestingModule { }
 
-describe(DashModule.name, () => {
+describe(FloDashModule.name, () => {
   it('should construct', () => {
     TestBed.configureTestingModule({
       imports: [HlsTestingModule]
@@ -97,20 +96,6 @@ describe(DashModule.name, () => {
     //   }
     //   expect(defaultDashIsSupportedFactory().func()).toEqual(true)
     // })
-  })
-
-  describe(`exposed ${defaultDashClientSrcChangeFunction.name} factory function`, () => {
-    it('should reset DASH client with new source', () => {
-      const videoElement = document.createElement('video')
-      const event: IMseSrcChangeOptions<MediaPlayerClass> = { clientRef: MediaPlayer().create(), src: '/new-url', videoElement }
-      const spy1 = spyOn(event.clientRef, 'reset')
-      const spy2 = spyOn(event.clientRef, 'attachView')
-      const spy3 = spyOn(event.clientRef, 'attachSource')
-      defaultDashClientSrcChangeFunction().func(event)
-      expect(spy1).toHaveBeenCalled()
-      expect(spy2).toHaveBeenCalledWith(event.videoElement)
-      expect(spy3).toHaveBeenCalledWith(event.src)
-    })
   })
 
   it('should execute defaultDashClientDestroyFunction correctly', () => {

@@ -3,7 +3,6 @@ import { MseDirective } from './mse.directive'
 import {
   SUPPORTS_MSE_TARGET_NATIVELY, SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
 } from './mse.tokens'
@@ -35,11 +34,6 @@ const useValue = { func: falseFunc, exectionKey }
       multi: true
     },
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-      useValue,
-      multi: true
-    },
-    {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
       useValue,
       multi: true
@@ -51,4 +45,4 @@ const useValue = { func: falseFunc, exectionKey }
     }
   ]
 })
-export class MseModule { }
+export class FloMseModule { }

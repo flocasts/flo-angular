@@ -1,12 +1,12 @@
 import { TestBed } from '@angular/core/testing'
 import { PwaService } from './pwa.service'
 import { ServiceWorkerModule } from '@angular/service-worker'
-import { WINDOW, WindowModule } from '@flosportsinc/ng-window'
+import { WINDOW, FloWindowModule } from '@flosportsinc/ng-window'
 
 describe('PwaService', () => {
   beforeEach(() => TestBed.configureTestingModule({
     imports: [
-      WindowModule,
+      FloWindowModule,
       ServiceWorkerModule.register('', { enabled: false })
     ],
     providers: [

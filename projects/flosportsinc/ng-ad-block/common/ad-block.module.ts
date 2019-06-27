@@ -4,4 +4,4 @@ import { AdBlockService } from './ad-block.service'
 @NgModule({
   providers: [AdBlockService]
 })
-export class AdBlockModule { }
+export class FloAdBlockModule { }

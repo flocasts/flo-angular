@@ -1,6 +1,6 @@
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
 import { TestBed } from '@angular/core/testing'
-import { HttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
+import { FloHttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
@@ -24,7 +24,7 @@ describe(HttpCacheTagInterceptor.name, () => {
     imports: [
       HttpClientModule,
       HttpClientTestingModule,
-      HttpCacheTagExpressServerModule.config(config)
+      FloHttpCacheTagExpressServerModule.config(config)
     ],
     providers: [createReponseProvider()]
   })

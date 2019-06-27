@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing'
 import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR } from '@flosportsinc/ng-env-transfer-state'
 import {
-  NodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory,
+  FloNodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory,
   DEFAULT_ENV_CONFIG_EXTRACTOR,
   serverEnvConfigFactory,
   defaultReplaceExtract,
@@ -14,8 +14,8 @@ const setupTestBed =
   (nodeProcess?: Object) =>
     (config?: Partial<INodeEnvTransferServerModuleConfig>) => {
       const ServerModule = config
-        ? NodeEnvTransferServerModule.config(config)
-        : NodeEnvTransferServerModule
+        ? FloNodeEnvTransferServerModule.config(config)
+        : FloNodeEnvTransferServerModule
       TestBed.configureTestingModule({
         imports: [ServerModule],
         providers: [{
@@ -25,7 +25,7 @@ const setupTestBed =
       })
     }
 
-describe(NodeEnvTransferServerModule.name, () => {
+describe(FloNodeEnvTransferServerModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   it('should pluck none by default A', () => {
@@ -64,7 +64,7 @@ describe(NodeEnvTransferServerModule.name, () => {
 
   it('should use defaults when .config is called but not used', () => {
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferServerModule.config()]
+      imports: [FloNodeEnvTransferServerModule.config()]
     })
 
     expect(TestBed.get(ENV_CONFIG_SERVER_EXTRACTOR)).toEqual(DEFAULT_ENV_CONFIG_EXTRACTOR)
