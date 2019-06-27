@@ -13,7 +13,7 @@ import {
   IVideoElementSupportsTargetMseCheckContext,
   MseModule
 } from '@flosportsinc/ng-media-source-extensions'
-import { NgModule, ModuleWithProviders, Type, InjectionToken } from '@angular/core'
+import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
