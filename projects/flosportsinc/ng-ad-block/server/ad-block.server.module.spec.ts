@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing'
-import { AdBlockServerModule } from './ad-block.server.module'
+import { FloAdBlockServerModule } from './ad-block.server.module'
 import { AdBlockService } from '@flosportsinc/ng-ad-block'
 
-describe(AdBlockServerModule.name, () => {
+describe(FloAdBlockServerModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [AdBlockServerModule]
+      imports: [FloAdBlockServerModule]
     })
   })
 
