@@ -12,7 +12,7 @@ import {
   MseDirective
 } from '@flosportsinc/ng-media-source-extensions'
 import { Component, Input, NgModule } from '@angular/core'
-import { take, filter } from 'rxjs/operators'
+import { take } from 'rxjs/operators'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { By } from '@angular/platform-browser'
 import { TEST_SOURCES } from '../core/mse.directive.spec'
@@ -144,8 +144,6 @@ describe(HlsModule.name, () => {
   describe(`when supports mse client natively`, () => {
     beforeEach(() => setTestBed(false)(true))
     afterEach(() => TestBed.resetTestingModule())
-    it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission',
-      shouldUnsubscribeFromInternalNgAfterViewInit)
   })
 
   describe('when using module config', () => {

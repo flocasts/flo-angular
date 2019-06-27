@@ -116,31 +116,6 @@ export const setMseTestBed = (supportsMle: boolean) => (native: boolean) => {
   })
 }
 
-const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
-  const wrapper = createMseSut()
-  const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
-
-  internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-    expect(response).toBeUndefined()
-  })
-
-  wrapper.hoist.destroy()
-
-  expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-})
-
-const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
-  const wrapper = createMseSut()
-  wrapper.hoist.detectChanges()
-  const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
-
-  expect(() => {
-    internalNgAfterViewInit$.pipe(take(1)).subscribe()
-  }).toThrow(new ObjectUnsubscribedError())
-
-  wrapper.hoist.destroy()
-})
-
 const shouldCompileTestComponent = done => {
   expect(createMseSut().hoist).toBeDefined()
   done()
@@ -151,14 +126,14 @@ const shouldCompilerDirective = done => {
   done()
 }
 
-const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-  const wrapper = createMseSut()
-  const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-  wrapper.instance.ngOnChanges({
-    floHls: sc
-  })
-  expect(spy).not.toHaveBeenCalled()
-}
+// const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
+//   const wrapper = createMseSut()
+//   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
+//   wrapper.instance.ngOnChanges({
+//     floHls: sc
+//   })
+//   expect(spy).not.toHaveBeenCalled()
+// }
 
 describe('rewrite these... problems', () => {
   // beforeEach(() => setMseTestBed(true)(false) )
@@ -285,16 +260,13 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   it('should compile the test component', shouldCompileTestComponent)
   it('should compile the directive under test', shouldCompilerDirective)
 
-  it('should skip src change when value is same', () => {
-    skipSrcChangeWhenValueIs(new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false))
-  })
+  // it('should skip src change when value is same', () => {
+  //   skipSrcChangeWhenValueIs(new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false))
+  // })
 
-  it('should skip src change when value is undefined', () => {
-    skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
-  })
-
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
+  // it('should skip src change when value is undefined', () => {
+  //   skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
+  // })
 })
 
 describe(`${MseDirective.name} when supports mse client natively`, () => {
@@ -303,7 +275,5 @@ describe(`${MseDirective.name} when supports mse client natively`, () => {
 
   it('should compile the test component', shouldCompileTestComponent)
   it('should compile the directive under test', shouldCompilerDirective)
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 

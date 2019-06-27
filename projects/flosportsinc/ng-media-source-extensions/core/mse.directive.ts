@@ -6,7 +6,8 @@ import {
   SimpleChanges,
   OnChanges,
   Inject,
-  Output
+  Output,
+  OnInit
 } from '@angular/core'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
@@ -32,7 +33,7 @@ export interface IMseClientReadyEvent<TMseClient> {
 @Directive({
   selector: 'video[floMse]'
 })
-export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChanges {
+export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy, OnChanges {
   constructor(readonly _elementRef: ElementRef<HTMLVideoElement>,
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
@@ -74,7 +75,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
 
   @Output() public readonly srcChange = new Subject<string | undefined>()
   @Output() public readonly floMseClientChange = new Subject<TMseClient | undefined>()
-  // @Output() public readonly mseClient = this._mseClientSource$.asObservable().pipe(startWith(undefined), takeUntil(this._ngOnDestroy$))
+  @Output() public readonly floMseClientMessageChange = new Subject<TMseMessage>()
 
   private readonly getExecutionKey =
     (src?: string) =>
@@ -109,7 +110,6 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
     }
   }
 
-  // tslint:disable-next-line: use-life-cycle-interface
   public ngOnInit() {
     maybe(this.src)
       .map(src => this.getCurrentTasks()
@@ -118,13 +118,11 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
           some: tsk => () => {
             this.setMseClient(tsk({
               src,
-              messageSource: new Subject(), // TODO:!
+              messageSource: this.floMseClientMessageChange,
               videoElement: this.videoElement
             }))
           },
-          none: () => () => {
-            this.setSrcUrl(src)
-          }
+          none: () => () => this.setSrcUrl(src)
         }))
       .tapSome(fn => fn())
   }
@@ -157,7 +155,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnDestroy, OnChang
         if (hasNextMseTask) {
           nextInitTask.tapSome(fn => this.setMseClient(fn({
             src,
-            messageSource: new Subject(), // TODO:!
+            messageSource: this.floMseClientMessageChange,
             videoElement
           })))
         } else {
