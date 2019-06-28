@@ -8,6 +8,7 @@
     display: grid;
     display: -ms-grid;
     margin: auto;
+    height: 100%; // IE11
   }
 
   &:fullscreen {
