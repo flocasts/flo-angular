@@ -5,10 +5,10 @@
   background: black; // move to js
 
   .flo-grid-list-container {
-    display: grid;
-    display: -ms-grid;
-    margin: auto;
     height: 100%; // IE11
+    display: -ms-grid; // IE11
+    display: grid;
+    margin: auto;
   }
 
   &:fullscreen {

@@ -529,12 +529,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       } else {
         const children = this.gridItemContainers.map(a => a.nativeElement)
 
-        this._rd.setStyle(element, displayKey, 'grid')
         this._rd.setStyle(element, displayKey, '-ms-grid')
-        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
         this._rd.setStyle(element, '-ms-grid-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
         this._rd.setStyle(element, '-ms-grid-rows', fillWith(gridCounts.gridBoxColumns, '1fr '))
+
+        this._rd.setStyle(element, displayKey, 'grid')
+        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
