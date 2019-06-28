@@ -15,7 +15,8 @@ export const swapItemsViaIndices =
     return _cloned
   }
 
-export const fillWith = (num: number, str: string) => new Array<string>(num).fill(str).reduce((acc, curr) => acc + curr, '').trimRight()
+export const fillWith = (num: number, str: string) => new Array<string>(num)
+  .fill(str).reduce((acc, curr) => acc + curr, '') .replace(/\s+$/, '')
 
 export const chunk = <T>(size: number, collection: ReadonlyArray<T> = []) =>
   collection.reduce((acc, _, index) =>
