@@ -2,7 +2,7 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser } from '@angular/common'
+import { isPlatformServer, isPlatformBrowser, DOCUMENT } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { fillWith, chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
@@ -44,6 +44,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     public elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
     private _cdRef: ChangeDetectorRef,
+    @Inject(DOCUMENT) private doc: any,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -537,24 +538,26 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
         this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
-        children.reduce((acc, curr, idx) => {
-          const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
-          const thing = gridCounts.rows % (idx + 1)
-          return [
-            ...acc,
-            {
-              div: curr,
-              colNum: idx % gridCounts.columns + 1,
-              rowNum: prev.colNum === thing
-                ? prev.rowNum + 1
-                : prev.rowNum
-            }
-          ]
-        }, [])
-        .forEach(v => {
-          this._rd.setStyle(v.div, '-ms-grid-column', v.colNum)
-          this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
-        })
+        if (typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!this.doc.documentMode) {
+          children.reduce((acc, curr, idx) => {
+            const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
+            const thing = gridCounts.rows % (idx + 1)
+            return [
+              ...acc,
+              {
+                div: curr,
+                colNum: idx % gridCounts.columns + 1,
+                rowNum: prev.colNum === thing
+                  ? prev.rowNum + 1
+                  : prev.rowNum
+              }
+            ]
+          }, [])
+          .forEach(v => {
+            this._rd.setStyle(v.div, '-ms-grid-column', v.colNum)
+            this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
+          })
+        }
 
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
