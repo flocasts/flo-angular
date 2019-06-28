@@ -537,10 +537,28 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
         this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
+        children.reduce((acc, curr, idx) => {
+          const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
+          const thing = gridCounts.rows % (idx + 1)
+          return [
+            ...acc,
+            {
+              div: curr,
+              colNum: idx % gridCounts.columns + 1,
+              rowNum: prev.colNum === thing
+                ? prev.rowNum + 1
+                : prev.rowNum
+            }
+          ]
+        }, [])
+        .forEach(v => {
+          this._rd.setStyle(v.div, '-ms-grid-column', v.colNum)
+          this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
+        })
+
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
           this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
-
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
           chunk(groups, children).forEach((col, groupIdx) => {
