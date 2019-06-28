@@ -6,6 +6,7 @@
 
   .flo-grid-list-container {
     display: grid;
+    display: -ms-grid;
     margin: auto;
   }
 
@@ -17,7 +18,6 @@
   }
 
   .flo-grid-list-item-container {
-    overflow: hidden;
     height: 0;
     position: relative;
     color: white;
