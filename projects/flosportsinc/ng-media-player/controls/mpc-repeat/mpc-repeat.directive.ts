@@ -3,7 +3,7 @@ import { FloMediaPlayerControlDirectiveBase } from '../mpc-base.directive'
 import {
   MEDIA_PLAYER_CONTROLS_ENABLE_REPEAT_FUNC, RepeatControlFunction,
   MEDIA_PLAYER_CONTROLS_DISABLE_REPEAT_FUNC
-} from './mp-repeat.tokens'
+} from './mpc-repeat.tokens'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword

@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerRepeatEnableControlDirective, FloMediaPlayerRepeatDisableControlDirective } from './mp-repeat.directive'
+import { FloMediaPlayerRepeatEnableControlDirective, FloMediaPlayerRepeatDisableControlDirective } from './mpc-repeat.directive'
 import {
   MEDIA_PLAYER_CONTROLS_ENABLE_REPEAT_FUNC, MEDIA_PLAYER_CONTROLS_DISABLE_REPEAT_FUNC,
   defaultEnableRepeatFunction, defaultDisableRepeatFunction
-} from './mp-repeat.tokens'
+} from './mpc-repeat.tokens'
 
 @NgModule({
   declarations: [FloMediaPlayerRepeatEnableControlDirective, FloMediaPlayerRepeatDisableControlDirective],
