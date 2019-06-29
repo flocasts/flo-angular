@@ -6,7 +6,7 @@ export abstract class FloMediaPlayerControlDirectiveBase<TMeta = any> {
   constructor(@Inject(PLATFORM_ID) protected platformId: string) { }
 
   @Input() readonly floMp?: HTMLMediaElement
-  @Input() readonly floMpcMeta?: TMeta
+  @Input() readonly floMpMeta?: TMeta
 
   protected readonly maybeMediaElement = () => isPlatformBrowser(this.platformId)
     ? maybe(this.floMp).filter(ve => ve instanceof HTMLMediaElement)

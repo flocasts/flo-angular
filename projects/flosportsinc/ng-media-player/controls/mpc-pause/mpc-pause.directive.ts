@@ -33,6 +33,6 @@ export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPl
 
     if (!this.floMpClickToPause) { return }
 
-    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpcMeta))
+    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpMeta))
   }
 }

@@ -33,7 +33,7 @@ export class FloMediaPlayerMuteControlDirective<TMeta = any> extends FloMediaPla
     if (!this.floMpClickToMute) { return }
 
     this.maybeMediaElement().tapSome(ve => {
-      this.func(ve, this.elmRef, this.floMpcMeta)
+      this.func(ve, this.elmRef, this.floMpMeta)
     })
   }
 }

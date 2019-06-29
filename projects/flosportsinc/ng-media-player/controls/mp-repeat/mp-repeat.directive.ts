@@ -23,7 +23,7 @@ export abstract class FloMediaPlayerRepeatControlDirective<TMeta = any> extends 
     this.cd.detectChanges()
 
     this.maybeMediaElement().tapSome(ve => {
-      this.executionFunc(ve, this.elmRef, this.floMpcMeta)
+      this.executionFunc(ve, this.elmRef, this.floMpMeta)
     })
   }
 }

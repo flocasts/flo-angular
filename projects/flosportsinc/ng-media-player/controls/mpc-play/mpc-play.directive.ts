@@ -33,6 +33,6 @@ export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPla
 
     if (!this.floMpClickToPlay) { return }
 
-    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpcMeta))
+    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpMeta))
   }
 }

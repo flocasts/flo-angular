@@ -33,7 +33,7 @@ export class FloMediaPlayerUnmuteControlDirective<TMeta = any> extends FloMediaP
     if (!this.floMpClickToUnmute) { return }
 
     this.maybeMediaElement().tapSome(ve => {
-      this.func(ve, this.elmRef, this.floMpcMeta)
+      this.func(ve, this.elmRef, this.floMpMeta)
     })
   }
 }
