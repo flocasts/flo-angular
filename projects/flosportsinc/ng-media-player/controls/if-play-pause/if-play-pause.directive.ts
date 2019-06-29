@@ -1,4 +1,4 @@
-import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, Input } from '@angular/core'
+import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive } from '@angular/core'
 import { Subject, fromEvent, merge } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 
