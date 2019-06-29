@@ -6,50 +6,62 @@
 </video>
 
 <div>
-  <span>
-    <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>Play</button>
-    <button *floIfMediaPlaying="vidRef" [floMp]="vidRef" floMpClickToPause>Pause</button>
-  </span>
-  <span>
-    <button [floMp]="vidRef" [floMpClickToSkipBack]="15000">-15</button>
-    <button [floMp]="vidRef" [floMpClickToSkipForward]="15000">15+</button>
-  </span>
-  <span>
-    <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
-    <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
-  </span>
-  <span>
-    <button *floIfMediaCanEnterNativePip="vidRef" [floMp]="vidRef" floMpClickToEnterNativePip>PiP</button>
-    <button *floIfMediaCanExitNativePip="vidRef" [floMp]="vidRef" floMpClickToExitNativePip>Exit PiP</button>
-  </span>
-  <span>
+  <div>
+    <!-- TODO: TIMELINE SCRUBBER -->
+  </div>
+  <div>
     <button *floIfMediaUnmuted="vidRef" [floMp]="vidRef" floMpClickToMute>Mute</button>
     <button *floIfMediaMuted="vidRef" [floMp]="vidRef" floMpClickToUnmute>Unmute</button>
     <input *floIfMediaAdjustableVolume [floMp]="vidRef" floMpVolume type="range">
     <!--
-      <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]">Low</span>
-      <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]">Medium</span>
-      <span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]">High</span>
-    -->
-  </span>
-  <span>
-    <!-- TODO: PLAYBACK SPEED -->
-    <!-- 
-      <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
-      <input [floMp]="vidRef" floMpPlaybackRate type="range"> 
-    -->
-  </span>
-  <span>
-    <button *floIfMediaLoopDisabled="vidRef" [floMp]="vidRef" floMpClickToEnableRepeat>ENABLE REPEAT</button>
-    <button *floIfMediaLoopEnabled="vidRef" [floMp]="vidRef" floMpClickToDisableRepeat>DISABLE REPEAT</button>
-  </span>
-  <span>
-    <!-- TODO: PLAY AGIN AFTER ENDED (NOT LOOP) -->
-  </span>
-  <span>
-    <!-- TODO: TIMELINE SCRUBBER -->
-  </span>
+        <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]" floMpClickToMute>Low</span>
+        <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]" floMpClickToMute>Medium</span>
+        <span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]" floMpClickToMute>High</span>
+      -->
+  </div>
+  <div>
+    <span>
+      <!-- TODO: PLAY AGIN AFTER ENDED (NOT LOOP) -->
+    </span>
+    <span>
+      <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>Play</button>
+      <button *floIfMediaPlaying="vidRef" [floMp]="vidRef" floMpClickToPause>Pause</button>
+    </span>
+    <span>
+      <button [floMp]="vidRef" [floMpClickToSkipBack]="15000">-15</button>
+      <button [floMp]="vidRef" [floMpClickToSkipForward]="15000">15+</button>
+    </span>
+    <span>
+      <button *floIfMediaLoopDisabled="vidRef" [floMp]="vidRef" floMpClickToEnableRepeat>ENABLE REPEAT</button>
+      <button *floIfMediaLoopEnabled="vidRef" [floMp]="vidRef" floMpClickToDisableRepeat>DISABLE REPEAT</button>
+    </span>
+    <span>
+      <input type="range" min="0" max="2" step=".5" list="steplist">
+      <datalist id="steplist">
+        <option>0</option>
+        <option>.5</option>
+        <option>1</option>
+        <option>1.5</option>
+        <option>2</option>
+      </datalist>
 
+      <!-- TODO: PLAYBACK SPEED -->
+      <!-- 
+        <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
+        <input [floMp]="vidRef" floMpPlaybackRate type="range"> 
+      -->
+    </span>
+  </div>
+  <div>
+    <span>
+      <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
+      <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
+    </span>
+    <span>
+      <button *floIfMediaCanEnterNativePip="vidRef" [floMp]="vidRef" floMpClickToEnterNativePip>PiP</button>
+      <button *floIfMediaCanExitNativePip="vidRef" [floMp]="vidRef" floMpClickToExitNativePip>Exit PiP</button>
+    </span>
+  </div>
 
   <!-- EXTENDED FUTURE IDEAS -->
   <span>

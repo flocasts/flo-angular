@@ -12,6 +12,7 @@ import { FloMediaIfAdjustableVolumeModule } from './if-adjustable-volume/if-adju
 import { FloMediaIfMutedModule } from './if-muted/if-muted.module'
 import { FloMediaPlayerControlsRepeatModule } from './mpc-repeat/mpc-repeat.module'
 import { FloMediaIfRepeatModule } from './if-repeat/if-repeat.module'
+import { FloMediaPlayerControlsPlaybackRateModule } from './mpc-playback-rate/mpc-playback-rate.module'
 
 @NgModule({
   imports: [
@@ -23,6 +24,7 @@ import { FloMediaIfRepeatModule } from './if-repeat/if-repeat.module'
     FloMediaPlayerControlsUnmuteModule,
     FloMediaPlayerControlsSkipModule,
     FloMediaPlayerControlsRepeatModule,
+    FloMediaPlayerControlsPlaybackRateModule,
     FloMediaIfPlayPauseModule,
     FloMediaIfPipNativeModule,
     FloMediaIfAdjustableVolumeModule,
@@ -38,6 +40,7 @@ import { FloMediaIfRepeatModule } from './if-repeat/if-repeat.module'
     FloMediaPlayerControlsUnmuteModule,
     FloMediaPlayerControlsSkipModule,
     FloMediaPlayerControlsRepeatModule,
+    FloMediaPlayerControlsPlaybackRateModule,
     FloMediaIfPlayPauseModule,
     FloMediaIfPipNativeModule,
     FloMediaIfAdjustableVolumeModule,
