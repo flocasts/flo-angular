@@ -16,6 +16,7 @@ export class FloMediaIfAdjustableVolumeDirective implements OnInit {
   ngOnInit() {
     if (isPlatformServer(this.platformId)) { return }
 
+    // test if able to mutate volume, iOS cannot so don't render control.
     const video = (this.doc as HTMLDocument).createElement('video')
     video.volume = 0.125
 
