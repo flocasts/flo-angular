@@ -531,7 +531,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       if (gridCounts.columns <= 1) {
         this._rd.setStyle(element, displayKey, 'block')
         if (this.isIE11()) {
-          this._rd.setStyle(element, heightKey, '100%')
+          this._rd.setStyle(this.elmRef, heightKey, '100%')
         }
       } else {
         const children = this.gridItemContainers.map(a => a.nativeElement)
@@ -545,7 +545,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
         if (this.isIE11()) {
-          this._rd.removeStyle(element, heightKey)
+          this._rd.removeStyle(this.elmRef, heightKey)
           children.reduce((acc, curr, idx) => {
             const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
             const thing = gridCounts.rows % (idx + 1)
