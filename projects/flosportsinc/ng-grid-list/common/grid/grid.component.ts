@@ -511,7 +511,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
-  private isIE11 = () => typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 
   private readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
@@ -529,7 +529,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       this._rd.setStyle(element, maxWidthKey, maxWidth)
       if (gridCounts.columns <= 1) {
         this._rd.setStyle(element, displayKey, 'block')
-        if (this.isIE11()) {
+        if (this.isIE11) {
           this._rd.removeStyle(this.elmRef.nativeElement, heightKey)
         }
       } else {
@@ -543,8 +543,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
         this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
-        if (this.isIE11()) {
-          console.log('RUNNIING IE 11 sub routine')
+        if (this.isIE11) {
           this._rd.setStyle(this.elmRef.nativeElement, heightKey, '100%')
           children.reduce((acc, curr, idx) => {
             const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
