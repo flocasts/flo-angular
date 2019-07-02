@@ -2,7 +2,7 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser, DOCUMENT } from '@angular/common'
+import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { fillWith, chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
@@ -44,7 +44,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     public elmRef: ElementRef<HTMLElement>,
     private _rd: Renderer2,
     private _cdRef: ChangeDetectorRef,
-    @Inject(DOCUMENT) private doc: any,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -512,7 +511,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
-  private isIE11 = () => typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!this.doc.documentMode
+  private isIE11 = () => typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 
   private readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
@@ -545,6 +544,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
         if (this.isIE11()) {
+          console.log('RUNNIING IE 11 sub routine')
           this._rd.removeStyle(this.elmRef, heightKey)
           children.reduce((acc, curr, idx) => {
             const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
