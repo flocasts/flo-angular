@@ -5,6 +5,8 @@
   background: black; // move to js
 
   .flo-grid-list-container {
+    height: 100%; // IE11
+    display: -ms-grid; // IE11
     display: grid;
     margin: auto;
   }
@@ -17,8 +19,6 @@
   }
 
   .flo-grid-list-item-container {
-    overflow: hidden;
-    height: 0;
     position: relative;
     color: white;
 

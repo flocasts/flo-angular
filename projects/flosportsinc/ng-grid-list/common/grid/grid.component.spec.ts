@@ -3,7 +3,7 @@ import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
-import { PLATFORM_ID, Component, NgModule, ChangeDetectorRef } from '@angular/core'
+import { PLATFORM_ID, Component, NgModule, ChangeDetectorRef, Renderer2 } from '@angular/core'
 import { By } from '@angular/platform-browser'
 import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
@@ -723,6 +723,17 @@ describe(FloGridListViewComponent.name, () => {
     it('TODO', () => {
       const sut = createSut()
       sut.hoistInstance.count = 4
+      sut.hoistFixture.detectChanges()
+    })
+  })
+
+  describe('IE11', () => {
+    it('apply ms-prefix', () => {
+      const sut = createSut()
+      spyOn(sut.instance as any, 'isIE11').and.returnValue(true)
+      sut.hoistInstance.count = 4
+      sut.hoistFixture.detectChanges()
+      sut.hoistInstance.count = 1
       sut.hoistFixture.detectChanges()
     })
   })

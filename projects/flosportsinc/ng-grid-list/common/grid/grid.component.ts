@@ -511,6 +511,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
+
   private readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
     const element = this.gridContainer.nativeElement
@@ -520,14 +522,43 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     const displayKey = 'display'
     const gridAreaKey = 'grid-area'
     const alignSelfKey = 'align-self'
+    const heightKey = 'height'
 
     if (this.gridContainer) {
       this._rd.removeStyle(element, maxHeightKey)
       this._rd.setStyle(element, maxWidthKey, maxWidth)
       if (gridCounts.columns <= 1) {
         this._rd.setStyle(element, displayKey, 'block')
+        if (this.isIE11) {
+          this._rd.removeStyle(this.elmRef.nativeElement, heightKey)
+        }
       } else {
         const children = this.gridItemContainers.map(a => a.nativeElement)
+
+        if (this.isIE11) {
+          this._rd.setStyle(element, displayKey, '-ms-grid')
+          this._rd.setStyle(element, '-ms-grid-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+          this._rd.setStyle(element, '-ms-grid-rows', fillWith(gridCounts.gridBoxColumns, '1fr '))
+          this._rd.setStyle(this.elmRef.nativeElement, heightKey, '100%')
+          children.reduce((acc, curr, idx) => {
+            const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
+            const thing = gridCounts.rows % (idx + 1)
+            return [
+              ...acc,
+              {
+                div: curr,
+                colNum: idx % gridCounts.columns + 1,
+                rowNum: prev.colNum === thing
+                  ? prev.rowNum + 1
+                  : prev.rowNum
+              }
+            ]
+          }, [])
+          .forEach(v => {
+            this._rd.setStyle(v.div, '-ms-grid-column', v.colNum)
+            this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
+          })
+        }
 
         this._rd.setStyle(element, displayKey, 'grid')
         this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
@@ -536,7 +567,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
           this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
-
           const groups = Math.ceil(children.length / gridCounts.columns) + 1
 
           chunk(groups, children).forEach((col, groupIdx) => {
