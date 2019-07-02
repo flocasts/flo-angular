@@ -535,15 +535,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       } else {
         const children = this.gridItemContainers.map(a => a.nativeElement)
 
-        this._rd.setStyle(element, displayKey, '-ms-grid')
-        this._rd.setStyle(element, '-ms-grid-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-        this._rd.setStyle(element, '-ms-grid-rows', fillWith(gridCounts.gridBoxColumns, '1fr '))
-
-        this._rd.setStyle(element, displayKey, 'grid')
-        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
-
         if (this.isIE11) {
+          this._rd.setStyle(element, displayKey, '-ms-grid')
+          this._rd.setStyle(element, '-ms-grid-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+          this._rd.setStyle(element, '-ms-grid-rows', fillWith(gridCounts.gridBoxColumns, '1fr '))
           this._rd.setStyle(this.elmRef.nativeElement, heightKey, '100%')
           children.reduce((acc, curr, idx) => {
             const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
@@ -564,6 +559,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
             this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
           })
         }
+
+        this._rd.setStyle(element, displayKey, 'grid')
+        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
 
         if (gridCounts.shouldFill) {
           this._rd.removeStyle(element, maxWidthKey)
