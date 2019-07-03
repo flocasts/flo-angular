@@ -4,7 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { fillWith, chunk, swapItemsViaIndices } from './helpers'
+import { chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
@@ -513,69 +513,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         .filter(idx => idx >= 0)
         .tapSome(idx => this.setItem(item, idx))
 
-  private readonly calcNumRowsColumns = (n: number) => {
-    const squared = Math.sqrt(n)
-    const columns = Math.ceil(squared)
-    const rows = columns
-    const shouldFill = n === 2
-    return {
-      columns,
-      rows,
-      gridBoxColumns: shouldFill ? columns * 2 : columns,
-      gridBoxRows: shouldFill ? columns * 2 : rows,
-      shouldFill
-    }
-  }
-
   private readonly updateGridStyles = (count: number) => {
-    const gridCounts = this.calcNumRowsColumns(count)
-    const element = this.gridContainer.nativeElement
-    // const maxWidth = `${this.maxheight * 1.777777778}px`
-    // const maxWidthKey = 'max-width'
-    // const maxHeightKey = 'max-height'
-    const displayKey = 'display'
-    // const gridAreaKey = 'grid-area'
-    // const alignSelfKey = 'align-self'
-    // const heightKey = 'height'
-
-    if (this.gridContainer) {
-      // if (gridCounts.columns <= 1) {
-      //   this._rd.setStyle(element, displayKey, 'block')
-      // } else {
-      //   this._rd.setStyle(element, displayKey, 'flex')
-      // }
-    }
-    // if (this.gridContainer) {
-    //   this._rd.removeStyle(element, maxHeightKey)
-    //   this._rd.setStyle(element, maxWidthKey, maxWidth)
-    //   if (gridCounts.columns <= 1) {
-    //     this._rd.setStyle(element, displayKey, 'block')
-    //   } else {
-    // const children = this.gridItemContainers.map(a => a.nativeElement)
-
-    // this._rd.setStyle(element, displayKey, 'grid')
-    // this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-    // this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
-
-    // if (gridCounts.shouldFill) {
-    //   this._rd.removeStyle(element, maxWidthKey)
-    //   this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
-    //   const groups = Math.ceil(children.length / gridCounts.columns) + 1
-
-    //   chunk(groups, children).forEach((col, groupIdx) => {
-    //     col.forEach((val, idx) => {
-    //       this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
-    //       this._rd.setStyle(val, alignSelfKey, 'center')
-    //     })
-    //   })
-    // } else {
-    //   this._rd.setStyle(element, maxWidthKey, maxWidth)
-    //   children.forEach(child => {
-    //     this._rd.removeStyle(child, gridAreaKey)
-    //     this._rd.removeStyle(child, alignSelfKey)
-    //   })
-    // }
-    // }
-    // }
+    //
   }
 }

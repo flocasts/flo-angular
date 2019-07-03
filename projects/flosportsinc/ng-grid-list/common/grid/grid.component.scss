@@ -10,7 +10,8 @@
     flex-wrap: wrap;
     justify-content: center;
     margin: auto;
-    max-width: 1200px;
+    max-width: 1066px;
+    height: 600px;
   }
 
   &:fullscreen {
@@ -23,9 +24,6 @@
   .flo-grid-list-item-container {
     position: relative;
     color: white;
-    flex-basis: 50%;
-    
-    padding-top: 28.125%; // aspect-ratio / total rows
     ::ng-deep > :first-child, ::ng-deep > video {
       position: absolute;
       top: 0;
