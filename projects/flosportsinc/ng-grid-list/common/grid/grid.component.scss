@@ -3,15 +3,20 @@
   position: relative;
   width: 100%;
   background: black; // move to js
+
+  .mg-auto {
+    margin: auto;
+  }
   
   .flo-grid-list-container {
-    margin: auto;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    margin: auto;
-    max-width: 1066px;
-    height: 600px;
+    
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
   }
 
   &:fullscreen {
@@ -34,7 +39,7 @@
     ::ng-deep video {
       height: 100%;
       max-width: 100%;
-      object-fit: cover;
+      object-fit: contain;
     }
     // .flo-grid-list-item-some {
     //   height: 100%;
