@@ -1,7 +1,6 @@
 :host {
   display: block;
   position: relative;
-  width: 100%;
   background: black; // move to js
 
   .mg-auto {
@@ -12,7 +11,6 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    
     position: absolute;
     top: 0;
     left: 0;
@@ -20,7 +18,9 @@
   }
 
   &:fullscreen {
-    .flo-grid-list-container {
+    position: inherit;
+    .flo-grid-list-container, .mg-auto {
+      // position: relative;
       max-width: initial !important;
       max-height: initial !important;
     }
@@ -51,8 +51,6 @@
     //   color: white; // TODO: move to JS land
     // }
   }
-
-  
 
   .flo-grid-list-overlay {
     position: absolute;

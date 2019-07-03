@@ -302,15 +302,31 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.detectChanges()
   }
 
+  baseAspectRatio = .5625
+  get baseMaxWidth() {
+    return this.maxheight / this.baseAspectRatio + 'px'
+  }
+
+  get maxWidth() {
+    return this.count === 2
+      ? 'none'
+      : this.maxheight / this.baseAspectRatio + 'px'
+  }
+
+  get pos() {
+    return this.count === 2
+      ? 'initial'
+      : 0
+  }
+
   get viewItems() {
     const square = Math.ceil(Math.sqrt(this.count))
-
 
     const stub = new Array<IMaybe<TItem>>(this.count)
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
 
-    return chunk(square, stub)
+    const d = chunk(square, stub)
       .reduce((acc: any, curr) => {
         return [
           ...acc,
@@ -318,7 +334,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
             return {
               hasValue: value.isSome(),
               value: value.valueOrUndefined(),
-              aspectRatio: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
+              flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
               padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%'
             }
           })
@@ -333,6 +349,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
           isNotSelected: !isSelected
         }
       })
+    console.log(+d[0].padTop.replace('%', '') - +d[d.length - 1].padTop.replace('%', ''))
+    return d
   }
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()

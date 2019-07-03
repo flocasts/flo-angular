@@ -1,12 +1,12 @@
 <div class="flo-grid-list-overlay mg-auto"
-    [ngClass]="overlayNgClass"
-    [ngStyle]="overlayNgStyle"
-    [class.flo-grid-list-overlay-hide]="hideOverlay | async">
-    <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
-  </div>
-<div class="mg-auto" style="max-width: 1200px">
+  [ngClass]="overlayNgClass"
+  [ngStyle]="overlayNgStyle"
+  [class.flo-grid-list-overlay-hide]="hideOverlay | async">
+  <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
+</div>
+<div class="mg-auto" [style.max-width]="baseMaxWidth" style="display: flex; align-items: center;">
   <div style="padding-top: 56.25%"></div>
-  <div #floGridListContainer class="mg-auto flo-grid-list-container" style="max-width: 1200px">
+  <div #floGridListContainer class="mg-auto flo-grid-list-container" [style.max-width]="maxWidth" [style.top]="pos">
     <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
       <div #floGridListItemContainer
         class=" flo-grid-list-item-container"
@@ -15,7 +15,7 @@
         [floGridListDragDropItem]="item.value"
         [floGridListDragDropIndex]="idx"
         [floGridListDragDropGridRef]="this"
-        [style.flex-basis]="item.aspectRatio"
+        [style.flex-basis]="item.flexBasis"
         [style.padding-top]="item.padTop"
         [attr.id]="item?.value?.id">
         <ng-container [ngSwitch]="item.hasValue">
