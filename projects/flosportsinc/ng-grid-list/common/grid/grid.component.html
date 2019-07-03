@@ -13,12 +13,13 @@
       [floGridListDragDropItem]="item.value"
       [floGridListDragDropIndex]="idx"
       [floGridListDragDropGridRef]="this"
-      [style.padding-top]="item.aspectRatio"
+      [style.flex-basis]="item.aspectRatio"
+      [style.padding-top]="item.padTop"
       [attr.id]="item?.value?.id">
       <ng-container [ngSwitch]="item.hasValue">
-        <ng-container *ngSwitchCase="true">
+        <div *ngSwitchCase="true" class="flo-grid-list-item-some">
           <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>
-        </ng-container>
+        </div>
         <div *ngSwitchCase="false" class="flo-grid-list-item-none">
           <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
         </div>

@@ -303,18 +303,34 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get viewItems() {
-    return new Array<IMaybe<TItem>>(this.count)
+    const square = Math.ceil(Math.sqrt(this.count))
+
+
+    const stub = new Array<IMaybe<TItem>>(this.count)
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
-      .map((value, idx) => {
+
+    return chunk(square, stub)
+      .reduce((acc: any, curr) => {
+        return [
+          ...acc,
+          ...curr.map((value, _indexb, arrb) => {
+            return {
+              hasValue: value.isSome(),
+              value: value.valueOrUndefined(),
+              aspectRatio: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
+              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%'
+            }
+          })
+        ]
+      }, [])
+      .map((a, idx) => {
         const isSelected = this.selectedIndex === idx
         return {
-          hasValue: value.isSome(),
-          value: value.valueOrUndefined(),
+          ...a,
           isShowingBorder: isSelected && this.count > 1,
           isSelected,
-          isNotSelected: !isSelected,
-          aspectRatio: this.getAspectRatio()
+          isNotSelected: !isSelected
         }
       })
   }
@@ -511,78 +527,55 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
-  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
-
   private readonly updateGridStyles = (count: number) => {
     const gridCounts = this.calcNumRowsColumns(count)
     const element = this.gridContainer.nativeElement
-    const maxWidth = `${this.maxheight * 1.777777778}px`
-    const maxWidthKey = 'max-width'
-    const maxHeightKey = 'max-height'
+    // const maxWidth = `${this.maxheight * 1.777777778}px`
+    // const maxWidthKey = 'max-width'
+    // const maxHeightKey = 'max-height'
     const displayKey = 'display'
-    const gridAreaKey = 'grid-area'
-    const alignSelfKey = 'align-self'
-    const heightKey = 'height'
+    // const gridAreaKey = 'grid-area'
+    // const alignSelfKey = 'align-self'
+    // const heightKey = 'height'
 
     if (this.gridContainer) {
-      this._rd.removeStyle(element, maxHeightKey)
-      this._rd.setStyle(element, maxWidthKey, maxWidth)
-      if (gridCounts.columns <= 1) {
-        this._rd.setStyle(element, displayKey, 'block')
-        if (this.isIE11) {
-          this._rd.removeStyle(this.elmRef.nativeElement, heightKey)
-        }
-      } else {
-        const children = this.gridItemContainers.map(a => a.nativeElement)
-
-        if (this.isIE11) {
-          this._rd.setStyle(element, displayKey, '-ms-grid')
-          this._rd.setStyle(element, '-ms-grid-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-          this._rd.setStyle(element, '-ms-grid-rows', fillWith(gridCounts.gridBoxColumns, '1fr '))
-          this._rd.setStyle(this.elmRef.nativeElement, heightKey, '100%')
-          children.reduce((acc, curr, idx) => {
-            const prev = (acc[acc.length - 1] || { colNum: 1, rowNum: 1})
-            const thing = gridCounts.rows % (idx + 1)
-            return [
-              ...acc,
-              {
-                div: curr,
-                colNum: idx % gridCounts.columns + 1,
-                rowNum: prev.colNum === thing
-                  ? prev.rowNum + 1
-                  : prev.rowNum
-              }
-            ]
-          }, [])
-          .forEach(v => {
-            this._rd.setStyle(v.div, '-ms-grid-column', v.colNum)
-            this._rd.setStyle(v.div, '-ms-grid-row', v.rowNum)
-          })
-        }
-
-        this._rd.setStyle(element, displayKey, 'grid')
-        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
-
-        if (gridCounts.shouldFill) {
-          this._rd.removeStyle(element, maxWidthKey)
-          this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
-          const groups = Math.ceil(children.length / gridCounts.columns) + 1
-
-          chunk(groups, children).forEach((col, groupIdx) => {
-            col.forEach((val, idx) => {
-              this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
-              this._rd.setStyle(val, alignSelfKey, 'center')
-            })
-          })
-        } else {
-          this._rd.setStyle(element, maxWidthKey, maxWidth)
-          children.forEach(child => {
-            this._rd.removeStyle(child, gridAreaKey)
-            this._rd.removeStyle(child, alignSelfKey)
-          })
-        }
-      }
+      // if (gridCounts.columns <= 1) {
+      //   this._rd.setStyle(element, displayKey, 'block')
+      // } else {
+      //   this._rd.setStyle(element, displayKey, 'flex')
+      // }
     }
+    // if (this.gridContainer) {
+    //   this._rd.removeStyle(element, maxHeightKey)
+    //   this._rd.setStyle(element, maxWidthKey, maxWidth)
+    //   if (gridCounts.columns <= 1) {
+    //     this._rd.setStyle(element, displayKey, 'block')
+    //   } else {
+    // const children = this.gridItemContainers.map(a => a.nativeElement)
+
+    // this._rd.setStyle(element, displayKey, 'grid')
+    // this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
+    // this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
+
+    // if (gridCounts.shouldFill) {
+    //   this._rd.removeStyle(element, maxWidthKey)
+    //   this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
+    //   const groups = Math.ceil(children.length / gridCounts.columns) + 1
+
+    //   chunk(groups, children).forEach((col, groupIdx) => {
+    //     col.forEach((val, idx) => {
+    //       this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
+    //       this._rd.setStyle(val, alignSelfKey, 'center')
+    //     })
+    //   })
+    // } else {
+    //   this._rd.setStyle(element, maxWidthKey, maxWidth)
+    //   children.forEach(child => {
+    //     this._rd.removeStyle(child, gridAreaKey)
+    //     this._rd.removeStyle(child, alignSelfKey)
+    //   })
+    // }
+    // }
+    // }
   }
 }
