@@ -299,11 +299,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.aspectRatio = percent
   }
 
-  isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  getNativeAspectRatio = () => window.screen.height > window.screen.width
+  public readonly isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
+  public readonly getNativeAspectRatio = () => window.screen.height > window.screen.width
     ? window.screen.width / window.screen.height
     : window.screen.height / window.screen.width
-
 
   @HostListener('fullscreenchange')
   @HostListener('webkitfullscreenchange')
@@ -311,7 +310,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @HostListener('MSFullscreenChange')
   fullscreenchange() {
     this.update()
-    this._cdRef.detectChanges()
   }
 
   get baseMaxWidth() {
@@ -363,8 +361,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       })
   }
 
-  viewItemSource = new BehaviorSubject([])
-  viewItems$ = this.viewItemSource.asObservable().pipe(shareReplay(1))
+  private readonly viewItemSource = new BehaviorSubject([])
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
   @Output() public readonly countChange = new Subject<number>()
@@ -384,6 +381,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
+  @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -513,7 +511,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       this.isIndexEmpty(toIndex) && this.isItemInNotAnotherIndex(item, toIndex)
 
   public readonly canReplaceItem = (item: TItem, toIndex = this.selectedIndex) => {
-    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex) // this.isItemInView(item)
+    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
   }
 
   public readonly setItem = (item: TItem, idx = this.selectedIndex) => this.setItemAtIndex(idx, item)
