@@ -8,6 +8,7 @@
   }
   
   .flo-grid-list-container {
+    width: 100%;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -20,7 +21,6 @@
   &:fullscreen {
     position: inherit;
     .flo-grid-list-container, .mg-auto {
-      // position: relative;
       max-width: initial !important;
       max-height: initial !important;
     }
