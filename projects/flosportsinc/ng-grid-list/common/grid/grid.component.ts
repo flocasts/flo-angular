@@ -5,12 +5,13 @@
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { chunk, swapItemsViaIndices } from './helpers'
-import { Subject, fromEvent, of, interval, merge } from 'rxjs'
+import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, HostListener
+  TemplateRef, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef,
+  HostListener, OnChanges, SimpleChanges
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -38,7 +39,7 @@ import {
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
+export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
     private _cdRef: ChangeDetectorRef,
@@ -328,15 +329,14 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.count === 2 ? 'inherit' : '0px'
   }
 
-  // TODO: optimize!!!!!
-  get viewItems() {
+  createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
 
     const stub = new Array<IMaybe<TItem>>(this.count)
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
 
-    const d = chunk(square, stub)
+    return chunk(square, stub)
       .reduce((acc: any, curr) => {
         return [
           ...acc,
@@ -359,8 +359,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
           isNotSelected: !isSelected
         }
       })
-    return d
   }
+
+  viewItemSource = new BehaviorSubject([])
+  viewItems$ = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
   @Output() public readonly countChange = new Subject<number>()
@@ -379,7 +381,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
-  @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
+  @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -411,7 +413,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
 
   public readonly trySelectNextEmpty = () =>
-    maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
+    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex((b: any) => !b.hasValue))
       .filter(idx => idx >= 0)
       .tapSome(idx => this.setSelectedIndex(idx))
 
@@ -425,15 +427,26 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
+  update() {
+    console.log('computing')
+    this.viewItemSource.next(this.createViewItems())
+  }
+
   ngOnInit() {
     // initial setup of selected id
     this.setSelectedIdViaIndex(this.selectedIndex)
+    this.update()
   }
 
   ngAfterViewInit() {
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
+      this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
     }
+  }
+
+  ngOnChanges(_change: SimpleChanges) {
+    this.update()
   }
 
   ngOnDestroy() {
@@ -530,7 +543,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setSelectedId(undefined)
   }
 
-  public readonly findNextEmptyIndex = () => this.viewItems.findIndex(a => !a.hasValue)
+  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex((a: any) => !a.hasValue)
 
   public readonly fillNextEmpty =
     (item: TItem) =>
