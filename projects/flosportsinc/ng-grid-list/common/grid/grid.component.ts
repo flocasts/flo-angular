@@ -10,7 +10,7 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, HostListener
+  TemplateRef, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, HostListener
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -31,7 +31,6 @@ import {
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
-import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 
 @Component({
   selector: 'flo-grid-list-view',
@@ -42,7 +41,6 @@ import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defau
 export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
-    private _rd: Renderer2,
     private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
@@ -60,7 +58,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
-    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: string
+    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number
   ) { }
 
   @Input()
@@ -290,13 +288,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   get aspectRatio() {
     return this._aspectRatio
   }
-  set aspectRatio(ratio: string) {
-    const _ratio = typeof ratio === 'string' && ratio.includes('%') ? ratio : DEFAULT_FLO_GRID_LIST_ASPECT_RATIO
+  set aspectRatio(ratio: number) {
+    const _ratio = typeof ratio === 'number' ? ratio : this._aspectRatio
     this._aspectRatio = _ratio
     this.aspectRatioChange.next(_ratio)
   }
 
-  public setAspectRatio(percent: string) {
+  public setAspectRatio(percent: number) {
     this.aspectRatio = percent
   }
 
@@ -316,23 +314,18 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   // TODO: this could be a bit more dynamc
-  baseAspectRatio = .5625
-  aspectPercentage = this.baseAspectRatio * 100 + '%'
+  aspectRatioPercentage = this.aspectRatio * 100 + '%'
 
   get baseMaxWidth() {
-    return this.maxheight / this.baseAspectRatio + 'px'
+    return this.maxheight / this.aspectRatio
   }
 
   get maxWidth() {
-    return this.count === 2
-      ? 'none'
-      : this.maxheight / this.baseAspectRatio + 'px'
+    return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
   }
 
   get pos() {
-    return this.count === 2
-      ? 'initial'
-      : 0
+    return this.count === 2 ? 'initial' : 0
   }
 
   // TODO: optimize!!!!!
@@ -385,7 +378,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
-  @Output() public readonly aspectRatioChange = new Subject<string>()
+  @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
