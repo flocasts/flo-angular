@@ -310,6 +310,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @HostListener('mozfullscreenchange')
   @HostListener('MSFullscreenChange')
   fullscreenchange() {
+    this.update()
     this._cdRef.detectChanges()
   }
 

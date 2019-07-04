@@ -2,6 +2,15 @@
   display: block;
   position: relative;
   background: black; // TODO: make a config value
+  &:fullscreen {
+    position: inherit;
+
+    .fg.list-container,
+    .fg.mg-auto {
+      max-width: none !important;
+      max-height: none !important;
+    }
+  }
   .fg {
     &.mg-auto {
       margin: auto;
@@ -70,16 +79,6 @@
   
     &.list-cursor-hide {
       cursor: none;
-    }
-  }
-
-  &:fullscreen {
-    position: inherit;
-
-    .fg.list-container,
-    .fg.mg-auto {
-      max-width: none !important;
-      max-height: none !important;
     }
   }
 }
