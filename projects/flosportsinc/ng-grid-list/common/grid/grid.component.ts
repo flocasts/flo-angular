@@ -303,6 +303,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   baseAspectRatio = .5625
+  aspectPercentage = this.baseAspectRatio * 100 + '%'
+
   get baseMaxWidth() {
     return this.maxheight / this.baseAspectRatio + 'px'
   }
