@@ -329,6 +329,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.count === 2 ? 'inherit' : '0px'
   }
 
+  // TODO: optimize!
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
 
@@ -428,7 +429,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   update() {
-    console.log('computing')
     this.viewItemSource.next(this.createViewItems())
   }
 
