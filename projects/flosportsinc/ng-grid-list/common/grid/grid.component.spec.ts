@@ -145,8 +145,8 @@ describe(FloGridListViewComponent.name, () => {
   })
 
   describe('aspectRatio property', () => {
-    it('should double bind', () => testInputProperty('aspectRatio', '50%'))
-    it('should expose setter function', () => testInputPropSetFunc('aspectRatio', 'setAspectRatio', '50%'))
+    it('should double bind', () => testInputProperty('aspectRatio', 0.5625))
+    it('should expose setter function', () => testInputPropSetFunc('aspectRatio', 'setAspectRatio', 0.5625))
     // it('should return false if not a percentage string', () => {
     //   const sut = createSut().instance
     //   sut.setAspectRatio(123)
@@ -158,7 +158,7 @@ describe(FloGridListViewComponent.name, () => {
     })
     it('should get native', () => {
       const sut = createSut().instance
-      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.height / window.screen.width * 100}%`)
+      expect(sut.getNativeAspectRatio()).toEqual(window.screen.height / window.screen.width)
     })
 
     it('should get native when orientation is landscape', () => {
@@ -167,7 +167,7 @@ describe(FloGridListViewComponent.name, () => {
       (<any>window).screen = { width: 300, height: 400 }
       expect(window.screen.height).toEqual(400)
       expect(window.screen.width).toEqual(300)
-      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.width / window.screen.height * 100}%`);
+      expect(sut.getNativeAspectRatio()).toEqual(window.screen.width / window.screen.height);
       (<any>window).screen = { width, height } // reset window object
     })
 
@@ -372,7 +372,7 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
-      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.flo-grid-list-overlay-hide'))
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
       expect(elementHasHiddenClass).toBeTruthy()
     }))
   })
@@ -723,17 +723,6 @@ describe(FloGridListViewComponent.name, () => {
     it('TODO', () => {
       const sut = createSut()
       sut.hoistInstance.count = 4
-      sut.hoistFixture.detectChanges()
-    })
-  })
-
-  describe('IE11', () => {
-    it('apply ms-prefix', () => {
-      const sut = createSut()
-      spyOn(sut.instance as any, 'isIE11').and.returnValue(true)
-      sut.hoistInstance.count = 4
-      sut.hoistFixture.detectChanges()
-      sut.hoistInstance.count = 1
       sut.hoistFixture.detectChanges()
     })
   })
