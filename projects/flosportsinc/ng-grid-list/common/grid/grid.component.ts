@@ -300,10 +300,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
   getNativeAspectRatio = () => window.screen.height > window.screen.width
-    ? `${window.screen.width / window.screen.height * 100}%`
-    : `${window.screen.height / window.screen.width * 100}%`
+    ? window.screen.width / window.screen.height
+    : window.screen.height / window.screen.width
 
-  getAspectRatio = () => this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio
+  aspectRatioPercentage = () => `${(this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100 + '%'}`
 
   @HostListener('fullscreenchange')
   @HostListener('webkitfullscreenchange')
@@ -313,19 +313,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.detectChanges()
   }
 
-  // TODO: this could be a bit more dynamc
-  aspectRatioPercentage = this.aspectRatio * 100 + '%'
-
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
   }
 
   get maxWidth() {
     return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
-  }
-
-  get pos() {
-    return this.count === 2 ? 'initial' : 0
   }
 
   // TODO: optimize!!!!!

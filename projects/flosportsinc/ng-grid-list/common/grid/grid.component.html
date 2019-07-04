@@ -5,8 +5,8 @@
   <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
 </div>
 <div class="fg mg-auto" style="display: flex; align-items: center;" [style.max-width.px]="baseMaxWidth">
-  <div [style.padding-top]="aspectRatioPercentage"></div>
-  <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="pos">
+  <div [style.padding-top]="aspectRatioPercentage()"></div>
+  <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth">
     <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
       <div #floGridListItemContainer
         class="fg list-item-container"
