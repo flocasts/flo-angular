@@ -62,6 +62,14 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number
   ) { }
 
+  @HostListener('fullscreenchange')
+  @HostListener('webkitfullscreenchange')
+  @HostListener('mozfullscreenchange')
+  @HostListener('MSFullscreenChange')
+  fullscreenchange() {
+    this.update()
+  }
+
   @Input()
   get items() {
     return this._items as ReadonlyArray<TItem | undefined>
@@ -304,14 +312,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     ? window.screen.width / window.screen.height
     : window.screen.height / window.screen.width
 
-  @HostListener('fullscreenchange')
-  @HostListener('webkitfullscreenchange')
-  @HostListener('mozfullscreenchange')
-  @HostListener('MSFullscreenChange')
-  fullscreenchange() {
-    this.update()
-  }
-
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
   }
@@ -330,39 +330,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         ? '25%'
         : 'inherit'
       : '0px'
-  }
-
-  // TODO: optimize!
-  createViewItems = () => {
-    const square = Math.ceil(Math.sqrt(this.count))
-
-    const stub = new Array<IMaybe<TItem>>(this.count)
-      .fill(maybe())
-      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
-
-    return chunk(square, stub)
-      .reduce((acc: any, curr) => {
-        return [
-          ...acc,
-          ...curr.map((value, _indexb, arrb) => {
-            return {
-              hasValue: value.isSome(),
-              value: value.valueOrUndefined(),
-              flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
-              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%'
-            }
-          })
-        ]
-      }, [])
-      .map((a, idx) => {
-        const isSelected = this.selectedIndex === idx
-        return {
-          ...a,
-          isShowingBorder: isSelected && this.count > 1,
-          isSelected,
-          isNotSelected: !isSelected
-        }
-      })
   }
 
   private readonly viewItemSource = new BehaviorSubject([])
@@ -431,6 +398,39 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
+  // TODO: optimize!
+  createViewItems = () => {
+    const square = Math.ceil(Math.sqrt(this.count))
+
+    const stub = new Array<IMaybe<TItem>>(this.count)
+      .fill(maybe())
+      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
+
+    return chunk(square, stub)
+      .reduce((acc: any, curr) => {
+        return [
+          ...acc,
+          ...curr.map((value, _indexb, arrb) => {
+            return {
+              hasValue: value.isSome(),
+              value: value.valueOrUndefined(),
+              flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
+              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%'
+            }
+          })
+        ]
+      }, [])
+      .map((a, idx) => {
+        const isSelected = this.selectedIndex === idx
+        return {
+          ...a,
+          isShowingBorder: isSelected && this.count > 1,
+          isSelected,
+          isNotSelected: !isSelected
+        }
+      })
+  }
+
   update() {
     this.viewItemSource.next(this.createViewItems())
   }
@@ -466,13 +466,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setItems(_cloned)
   }
 
-  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number) => {
-    if (typeof fromIndex === 'number') {
-      this.setItems(swapItemsViaIndices(this.items, toIndex, fromIndex))
-    } else {
-      this.setItemAtIndex(toIndex, toVal)
-    }
-  }
+  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number) => typeof fromIndex === 'number'
+    ? this.setItems(swapItemsViaIndices(this.items, toIndex, fromIndex))
+    : this.setItemAtIndex(toIndex, toVal)
 
   public readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
