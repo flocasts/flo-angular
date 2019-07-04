@@ -408,7 +408,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
 
   public readonly trySelectNextEmpty = () =>
     maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
