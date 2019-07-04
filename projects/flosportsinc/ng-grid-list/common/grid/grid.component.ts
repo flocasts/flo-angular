@@ -113,6 +113,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   @Input()
+  get shouldSelectNextEmpty() {
+    return this._shouldSelectNextEmpty
+  }
+  set shouldSelectNextEmpty(val: boolean) {
+    this._shouldSelectNextEmpty = val
+    this.shouldSelectNextEmptyChange.next(val)
+  }
+
+  public setShouldSelectNextEmpty(val: boolean) {
+    this.shouldSelectNextEmpty = val
+  }
+
+  @Input()
   get max() {
     return this._max
   }
@@ -371,6 +384,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
+  @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<string>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
 
