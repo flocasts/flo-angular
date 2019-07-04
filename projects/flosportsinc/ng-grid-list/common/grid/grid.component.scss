@@ -21,8 +21,8 @@
   &:fullscreen {
     position: inherit;
     .flo-grid-list-container, .mg-auto {
-      max-width: initial !important;
-      max-height: initial !important;
+      max-width: none !important;
+      max-height: none !important;
     }
   }
 

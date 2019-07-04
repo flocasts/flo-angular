@@ -302,6 +302,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.detectChanges()
   }
 
+  // TODO: this could be a bit more dynamc
   baseAspectRatio = .5625
   aspectPercentage = this.baseAspectRatio * 100 + '%'
 
@@ -321,6 +322,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       : 0
   }
 
+  // TODO: optimize!!!!!
   get viewItems() {
     const square = Math.ceil(Math.sqrt(this.count))
 
@@ -351,7 +353,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
           isNotSelected: !isSelected
         }
       })
-    console.log(+d[0].padTop.replace('%', '') - +d[d.length - 1].padTop.replace('%', ''))
     return d
   }
 
@@ -423,11 +424,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngAfterViewInit() {
-    this.updateGridStyles(this.gridItemContainers.length)
-
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
     }
   }
 
@@ -532,8 +530,4 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       maybe(this.findNextEmptyIndex())
         .filter(idx => idx >= 0)
         .tapSome(idx => this.setItem(item, idx))
-
-  private readonly updateGridStyles = (count: number) => {
-    //
-  }
 }
