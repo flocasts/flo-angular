@@ -325,7 +325,11 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get top() {
-    return this.count === 2 ? 'inherit' : '0px'
+    return this.count === 2
+      ? this.isIE11
+        ? '25%'
+        : 'inherit'
+      : '0px'
   }
 
   // TODO: optimize!
@@ -549,4 +553,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       maybe(this.findNextEmptyIndex())
         .filter(idx => idx >= 0)
         .tapSome(idx => this.setItem(item, idx))
+
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 }
