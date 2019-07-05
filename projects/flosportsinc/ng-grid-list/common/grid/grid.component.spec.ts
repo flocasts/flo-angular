@@ -151,7 +151,12 @@ describe(FloGridListViewComponent.name, () => {
   describe('fullscreen', () => {
     it('no', () => {
       const sut = createSut()
-      expect(sut.instance.isFullscreen()).toEqual(false)
+      // tslint:disable-next-line: no-if-statement
+      if (window.outerHeight - window.innerHeight <= 1) {
+        expect(sut.instance.isFullscreen()).toEqual(true)
+      } else {
+        expect(sut.instance.isFullscreen()).toEqual(false)
+      }
     })
   })
 
