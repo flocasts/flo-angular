@@ -9,7 +9,8 @@ import {
   FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED,
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
-  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO
+  FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -145,20 +146,21 @@ describe(FloGridListViewComponent.name, () => {
   })
 
   describe('aspectRatio property', () => {
-    it('should double bind', () => testInputProperty('aspectRatio', '50%'))
-    it('should expose setter function', () => testInputPropSetFunc('aspectRatio', 'setAspectRatio', '50%'))
-    it('should return false if not a percentage string', () => {
+    it('should double bind', () => testInputProperty('aspectRatio', 0.5625))
+    it('should expose setter function', () => testInputPropSetFunc('aspectRatio', 'setAspectRatio', 0.5625))
+    it('should previous value if not of type number', () => {
       const sut = createSut().instance
-      sut.setAspectRatio('asdkasd')
+      sut.setAspectRatio('fasdfasdfasdf' as any)
       expect(sut.aspectRatio).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
     })
+
     it('should get default', () => {
       const sut = createSut().instance
       expect(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO)).toEqual(DEFAULT_FLO_GRID_LIST_ASPECT_RATIO)
     })
     it('should get native', () => {
       const sut = createSut().instance
-      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.height / window.screen.width * 100}%`)
+      expect(sut.getNativeAspectRatio()).toEqual(window.screen.height / window.screen.width)
     })
 
     it('should get native when orientation is landscape', () => {
@@ -167,7 +169,7 @@ describe(FloGridListViewComponent.name, () => {
       (<any>window).screen = { width: 300, height: 400 }
       expect(window.screen.height).toEqual(400)
       expect(window.screen.width).toEqual(300)
-      expect(sut.getNativeAspectRatio()).toEqual(`${window.screen.width / window.screen.height * 100}%`);
+      expect(sut.getNativeAspectRatio()).toEqual(window.screen.width / window.screen.height);
       (<any>window).screen = { width, height } // reset window object
     })
 
@@ -179,15 +181,15 @@ describe(FloGridListViewComponent.name, () => {
       expect(spy).toHaveBeenCalled()
     })
 
-    it('should run native if fullscreen', () => {
-      const sut = createSut()
-      const spy = spyOn(sut.instance, 'isFullscreen').and.returnValue(true)
-      const spy2 = spyOn(sut.instance, 'getNativeAspectRatio').and.callThrough()
-      const ar = sut.instance.getAspectRatio()
-      expect(spy).toHaveBeenCalled()
-      expect(spy2).toHaveBeenCalled()
-      expect(ar).toEqual(sut.instance.getNativeAspectRatio())
-    })
+    // it('should run native if fullscreen', () => {
+    //   const sut = createSut()
+    //   const spy = spyOn(sut.instance, 'isFullscreen').and.returnValue(true)
+    //   const spy2 = spyOn(sut.instance, 'getNativeAspectRatio').and.callThrough()
+    //   const ar = sut.instance.aspectRatioPercentage()
+    //   expect(spy).toHaveBeenCalled()
+    //   expect(spy2).toHaveBeenCalled()
+    //   expect(ar).toEqual(sut.instance.getNativeAspectRatio())
+    // })
   })
 
   describe('selectedIndex property', () => {
@@ -281,6 +283,13 @@ describe(FloGridListViewComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
   })
 
+  describe('shouldSelectNextEmpty property', () => {
+    it('should double bind', () => testInputProperty('shouldSelectNextEmpty', true))
+    it('should expose setter function', () => testInputPropSetFunc('shouldSelectNextEmpty', 'setShouldSelectNextEmpty', true))
+    it('should start with token value', () =>
+      expect(createSut().instance.shouldSelectNextEmpty).toEqual(TestBed.get(FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY)))
+  })
+
   describe('when count equals 1', () => {
     it('should show 1 empty', () => {
       const result = setupCountSomeNoneTests(1, [])
@@ -372,7 +381,7 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
-      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.flo-grid-list-overlay-hide'))
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
       expect(elementHasHiddenClass).toBeTruthy()
     }))
   })
@@ -723,17 +732,6 @@ describe(FloGridListViewComponent.name, () => {
     it('TODO', () => {
       const sut = createSut()
       sut.hoistInstance.count = 4
-      sut.hoistFixture.detectChanges()
-    })
-  })
-
-  describe('IE11', () => {
-    it('apply ms-prefix', () => {
-      const sut = createSut()
-      spyOn(sut.instance as any, 'isIE11').and.returnValue(true)
-      sut.hoistInstance.count = 4
-      sut.hoistFixture.detectChanges()
-      sut.hoistInstance.count = 1
       sut.hoistFixture.detectChanges()
     })
   })
