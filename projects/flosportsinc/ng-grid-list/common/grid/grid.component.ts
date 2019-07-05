@@ -6,7 +6,7 @@ import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { chunk, swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, debounceTime } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
@@ -408,7 +408,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
-  // TODO: optimize!
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
 
@@ -426,7 +425,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
               hasValue: value.isSome(),
               value: value.valueOrUndefined(),
               flexBasis: arrb.length > 1 ? 100 / arrb.length : 100 / square,
-              padTop: arrb.length > 1 ? 56.25 / arrb.length : 56.25 / square,
+              padTop: arrb.length > 1 ? this.aspectRatioPercentage / arrb.length : this.aspectRatioPercentage / square,
               isShowingBorder: isSelected && this.count > 1,
               isSelected,
               isNotSelected: !isSelected
@@ -448,7 +447,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ngAfterViewInit() {
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
+      this.cdRefChange.pipe(debounceTime(0), takeUntil(this.onDestroy)).subscribe(() => this.update())
     }
   }
 
