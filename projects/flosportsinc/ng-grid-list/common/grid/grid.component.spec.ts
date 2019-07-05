@@ -1,4 +1,4 @@
-import { async, TestBed, fakeAsync, tick } from '@angular/core/testing'
+import { async, TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing'
 import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
 import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
@@ -75,7 +75,10 @@ const setupCountSomeNoneTests = (count: number, items: any[] = []) => {
   sut.hoistInstance.count = count
   sut.hoistFixture.detectChanges()
 
-  return sut.instance.gridItemContainers.toArray()
+  return {
+    collection: sut.instance.gridItemContainers.toArray(),
+    sut
+  }
 }
 
 describe(FloGridListViewComponent.name, () => {
@@ -143,6 +146,13 @@ describe(FloGridListViewComponent.name, () => {
   describe('selectedId property', () => {
     it('should double bind', () => testInputProperty('selectedId', 'awesome-id'))
     it('should expose setter function', () => testInputPropSetFunc('selectedId', 'setSelectedId', 'awesome-id'))
+  })
+
+  describe('fullscreen', () => {
+    it('no', () => {
+      const sut = createSut()
+      expect(sut.instance.isFullscreen()).toEqual(false)
+    })
   })
 
   describe('aspectRatio property', () => {
@@ -277,36 +287,42 @@ describe(FloGridListViewComponent.name, () => {
   })
 
   describe('when count equals 1', () => {
-    it('should show 1 empty', () => {
+    it('should show 1 empty', fakeAsync(() => {
       const result = setupCountSomeNoneTests(1, [])
-      expect(result.length).toEqual(1)
-      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
-    })
-    it('should show 1 filled', () => {
+      tick(0)
+      result.sut.hoistFixture.detectChanges()
+      expect(result.collection.length).toEqual(1)
+      expect(result.collection[0].nativeElement.innerText).toEqual('EMPTY')
+      discardPeriodicTasks()
+    }))
+    it('should show 1 filled', fakeAsync(() => {
       const result = setupCountSomeNoneTests(1, [{ id: '1', value: 'SOME_VALUE' }])
-      expect(result.length).toEqual(1)
-      expect(result[0].nativeElement.innerText).toEqual('SOME_VALUE')
-    })
+      tick(0)
+      result.sut.hoistFixture.detectChanges()
+      expect(result.collection.length).toEqual(1)
+      expect(result.collection[0].nativeElement.innerText).toEqual('SOME_VALUE')
+      discardPeriodicTasks()
+    }))
   })
 
   describe('when count equals 2', () => {
     it('should show 2 empty', () => {
       const result = setupCountSomeNoneTests(2, [])
-      expect(result.length).toEqual(2)
-      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
-      expect(result[1].nativeElement.innerText).toEqual('EMPTY')
+      expect(result.collection.length).toEqual(2)
+      expect(result.collection[0].nativeElement.innerText).toEqual('EMPTY')
+      expect(result.collection[1].nativeElement.innerText).toEqual('EMPTY')
     })
     it('should show 1 empty, 1 filled', () => {
       const result = setupCountSomeNoneTests(2, [undefined, { id: '1', value: 'SOME_VALUE' }])
-      expect(result.length).toEqual(2)
-      expect(result[0].nativeElement.innerText).toEqual('EMPTY')
-      expect(result[1].nativeElement.innerText).toEqual('SOME_VALUE')
+      expect(result.collection.length).toEqual(2)
+      expect(result.collection[0].nativeElement.innerText).toEqual('EMPTY')
+      expect(result.collection[1].nativeElement.innerText).toEqual('SOME_VALUE')
     })
     it('should show 2 filled', () => {
       const result = setupCountSomeNoneTests(2, [{ id: '1', value: 'SOME_VALUE_1' }, { id: '2', value: 'SOME_VALUE_2' }])
-      expect(result.length).toEqual(2)
-      expect(result[0].nativeElement.innerText).toEqual('SOME_VALUE_1')
-      expect(result[1].nativeElement.innerText).toEqual('SOME_VALUE_2')
+      expect(result.collection.length).toEqual(2)
+      expect(result.collection[0].nativeElement.innerText).toEqual('SOME_VALUE_1')
+      expect(result.collection[1].nativeElement.innerText).toEqual('SOME_VALUE_2')
     })
   })
 
@@ -468,39 +484,51 @@ describe(FloGridListViewComponent.name, () => {
           })]
         }).compileComponents()
       })
-      it('should handle counts of 1', () => {
+      it('should handle counts of 1', fakeAsync(() => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(1)
+        tick(0)
+        sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(0)
-      })
-      it('should handle counts of 2', () => {
+        discardPeriodicTasks()
+      }))
+      it('should handle counts of 2', fakeAsync(() => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(2)
+        tick(0)
+        sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(1)
-      })
-      // it('should handle counts of 3', fakeAsync(() => {
-      //   const sut = createSut()
-      //   sut.hoistFixture.detectChanges()
-      //   sut.hoistInstance.items = [SAMPLE_ITEM_1]
-      //   sut.instance.setCount(3)
-      //   tick(50)
-      //   expect(sut.instance.selectedIndex).toEqual(1)
-      // }))
-      it('should handle counts of 4', () => {
+        discardPeriodicTasks()
+      }))
+      it('should handle counts of 3', fakeAsync(() => {
+        const sut = createSut()
+        sut.hoistInstance.items = [SAMPLE_ITEM_1]
+        sut.instance.setCount(3)
+        tick(0)
+        sut.hoistFixture.detectChanges()
+        expect(sut.instance.selectedIndex).toEqual(1)
+        discardPeriodicTasks()
+      }))
+      it('should handle counts of 4', fakeAsync(() => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(4)
+        tick(0)
+        sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(1)
-      })
-
-      it('should handle multi items w/ counts', () => {
+        discardPeriodicTasks()
+      }))
+      it('should handle multi items w/ counts', fakeAsync(() => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
         sut.instance.setCount(4)
+        tick(0)
+        sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(2)
-      })
+        discardPeriodicTasks()
+      }))
     })
   })
 
@@ -660,26 +688,32 @@ describe(FloGridListViewComponent.name, () => {
   })
 
   describe('findNextEmptyIndex', () => {
-    it('should return next index when in viewcount', () => {
+    it('should return next index when in viewcount', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(4)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      tick(0)
       expect(sut.instance.findNextEmptyIndex()).toEqual(1)
-    })
+      discardPeriodicTasks()
+    }))
 
-    it('should return -1 when no index is next', () => {
+    it('should return -1 when no index is next', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(1)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      tick(0)
       expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
-    })
+      discardPeriodicTasks()
+    }))
 
-    it('should return -1 when out of bounds', () => {
+    it('should return -1 when out of bounds', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(2)
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
+      tick(0)
       expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
-    })
+      discardPeriodicTasks()
+    }))
   })
 
   describe('fillNextEmpty', () => {
@@ -691,13 +725,17 @@ describe(FloGridListViewComponent.name, () => {
       expect(sut.hoistInstance.items[0]).toEqual(SAMPLE_ITEM_1)
     })
 
-    it('should fill first empty', () => {
+    it('should fill first empty', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(4)
+      sut.hoistFixture.detectChanges()
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       sut.instance.fillNextEmpty(SAMPLE_ITEM_2)
+      tick(0)
+      sut.hoistFixture.detectChanges()
       expect(sut.hoistInstance.items[1]).toEqual(SAMPLE_ITEM_2)
-    })
+      discardPeriodicTasks()
+    }))
   })
 
   describe('isItemInAnotherIndex', () => {

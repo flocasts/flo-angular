@@ -440,7 +440,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ngAfterViewInit() {
     if (isPlatformBrowser(this._platformId)) {
       this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.cdRefChange.pipe(debounceTime(0), takeUntil(this.onDestroy)).subscribe(() => this.update())
+      this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
     }
   }
 
