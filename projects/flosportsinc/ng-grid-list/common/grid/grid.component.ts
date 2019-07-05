@@ -331,7 +331,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get aspectRatioPercentage() {
-    return (this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100
+    return this.aspectRatio * 100 // (this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100
   }
 
   get top() {
@@ -339,7 +339,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       ? this.isIE11
         ? '25%'
         : 'inherit'
-      : '0px'
+      : this.isFullscreen
+        ? 'inhert'
+        : '0px'
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
@@ -419,13 +421,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       .reduce((acc, curr) => {
         return [
           ...acc,
-          ...curr.map((value, itemIndex, arrb) => {
+          ...curr.map((value, itemIndex) => {
             const isSelected = this.selectedIndex === acc.length + itemIndex
             return {
               hasValue: value.isSome(),
               value: value.valueOrUndefined(),
-              flexBasis: arrb.length > 1 ? 100 / arrb.length : 100 / square,
-              padTop: arrb.length > 1 ? this.aspectRatioPercentage / arrb.length : this.aspectRatioPercentage / square,
+              flexBasis: 100 / square,
+              padTop: this.aspectRatioPercentage / square,
               isShowingBorder: isSelected && this.count > 1,
               isSelected,
               isNotSelected: !isSelected
