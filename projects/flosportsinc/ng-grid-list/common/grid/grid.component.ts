@@ -36,8 +36,8 @@ import {
 export interface IViewItem<T> {
   readonly value?: T
   readonly hasValue: boolean
-  readonly flexBasis: string
-  readonly padTop: string
+  readonly flexBasis: number
+  readonly padTop: number
   readonly isShowingBorder: boolean
   readonly isSelected: boolean
   readonly isNotSelected: boolean
@@ -331,7 +331,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get aspectRatioPercentage() {
-    return `${(this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100 + '%'}`
+    return (this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100
   }
 
   get top() {
@@ -425,8 +425,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
             return {
               hasValue: value.isSome(),
               value: value.valueOrUndefined(),
-              flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
-              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%',
+              flexBasis: arrb.length > 1 ? 100 / arrb.length : 100 / square,
+              padTop: arrb.length > 1 ? 56.25 / arrb.length : 56.25 / square,
               isShowingBorder: isSelected && this.count > 1,
               isSelected,
               isNotSelected: !isSelected
