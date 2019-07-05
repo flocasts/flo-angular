@@ -318,9 +318,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   public readonly isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  public readonly getNativeAspectRatio = () => window.screen.height > window.screen.width
-    ? window.screen.width / window.screen.height
-    : window.screen.height / window.screen.width
 
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
@@ -331,7 +328,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get aspectRatioPercentage() {
-    return this.aspectRatio * 100 // (this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100
+    return this.aspectRatio * 100
   }
 
   get top() {
@@ -417,24 +414,18 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
 
-    return chunk(square, stub)
-      .reduce((acc, curr) => {
-        return [
-          ...acc,
-          ...curr.map((value, itemIndex) => {
-            const isSelected = this.selectedIndex === acc.length + itemIndex
-            return {
-              hasValue: value.isSome(),
-              value: value.valueOrUndefined(),
-              flexBasis: 100 / square,
-              padTop: this.aspectRatioPercentage / square,
-              isShowingBorder: isSelected && this.count > 1,
-              isSelected,
-              isNotSelected: !isSelected
-            }
-          })
-        ]
-      }, [] as ReadonlyArray<IViewItem<TItem>>)
+    return stub.map<IViewItem<TItem>>((value, idx) => {
+      const isSelected = this.selectedIndex === idx
+      return {
+        hasValue: value.isSome(),
+        value: value.valueOrUndefined(),
+        flexBasis: 100 / square,
+        padTop: this.aspectRatioPercentage / square,
+        isShowingBorder: isSelected && this.count > 1,
+        isSelected,
+        isNotSelected: !isSelected
+      }
+    })
   }
 
   update() {
