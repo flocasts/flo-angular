@@ -336,17 +336,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       ? this.count === 2
         ? '25%'
         : 0
-      : this.isFullscreen() || this.count === 2
+      : this.count === 2 || this.isFullscreen()
         ? 'inherit'
         : 0
-
-    // return this.count === 2
-    //   ? this.isIE11
-    //     ? '25%'
-    //     : 'inherit'
-    //   : this.isFullscreen
-    //     ? 'inhert'
-    //     : '0px'
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
