@@ -728,7 +728,6 @@ describe(FloGridListViewComponent.name, () => {
     it('should fill first empty', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(4)
-      sut.hoistFixture.detectChanges()
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       sut.instance.fillNextEmpty(SAMPLE_ITEM_2)
       tick(0)

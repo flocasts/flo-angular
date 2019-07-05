@@ -4,9 +4,9 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { chunk, swapItemsViaIndices } from './helpers'
+import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, debounceTime } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
