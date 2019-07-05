@@ -4,7 +4,7 @@
 
 import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { chunk, swapItemsViaIndices } from './helpers'
+import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
@@ -36,8 +36,8 @@ import {
 export interface IViewItem<T> {
   readonly value?: T
   readonly hasValue: boolean
-  readonly flexBasis: string
-  readonly padTop: string
+  readonly flexBasis: number
+  readonly padTop: number
   readonly isShowingBorder: boolean
   readonly isSelected: boolean
   readonly isNotSelected: boolean
@@ -318,9 +318,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   public readonly isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  public readonly getNativeAspectRatio = () => window.screen.height > window.screen.width
-    ? window.screen.width / window.screen.height
-    : window.screen.height / window.screen.width
 
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
@@ -331,15 +328,17 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get aspectRatioPercentage() {
-    return `${(this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio) * 100 + '%'}`
+    return this.aspectRatio * 100
   }
 
   get top() {
-    return this.count === 2
-      ? this.isIE11
+    return this.isIE11
+      ? this.count === 2
         ? '25%'
-        : 'inherit'
-      : '0px'
+        : 0
+      : this.count === 2 || this.isFullscreen()
+        ? 'inherit'
+        : 0
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
@@ -408,7 +407,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
-  // TODO: optimize!
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
 
@@ -416,24 +414,18 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       .fill(maybe())
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
 
-    return chunk(square, stub)
-      .reduce((acc, curr) => {
-        return [
-          ...acc,
-          ...curr.map((value, itemIndex, arrb) => {
-            const isSelected = this.selectedIndex === acc.length + itemIndex
-            return {
-              hasValue: value.isSome(),
-              value: value.valueOrUndefined(),
-              flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
-              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%',
-              isShowingBorder: isSelected && this.count > 1,
-              isSelected,
-              isNotSelected: !isSelected
-            }
-          })
-        ]
-      }, [] as ReadonlyArray<IViewItem<TItem>>)
+    return stub.map<IViewItem<TItem>>((value, idx) => {
+      const isSelected = this.selectedIndex === idx
+      return {
+        hasValue: value.isSome(),
+        value: value.valueOrUndefined(),
+        flexBasis: 100 / square,
+        padTop: this.aspectRatioPercentage / square,
+        isShowingBorder: isSelected && this.count > 1,
+        isSelected,
+        isNotSelected: !isSelected
+      }
+    })
   }
 
   update() {

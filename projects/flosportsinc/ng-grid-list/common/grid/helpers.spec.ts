@@ -1,4 +1,4 @@
-import { swapItemsViaIndices, chunk } from './helpers'
+import { swapItemsViaIndices } from './helpers'
 
 const COLLECTION_1: ReadonlyArray<any> = [{ prop: 1 }, { prop: 2 }, { prop: 3 }]
 
@@ -25,22 +25,5 @@ describe(swapItemsViaIndices.name, () => {
     expect(sut[0]).toEqual({ prop: 1 })
     expect(sut[3]).toEqual({ prop: 3 })
     expect(sut[2]).toBeUndefined()
-  })
-})
-
-describe('chunk utility function', () => {
-  it('should work', () => {
-    const sut = chunk(1, [{}, {}, {}, {}])
-    expect(sut.length).toEqual(4)
-  })
-
-  it('should handle empty collection', () => {
-    const sut = chunk(2, [{}, {}, {}])
-    expect(sut.length).toEqual(2)
-  })
-
-  it('should handle empty collection', () => {
-    const sut = chunk(1)
-    expect(sut.length).toEqual(0)
   })
 })
