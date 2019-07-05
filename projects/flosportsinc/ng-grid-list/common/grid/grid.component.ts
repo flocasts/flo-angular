@@ -332,13 +332,21 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   get top() {
-    return this.count === 2
-      ? this.isIE11
+    return this.isIE11
+      ? this.count === 2
         ? '25%'
-        : 'inherit'
-      : this.isFullscreen
-        ? 'inhert'
-        : '0px'
+        : 0
+      : this.isFullscreen() || this.count === 2
+        ? 'inherit'
+        : 0
+
+    // return this.count === 2
+    //   ? this.isIE11
+    //     ? '25%'
+    //     : 'inherit'
+    //   : this.isFullscreen
+    //     ? 'inhert'
+    //     : '0px'
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
