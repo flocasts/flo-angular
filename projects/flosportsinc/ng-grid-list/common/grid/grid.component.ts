@@ -33,6 +33,16 @@ import {
   FLO_GRID_LIST_ASPECT_RATIO
 } from '../ng-grid-list.tokens'
 
+export interface IViewItem<T> {
+  readonly value?: T
+  readonly hasValue: boolean
+  readonly flexBasis: string
+  readonly padTop: string
+  readonly isShowingBorder: boolean
+  readonly isSelected: boolean
+  readonly isNotSelected: boolean
+}
+
 @Component({
   selector: 'flo-grid-list-view',
   templateUrl: './grid.component.html',
@@ -332,7 +342,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       : '0px'
   }
 
-  private readonly viewItemSource = new BehaviorSubject([])
+  private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
   @Output() public readonly countChange = new Subject<number>()
@@ -407,28 +417,23 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
 
     return chunk(square, stub)
-      .reduce((acc: any, curr) => {
+      .reduce((acc, curr) => {
         return [
           ...acc,
-          ...curr.map((value, _indexb, arrb) => {
+          ...curr.map((value, itemIndex, arrb) => {
+            const isSelected = this.selectedIndex === acc.length + itemIndex
             return {
               hasValue: value.isSome(),
               value: value.valueOrUndefined(),
               flexBasis: arrb.length > 1 ? 100 / arrb.length + '%' : 100 / square + '%',
-              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%'
+              padTop: arrb.length > 1 ? 56.25 / arrb.length + '%' : 56.25 / square + '%',
+              isShowingBorder: isSelected && this.count > 1,
+              isSelected,
+              isNotSelected: !isSelected
             }
           })
         ]
-      }, [])
-      .map((a, idx) => {
-        const isSelected = this.selectedIndex === idx
-        return {
-          ...a,
-          isShowingBorder: isSelected && this.count > 1,
-          isSelected,
-          isNotSelected: !isSelected
-        }
-      })
+      }, [] as ReadonlyArray<IViewItem<TItem>>)
   }
 
   update() {
@@ -438,7 +443,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ngOnInit() {
     // initial setup of selected id
     this.setSelectedIdViaIndex(this.selectedIndex)
-    this.update()
   }
 
   ngAfterViewInit() {
