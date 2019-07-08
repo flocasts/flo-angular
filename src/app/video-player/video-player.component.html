@@ -21,7 +21,7 @@
   </div>
   <div>
     <span>
-      <!-- TODO: PLAY AGIN AFTER ENDED (NOT LOOP) -->
+      <!-- TODO: PLAY AGAIN AFTER ENDED (NOT LOOP) -->
     </span>
     <span>
       <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>Play</button>
@@ -36,15 +36,15 @@
       <button *floIfMediaLoopEnabled="vidRef" [floMp]="vidRef" floMpClickToDisableRepeat>DISABLE REPEAT</button>
     </span>
     <span>
-      <input type="range" min="0" max="2" step=".5" list="steplist">
-      <datalist id="steplist">
+      <input type="range" [floMp]="vidRef" floMpPlaybackRate>
+      <span>{{ vidRef.playbackRate }}x</span>
+      <!-- <datalist id="steplist">
         <option>0</option>
         <option>.5</option>
         <option>1</option>
         <option>1.5</option>
         <option>2</option>
-      </datalist>
-
+      </datalist> -->
       <!-- TODO: PLAYBACK SPEED -->
       <!-- 
         <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
