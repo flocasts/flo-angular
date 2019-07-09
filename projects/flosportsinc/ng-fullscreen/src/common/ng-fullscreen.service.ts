@@ -48,7 +48,7 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_CHANGE_EVENTS) private changeEventKeys: FullscreenChangeEvents[],
     @Inject(FS_FULLSCREEN_ELEMENT_ERROR_EVENTS) private elementErrorEventKeys: FullscreenErrorEvents[],
     @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[],
-    @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enableldFunc: FullscreenEnabledFunc
+    @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enabledFunc: FullscreenEnabledFunc
   ) { }
 
   public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
@@ -75,7 +75,7 @@ export class FloFullscreenService implements IFloFullscreenService {
           ? of(true)
           : !elm
             ? of(false)
-            : this.enableldFunc(elm)
+            : this.enabledFunc(elm)
 
   public readonly canGoFullscreen =
     (elm?: HTMLElement) =>

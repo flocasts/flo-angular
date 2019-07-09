@@ -4,6 +4,7 @@ import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 import { PLATFORM_ID } from '@angular/core'
 import { take, skip } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
+import { FS_FULLSCREEN_ENABLED } from './ng-fullscreen.tokens'
 
 describe(FloFullscreenService.name, () => {
   // tslint:disable-next-line: no-let
@@ -100,6 +101,27 @@ describe(FloFullscreenService.name, () => {
       doc.dispatchEvent(requestFullscreen)
       doc.dispatchEvent(fullscreenchange)
     })
+
+    // it('should handle empty case', () => {
+    //   TestBed.resetTestingModule()
+    //   TestBed.configureTestingModule({
+    //     imports: [FloFullscreenCommonModule],
+    //     providers: [
+    //       { provide: FS_FULLSCREEN_ENABLED, useValue: []},
+    //       {
+    //       provide: DOCUMENT, useValue: {
+    //         fullscreenElement: true
+    //       }
+    //     }]
+    //   })
+    //   setService()
+
+    //   const video = document.createElement('video')
+    //   const loadedmetadata = new Event('loadedmetadata')
+
+    //   service.canGoFullscreen(video).subscribe(res => expect(res).toEqual(false))
+    //   video.dispatchEvent(loadedmetadata)
+    // })
   })
 
   describe('when on platform server', () => {

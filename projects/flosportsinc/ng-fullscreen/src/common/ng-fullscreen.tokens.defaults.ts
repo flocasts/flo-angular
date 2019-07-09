@@ -3,7 +3,7 @@ import {
   FullscreenErrorEvents, FullscreenEnabledKeys, FullscreenElementKeys, FullscreenEnabledFunc
 } from './ng-fullscreen.tokens'
 import { fromEvent } from 'rxjs'
-import { map } from 'rxjs/operators'
+import { map, filter } from 'rxjs/operators'
 
 export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<FullscreenRequestEvents> = [
   'requestFullscreen',
@@ -54,7 +54,9 @@ export const DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS: ReadonlyArray<FullscreenChange
 
 export function DEFAULT_FS_FULLSCREEN_ENABLED_FUNC(): FullscreenEnabledFunc {
   const lambda = (elm: HTMLElement) => {
-    return fromEvent(elm, 'loadedmetadata').pipe(map(evt => (evt.target as any).webkitSupportsFullscreen))
+    return fromEvent(elm, 'loadedmetadata').pipe(
+      map(evt => !evt.target ? false : (evt.target as any).webkitSupportsFullscreen)
+    )
   }
   return lambda
 }

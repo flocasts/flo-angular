@@ -1,16 +1,19 @@
 import { Component, NgModule } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
-import { FloFullscreenDirective } from './ng-fullscreen.switch.directive'
+import { FloFullscreenDirective, FloFullscreenOffDirective } from './ng-fullscreen.switch.directive'
 import { FloFullscreenSwitchModule } from './ng-fullscreen.switch.module'
 import { By } from '@angular/platform-browser'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { of } from 'rxjs'
+import { FS_FULLSCREEN_ENABLED, FS_FULLSCREEN_ELEMENT } from '../common/ng-fullscreen.tokens'
+import { DOCUMENT } from '@angular/common'
 
 @Component({
   selector: 'flo-test-component',
   template: `<div id="container">
-    <button *floIfNotFullscreen>ENTER</button>
-    <button *floIfFullscreen>EXIT</button>
+    <video #ref></video>
+    <button *floIfNotFullscreen="ref">ENTER</button>
+    <button *floIfFullscreen="ref">EXIT</button>
   </div>`
 })
 export class FloTestComponent { }
@@ -76,5 +79,38 @@ describe(FloFullscreenDirective.name, () => {
     const container = sut.debugElement.query(By.css('#container'))
     const tag = container.query(By.css('button'))
     expect(tag).toBeFalsy()
+  })
+
+  it('should support ios fullscreen', () => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [FloFullscreenTestModule],
+      providers: [
+        { provide: FS_FULLSCREEN_ENABLED, useValue: []},
+        // { provide: FS_FULLSCREEN_ELEMENT, useValue: []}
+        // { provide: DOCUMENT, useValue: { fullscreenElement: false } }
+      ]
+    })
+    const sut = createSut()
+    sut.detectChanges()
+    const service = TestBed.get(FloFullscreenService) as FloFullscreenService
+    const video = sut.debugElement.query(By.css('video'))
+    const loadedmetadata = new Event('loadedmetadata')
+    video.nativeElement.dispatchEvent(loadedmetadata)
+    service.canGoFullscreen(video.nativeElement).subscribe(res => expect(res).toEqual(true))
+  })
+
+  it('should handle empty case', () => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [FloFullscreenTestModule],
+      providers: [
+        { provide: FS_FULLSCREEN_ENABLED, useValue: []}
+      ]
+    })
+    const sut = createSut()
+    sut.detectChanges()
+    const service = TestBed.get(FloFullscreenService) as FloFullscreenService
+    service.canGoFullscreen().subscribe(res => expect(res).toEqual(false))
   })
 })
