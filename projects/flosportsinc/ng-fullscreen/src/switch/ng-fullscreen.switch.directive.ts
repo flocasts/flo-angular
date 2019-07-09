@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, Input } from '@angular/core'
-import { takeUntil } from 'rxjs/operators'
+import { takeUntil, filter, flatMap } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
@@ -10,18 +10,24 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit {
 
   protected readonly ngOnDestroy$ = new Subject()
   protected showWhenFullscreen = false
+  protected abstract elmInputKey?: string
+  protected readonly elm = () => this.elmInputKey ? this[this.elmInputKey] as HTMLElement : undefined
 
   ngOnInit() {
-    if (!this.fs.fullscreenIsSupported()) { return }
-    this.fs.fullscreen$.pipe(takeUntil(this.ngOnDestroy$)).subscribe(isFullscreen => {
-      if (this.showWhenFullscreen && isFullscreen) {
-        this.vc.createEmbeddedView(this.tr)
-      } else if (!isFullscreen && !this.showWhenFullscreen) {
-        this.vc.createEmbeddedView(this.tr)
-      } else {
-        this.vc.clear()
-      }
-    })
+    this.fs.fullscreenIsSupported(this.elm())
+      .pipe(
+        filter(Boolean),
+        flatMap(() => this.fs.fullscreen$),
+        takeUntil(this.ngOnDestroy$)
+      ).subscribe(isFullscreen => {
+        if (this.showWhenFullscreen && isFullscreen) {
+          this.vc.createEmbeddedView(this.tr)
+        } else if (!isFullscreen && !this.showWhenFullscreen) {
+          this.vc.createEmbeddedView(this.tr)
+        } else {
+          this.vc.clear()
+        }
+      })
   }
 
   ngOnDestroy() {
@@ -30,22 +36,32 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit {
   }
 }
 
+const IF_FS_SELECTOR = 'floIfFullscreen'
+
 @Directive({
-  selector: '[floIfFullscreen]',
+  selector: `[${IF_FS_SELECTOR}]`,
+  inputs: [IF_FS_SELECTOR]
 })
 export class FloFullscreenOnDirective extends FloFullscreenDirective {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
     super(tr, vc, fs)
     this.showWhenFullscreen = true
   }
+
+  elmInputKey = IF_FS_SELECTOR
 }
 
+const IF_NOT_FS_SELECTOR = 'floIfNotFullscreen'
+
 @Directive({
-  selector: '[floIfNotFullscreen]',
+  selector: `[${IF_NOT_FS_SELECTOR}]`,
+  inputs: [IF_NOT_FS_SELECTOR]
 })
 export class FloFullscreenOffDirective extends FloFullscreenDirective {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
     super(tr, vc, fs)
     this.showWhenFullscreen = false
   }
+
+  elmInputKey = IF_NOT_FS_SELECTOR
 }

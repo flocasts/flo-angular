@@ -1,13 +1,12 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of } from 'rxjs'
-import { debounceTime, map, startWith, shareReplay, filter } from 'rxjs/operators'
+import { debounceTime, map, startWith, shareReplay, filter, flatMap } from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
   FS_FULLSCREEN_CHANGE_EVENTS, FS_FULLSCREEN_ELEMENT_ERROR_EVENTS, FullscreenRequestEvents,
   FullscreenExitEvents, FullscreenElementKeys, FullscreenChangeEvents, FullscreenErrorEvents,
-  FS_FULLSCREEN_ENABLED,
-  FullscreenEnabledKeys
+  FS_FULLSCREEN_ENABLED, FullscreenEnabledKeys, FS_FULLSCREEN_ENABLED_FUNC, FullscreenEnabledFunc
 } from './ng-fullscreen.tokens'
 
 const isKeyTrue =
@@ -29,11 +28,11 @@ const filterAndExecute =
 export interface IFloFullscreenService {
   readonly fullscreen$: Observable<boolean>
   readonly isFullscreen$: Observable<boolean>
-  readonly isNotFullscreen$: Observable<boolean>
-  readonly canGoFullscreen$: Observable<boolean>
-  readonly fullscreenIsSupported: () => boolean
-  readonly goFullscreen: () => void
+  readonly isNotFullscreen: Observable<boolean>
   readonly exitFullscreen: () => void
+  readonly goFullscreen: (elm?: HTMLElement | HTMLDocument) => void
+  readonly canGoFullscreen: (elm?: HTMLElement) => Observable<boolean>
+  readonly fullscreenIsSupported: (elm?: HTMLElement) => Observable<boolean>
   readonly isFullscreen: (elmOrDoc: HTMLDocument | HTMLElement) => boolean
 }
 
@@ -48,7 +47,8 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_ELEMENT) private elementKeys: FullscreenElementKeys[],
     @Inject(FS_FULLSCREEN_CHANGE_EVENTS) private changeEventKeys: FullscreenChangeEvents[],
     @Inject(FS_FULLSCREEN_ELEMENT_ERROR_EVENTS) private elementErrorEventKeys: FullscreenErrorEvents[],
-    @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[]
+    @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[],
+    @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enableldFunc: FullscreenEnabledFunc
   ) { }
 
   public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
@@ -63,13 +63,24 @@ export class FloFullscreenService implements IFloFullscreenService {
     shareReplay(1))
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
-  public readonly isNotFullscreen$ = this.fullscreen$.pipe(filter(v => v === false))
+  public readonly isNotFullscreen = this.fullscreen$.pipe(filter(v => v === false))
   public readonly goFullscreen = (elm: HTMLElement | HTMLDocument = this.doc.body) => filterAndExecute(elm)(this.requestEventKeys)
   public readonly exitFullscreen = () => filterAndExecute(this.doc)(this.exitEventKeys)
-  public readonly fullscreenIsSupported = () => isPlatformServer(this.platformId) ? false : isKeyTrue(this.enabledKeys)(this.doc)
-  public readonly canGoFullscreen$ = isPlatformServer(this.platformId)
-    ? of(false)
-    : this.fullscreenIsSupported()
-      ? this.fullscreen$.pipe(map(isfs => isfs ? false : true))
-      : of(false)
+
+  public readonly fullscreenIsSupported =
+    (elm?: HTMLElement) =>
+      isPlatformServer(this.platformId)
+        ? of(false)
+        : isKeyTrue(this.enabledKeys)(this.doc)
+          ? of(true)
+          : !elm
+            ? of(false)
+            : this.enableldFunc(elm)
+
+  public readonly canGoFullscreen =
+    (elm?: HTMLElement) =>
+      isPlatformServer(this.platformId)
+        ? of(false)
+        : this.fullscreenIsSupported(elm)
+          .pipe(flatMap(isSupported => isSupported ? of(false) : this.fullscreen$.pipe(map(isfs => isfs ? false : true))))
 }

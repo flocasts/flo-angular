@@ -83,7 +83,7 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('canGoFullscreen$ should return true when fullscreen is supported and not in fullscreen ', done => {
-      service.canGoFullscreen$.pipe(take(1)).subscribe(val => {
+      service.canGoFullscreen().pipe(take(1)).subscribe(val => {
         expect(val).toEqual(true)
         done()
       })
@@ -118,7 +118,7 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('should return false from canGoFullscreen', async(() => {
-      service.canGoFullscreen$.subscribe(val => {
+      service.canGoFullscreen().subscribe(val => {
         expect(val).toEqual(false)
       })
     }))

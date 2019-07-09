@@ -28,7 +28,7 @@ export class FloClickToEnterFullscreenDirective {
 
   @HostListener('click', []) click() {
     this.cd.detectChanges()
-    this.fs.isNotFullscreen$.pipe(take(1)).subscribe(_ => {
+    this.fs.isNotFullscreen.pipe(take(1)).subscribe(_ => {
       this.fs.goFullscreen(this.floClickToEnterFullscreen)
     })
   }
