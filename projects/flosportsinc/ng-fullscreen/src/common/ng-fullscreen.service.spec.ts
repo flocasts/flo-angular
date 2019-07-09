@@ -26,9 +26,9 @@ describe(FloFullscreenService.name, () => {
       expect(service).toBeTruthy()
     })
 
-    it('should return false true fullscreenIsSupported', () => {
-      expect(service.fullscreenIsSupported()).toEqual(true)
-    })
+    it('should return false true fullscreenIsSupported', async(() => {
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(true))
+    }))
 
     // it('should default fullscreen obs', done => {
     //   service.fullscreen$.pipe(take(1)).subscribe(c => {
@@ -124,7 +124,7 @@ describe(FloFullscreenService.name, () => {
     }))
 
     it('should return false from fullscreenIsSupported', async(() => {
-      expect(service.fullscreenIsSupported()).toEqual(false)
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(false))
     }))
   })
 })

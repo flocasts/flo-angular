@@ -82,5 +82,7 @@ export class FloFullscreenService implements IFloFullscreenService {
       isPlatformServer(this.platformId)
         ? of(false)
         : this.fullscreenIsSupported(elm)
-          .pipe(flatMap(isSupported => isSupported ? of(false) : this.fullscreen$.pipe(map(isfs => isfs ? false : true))))
+          .pipe(flatMap(isSupported => !isSupported
+            ? of(false)
+            : this.fullscreen$.pipe(map(isfs => isfs ? false : true))))
 }

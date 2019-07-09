@@ -51,7 +51,7 @@ describe(FloFullscreenDirective.name, () => {
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule],
       providers: [
-        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => true } }
+        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => of(true) } }
       ]
     })
 
@@ -67,7 +67,7 @@ describe(FloFullscreenDirective.name, () => {
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule],
       providers: [
-        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => false } }
+        { provide: FloFullscreenService, useValue: { fullscreen$: of(true), fullscreenIsSupported: () => of(false) } }
       ]
     })
 
