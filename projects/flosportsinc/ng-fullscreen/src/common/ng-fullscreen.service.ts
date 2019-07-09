@@ -1,15 +1,16 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
-import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, forkJoin } from 'rxjs'
+import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
 import {
-  debounceTime, map, startWith, shareReplay, filter, flatMap,
-  mergeAll, take, tap, toArray, mergeMap, switchMap, takeUntil
+  debounceTime, map, startWith, shareReplay,
+  filter, flatMap, mergeAll, take, tap, mergeMap
 } from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
   FS_FULLSCREEN_CHANGE_EVENTS, FS_FULLSCREEN_ELEMENT_ERROR_EVENTS, FullscreenRequestEvents,
   FullscreenExitEvents, FullscreenElementKeys, FullscreenChangeEvents, FullscreenErrorEvents,
-  FS_FULLSCREEN_ENABLED, FullscreenEnabledKeys, FS_FULLSCREEN_ENABLED_FUNC, FullscreenEnabledFunc
+  FS_FULLSCREEN_ENABLED, FullscreenEnabledKeys, FS_FULLSCREEN_ENABLED_FUNC, FullscreenEnabledFunc,
+  FS_FULLSCREEN_IOS_POLL_MS, FS_FULLSCREEN_IOS_POLL_ENABLED
 } from './ng-fullscreen.tokens'
 
 const isKeyTrue =
@@ -51,7 +52,9 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_CHANGE_EVENTS) private changeEventKeys: FullscreenChangeEvents[],
     @Inject(FS_FULLSCREEN_ELEMENT_ERROR_EVENTS) private elementErrorEventKeys: FullscreenErrorEvents[],
     @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[],
-    @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enabledFunc: FullscreenEnabledFunc
+    @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enabledFunc: FullscreenEnabledFunc,
+    @Inject(FS_FULLSCREEN_IOS_POLL_MS) private iosPollrate: number,
+    @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) private iosPollEnablled: boolean
   ) { }
 
   private readonly iOSVideoState = new BehaviorSubject<boolean>(false)
@@ -62,27 +65,19 @@ export class FloFullscreenService implements IFloFullscreenService {
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
-  // webkitendfullscreen: false, webkitbeginfullscreen: true
-  private readonly d = (eventName: string, mapToValue: boolean) => <T>(source: Observable<NodeListOf<HTMLVideoElement>[]>) => {
-    return source.pipe(
-      map(videoElements => videoElements.map(ve => fromEvent(ve, eventName))),
-      tap(() => this.iOSVideoState.next(mapToValue))
-    )
-  }
-
   public readonly fullscreen$ = merge(
     ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
-    interval(1000).pipe(
+    !this.iosPollEnablled ? EMPTY : interval(this.iosPollrate).pipe(
       map(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))),
-      mergeMap(a => [
-        ...a.map(v => fromEvent(v, 'webkitbeginfullscreen').pipe(tap(() => this.iOSVideoState.next(true)), take(1))),
-        ...a.map(v => fromEvent(v, 'webkitendfullscreen').pipe(tap(() => this.iOSVideoState.next(false)), take(1)))
+      mergeMap(videoElements => [
+        ...videoElements.map(ve => fromEvent(ve, 'webkitbeginfullscreen').pipe(tap(() => this.iOSVideoState.next(true)), take(1))),
+        ...videoElements.map(ve => fromEvent(ve, 'webkitendfullscreen').pipe(tap(() => this.iOSVideoState.next(false)), take(1)))
       ]),
       mergeAll(1)
     ),
     this.fullscreenError$).pipe(
       debounceTime(0),
-      map(_ => this.isFullscreen()),
+      map(() => this.isFullscreen()),
       startWith(this.isFullscreen()),
       shareReplay(1))
 
