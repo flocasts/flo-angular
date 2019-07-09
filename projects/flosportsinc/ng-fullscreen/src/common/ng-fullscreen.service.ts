@@ -1,6 +1,9 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
-import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject } from 'rxjs'
-import { debounceTime, map, startWith, shareReplay, filter, flatMap, mergeAll, take, tap } from 'rxjs/operators'
+import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, forkJoin } from 'rxjs'
+import {
+  debounceTime, map, startWith, shareReplay, filter, flatMap,
+  mergeAll, take, tap, toArray, mergeMap, switchMap, takeUntil
+} from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
@@ -59,19 +62,23 @@ export class FloFullscreenService implements IFloFullscreenService {
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
+  // webkitendfullscreen: false, webkitbeginfullscreen: true
+  private readonly d = (eventName: string, mapToValue: boolean) => <T>(source: Observable<NodeListOf<HTMLVideoElement>[]>) => {
+    return source.pipe(
+      map(videoElements => videoElements.map(ve => fromEvent(ve, eventName))),
+      tap(() => this.iOSVideoState.next(mapToValue))
+    )
+  }
+
   public readonly fullscreen$ = merge(
     ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
     interval(1000).pipe(
-      flatMap(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))
-        .map(v => fromEvent(v, 'webkitbeginfullscreen').pipe(take(1)))),
-      mergeAll(1),
-      tap(() => this.iOSVideoState.next(true))
-    ),
-    interval(1000).pipe(
-      flatMap(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))
-        .map(v => fromEvent(v, 'webkitendfullscreen').pipe(take(1)))),
-      mergeAll(1),
-      tap(() => this.iOSVideoState.next(false))
+      map(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))),
+      mergeMap(a => [
+        ...a.map(v => fromEvent(v, 'webkitbeginfullscreen').pipe(tap(() => this.iOSVideoState.next(true)), take(1))),
+        ...a.map(v => fromEvent(v, 'webkitendfullscreen').pipe(tap(() => this.iOSVideoState.next(false)), take(1)))
+      ]),
+      mergeAll(1)
     ),
     this.fullscreenError$).pipe(
       debounceTime(0),
