@@ -447,14 +447,15 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ngAfterViewInit() {
     if (!isPlatformBrowser(this._platformId)) { return }
 
-    merge(this.selectedIndexChange, this.itemsChange).pipe(startWith(this.selectedIndex), takeUntil(this.onDestroy)).subscribe(_ => {
-      this._cdRef.detectChanges()
-      maybe(this.gridItemContainers.toArray()[this.selectedIndex].nativeElement)
+    merge(this.selectedIndexChange, this.itemsChange).pipe(
+      startWith(this.selectedIndex),
+      tap(() => this._cdRef.detectChanges()),
+      mapTo(maybe(this.gridItemContainers.toArray()[this.selectedIndex].nativeElement)
         .flatMapAuto(elm => Array.from(elm.children)
           .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
-        .flatMapAuto(a => a.children.item(0))
-        .tapSome((val: HTMLElement) => this.selectedElementChange.next(val))
-    })
+        .flatMapAuto(a => a.children.item(0))),
+      takeUntil(this.onDestroy)
+    ).subscribe(maybeElement => maybeElement.tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
   }
 
   ngOnDestroy() {

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-grid-list',
@@ -17,10 +18,13 @@ export class GridListComponent {
   ]
 
   readonly initialFill = { 0: '789', 3: 'wut' }
-  // tslint:disable-next-line: readonly-keyword
+  // tslint:disable: readonly-keyword
   count = 4
 
+  selectSource = new Subject()
+  selectedElement$ = this.selectSource.asObservable()
+
   selectedElementChange(evt) {
-    console.log(evt)
+    this.selectSource.next(evt)
   }
 }

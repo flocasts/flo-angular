@@ -15,7 +15,7 @@
     <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
     <button (click)="list.autoFill()">AUTOFILL</button>
     <button *floIfFullscreen floClickToExitFullscreen>EXIT FULLSCREEN</button>
-    <button *floIfNotFullscreen [floClickToEnterFullscreen]="gridRef.elmRef.nativeElement">FULLSCREEN</button>
+    <button *floIfNotFullscreen [floClickToEnterFullscreen]="selectedElement$ | async">FULLSCREEN</button>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
