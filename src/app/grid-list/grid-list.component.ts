@@ -17,4 +17,9 @@ export class GridListComponent {
   ]
 
   readonly initialFill = { 0: '789', 3: 'wut' }
+  readonly count = 4
+
+  selectedElementChange(evt) {
+    console.log(evt)
+  }
 }

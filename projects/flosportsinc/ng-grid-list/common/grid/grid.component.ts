@@ -10,8 +10,9 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, OnChanges, SimpleChanges
+  TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
+  HostListener,
+  AfterViewInit
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -49,7 +50,7 @@ export interface IViewItem<T> {
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
     private _cdRef: ChangeDetectorRef,
@@ -350,6 +351,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly maxheightChange = new Subject<number>()
   @Output() public readonly selectedIdChange = new Subject<string>()
   @Output() public readonly selectedIndexChange = new Subject<number>()
+  @Output() public readonly selectedElementChange = new Subject<HTMLElement>()
   @Output() public readonly overlayEnabledChange = new Subject<boolean>()
   @Output() public readonly overlayStaticChange = new Subject<boolean>()
   @Output() public readonly overlayStartChange = new Subject<boolean>()
@@ -433,19 +435,26 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    // initial setup of selected id
+    // initial setup of selected ID
     this.setSelectedIdViaIndex(this.selectedIndex)
+
+    if (!isPlatformBrowser(this._platformId)) { return }
+
+    this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
+    this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
   }
 
   ngAfterViewInit() {
-    if (isPlatformBrowser(this._platformId)) {
-      this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
-    }
-  }
+    if (!isPlatformBrowser(this._platformId)) { return }
 
-  ngOnChanges(_change: SimpleChanges) {
-    this.update()
+    merge(this.selectedIndexChange, this.itemsChange).pipe(startWith(this.selectedIndex), takeUntil(this.onDestroy)).subscribe(_ => {
+      this._cdRef.detectChanges()
+      maybe(this.gridItemContainers.toArray()[this.selectedIndex].nativeElement)
+        .flatMapAuto(elm => Array.from(elm.children)
+          .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
+        .flatMapAuto(a => a.children.item(0))
+        .tapSome((val: HTMLElement) => this.selectedElementChange.next(val))
+    })
   }
 
   ngOnDestroy() {
