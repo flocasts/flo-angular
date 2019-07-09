@@ -4,6 +4,7 @@ import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 import { PLATFORM_ID } from '@angular/core'
 import { take, skip } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
+import { FS_FULLSCREEN_ENABLED } from './ng-fullscreen.tokens'
 
 describe(FloFullscreenService.name, () => {
   // tslint:disable-next-line: no-let
@@ -26,9 +27,9 @@ describe(FloFullscreenService.name, () => {
       expect(service).toBeTruthy()
     })
 
-    it('should return false true fullscreenIsSupported', () => {
-      expect(service.fullscreenIsSupported()).toEqual(true)
-    })
+    it('should return false true fullscreenIsSupported', async(() => {
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(true))
+    }))
 
     // it('should default fullscreen obs', done => {
     //   service.fullscreen$.pipe(take(1)).subscribe(c => {
@@ -83,7 +84,7 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('canGoFullscreen$ should return true when fullscreen is supported and not in fullscreen ', done => {
-      service.canGoFullscreen$.pipe(take(1)).subscribe(val => {
+      service.canGoFullscreen().pipe(take(1)).subscribe(val => {
         expect(val).toEqual(true)
         done()
       })
@@ -100,6 +101,27 @@ describe(FloFullscreenService.name, () => {
       doc.dispatchEvent(requestFullscreen)
       doc.dispatchEvent(fullscreenchange)
     })
+
+    // it('should handle empty case', () => {
+    //   TestBed.resetTestingModule()
+    //   TestBed.configureTestingModule({
+    //     imports: [FloFullscreenCommonModule],
+    //     providers: [
+    //       { provide: FS_FULLSCREEN_ENABLED, useValue: []},
+    //       {
+    //       provide: DOCUMENT, useValue: {
+    //         fullscreenElement: true
+    //       }
+    //     }]
+    //   })
+    //   setService()
+
+    //   const video = document.createElement('video')
+    //   const loadedmetadata = new Event('loadedmetadata')
+
+    //   service.canGoFullscreen(video).subscribe(res => expect(res).toEqual(false))
+    //   video.dispatchEvent(loadedmetadata)
+    // })
   })
 
   describe('when on platform server', () => {
@@ -118,13 +140,13 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('should return false from canGoFullscreen', async(() => {
-      service.canGoFullscreen$.subscribe(val => {
+      service.canGoFullscreen().subscribe(val => {
         expect(val).toEqual(false)
       })
     }))
 
     it('should return false from fullscreenIsSupported', async(() => {
-      expect(service.fullscreenIsSupported()).toEqual(false)
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(false))
     }))
   })
 })
