@@ -1,6 +1,6 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
-import { merge, fromEvent, Observable, throwError, of } from 'rxjs'
-import { debounceTime, map, startWith, shareReplay, filter, flatMap } from 'rxjs/operators'
+import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject } from 'rxjs'
+import { debounceTime, map, startWith, shareReplay, filter, flatMap, mergeAll, take, tap } from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
@@ -51,16 +51,33 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enabledFunc: FullscreenEnabledFunc
   ) { }
 
-  public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
-    isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc)
+  private readonly iOSVideoState = new BehaviorSubject<boolean>(false)
+
+  public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) => {
+    return isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc) || this.iOSVideoState.getValue()
+  }
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
-  public readonly fullscreen$ = merge(...this.changeEventKeys.map(key => fromEvent(this.doc, key)), this.fullscreenError$).pipe(
-    debounceTime(0),
-    map(_ => this.isFullscreen()),
-    startWith(this.isFullscreen()),
-    shareReplay(1))
+  public readonly fullscreen$ = merge(
+    ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
+    interval(1000).pipe(
+      flatMap(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))
+        .map(v => fromEvent(v, 'webkitbeginfullscreen').pipe(take(1)))),
+      mergeAll(1),
+      tap(() => this.iOSVideoState.next(true))
+    ),
+    interval(1000).pipe(
+      flatMap(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))
+        .map(v => fromEvent(v, 'webkitendfullscreen').pipe(take(1)))),
+      mergeAll(1),
+      tap(() => this.iOSVideoState.next(false))
+    ),
+    this.fullscreenError$).pipe(
+      debounceTime(0),
+      map(_ => this.isFullscreen()),
+      startWith(this.isFullscreen()),
+      shareReplay(1))
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
   public readonly isNotFullscreen = this.fullscreen$.pipe(filter(v => v === false))
