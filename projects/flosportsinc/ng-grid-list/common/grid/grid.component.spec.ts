@@ -550,6 +550,7 @@ describe(FloGridListViewComponent.name, () => {
       const sut = createSut()
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
+      sut.hoistFixture.detectChanges()
       const res = sut.instance.gridItemContainers.toArray()
       res[0].nativeElement.click()
       expect(sut.instance.isIdSelected(SAMPLE_ITEM_1.id)).toEqual(true)
@@ -562,15 +563,6 @@ describe(FloGridListViewComponent.name, () => {
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       sut.instance.setSelectedIndex(0)
-      expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
-    })
-
-    it('via click event', () => {
-      const sut = createSut()
-      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
-      sut.instance.setCount(2)
-      const res = sut.instance.gridItemContainers.toArray()
-      res[0].nativeElement.click()
       expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
     })
   })

@@ -450,7 +450,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     merge(this.selectedIndexChange, this.itemsChange).pipe(
       startWith(this.selectedIndex),
       tap(() => this._cdRef.detectChanges()),
-      mapTo(maybe(this.gridItemContainers.toArray()[this.selectedIndex].nativeElement)
+      mapTo(maybe(this.gridItemContainers.toArray()[this.selectedIndex])
+        .flatMapAuto(a => a.nativeElement)
         .flatMapAuto(elm => Array.from(elm.children)
           .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
         .flatMapAuto(a => a.children.item(0))),
