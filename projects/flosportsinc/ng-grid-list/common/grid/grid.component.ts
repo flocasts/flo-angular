@@ -459,7 +459,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
             elm: a.children.item(0)
           }
         })),
-      distinctUntilChanged((x, y) => x.map(b => b.id).valueOrUndefined() === y.map(b => b.id).valueOrUndefined()),
+      distinctUntilChanged((x, y) => x.flatMapAuto(b => b.id).valueOrUndefined() === y.flatMapAuto(b => b.id).valueOrUndefined()),
       takeUntil(this.onDestroy)
     ).subscribe(maybeElement => maybeElement.map(a => a.elm).tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
   }
