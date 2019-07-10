@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core'
 import { Observable } from 'rxjs'
 
 // tslint:disable: max-line-length
-export type FullscreenRequestEvents = 'requestFullscreen' | 'webkitRequestFullscreen' | 'webkitRequestFullScreen' | 'mozRequestFullScreen' | 'msRequestFullscreen' | 'webkitEnterFullscreen'
+export type FullscreenRequestEvents = 'requestFullscreen' | 'webkitRequestFullscreen' | 'webkitRequestFullScreen' | 'mozRequestFullScreen' | 'msRequestFullscreen'
 export type FullscreenExitEvents = 'exitFullscreen' | 'webkitExitFullscreen' | 'webkitCancelFullScreen' | 'mozCancelFullScreen' | 'msExitFullscreen'
 export type FullscreenChangeEvents = 'fullscreenchange' | 'webkitfullscreenchange' | 'mozfullscreenchange' | 'MSFullscreenChange'
 export type FullscreenErrorEvents = 'fullscreenerror' | 'webkitfullscreenerror' | 'webkitfullscreenerror' | 'mozfullscreenerror' | 'MSFullscreenError'
@@ -18,3 +18,5 @@ export const FS_FULLSCREEN_ELEMENT_ERROR_EVENTS = new InjectionToken<ReadonlyArr
 export const FS_FULLSCREEN_ELEMENT = new InjectionToken<ReadonlyArray<FullscreenElementKeys>>('fs.fullscreen.element')
 export const FS_FULLSCREEN_ENABLED = new InjectionToken<ReadonlyArray<FullscreenEnabledKeys>>('fs.fullscreen.enabled')
 export const FS_FULLSCREEN_ENABLED_FUNC = new InjectionToken<FullscreenEnabledFunc>('fs.fullscreen.enabled-func')
+export const FS_FULLSCREEN_IOS_POLL_ENABLED = new InjectionToken<boolean>('fs.fullscreen.ios.poll.enabled')
+export const FS_FULLSCREEN_IOS_POLL_MS = new InjectionToken<number>('fs.fullscreen.ios.poll.ms')
