@@ -10,8 +10,7 @@ export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<FullscreenReque
   'webkitRequestFullscreen',
   'webkitRequestFullScreen',
   'mozRequestFullScreen',
-  'msRequestFullscreen',
-  'webkitEnterFullscreen'
+  'msRequestFullscreen'
 ]
 
 export const DEFAULT_FS_FULLSCREEN_EXIT_EVENTS: ReadonlyArray<FullscreenExitEvents> = [

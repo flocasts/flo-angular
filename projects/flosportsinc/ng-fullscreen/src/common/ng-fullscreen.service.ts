@@ -2,7 +2,7 @@ import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
 import {
   debounceTime, map, startWith, shareReplay,
-  filter, flatMap, mergeAll, take, tap, mergeMap
+  filter, flatMap, mergeAll, take, tap, mergeMap, distinctUntilChanged
 } from 'rxjs/operators'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
@@ -25,9 +25,10 @@ const fullscreenChangeError =
 
 const filterAndExecute =
   (ref: HTMLElement | HTMLDocument) =>
-    (arr: ReadonlyArray<string>) => arr.
-      filter(a => typeof ref[a] === 'function')
+    (arr: ReadonlyArray<string>) => arr
+      .filter(a => typeof ref[a] === 'function')
       .forEach(a => ref[a]())
+
 
 export interface IFloFullscreenService {
   readonly fullscreen$: Observable<boolean>
@@ -64,6 +65,10 @@ export class FloFullscreenService implements IFloFullscreenService {
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
+  private readonly iosVideoBypass = (pasthrough: string[]) => isPlatformServer(this.platformId)
+    ? pasthrough
+    : window.navigator.userAgent.match(/iPhone/) ? ['webkitEnterFullscreen'] : pasthrough
+
   private readonly iosPoller = () => !this.iosPollEnabled
     ? EMPTY
     : interval(this.iosPollrate).pipe(
@@ -81,11 +86,13 @@ export class FloFullscreenService implements IFloFullscreenService {
       debounceTime(0),
       map(() => this.isFullscreen()),
       startWith(this.isFullscreen()),
+      distinctUntilChanged(),
       shareReplay(1))
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
   public readonly isNotFullscreen = this.fullscreen$.pipe(filter(v => v === false))
-  public readonly goFullscreen = (elm: HTMLElement | HTMLDocument = this.doc.body) => filterAndExecute(elm)(this.requestEventKeys)
+  public readonly goFullscreen = (elm: HTMLElement | HTMLDocument = this.doc.body) =>
+    filterAndExecute(elm)(this.iosVideoBypass(this.requestEventKeys))
   public readonly exitFullscreen = () => filterAndExecute(this.doc)(this.exitEventKeys)
 
   public readonly fullscreenIsSupported =

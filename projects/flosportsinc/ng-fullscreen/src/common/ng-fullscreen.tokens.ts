@@ -2,7 +2,7 @@ import { InjectionToken } from '@angular/core'
 import { Observable } from 'rxjs'
 
 // tslint:disable: max-line-length
-export type FullscreenRequestEvents = 'requestFullscreen' | 'webkitRequestFullscreen' | 'webkitRequestFullScreen' | 'mozRequestFullScreen' | 'msRequestFullscreen' | 'webkitEnterFullscreen'
+export type FullscreenRequestEvents = 'requestFullscreen' | 'webkitRequestFullscreen' | 'webkitRequestFullScreen' | 'mozRequestFullScreen' | 'msRequestFullscreen'
 export type FullscreenExitEvents = 'exitFullscreen' | 'webkitExitFullscreen' | 'webkitCancelFullScreen' | 'mozCancelFullScreen' | 'msExitFullscreen'
 export type FullscreenChangeEvents = 'fullscreenchange' | 'webkitfullscreenchange' | 'mozfullscreenchange' | 'MSFullscreenChange'
 export type FullscreenErrorEvents = 'fullscreenerror' | 'webkitfullscreenerror' | 'webkitfullscreenerror' | 'mozfullscreenerror' | 'MSFullscreenError'
