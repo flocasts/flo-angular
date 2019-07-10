@@ -1,6 +1,6 @@
 <h1>Grid List</h1>
 
-<flo-grid-list-view #gridRef [(count)]="count" (selectedElementChange)="selectedElementChange($event)">
+<flo-grid-list-view #gridRef [(count)]="count">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>
     <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>
@@ -15,7 +15,7 @@
     <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
     <button (click)="list.autoFill()">AUTOFILL</button>
     <button *floIfFullscreen floClickToExitFullscreen>EXIT FULLSCREEN</button>
-    <button *floIfNotFullscreen [floClickToEnterFullscreen]="selectedElement$ | async">FULLSCREEN</button>
+    <button *floIfNotFullscreen [floClickToEnterFullscreen]="gridRef.elmRef.nativeElement">FULLSCREEN</button>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
