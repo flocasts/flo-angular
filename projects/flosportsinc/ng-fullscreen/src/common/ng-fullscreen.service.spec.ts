@@ -1,4 +1,4 @@
-import { TestBed, async } from '@angular/core/testing'
+import { TestBed, async, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 import { PLATFORM_ID } from '@angular/core'
@@ -101,27 +101,6 @@ describe(FloFullscreenService.name, () => {
       doc.dispatchEvent(requestFullscreen)
       doc.dispatchEvent(fullscreenchange)
     })
-
-    // it('should handle empty case', () => {
-    //   TestBed.resetTestingModule()
-    //   TestBed.configureTestingModule({
-    //     imports: [FloFullscreenCommonModule],
-    //     providers: [
-    //       { provide: FS_FULLSCREEN_ENABLED, useValue: []},
-    //       {
-    //       provide: DOCUMENT, useValue: {
-    //         fullscreenElement: true
-    //       }
-    //     }]
-    //   })
-    //   setService()
-
-    //   const video = document.createElement('video')
-    //   const loadedmetadata = new Event('loadedmetadata')
-
-    //   service.canGoFullscreen(video).subscribe(res => expect(res).toEqual(false))
-    //   video.dispatchEvent(loadedmetadata)
-    // })
   })
 
   describe('when on platform server', () => {

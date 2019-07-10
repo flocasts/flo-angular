@@ -1,17 +1,20 @@
 import { Component, NgModule } from '@angular/core'
-import { TestBed } from '@angular/core/testing'
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing'
 import { FloFullscreenDirective, FloFullscreenOffDirective } from './ng-fullscreen.switch.directive'
 import { FloFullscreenSwitchModule } from './ng-fullscreen.switch.module'
 import { By } from '@angular/platform-browser'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { of } from 'rxjs'
-import { FS_FULLSCREEN_ENABLED, FS_FULLSCREEN_ELEMENT } from '../common/ng-fullscreen.tokens'
+import { FS_FULLSCREEN_ENABLED, FS_FULLSCREEN_ELEMENT, FS_FULLSCREEN_IOS_POLL_ENABLED } from '../common/ng-fullscreen.tokens'
 import { DOCUMENT } from '@angular/common'
+import { skip } from 'rxjs/operators'
+import { DEFAULT_FS_FULLSCREEN_IOS_POLL_MS } from '../common/ng-fullscreen.tokens.defaults'
 
 @Component({
   selector: 'flo-test-component',
   template: `<div id="container">
     <video #ref></video>
+    <video #ref2></video>
     <button *floIfNotFullscreen="ref">ENTER</button>
     <button *floIfFullscreen="ref">EXIT</button>
   </div>`
@@ -113,4 +116,40 @@ describe(FloFullscreenDirective.name, () => {
     const service = TestBed.get(FloFullscreenService) as FloFullscreenService
     service.canGoFullscreen().subscribe(res => expect(res).toEqual(false))
   })
+
+  it('should handle iOS entering/exiting fullscreen', fakeAsync(() => {
+    const sut = createSut()
+    const video = sut.debugElement.query(By.css('video'))
+    video.triggerEventHandler('webkitbeginfullscreen', { })
+    sut.detectChanges()
+
+    tick(DEFAULT_FS_FULLSCREEN_IOS_POLL_MS)
+
+    // TODO
+
+    discardPeriodicTasks()
+  }))
+
+  it('should... ', fakeAsync(() => {
+    TestBed.resetTestingModule()
+    TestBed.configureTestingModule({
+      imports: [FloFullscreenTestModule],
+      providers: [
+        { provide: FS_FULLSCREEN_IOS_POLL_ENABLED, useValue: false }
+      ]
+    })
+    const service = TestBed.get(FloFullscreenService) as FloFullscreenService
+    const spy = spyOn(service as any, 'iOSVideoState').and.callThrough()
+    const sut = createSut()
+    const video = sut.debugElement.query(By.css('video'))
+    video.nativeElement.dispatchEvent(new Event('webkitbeginfullscreen'))
+    sut.detectChanges()
+
+    tick(DEFAULT_FS_FULLSCREEN_IOS_POLL_MS)
+
+    expect(spy).not.toHaveBeenCalled()
+
+    discardPeriodicTasks()
+  }))
+
 })
