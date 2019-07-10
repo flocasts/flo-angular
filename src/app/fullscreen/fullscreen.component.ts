@@ -1,6 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnDestroy } from '@angular/core'
-import { Subject } from 'rxjs'
-import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
+import { Component, ChangeDetectionStrategy } from '@angular/core'
 
 @Component({
   selector: 'app-fullscreen',
@@ -8,14 +6,5 @@ import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
   styleUrls: ['./fullscreen.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FullscreenComponent implements OnDestroy {
-  readonly onDestroy = new Subject()
-
-  constructor(fs: FloFullscreenService) {
-    fs.fullscreen$.subscribe(i => console.log('is fullscreen', i))
-  }
-
-  ngOnDestroy() {
-    this.onDestroy.next()
-  }
+export class FullscreenComponent  {
 }
