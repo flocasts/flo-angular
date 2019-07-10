@@ -23,8 +23,8 @@ import {
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
-      <div *floGridListItemSome="let item">{{ item.value.value }}</div>
-      <div *floGridListItemNone>EMPTY</div>
+      <div *floGridListItemSome="let item" class="some">{{ item.value.value }}</div>
+      <div *floGridListItemNone class="none">EMPTY</div>
     </flo-grid-list-view>
   `
 })
@@ -747,6 +747,33 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.setCount(2)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       expect(sut.instance.isItemInAnotherIndex(SAMPLE_ITEM_2, 0)).toEqual(false)
+    })
+  })
+
+  describe('selectedElementChange', () => {
+    it('should output inner HTML element - some', done => {
+      const sut = createSut()
+      sut.instance.selectedElementChange.subscribe(res => {
+        expect(res instanceof HTMLElement).toEqual(true)
+        expect(res.classList.contains('some')).toEqual(true)
+        done()
+      })
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2, undefined]
+      sut.instance.setSelectedIndex(1)
+      sut.hoistFixture.detectChanges()
+    })
+    it('should output inner HTML element - none', done => {
+      const sut = createSut()
+      sut.instance.selectedElementChange.subscribe(res => {
+        expect(res instanceof HTMLElement).toEqual(true)
+        expect(res.classList.contains('none')).toEqual(true)
+        done()
+      })
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [undefined, undefined]
+      sut.instance.setSelectedIndex(1)
+      sut.hoistFixture.detectChanges()
     })
   })
 
