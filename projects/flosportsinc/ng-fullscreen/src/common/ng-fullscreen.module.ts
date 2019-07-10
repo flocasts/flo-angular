@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core'
+import { NgModule, ModuleWithProviders } from '@angular/core'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { CommonModule } from '@angular/common'
 import {
@@ -13,6 +13,15 @@ import {
   DEFAULT_FS_FULLSCREEN_IOS_POLL_MS,
   DEFAULT_FS_FULLSCREEN_IOS_POLL_ENABLED
 } from './ng-fullscreen.tokens.defaults'
+
+export interface FloFullscreenCommonModuleConfig {
+  readonly ios: Partial<FloFullscreenCommonModuleIosPollingConfig>
+}
+
+export interface FloFullscreenCommonModuleIosPollingConfig {
+  readonly enabled: boolean
+  readonly pollDurationMs: number
+}
 
 @NgModule({
   imports: [CommonModule],
@@ -30,4 +39,22 @@ import {
     { provide: FS_FULLSCREEN_IOS_POLL_ENABLED, useValue: DEFAULT_FS_FULLSCREEN_IOS_POLL_ENABLED }
   ]
 })
-export class FloFullscreenCommonModule { }
+export class FloFullscreenCommonModule {
+  static config(config: Partial<FloFullscreenCommonModuleConfig>): ModuleWithProviders {
+    return {
+      ngModule: FloFullscreenCommonModule,
+      providers: [
+        {
+          provide: FS_FULLSCREEN_IOS_POLL_ENABLED,
+          useValue: config.ios && typeof config.ios.enabled === 'boolean' ? config.ios.enabled : DEFAULT_FS_FULLSCREEN_IOS_POLL_ENABLED
+        },
+        {
+          provide: FS_FULLSCREEN_IOS_POLL_MS,
+          useValue: config.ios && typeof config.ios.pollDurationMs === 'number'
+            ? config.ios.pollDurationMs
+            : DEFAULT_FS_FULLSCREEN_IOS_POLL_MS
+        }
+      ]
+    }
+  }
+}
