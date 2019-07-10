@@ -17,7 +17,7 @@
         [floGridListDragDropGridRef]="this"
         [style.flex-basis.%]="item.flexBasis"
         [style.padding-top.%]="item.padTop"
-        [attr.id]="item?.value?.id">
+        [attr.id]="item?.value?.id || 'some_' + idx">
         <ng-container [ngSwitch]="item.hasValue">
           <div *ngSwitchCase="true" class="fg list-item-some">
             <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>

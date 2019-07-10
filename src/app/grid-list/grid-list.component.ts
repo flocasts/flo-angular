@@ -19,4 +19,8 @@ export class GridListComponent {
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
   count = 4
+
+  test(e) {
+    console.log(e)
+  }
 }
