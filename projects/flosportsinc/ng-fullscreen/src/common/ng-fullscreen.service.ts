@@ -54,28 +54,30 @@ export class FloFullscreenService implements IFloFullscreenService {
     @Inject(FS_FULLSCREEN_ENABLED) private enabledKeys: FullscreenEnabledKeys[],
     @Inject(FS_FULLSCREEN_ENABLED_FUNC) private enabledFunc: FullscreenEnabledFunc,
     @Inject(FS_FULLSCREEN_IOS_POLL_MS) private iosPollrate: number,
-    @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) private iosPollEnablled: boolean
+    @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) private iosPollEnabled: boolean
   ) { }
 
   private readonly iOSVideoState = new BehaviorSubject<boolean>(false)
 
-  public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) => {
-    return isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc) || this.iOSVideoState.getValue()
-  }
+  public readonly isFullscreen = (doc: HTMLDocument | HTMLElement = this.doc) =>
+    isPlatformServer(this.platformId) ? false : isKeyTrue(this.elementKeys)(doc) || this.iOSVideoState.getValue()
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
-  public readonly fullscreen$ = merge(
-    ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
-    !this.iosPollEnablled ? EMPTY : interval(this.iosPollrate).pipe(
+  private readonly iosPoller = () => !this.iosPollEnabled
+    ? EMPTY
+    : interval(this.iosPollrate).pipe(
       map(() => Array.from((this.doc as HTMLDocument).querySelectorAll('video'))),
       mergeMap(videoElements => [
         ...videoElements.map(ve => fromEvent(ve, 'webkitbeginfullscreen').pipe(tap(() => this.iOSVideoState.next(true)), take(1))),
         ...videoElements.map(ve => fromEvent(ve, 'webkitendfullscreen').pipe(tap(() => this.iOSVideoState.next(false)), take(1)))
       ]),
-      mergeAll(1)
-    ),
-    this.fullscreenError$).pipe(
+      mergeAll(1))
+
+  public readonly fullscreen$ = merge(
+    ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
+    this.fullscreenError$,
+    this.iosPoller()).pipe(
       debounceTime(0),
       map(() => this.isFullscreen()),
       startWith(this.isFullscreen()),
