@@ -10,8 +10,9 @@ import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, t
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, OnChanges, SimpleChanges
+  TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
+  HostListener,
+  AfterViewInit
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -49,7 +50,7 @@ export interface IViewItem<T> {
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnChanges, OnDestroy {
+export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
     private _cdRef: ChangeDetectorRef,
@@ -350,6 +351,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly maxheightChange = new Subject<number>()
   @Output() public readonly selectedIdChange = new Subject<string>()
   @Output() public readonly selectedIndexChange = new Subject<number>()
+  @Output() public readonly selectedElementChange = new Subject<HTMLElement>()
   @Output() public readonly overlayEnabledChange = new Subject<boolean>()
   @Output() public readonly overlayStaticChange = new Subject<boolean>()
   @Output() public readonly overlayStartChange = new Subject<boolean>()
@@ -433,19 +435,29 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    // initial setup of selected id
-    this.setSelectedIdViaIndex(this.selectedIndex)
+    if (!isPlatformBrowser(this._platformId)) { return }
+
+    this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
+    this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
   }
 
   ngAfterViewInit() {
-    if (isPlatformBrowser(this._platformId)) {
-      this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
-    }
-  }
+    // initial setup of selected ID
+    this.setSelectedIdViaIndex(this.selectedIndex)
 
-  ngOnChanges(_change: SimpleChanges) {
-    this.update()
+    if (!isPlatformBrowser(this._platformId)) { return }
+
+    merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
+      startWith(this.selectedIndex),
+      distinctUntilChanged(),
+      tap(() => this._cdRef.detectChanges()),
+      map(idx => maybe(this.gridItemContainers.toArray()[idx])
+        .flatMapAuto(a => a.nativeElement)
+        .flatMapAuto(elm => Array.from(elm.children)
+          .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
+        .flatMapAuto(a => a.children.item(0))),
+      takeUntil(this.onDestroy)
+    ).subscribe(maybeElement => maybeElement.tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
   }
 
   ngOnDestroy() {
@@ -506,11 +518,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem, toIndex = this.selectedIndex) =>
       this.isIndexEmpty(toIndex) && this.isItemInNotAnotherIndex(item, toIndex)
 
-  public readonly canReplaceItem = (item: TItem, toIndex = this.selectedIndex) => {
-    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
-  }
+  public readonly canReplaceItem =
+    (item: TItem, toIndex = this.selectedIndex) =>
+      this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
 
-  public readonly setItem = (item: TItem, idx = this.selectedIndex) => this.setItemAtIndex(idx, item)
+  public readonly setItem =
+    (item: TItem, idx = this.selectedIndex) =>
+      this.setItemAtIndex(idx, item)
 
   public readonly removeItem =
     (item: TItem) =>

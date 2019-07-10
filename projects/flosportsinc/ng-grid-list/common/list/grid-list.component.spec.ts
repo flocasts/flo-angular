@@ -149,11 +149,11 @@ describe(FloGridListComponent.name, () => {
 
     it('should actions.swap()', () => {
       const sut = createSut()
+      const spy = spyOn(sut.hoistInstance._gridRef, 'swapItems').and.callThrough()
+      const anchor = sut.gridListDebug.query(By.css('#swapFuncAnchor'))
       sut.hoistInstance._listRef.autoFill()
       sut.hoistInstance._gridRef.setSelectedIndex(1)
       sut.hoistFixture.detectChanges()
-      const spy = spyOn(sut.hoistInstance._gridRef, 'swapItems').and.callThrough()
-      const anchor = sut.gridListDebug.query(By.css('#swapFuncAnchor'))
       anchor.nativeElement.click()
       expect(spy).toHaveBeenCalledWith(SAMPLE_ITEM_1)
     })

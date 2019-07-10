@@ -23,8 +23,8 @@ import {
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
-      <div *floGridListItemSome="let item">{{ item.value.value }}</div>
-      <div *floGridListItemNone>EMPTY</div>
+      <div *floGridListItemSome="let item" class="some">{{ item.value.value }}</div>
+      <div *floGridListItemNone class="none">EMPTY</div>
     </flo-grid-list-view>
   `
 })
@@ -550,6 +550,7 @@ describe(FloGridListViewComponent.name, () => {
       const sut = createSut()
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
+      sut.hoistFixture.detectChanges()
       const res = sut.instance.gridItemContainers.toArray()
       res[0].nativeElement.click()
       expect(sut.instance.isIdSelected(SAMPLE_ITEM_1.id)).toEqual(true)
@@ -562,15 +563,6 @@ describe(FloGridListViewComponent.name, () => {
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       sut.instance.setCount(2)
       sut.instance.setSelectedIndex(0)
-      expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
-    })
-
-    it('via click event', () => {
-      const sut = createSut()
-      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
-      sut.instance.setCount(2)
-      const res = sut.instance.gridItemContainers.toArray()
-      res[0].nativeElement.click()
       expect(sut.instance.isItemSelected(SAMPLE_ITEM_1)).toEqual(true)
     })
   })
@@ -755,6 +747,33 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.setCount(2)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       expect(sut.instance.isItemInAnotherIndex(SAMPLE_ITEM_2, 0)).toEqual(false)
+    })
+  })
+
+  describe('selectedElementChange', () => {
+    it('should output inner HTML element - some', done => {
+      const sut = createSut()
+      sut.instance.selectedElementChange.subscribe(res => {
+        expect(res instanceof HTMLElement).toEqual(true)
+        expect(res.classList.contains('some')).toEqual(true)
+        done()
+      })
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2, undefined]
+      sut.instance.setSelectedIndex(1)
+      sut.hoistFixture.detectChanges()
+    })
+    it('should output inner HTML element - none', done => {
+      const sut = createSut()
+      sut.instance.selectedElementChange.subscribe(res => {
+        expect(res instanceof HTMLElement).toEqual(true)
+        expect(res.classList.contains('none')).toEqual(true)
+        done()
+      })
+      sut.instance.setCount(2)
+      sut.hoistInstance.items = [undefined, undefined]
+      sut.instance.setSelectedIndex(1)
+      sut.hoistFixture.detectChanges()
     })
   })
 
