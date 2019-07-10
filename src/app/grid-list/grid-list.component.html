@@ -1,6 +1,6 @@
 <h1>Grid List</h1>
 
-<flo-grid-list-view #gridRef [(count)]="count">
+<flo-grid-list-view #gridRef [(count)]="count" (selectedElementChange)="selectedElementChange($event)">
   <div *floGridListOverlay>
     <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>
     <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>

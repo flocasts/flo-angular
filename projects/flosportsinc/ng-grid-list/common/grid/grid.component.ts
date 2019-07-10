@@ -435,9 +435,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    // initial setup of selected ID
-    this.setSelectedIdViaIndex(this.selectedIndex)
-
     if (!isPlatformBrowser(this._platformId)) { return }
 
     this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
@@ -445,12 +442,16 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngAfterViewInit() {
+    // initial setup of selected ID
+    this.setSelectedIdViaIndex(this.selectedIndex)
+
     if (!isPlatformBrowser(this._platformId)) { return }
 
-    merge(this.selectedIndexChange, this.itemsChange).pipe(
+    merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
+      distinctUntilChanged(),
       tap(() => this._cdRef.detectChanges()),
-      mapTo(maybe(this.gridItemContainers.toArray()[this.selectedIndex])
+      map(idx => maybe(this.gridItemContainers.toArray()[idx])
         .flatMapAuto(a => a.nativeElement)
         .flatMapAuto(elm => Array.from(elm.children)
           .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
@@ -517,11 +518,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem, toIndex = this.selectedIndex) =>
       this.isIndexEmpty(toIndex) && this.isItemInNotAnotherIndex(item, toIndex)
 
-  public readonly canReplaceItem = (item: TItem, toIndex = this.selectedIndex) => {
-    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
-  }
+  public readonly canReplaceItem =
+    (item: TItem, toIndex = this.selectedIndex) =>
+      this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
 
-  public readonly setItem = (item: TItem, idx = this.selectedIndex) => this.setItemAtIndex(idx, item)
+  public readonly setItem =
+    (item: TItem, idx = this.selectedIndex) =>
+      this.setItemAtIndex(idx, item)
 
   public readonly removeItem =
     (item: TItem) =>

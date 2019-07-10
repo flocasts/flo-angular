@@ -93,16 +93,16 @@ describe(FloGridListComponent.name, () => {
       Object.values(sut.hoistInstance._listRef.viewItems[0].actions).forEach(action => expect(action).toEqual(noop))
     })
 
-    // it('should actions.select()', () => {
-    //   const sut = createSut()
-    //   sut.hoistInstance._listRef.autoFill()
-    //   sut.hoistInstance._gridRef.setSelectedIndex(1)
-    //   sut.hoistFixture.detectChanges()
-    //   const spy = spyOn(sut.hoistInstance._gridRef, 'setSelectedIndex').and.callThrough()
-    //   const anchor = sut.gridListDebug.query(By.css('#selectFuncAnchor'))
-    //   anchor.nativeElement.click()
-    //   expect(spy).toHaveBeenCalledWith(0)
-    // })
+    it('should actions.select()', () => {
+      const sut = createSut()
+      sut.hoistInstance._listRef.autoFill()
+      sut.hoistInstance._gridRef.setSelectedIndex(1)
+      sut.hoistFixture.detectChanges()
+      const spy = spyOn(sut.hoistInstance._gridRef, 'setSelectedIndex').and.callThrough()
+      const anchor = sut.gridListDebug.query(By.css('#selectFuncAnchor'))
+      anchor.nativeElement.click()
+      expect(spy).toHaveBeenCalledWith(0)
+    })
 
     // it('should actions.add()', () => {
     //   const sut = createSut()
