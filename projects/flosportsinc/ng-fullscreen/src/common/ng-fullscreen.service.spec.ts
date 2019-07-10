@@ -127,5 +127,9 @@ describe(FloFullscreenService.name, () => {
     it('should return false from fullscreenIsSupported', async(() => {
       service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(false))
     }))
+
+    it('should return false from fullscreen', async(() => {
+      service.fullscreen$.subscribe(res => expect(res).toEqual(false))
+    }))
   })
 })

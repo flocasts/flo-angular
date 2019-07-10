@@ -79,15 +79,17 @@ export class FloFullscreenService implements IFloFullscreenService {
       ]),
       mergeAll(1))
 
-  public readonly fullscreen$ = merge(
-    ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
-    this.fullscreenError$,
-    this.iosPoller()).pipe(
-      debounceTime(0),
-      map(() => this.isFullscreen()),
-      startWith(this.isFullscreen()),
-      distinctUntilChanged(),
-      shareReplay(1))
+  public readonly fullscreen$ = isPlatformServer(this.platformId)
+    ? of(false)
+    : merge(
+      ...this.changeEventKeys.map(key => fromEvent(this.doc, key)),
+      this.fullscreenError$,
+      this.iosPoller()).pipe(
+        debounceTime(0),
+        map(() => this.isFullscreen()),
+        distinctUntilChanged(),
+        startWith(this.isFullscreen()),
+        shareReplay(1))
 
   public readonly isFullscreen$ = this.fullscreen$.pipe(filter(v => v === true))
   public readonly isNotFullscreen = this.fullscreen$.pipe(filter(v => v === false))
