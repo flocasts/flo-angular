@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
 
 @Component({
   selector: 'app-grid-list',
@@ -18,5 +18,21 @@ export class GridListComponent {
 
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
-  count = 4
+  count = 2
+
+  @ViewChild('gridRef', { read: ElementRef }) gridref: ElementRef<HTMLElement>
+
+  currentElm: HTMLElement
+
+  elmChange(evt: HTMLElement) {
+    // tslint:disable-next-line: no-object-mutation
+    this.currentElm = evt
+    console.log(evt)
+  }
+
+  get fsElementRef() {
+    return window.navigator.userAgent.match(/iPhone/)
+      ? this.currentElm
+      : this.gridref.nativeElement
+  }
 }

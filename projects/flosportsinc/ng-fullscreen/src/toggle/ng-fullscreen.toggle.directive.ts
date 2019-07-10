@@ -12,22 +12,31 @@ import { DOCUMENT } from '@angular/common'
 export class FloClickToEnterFullscreenDirective {
   constructor(private fs: FloFullscreenService, @Inject(DOCUMENT) private doc: any, private cd: ChangeDetectorRef) { }
 
-  private _thing: HTMLElement | HTMLDocument
+  private _element: HTMLElement | HTMLDocument
 
   @Input()
   get floClickToEnterFullscreen() {
-    return this._thing
+    return this._element
   }
   set floClickToEnterFullscreen(val: any) {
     if (val instanceof HTMLElement) {
-      this._thing = val
+      this._element = val
     } else {
-      this._thing = this.doc.body
+      this._element = this.doc.body
     }
   }
 
   @HostListener('click', []) click() {
     this.cd.detectChanges()
+    // tslint:disable-next-line: no-let
+    // let d: any
+    // if (window.navigator.userAgent.match(/iPhone/)) {
+    //   d = this.floClickToEnterFullscreen instanceof HTMLVideoElement
+    //     ? this.floClickToEnterFullscreen
+    //     : this.floClickToEnterFullscreen.querySelector('video') || this.floClickToEnterFullscreen
+    // } else {
+    //   d = this.floClickToEnterFullscreen
+    // }
     this.fs.isNotFullscreen.pipe(take(1)).subscribe(_ => {
       this.fs.goFullscreen(this.floClickToEnterFullscreen)
     })

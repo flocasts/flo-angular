@@ -1,33 +1,54 @@
-import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, Input } from '@angular/core'
-import { takeUntil, filter, flatMap } from 'rxjs/operators'
-import { Subject } from 'rxjs'
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges } from '@angular/core'
+import { takeUntil, filter, flatMap, startWith, delay, sample, sampleTime, timeInterval, mergeAll, map, tap } from 'rxjs/operators'
+import { Subject, interval } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
-export abstract class FloFullscreenDirective implements OnDestroy, OnInit {
+export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnChanges {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) { }
 
-  protected readonly ngOnDestroy$ = new Subject()
   protected showWhenFullscreen = false
+  protected readonly ngOnDestroy$ = new Subject()
   protected abstract elmInputKey?: string
   protected readonly elm = () => this.elmInputKey ? this[this.elmInputKey] as HTMLElement : undefined
+  private elmSource = new Subject<HTMLElement | undefined>()
+  protected readonly elm$ = this.elmSource.asObservable()
 
   ngOnInit() {
-    this.fs.fullscreenIsSupported(this.elm())
-      .pipe(
-        filter(Boolean),
-        flatMap(() => this.fs.fullscreen$),
-        takeUntil(this.ngOnDestroy$)
-      ).subscribe(isFullscreen => {
-        if (this.showWhenFullscreen && isFullscreen) {
+    this.elm$.pipe(
+      startWith(this.elm()),
+      delay(0),
+      flatMap(elm => this.fs.fullscreenIsSupported(elm)),
+      flatMap(isSupported => this.fs.fullscreen$.pipe(map(isFullscreen => ({ isSupported, isFullscreen })))),
+      takeUntil(this.ngOnDestroy$)
+    ).subscribe(res => {
+      this.vc.clear()
+      if (this.showWhenFullscreen) { // exit
+        if (res.isFullscreen) {
           this.vc.createEmbeddedView(this.tr)
-        } else if (!isFullscreen && !this.showWhenFullscreen) {
-          this.vc.createEmbeddedView(this.tr)
-        } else {
-          this.vc.clear()
         }
-      })
+      } else if (!res.isFullscreen) { // enter
+        if (res.isSupported) {
+          this.vc.createEmbeddedView(this.tr)
+        }
+      }
+      // if (this.vc.length === 0 && this.showWhenFullscreen && isFullscreen) {
+      //   this.vc.createEmbeddedView(this.tr)
+      // } else if (this.vc.length === 0 && !isFullscreen && !this.showWhenFullscreen) {
+      //   this.vc.createEmbeddedView(this.tr)
+      // } else {
+      //   this.vc.clear()
+      // }
+    })
+  }
+
+  ngOnChanges(sc: SimpleChanges) {
+    if (this.elmInputKey) {
+      if (sc[this.elmInputKey]) {
+        this.elmSource.next(sc[this.elmInputKey].currentValue)
+      }
+    }
   }
 
   ngOnDestroy() {

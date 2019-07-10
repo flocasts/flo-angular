@@ -7,8 +7,10 @@
   <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen1">Enter Fullscreen</button>
 </div>
 
-<div>
-  <video #takeMeFullscreen3 floMse playsinline controls src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
+<div #takeMeFullscreen3>
+  <div>
+    <video floMse playsinline controls src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8" width="400px"></video>
+  </div>
   <button *floIfFullscreen="takeMeFullscreen3" floClickToExitFullscreen>Exit Fullscreen</button>
   <button *floIfNotFullscreen="takeMeFullscreen3" [floClickToEnterFullscreen]="takeMeFullscreen3">Enter Fullscreen</button>
 </div>

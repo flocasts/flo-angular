@@ -1,10 +1,10 @@
+import { DOCUMENT, isPlatformServer } from '@angular/common'
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
 import {
   debounceTime, map, startWith, shareReplay,
   filter, flatMap, mergeAll, take, tap, mergeMap, distinctUntilChanged
 } from 'rxjs/operators'
-import { DOCUMENT, isPlatformServer } from '@angular/common'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
   FS_FULLSCREEN_CHANGE_EVENTS, FS_FULLSCREEN_ELEMENT_ERROR_EVENTS, FullscreenRequestEvents,
@@ -28,7 +28,6 @@ const filterAndExecute =
     (arr: ReadonlyArray<string>) => arr
       .filter(a => typeof ref[a] === 'function')
       .forEach(a => ref[a]())
-
 
 export interface IFloFullscreenService {
   readonly fullscreen$: Observable<boolean>
