@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
-import { isPlatformBrowser } from '@angular/common'
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
+import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
 
 @Component({
   selector: 'app-grid-list',
@@ -8,7 +8,7 @@ import { isPlatformBrowser } from '@angular/common'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridListComponent {
-  constructor(@Inject(PLATFORM_ID) private platformId: string) { }
+  constructor(private fs: FloFullscreenService) { }
 
   // tslint:disable-next-line: readonly-keyword
   public items: ReadonlyArray<any> = [
@@ -33,10 +33,8 @@ export class GridListComponent {
   }
 
   get fsElementRef() {
-    return isPlatformBrowser(this.platformId)
-      ? window.navigator.userAgent.match(/iPhone/)
-        ? this.currentElm
-        : this.gridref.nativeElement
+    return this.fs.isIphone()
+      ? this.currentElm
       : this.gridref.nativeElement
   }
 }
