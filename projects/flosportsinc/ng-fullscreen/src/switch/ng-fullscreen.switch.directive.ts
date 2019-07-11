@@ -1,5 +1,5 @@
 import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core'
-import { takeUntil, flatMap, startWith, delay, map, tap } from 'rxjs/operators'
+import { takeUntil, flatMap, startWith, delay, tap } from 'rxjs/operators'
 import { Subject, combineLatest } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
@@ -40,6 +40,7 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
           this.vc.createEmbeddedView(this.tr)
         }
       }
+      this.cd.detectChanges()
     })
   }
 
