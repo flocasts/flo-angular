@@ -28,15 +28,6 @@ export class FloClickToEnterFullscreenDirective {
 
   @HostListener('click', []) click() {
     this.cd.detectChanges()
-    // tslint:disable-next-line: no-let
-    // let d: any
-    // if (window.navigator.userAgent.match(/iPhone/)) {
-    //   d = this.floClickToEnterFullscreen instanceof HTMLVideoElement
-    //     ? this.floClickToEnterFullscreen
-    //     : this.floClickToEnterFullscreen.querySelector('video') || this.floClickToEnterFullscreen
-    // } else {
-    //   d = this.floClickToEnterFullscreen
-    // }
     this.fs.isNotFullscreen.pipe(take(1)).subscribe(_ => {
       this.fs.goFullscreen(this.floClickToEnterFullscreen)
     })

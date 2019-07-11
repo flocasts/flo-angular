@@ -1,12 +1,13 @@
-import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges } from '@angular/core'
-import { takeUntil, filter, flatMap, startWith, delay, sample, sampleTime, timeInterval, mergeAll, map, tap } from 'rxjs/operators'
-import { Subject, interval } from 'rxjs'
+import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core'
+import { takeUntil, flatMap, startWith, delay, map, tap } from 'rxjs/operators'
+import { Subject } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnChanges {
-  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) { }
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
+    protected cd: ChangeDetectorRef) { }
 
   protected showWhenFullscreen = false
   protected readonly ngOnDestroy$ = new Subject()
@@ -17,6 +18,7 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
 
   ngOnInit() {
     this.elm$.pipe(
+      tap(() => this.cd.detectChanges()),
       startWith(this.elm()),
       delay(0),
       flatMap(elm => this.fs.fullscreenIsSupported(elm)),
@@ -33,21 +35,12 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
           this.vc.createEmbeddedView(this.tr)
         }
       }
-      // if (this.vc.length === 0 && this.showWhenFullscreen && isFullscreen) {
-      //   this.vc.createEmbeddedView(this.tr)
-      // } else if (this.vc.length === 0 && !isFullscreen && !this.showWhenFullscreen) {
-      //   this.vc.createEmbeddedView(this.tr)
-      // } else {
-      //   this.vc.clear()
-      // }
     })
   }
 
   ngOnChanges(sc: SimpleChanges) {
-    if (this.elmInputKey) {
-      if (sc[this.elmInputKey]) {
-        this.elmSource.next(sc[this.elmInputKey].currentValue)
-      }
+    if (this.elmInputKey && sc[this.elmInputKey]) {
+      this.elmSource.next(sc[this.elmInputKey].currentValue)
     }
   }
 
@@ -64,8 +57,9 @@ const IF_FS_SELECTOR = 'floIfFullscreen'
   inputs: [IF_FS_SELECTOR]
 })
 export class FloFullscreenOnDirective extends FloFullscreenDirective {
-  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
-    super(tr, vc, fs)
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
+    protected cd: ChangeDetectorRef) {
+    super(tr, vc, fs, cd)
     this.showWhenFullscreen = true
   }
 
@@ -79,8 +73,9 @@ const IF_NOT_FS_SELECTOR = 'floIfNotFullscreen'
   inputs: [IF_NOT_FS_SELECTOR]
 })
 export class FloFullscreenOffDirective extends FloFullscreenDirective {
-  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService) {
-    super(tr, vc, fs)
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
+    protected cd: ChangeDetectorRef) {
+    super(tr, vc, fs, cd)
     this.showWhenFullscreen = false
   }
 
