@@ -86,7 +86,7 @@ export class FloFullscreenService implements IFloFullscreenService {
         map(() => this.isFullscreen()),
         distinctUntilChanged(),
         startWith(this.isFullscreen()),
-        shareReplay(1), tap(console.log))
+        shareReplay(1))
 
   public readonly fullscreenIsSupported =
     (elm?: HTMLElement) =>
