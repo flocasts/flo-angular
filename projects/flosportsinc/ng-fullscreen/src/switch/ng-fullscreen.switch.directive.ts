@@ -2,7 +2,7 @@ import {
   Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy,
   SimpleChanges, OnChanges, ChangeDetectorRef, Inject
 } from '@angular/core'
-import { takeUntil, flatMap, startWith, delay, tap } from 'rxjs/operators'
+import { takeUntil, flatMap, startWith, delay, tap, distinctUntilChanged } from 'rxjs/operators'
 import { Subject, combineLatest, interval } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { isIphone } from '../common/util'
@@ -33,6 +33,7 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
         flatMap(elm => this.iosPollEnabled && isIphone()
           ? interval(this.iosPollrate).pipe(
             flatMap(() => this.fs.fullscreenIsSupported(elm)),
+            distinctUntilChanged(),
             takeUntil(this.ngOnDestroy$))
           : this.fs.fullscreenIsSupported(elm)
         ),
