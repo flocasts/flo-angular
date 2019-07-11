@@ -18,7 +18,7 @@
     <button *floIfNotFullscreen [floClickToEnterFullscreen]="gridRef.elmRef.nativeElement">FULLSCREEN</button>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
-  <video *floGridListItemSome="let item" floMse destroyOnMseSrcChange playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
+  <video *floGridListItemSome="let item" floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
 
 <flo-grid-list #list [gridRef]="gridRef" [items]="items" [initialFill]="initialFill">
