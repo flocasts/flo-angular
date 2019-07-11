@@ -53,13 +53,12 @@ export const DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS: ReadonlyArray<FullscreenChange
 
 export function DEFAULT_FS_FULLSCREEN_ENABLED_FUNC(): FullscreenEnabledFunc {
   const lambda = (elm: HTMLElement) => {
-    return elm instanceof HTMLVideoElement
-      ? elm.readyState >= 2
+    const _elm = elm instanceof HTMLVideoElement ? elm : elm.querySelector('video')
+    return !_elm ? of(false) : (_elm as any).readyState >= 2
         ? of(true)
-        : fromEvent(elm, 'loadedmetadata').pipe(
+        : fromEvent(_elm, 'loadedmetadata').pipe(
           map(evt => !evt.target ? false : (evt.target as any).webkitSupportsFullscreen),
           take(1))
-      : of(false)
   }
   return lambda
 }

@@ -7,17 +7,25 @@
   <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen1">Enter Fullscreen</button>
 </div>
 
-<div #takeMeFullscreen3>
-  <div>
-    <video floMse playsinline controls src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8" width="400px"></video>
-  </div>
-  <button *floIfFullscreen="takeMeFullscreen3" floClickToExitFullscreen>Exit Fullscreen</button>
-  <button *floIfNotFullscreen="takeMeFullscreen3" [floClickToEnterFullscreen]="takeMeFullscreen3">Enter Fullscreen</button>
-</div>
-
 <div #takeMeFullscreen2>
   <h3>I am the target of the fullscreen action #2!</h3>
   <h4>My container will be taken fullscreen</h4>
   <button *floIfFullscreen floClickToExitFullscreen>Exit Fullscreen</button>
   <button *floIfNotFullscreen [floClickToEnterFullscreen]="takeMeFullscreen2">Enter Fullscreen</button>
 </div>
+
+<div #takeMeFullscreen3>
+  <div>
+    <video floMse playsinline controls
+      src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
+  </div>
+  <button *floIfFullscreen="takeMeFullscreen3" floClickToExitFullscreen>Exit Fullscreen</button>
+  <button *floIfNotFullscreen="takeMeFullscreen3" [floClickToEnterFullscreen]="takeMeFullscreen3">Enter
+    Fullscreen</button>
+</div>
+
+<br>
+<br>
+<br>
+<br>
+<br>

@@ -1,6 +1,6 @@
 import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core'
 import { takeUntil, flatMap, startWith, delay, map, tap } from 'rxjs/operators'
-import { Subject } from 'rxjs'
+import { Subject, combineLatest } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
 
 // tslint:disable: no-if-statement
@@ -18,25 +18,50 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
   protected readonly elm$ = this.elmSource.asObservable()
 
   ngOnInit() {
-    this.elm$.pipe(
-      tap(() => this.cd.detectChanges()),
-      startWith(this.elm()),
-      delay(0),
-      flatMap(elm => this.fs.fullscreenIsSupported(elm)),
-      flatMap(isSupported => this.fs.fullscreen$.pipe(map(isFullscreen => ({ isSupported, isFullscreen })))),
-      takeUntil(this.ngOnDestroy$)
-    ).subscribe(res => {
+    combineLatest(
+      this.fs.fullscreen$,
+      this.elm$.pipe(
+        tap(() => this.cd.detectChanges()),
+        startWith(this.elm()),
+        delay(0),
+        flatMap(elm => this.fs.fullscreenIsSupported(elm)),
+        takeUntil(this.ngOnDestroy$)
+      )
+    ).pipe(takeUntil(this.ngOnDestroy$)).subscribe(res => {
+      const isFullscreen = res[0]
+      const isSupported = res[1]
       this.vc.clear()
       if (this.showWhenFullscreen) { // exit
-        if (res.isFullscreen) {
+        if (isFullscreen) {
           this.vc.createEmbeddedView(this.tr)
         }
-      } else if (!res.isFullscreen) { // enter
-        if (res.isSupported) {
+      } else if (!isFullscreen) { // enter
+        if (isSupported) {
           this.vc.createEmbeddedView(this.tr)
         }
       }
     })
+
+    // this.elm$.pipe(
+    //   tap(() => this.cd.detectChanges()),
+    //   startWith(this.elm()),
+    //   delay(0),
+    //   flatMap(elm => this.fs.fullscreenIsSupported(elm)),
+    //   flatMap(isSupported => this.fs.fullscreen$.pipe(map(isFullscreen => ({ isSupported, isFullscreen })))),
+    //   takeUntil(this.ngOnDestroy$)
+    // ).subscribe(res => {
+    //   console.log('res.isFullscreen', res.isFullscreen)
+    //   this.vc.clear()
+    //   if (this.showWhenFullscreen) { // exit
+    //     if (res.isFullscreen) {
+    //       this.vc.createEmbeddedView(this.tr)
+    //     }
+    //   } else if (!res.isFullscreen) { // enter
+    //     if (res.isSupported) {
+    //       this.vc.createEmbeddedView(this.tr)
+    //     }
+    //   }
+    // })
   }
 
   ngOnChanges(sc: SimpleChanges) {

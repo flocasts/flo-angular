@@ -29,7 +29,8 @@ export class FloClickToEnterFullscreenDirective {
   @HostListener('click', []) click() {
     this.cd.detectChanges()
     this.fs.isNotFullscreen.pipe(take(1)).subscribe(_ => {
-      this.fs.goFullscreen(this.floClickToEnterFullscreen)
+      // should check for nested video elements to make iOS dev easier
+      this.fs.goFullscreen(this.fs.extractVideoForIphoneIfRequired(this.floClickToEnterFullscreen))
     })
   }
 }
