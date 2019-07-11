@@ -9,6 +9,7 @@ import {
   FS_FULLSCREEN_ENABLED, FullscreenEnabledKeys, FS_FULLSCREEN_ENABLED_FUNC, FullscreenEnabledFunc,
   FS_FULLSCREEN_IOS_POLL_MS, FS_FULLSCREEN_IOS_POLL_ENABLED
 } from './ng-fullscreen.tokens'
+import { isIphone } from './util'
 
 const isKeyTrue =
   (platformKeys: ReadonlyArray<string>) =>
@@ -61,9 +62,8 @@ export class FloFullscreenService implements IFloFullscreenService {
 
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
-  private readonly iosVideoBypass = (pasthrough: string[]) => this.isIphone() ? ['webkitEnterFullscreen'] : pasthrough
-  public readonly isIphone = () => isPlatformServer(this.platformId) ? false : window.navigator.userAgent.match(/iPhone/) ? true : false
-  public readonly extractVideoForIphoneIfRequired = (element: HTMLElement) => this.isIphone() && !(element instanceof HTMLVideoElement)
+  private readonly iosVideoBypass = (pasthrough: string[]) => isIphone() ? ['webkitEnterFullscreen'] : pasthrough
+  public readonly extractVideoForIphoneIfRequired = (element: HTMLElement) => isIphone() && !(element instanceof HTMLVideoElement)
     ? element.querySelector('video') || element
     : element
 

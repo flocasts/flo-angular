@@ -4,6 +4,7 @@ export * from './src/common/ng-fullscreen.service'
 export * from './src/common/ng-fullscreen.module'
 export * from './src/common/ng-fullscreen.tokens'
 export * from './src/common/ng-fullscreen.tokens.defaults'
+export * from './src/common/util'
 
 export * from './src/switch/ng-fullscreen.switch.module'
 export * from './src/switch/ng-fullscreen.switch.directive'

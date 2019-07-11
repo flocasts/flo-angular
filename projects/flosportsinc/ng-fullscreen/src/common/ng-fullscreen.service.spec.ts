@@ -4,7 +4,7 @@ import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 import { PLATFORM_ID } from '@angular/core'
 import { take, skip } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
-import { FS_FULLSCREEN_ENABLED } from './ng-fullscreen.tokens'
+import { isIphone } from './util'
 
 describe(FloFullscreenService.name, () => {
   // tslint:disable-next-line: no-let
@@ -105,7 +105,7 @@ describe(FloFullscreenService.name, () => {
     it('', () => {
       spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
       setService()
-      expect(service.isIphone()).toEqual(true)
+      expect(isIphone()).toEqual(true)
     })
 
     it('should reference passthrough elm if required', () => {
@@ -158,7 +158,7 @@ describe(FloFullscreenService.name, () => {
     }))
 
     it('isIphone should return false', () => {
-      expect(service.isIphone()).toEqual(false)
+      expect(isIphone()).toEqual(false)
     })
   })
 })

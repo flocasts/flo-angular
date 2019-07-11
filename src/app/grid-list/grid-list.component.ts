@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
-import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
+import { isIphone } from '@flosportsinc/ng-fullscreen'
 
 @Component({
   selector: 'app-grid-list',
@@ -8,8 +8,6 @@ import { FloFullscreenService } from '@flosportsinc/ng-fullscreen'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridListComponent {
-  constructor(private fs: FloFullscreenService) { }
-
   // tslint:disable-next-line: readonly-keyword
   public items: ReadonlyArray<any> = [
     { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8' } as any,
@@ -33,7 +31,7 @@ export class GridListComponent {
   }
 
   get fsElementRef() {
-    return this.fs.isIphone()
+    return isIphone()
       ? this.currentElm
       : this.gridref.nativeElement
   }
