@@ -64,4 +64,4 @@ export function DEFAULT_FS_FULLSCREEN_ENABLED_FUNC(): FullscreenEnabledFunc {
 }
 
 export const DEFAULT_FS_FULLSCREEN_IOS_POLL_ENABLED = true
-export const DEFAULT_FS_FULLSCREEN_IOS_POLL_MS = 1000
+export const DEFAULT_FS_FULLSCREEN_IOS_POLL_MS = 60
