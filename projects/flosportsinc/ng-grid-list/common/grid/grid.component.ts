@@ -6,7 +6,7 @@ import { isPlatformServer, isPlatformBrowser } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, debounceTime } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
@@ -446,18 +446,22 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setSelectedIdViaIndex(this.selectedIndex)
 
     if (!isPlatformBrowser(this._platformId)) { return }
-
     merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
-      distinctUntilChanged(),
       tap(() => this._cdRef.detectChanges()),
-      map(idx => maybe(this.gridItemContainers.toArray()[idx])
-        .flatMapAuto(a => a.nativeElement)
+      map(idx => maybe(this.gridItemContainers.toArray()[idx]).flatMapAuto(a => a.nativeElement)),
+      map(e => e
         .flatMapAuto(elm => Array.from(elm.children)
           .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
-        .flatMapAuto(a => a.children.item(0))),
+        .flatMapAuto(a => {
+          return {
+            id: e.flatMapAuto(b => b.id).filter(b => b !== '').valueOrUndefined(),
+            elm: a.children.item(0)
+          }
+        })),
+      distinctUntilChanged((x, y) => x.flatMapAuto(b => b.id).valueOrUndefined() === y.flatMapAuto(b => b.id).valueOrUndefined()),
       takeUntil(this.onDestroy)
-    ).subscribe(maybeElement => maybeElement.tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
+    ).subscribe(maybeElement => maybeElement.map(a => a.elm).tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
   }
 
   ngOnDestroy() {
