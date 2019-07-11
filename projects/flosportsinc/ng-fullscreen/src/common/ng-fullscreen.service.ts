@@ -1,10 +1,7 @@
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
-import {
-  debounceTime, map, startWith, shareReplay,
-  filter, flatMap, mergeAll, take, tap, mergeMap, distinctUntilChanged, share
-} from 'rxjs/operators'
+import { debounceTime, map, startWith, shareReplay, filter, flatMap, tap, distinctUntilChanged } from 'rxjs/operators'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
   FS_FULLSCREEN_CHANGE_EVENTS, FS_FULLSCREEN_ELEMENT_ERROR_EVENTS, FullscreenRequestEvents,

@@ -41,27 +41,6 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
         }
       }
     })
-
-    // this.elm$.pipe(
-    //   tap(() => this.cd.detectChanges()),
-    //   startWith(this.elm()),
-    //   delay(0),
-    //   flatMap(elm => this.fs.fullscreenIsSupported(elm)),
-    //   flatMap(isSupported => this.fs.fullscreen$.pipe(map(isFullscreen => ({ isSupported, isFullscreen })))),
-    //   takeUntil(this.ngOnDestroy$)
-    // ).subscribe(res => {
-    //   console.log('res.isFullscreen', res.isFullscreen)
-    //   this.vc.clear()
-    //   if (this.showWhenFullscreen) { // exit
-    //     if (res.isFullscreen) {
-    //       this.vc.createEmbeddedView(this.tr)
-    //     }
-    //   } else if (!res.isFullscreen) { // enter
-    //     if (res.isSupported) {
-    //       this.vc.createEmbeddedView(this.tr)
-    //     }
-    //   }
-    // })
   }
 
   ngOnChanges(sc: SimpleChanges) {
