@@ -125,6 +125,7 @@ describe(FloFullscreenDirective.name, () => {
   })
 
   it('should handle iOS entering/exiting fullscreen', fakeAsync(() => {
+    spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
     const sut = createSut()
     const video = sut.debugElement.query(By.css('video'))
     video.triggerEventHandler('webkitbeginfullscreen', { })
