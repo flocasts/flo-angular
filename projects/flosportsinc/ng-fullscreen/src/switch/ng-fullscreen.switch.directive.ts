@@ -1,13 +1,19 @@
-import { Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy, SimpleChanges, OnChanges, ChangeDetectorRef } from '@angular/core'
+import {
+  Directive, TemplateRef, ViewContainerRef, OnInit, OnDestroy,
+  SimpleChanges, OnChanges, ChangeDetectorRef, Inject
+} from '@angular/core'
 import { takeUntil, flatMap, startWith, delay, tap } from 'rxjs/operators'
-import { Subject, combineLatest } from 'rxjs'
+import { Subject, combineLatest, interval } from 'rxjs'
 import { FloFullscreenService } from '../common/ng-fullscreen.service'
+import { isIphone } from '../common/util'
+import { FS_FULLSCREEN_IOS_POLL_MS, FS_FULLSCREEN_IOS_POLL_ENABLED } from '../common/ng-fullscreen.tokens'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnChanges {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
-    protected cd: ChangeDetectorRef) { }
+    protected cd: ChangeDetectorRef, @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) protected iosPollEnabled: boolean,
+    @Inject(FS_FULLSCREEN_IOS_POLL_MS) protected iosPollrate: number) { }
 
   protected abstract elmInputKey?: string
   private readonly elmSource = new Subject<HTMLElement | undefined>()
@@ -24,7 +30,12 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
         tap(() => this.cd.detectChanges()),
         startWith(this.elm()),
         delay(0),
-        flatMap(elm => this.fs.fullscreenIsSupported(elm)),
+        flatMap(elm => this.iosPollEnabled && isIphone()
+          ? interval(this.iosPollrate).pipe(
+            flatMap(() => this.fs.fullscreenIsSupported(elm)),
+            takeUntil(this.ngOnDestroy$))
+          : this.fs.fullscreenIsSupported(elm)
+        ),
         takeUntil(this.ngOnDestroy$)
       )
     ).pipe(takeUntil(this.ngOnDestroy$)).subscribe(res => {
@@ -64,8 +75,9 @@ const IF_FS_SELECTOR = 'floIfFullscreen'
 })
 export class FloFullscreenOnDirective extends FloFullscreenDirective {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
-    protected cd: ChangeDetectorRef) {
-    super(tr, vc, fs, cd)
+    protected cd: ChangeDetectorRef, @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) protected iosPollEnabled: boolean,
+    @Inject(FS_FULLSCREEN_IOS_POLL_MS) protected iosPollrate: number) {
+    super(tr, vc, fs, cd, iosPollEnabled, iosPollrate)
     this.showWhenFullscreen = true
   }
 
@@ -80,8 +92,9 @@ const IF_NOT_FS_SELECTOR = 'floIfNotFullscreen'
 })
 export class FloFullscreenOffDirective extends FloFullscreenDirective {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
-    protected cd: ChangeDetectorRef) {
-    super(tr, vc, fs, cd)
+    protected cd: ChangeDetectorRef, @Inject(FS_FULLSCREEN_IOS_POLL_ENABLED) protected iosPollEnabled: boolean,
+    @Inject(FS_FULLSCREEN_IOS_POLL_MS) protected iosPollrate: number) {
+    super(tr, vc, fs, cd, iosPollEnabled, iosPollrate)
     this.showWhenFullscreen = false
   }
 
