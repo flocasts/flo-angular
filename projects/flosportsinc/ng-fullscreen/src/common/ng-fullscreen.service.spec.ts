@@ -101,6 +101,31 @@ describe(FloFullscreenService.name, () => {
       doc.dispatchEvent(requestFullscreen)
       doc.dispatchEvent(fullscreenchange)
     })
+
+    it('', () => {
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(service.isIphone()).toEqual(true)
+    })
+
+    it('should reference passthrough elm if required', () => {
+      const elm = document.createElement('div')
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm)
+    })
+    it('should reference nested video elements if required', () => {
+      const elm = document.createElement('div')
+      const elm2 = document.createElement('video')
+      elm.append(elm2)
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm2)
+    })
+    it('should reference passthrough elm if required', () => {
+      const elm = document.createElement('div')
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm)
+    })
   })
 
   describe('when on platform server', () => {
@@ -131,5 +156,9 @@ describe(FloFullscreenService.name, () => {
     it('should return false from fullscreen', async(() => {
       service.fullscreen$.subscribe(res => expect(res).toEqual(false))
     }))
+
+    it('isIphone should return false', () => {
+      expect(service.isIphone()).toEqual(false)
+    })
   })
 })

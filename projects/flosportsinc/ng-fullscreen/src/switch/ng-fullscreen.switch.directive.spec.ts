@@ -15,7 +15,9 @@ import { DEFAULT_FS_FULLSCREEN_IOS_POLL_MS } from '../common/ng-fullscreen.token
   template: `<div id="container">
     <video #ref1></video>
     <video #ref2></video>
+    <div #ref3> <video></video></div>
     <button *floIfNotFullscreen="ref1">ENTER</button>
+    <button *floIfNotFullscreen="ref3">ENTER</button>
     <button *floIfFullscreen="ref1">EXIT</button>
   </div>`
 })

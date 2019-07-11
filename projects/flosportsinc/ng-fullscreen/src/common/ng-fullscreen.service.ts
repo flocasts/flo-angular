@@ -62,7 +62,7 @@ export class FloFullscreenService implements IFloFullscreenService {
   public readonly fullscreenError$ = fullscreenChangeError(this.elementErrorEventKeys)(this.doc).pipe(map(e => throwError(e)))
 
   private readonly iosVideoBypass = (pasthrough: string[]) => this.isIphone() ? ['webkitEnterFullscreen'] : pasthrough
-  public readonly isIphone = () => isPlatformServer(this.platformId) ? false : window.navigator.userAgent.match(/iPhone/)
+  public readonly isIphone = () => isPlatformServer(this.platformId) ? false : window.navigator.userAgent.match(/iPhone/) ? true : false
   public readonly extractVideoForIphoneIfRequired = (element: HTMLElement) => this.isIphone() && !(element instanceof HTMLVideoElement)
     ? element.querySelector('video') || element
     : element
