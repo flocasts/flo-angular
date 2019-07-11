@@ -2,8 +2,8 @@ import {
   FullscreenRequestEvents, FullscreenExitEvents, FullscreenChangeEvents,
   FullscreenErrorEvents, FullscreenEnabledKeys, FullscreenElementKeys, FullscreenEnabledFunc
 } from './ng-fullscreen.tokens'
-import { fromEvent } from 'rxjs'
-import { map, filter } from 'rxjs/operators'
+import { fromEvent, of } from 'rxjs'
+import { map, take } from 'rxjs/operators'
 
 export const DEFAULT_FS_FULLSCREEN_REQUEST_EVENTS: ReadonlyArray<FullscreenRequestEvents> = [
   'requestFullscreen',
@@ -53,9 +53,12 @@ export const DEFAULT_FS_FULLSCREEN_CHANGE_EVENTS: ReadonlyArray<FullscreenChange
 
 export function DEFAULT_FS_FULLSCREEN_ENABLED_FUNC(): FullscreenEnabledFunc {
   const lambda = (elm: HTMLElement) => {
-    return fromEvent(elm, 'loadedmetadata').pipe(
-      map(evt => !evt.target ? false : (evt.target as any).webkitSupportsFullscreen)
-    )
+    const _elm = elm instanceof HTMLVideoElement ? elm : elm.querySelector('video')
+    return !_elm ? of(false) : (_elm as any).readyState >= 2
+        ? of(true)
+        : fromEvent(_elm, 'loadedmetadata').pipe(
+          map(evt => !evt.target ? false : (evt.target as any).webkitSupportsFullscreen),
+          take(1))
   }
   return lambda
 }

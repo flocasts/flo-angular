@@ -13,10 +13,12 @@ import { DEFAULT_FS_FULLSCREEN_IOS_POLL_MS } from '../common/ng-fullscreen.token
 @Component({
   selector: 'flo-test-component',
   template: `<div id="container">
-    <video #ref></video>
+    <video #ref1></video>
     <video #ref2></video>
-    <button *floIfNotFullscreen="ref">ENTER</button>
-    <button *floIfFullscreen="ref">EXIT</button>
+    <div #ref3> <video></video></div>
+    <button *floIfNotFullscreen="ref1">ENTER</button>
+    <button *floIfNotFullscreen="ref3">ENTER</button>
+    <button *floIfFullscreen="ref1">EXIT</button>
   </div>`
 })
 export class FloTestComponent { }
@@ -38,21 +40,24 @@ describe(FloFullscreenDirective.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule]
-    })
+    }).compileComponents()
   })
 
   it('should compile', () => {
     expect(createSut()).toBeTruthy()
   })
 
-  it('should show ifNotFullscreen element', () => {
+  it('should show ifNotFullscreen element', fakeAsync(() => {
     const sut = createSut()
+    tick(15)
     const container = sut.debugElement.query(By.css('#container'))
     const tag = container.query(By.css('button'))
+    sut.detectChanges()
     expect(tag.nativeElement.innerText).toEqual('ENTER')
-  })
+    discardPeriodicTasks()
+  }))
 
-  it('should show floIfFullscreen element', () => {
+  it('should show floIfFullscreen element', fakeAsync(() => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
       imports: [FloFullscreenTestModule],
@@ -62,11 +67,13 @@ describe(FloFullscreenDirective.name, () => {
     })
 
     const sut = createSut()
+    tick(15)
     sut.detectChanges()
     const container = sut.debugElement.query(By.css('#container'))
     const tag = container.query(By.css('button'))
     expect(tag.nativeElement.innerText).toEqual('EXIT')
-  })
+    discardPeriodicTasks()
+  }))
 
   it('should not render when fullscreenIsSupported returns false', () => {
     TestBed.resetTestingModule()

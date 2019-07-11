@@ -1,4 +1,4 @@
-import { NgModule, ModuleWithProviders } from '@angular/core'
+import { NgModule, ModuleWithProviders, ChangeDetectorRef } from '@angular/core'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { CommonModule } from '@angular/common'
 import {

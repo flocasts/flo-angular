@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
+import { isIphone } from '@flosportsinc/ng-fullscreen'
 
 @Component({
   selector: 'app-grid-list',
@@ -18,5 +19,20 @@ export class GridListComponent {
 
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
-  count = 4
+  count = 2
+
+  @ViewChild('gridRef', { read: ElementRef }) gridref: ElementRef<HTMLElement>
+
+  currentElm: HTMLElement
+
+  elmChange(evt: HTMLElement) {
+    // tslint:disable-next-line: no-object-mutation
+    this.currentElm = evt
+  }
+
+  get fsElementRef() {
+    return isIphone()
+      ? this.currentElm
+      : this.gridref.nativeElement
+  }
 }
