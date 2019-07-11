@@ -13,10 +13,10 @@ import { DEFAULT_FS_FULLSCREEN_IOS_POLL_MS } from '../common/ng-fullscreen.token
 @Component({
   selector: 'flo-test-component',
   template: `<div id="container">
-    <video #ref></video>
+    <video #ref1></video>
     <video #ref2></video>
-    <button *floIfNotFullscreen="ref">ENTER</button>
-    <button *floIfFullscreen="ref">EXIT</button>
+    <button *floIfNotFullscreen="ref1">ENTER</button>
+    <button *floIfFullscreen="ref1">EXIT</button>
   </div>`
 })
 export class FloTestComponent { }

@@ -9,11 +9,12 @@ export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnCha
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,
     protected cd: ChangeDetectorRef) { }
 
+  protected abstract elmInputKey?: string
+  private readonly elmSource = new Subject<HTMLElement | undefined>()
+
   protected showWhenFullscreen = false
   protected readonly ngOnDestroy$ = new Subject()
-  protected abstract elmInputKey?: string
   protected readonly elm = () => this.elmInputKey ? this[this.elmInputKey] as HTMLElement : undefined
-  private elmSource = new Subject<HTMLElement | undefined>()
   protected readonly elm$ = this.elmSource.asObservable()
 
   ngOnInit() {

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, Inject, PLATFORM_ID } from '@angular/core'
+import { isPlatformBrowser } from '@angular/common'
 
 @Component({
   selector: 'app-grid-list',
@@ -7,6 +8,8 @@ import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angu
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GridListComponent {
+  constructor(@Inject(PLATFORM_ID) private platformId: string) { }
+
   // tslint:disable-next-line: readonly-keyword
   public items: ReadonlyArray<any> = [
     { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8' } as any,
@@ -27,12 +30,13 @@ export class GridListComponent {
   elmChange(evt: HTMLElement) {
     // tslint:disable-next-line: no-object-mutation
     this.currentElm = evt
-    console.log(evt)
   }
 
   get fsElementRef() {
-    return window.navigator.userAgent.match(/iPhone/)
-      ? this.currentElm
+    return isPlatformBrowser(this.platformId)
+      ? window.navigator.userAgent.match(/iPhone/)
+        ? this.currentElm
+        : this.gridref.nativeElement
       : this.gridref.nativeElement
   }
 }
