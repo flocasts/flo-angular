@@ -1,29 +1,33 @@
-<div class="flo-grid-list-overlay"
+<div class="fg list-overlay mg-auto"
   [ngClass]="overlayNgClass"
   [ngStyle]="overlayNgStyle"
-  [class.flo-grid-list-overlay-hide]="hideOverlay | async">
+  [class.list-overlay-hide]="hideOverlay | async">
   <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
 </div>
-<div #floGridListContainer class="flo-grid-list-container">
-  <ng-container *ngFor="let item of viewItems; index as idx; trackBy: trackByFn">
-    <div #floGridListItemContainer
-      class="flo-grid-list-item-container"
-      [style.padding-top]="item.aspectRatio"
-      (click)="setSelectedIndex(idx)"
-      [floGridListDragDrop]="dragDropEnabled"
-      [floGridListDragDropItem]="item.value"
-      [floGridListDragDropIndex]="idx"
-      [floGridListDragDropGridRef]="this"
-      [attr.id]="item?.value?.id">
-      <ng-container [ngSwitch]="item.hasValue">
-        <ng-container *ngSwitchCase="true">
-          <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>
+<div class="fg mg-auto" style="display: flex; align-items: center;" [style.max-width.px]="baseMaxWidth">
+  <div [style.padding-top.%]="aspectRatioPercentage"></div>
+  <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
+    <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
+      <div #floGridListItemContainer
+        class="fg list-item-container"
+        (click)="setSelectedIndex(idx)"
+        [floGridListDragDrop]="dragDropEnabled"
+        [floGridListDragDropItem]="item.value"
+        [floGridListDragDropIndex]="idx"
+        [floGridListDragDropGridRef]="this"
+        [style.flex-basis.%]="item.flexBasis"
+        [style.padding-top.%]="item.padTop"
+        [attr.id]="item?.value?.id || '__fs_gs_some__' + idx">
+        <ng-container [ngSwitch]="item.hasValue">
+          <div *ngSwitchCase="true" class="fg list-item-some">
+            <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>
+          </div>
+          <div *ngSwitchCase="false" class="fg list-item-none">
+            <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
+          </div>
         </ng-container>
-        <div *ngSwitchCase="false" class="flo-grid-list-item-none">
-          <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
-        </div>
-      </ng-container>
-      <div [class.flo-grid-list-item-selection-border]="item.isShowingBorder" [class.flo-grid-list-overlay-hide]="hideOverlay | async"></div>
-    </div>
-  </ng-container>
+        <div class="fg" [class.list-item-selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
+      </div>
+    </ng-container>
+  </div>
 </div>

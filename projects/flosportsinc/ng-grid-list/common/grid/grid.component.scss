@@ -1,77 +1,84 @@
 :host {
   display: block;
   position: relative;
-  width: 100%;
-  background: black; // TODO: move to JS land
-
-  .flo-grid-list-container {
-    display: grid;
-    margin: auto;
-  }
-
+  background: black; // TODO: make a config value
   &:fullscreen {
-    .flo-grid-list-container {
-      max-width: initial !important;
-      max-height: initial !important;
+    position: inherit;
+
+    .fg.list-container,
+    .fg.mg-auto {
+      max-width: none !important;
+      max-height: none !important;
     }
   }
+  .fg {
+    &.mg-auto {
+      margin: auto;
+    }
 
-  .flo-grid-list-item-container {
-    overflow: hidden;
-    height: 0;
-    position: relative;
-    color: white; // TODO: move to JS land
+    &.list-container {
+      width: 100%;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      position: absolute;
+      left: 0;
+      right: 0;
+    }
 
-    ::ng-deep > :first-child, ::ng-deep > video {
+    &.list-item-container {
+      position: relative;
+      color: white;
+
+      ::ng-deep> :first-child,
+      ::ng-deep>video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+      }
+
+      ::ng-deep video {
+        height: 100%;
+        max-width: 100%;
+      }
+    }
+
+    &.list-overlay {
+      position: absolute;
+      opacity: 1;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 4;
+      pointer-events: none;
+  
+      ::ng-deep>* {
+        pointer-events: all;
+      }
+    }
+
+    &.list-item-selection-border {
+      opacity: 1;
+      height: 100%;
+      box-shadow: inset 0px 0px 0px 2px white; // TODO: make a config value
+      z-index: 1; // pointer-events: none; TODO: check this out
+      transition: .25s ease-in-out all; // TODO same config as outer animation
+      pointer-events: none;
       position: absolute;
       top: 0;
       left: 0;
-      height: 100%;
-      width: 100%;
+      right: 0;
     }
-    ::ng-deep video {
-      max-width: 100%;
-      object-fit: cover;
+  
+    &.list-overlay-hide {
+      opacity: 0;
     }
-  }
-
-  .flo-grid-list-item-none {
-    color: white; // TODO: move to JS land
-  }
-
-  .flo-grid-list-overlay {
-    position: absolute;
-    opacity: 1;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 4;
-    pointer-events: none;
-
-    ::ng-deep>* {
-      pointer-events: all;
+  
+    &.list-cursor-hide {
+      cursor: none;
     }
-  }
-
-  .flo-grid-list-item-selection-border {
-    opacity: 1;
-    height: 100%;
-    box-shadow: inset 0px 0px 0px 2px white; // TODO: make config
-    z-index: 1; // pointer-events: none; TODO: check this out
-    transition: .25s ease-in-out all; // TODO same config as outer animation
-    pointer-events: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-
-  .flo-grid-list-overlay-hide {
-    opacity: 0;
-  }
-
-  .flo-grid-list-cursor-hide {
-    cursor: none;
   }
 }
