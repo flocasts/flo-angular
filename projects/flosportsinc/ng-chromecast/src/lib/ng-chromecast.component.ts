@@ -1,13 +1,15 @@
 import { Component, ChangeDetectionStrategy, Renderer2, Inject, OnInit, PLATFORM_ID, Input, OnChanges } from '@angular/core'
 import { DOCUMENT, isPlatformBrowser } from '@angular/common'
 
+// tslint:disable: no-if-statement
+
 declare const cast: any
 declare const chrome: any
 
 @Component({
   selector: 'flo-chromecast',
   template: `<google-cast-launcher></google-cast-launcher>`,
-  styleUrls: ['ng-chromecast.component.scss'],
+  styleUrls: ['./ng-chromecast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloChromecastComponent implements OnInit, OnChanges {
@@ -27,21 +29,19 @@ export class FloChromecastComponent implements OnInit, OnChanges {
   }
 
   private readonly installLibraryIfRequired = () => {
-    // tslint:disable-next-line:no-if-statement
     if (this.canRun() && !this.libAlreadyLoaded()) {
       this.createScriptElement()
     }
   }
 
   ngOnChanges(c) {
-
+    // video reference could be swapped out here
   }
 
   ngOnInit() {
     console.log(this.videoRef)
     // tslint:disable-next-line:no-object-mutation
     window['__onGCastApiAvailable'] = (isAvailable: boolean) => {
-      // tslint:disable-next-line:no-if-statement
       if (isAvailable) {
         const castInstance = cast.framework.CastContext.getInstance()
         castInstance.setOptions({
@@ -50,38 +50,44 @@ export class FloChromecastComponent implements OnInit, OnChanges {
         })
         const sessionRequest = new chrome.cast.SessionRequest(chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID)
         const apiConfig = new chrome.cast.ApiConfig(sessionRequest,
-          s => { console.log(s) },
-          status => { console.log(status) }
+          s => { console.log('s', s) },
+          status => { console.log('status', status) }
         )
         chrome.cast.initialize(apiConfig,
           () => {
             console.log('GCast initialization success')
+
+            // THIS CAN BE BASED ON MANUALLY CLICK SETUP
             // chrome.cast.requestSession(function (s) {
             //   console.log(s)
             // }, function (err) {
             //   console.log(err)
             // })
 
-
-            // console.log(cast.framework.CastContext.getInstance().getCurrentSession())
-          },
-          err => console.log('GCast initialization failed', err))
-
-        const remotePlayer = new cast.framework.RemotePlayer()
+            const remotePlayer = new cast.framework.RemotePlayer()
         const remotePlayerController = new cast.framework.RemotePlayerController(remotePlayer)
         remotePlayerController.addEventListener(
           cast.framework.RemotePlayerEventType.IS_CONNECTED_CHANGED,
           () => {
-            console.log('switch between remote and local?')
+            console.log('IS_CONNECTED_CHANGED')
             const session = cast.framework.CastContext.getInstance().getCurrentSession()
-            // tslint:disable-next-line:max-line-length
-            const mediaInfo = new chrome.cast.media.MediaInfo('https://www.streambox.fr/playlists/x36xhzz/url_0/193039199_mp4_h264_aac_hd_7.m3u8')
-            const request = new chrome.cast.media.LoadRequest(mediaInfo)
-            session.loadMedia(request).then(
-              function () { console.log('Load succeed') },
-              function (errorCode) { console.log('Error code: ' + errorCode) })
+
+            console.log('SESSION', session)
+
+            if (session) {
+              // tslint:disable-next-line: max-line-length
+              const mediaInfo = new chrome.cast.media.MediaInfo('https://devstreaming-cdn.apple.com/videos/streaming/examples/img_bipbop_adv_example_ts/master.m3u8')
+              const request = new chrome.cast.media.LoadRequest(mediaInfo)
+              session.loadMedia(request).then(
+                () => { console.log('Load succeed') },
+                errorCode => { console.log('Session loadMedia Error', errorCode) })
+            }
           }
         )
+
+            // console.log(cast.framework.CastContext.getInstance().getCurrentSession())
+          },
+          err => console.log('GCast initialization failed', err))
       }
     }
     this.installLibraryIfRequired()

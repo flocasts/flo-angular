@@ -28,6 +28,8 @@ import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
+import { FloChromecastModule } from '@flosportsinc/ng-chromecast'
+import { ChromecastComponent } from './chromecast/chromecast.component'
 
 @NgModule({
   imports: [
@@ -40,6 +42,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     FloFullscreenModule,
     FloMseModule,
     FloWindowModule,
+    FloChromecastModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
@@ -68,6 +71,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
     AutoplayComponent,
     GridListComponent,
     FullscreenComponent,
+    ChromecastComponent,
     NotFoundComponent,
   ]
 })
