@@ -1,6 +1,5 @@
 import { TestBed } from '@angular/core/testing'
-import { COOKIE_SERVICE } from './cookie.tokens'
-import { ICookieService } from './cookie.interfaces'
+import { COOKIE_SERVICE, ICookieService } from '@flosportsinc/ng-universal-services/cookies'
 import { CookieBrowserModule } from './cookie.browser.module'
 import * as jsCookie from 'js-cookie'
 

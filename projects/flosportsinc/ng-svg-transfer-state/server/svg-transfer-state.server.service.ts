@@ -1,13 +1,11 @@
 declare var fs: any
 
-import { SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_ERROR_RETURN_OPERATOR, SVG_SERVER_CACHE } from './svg-transfer-state.tokens'
 import {
-  ISvgLoaderService, ISvgLoaderHttpFunc, ISvgLoaderErrorReturnValueStreamFunc,
+  SVG_TRANSFER_KEY, SVG_LOADER_HTTP_REQUEST, SVG_LOADER_ERROR_RETURN_OPERATOR, SVG_SERVER_CACHE, SVG_REQUEST_PATTERN,
+  ISvgRequestPatternFunc, ISvgLoaderService, ISvgLoaderHttpFunc, ISvgLoaderErrorReturnValueStreamFunc,
   ISvgServerCache
-} from './svg-transfer-state.interfaces'
+} from '@flosportsinc/ng-svg-transfer-state'
 import { TransferState, makeStateKey } from '@angular/platform-browser'
-import { SVG_REQUEST_PATTERN } from './svg-transfer-state.tokens'
-import { ISvgRequestPatternFunc } from './svg-transfer-state.interfaces'
 import { Injectable, Inject, Optional } from '@angular/core'
 import { bindNodeCallback, of } from 'rxjs'
 import { tap, map, catchError } from 'rxjs/operators'

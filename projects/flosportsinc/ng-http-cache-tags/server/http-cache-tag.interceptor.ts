@@ -1,7 +1,10 @@
 import { Inject, Injectable } from '@angular/core'
-import { filter, tap, mergeAll, share } from 'rxjs/operators'
-import { Observable, merge, race } from 'rxjs'
-import { CACHE_TAG_CONFIG, ICacheTagConfig, CACHE_TAG_WRITE_HEADER_FACTORY, IWriteResponseHeader } from './http-cache-tag.tokens'
+import { filter, tap, share } from 'rxjs/operators'
+import { Observable, merge } from 'rxjs'
+import {
+  CACHE_TAG_WRITE_HEADER_FACTORY, IWriteResponseHeader,
+  CACHE_TAG_RESPONSE_CODES, CACHE_TAG_HEADER_KEY, CACHE_TAG_DELIMITER
+} from './http-cache-tag.tokens'
 import {
   HttpHandler,
   HttpInterceptor,
@@ -14,11 +17,14 @@ import {
 @Injectable()
 export class HttpCacheTagInterceptor implements HttpInterceptor {
   constructor(
-    @Inject(CACHE_TAG_CONFIG) private config: ICacheTagConfig,
+    // tslint:disable-next-line:readonly-array
+    @Inject(CACHE_TAG_RESPONSE_CODES) private cacheableResponseCodes: number[],
+    @Inject(CACHE_TAG_HEADER_KEY) private headerKey: string,
+    @Inject(CACHE_TAG_DELIMITER) private tagDelimiter: string,
     @Inject(CACHE_TAG_WRITE_HEADER_FACTORY) private factory: IWriteResponseHeader
   ) { }
 
-  readonly isCacheableResponseCode = (code: number) => (this.config.cacheableResponseCodes || []).find(a => a === code) ? true : false
+  readonly isCacheableResponseCode = (code: number) => this.cacheableResponseCodes.find(a => a === code) ? true : false
 
   readonly isHttpResponseEvent =
     <T>(httpEvent: HttpEvent<T>) =>
@@ -30,9 +36,9 @@ export class HttpCacheTagInterceptor implements HttpInterceptor {
 
   readonly writeResponseHeaders =
     <T>(response: HttpResponse<T>) => {
-      const cacheHeader = response.headers.get(this.config.headerKey) || ''
+      const cacheHeader = response.headers.get(this.headerKey) || ''
       if (cacheHeader) {
-        this.factory(this.config.headerKey)(cacheHeader)(this.config.delimiter)
+        this.factory(this.headerKey)(cacheHeader)(this.tagDelimiter)
       }
     }
 

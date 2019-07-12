@@ -1,16 +1,16 @@
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
 import { TestBed } from '@angular/core/testing'
-import { HttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
-import { DEFAULT_CACHE_TAG_CONFIGURATION } from './http-cache-tag.module'
+import { FloHttpCacheTagExpressServerModule } from './http-cache-tag.express.module'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
 import { HttpClient, HttpClientModule } from '@angular/common/http'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
-import { ICacheTagConfig } from './http-cache-tag.tokens'
+import { DEFAULT_CACHE_TAG_HEADER_KEY } from './http-cache-tag.tokens'
+import { IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
 
 describe(HttpCacheTagInterceptor.name, () => {
   afterEach(TestBed.resetTestingModule)
 
-  const createReponseProvider = (dict = { [DEFAULT_CACHE_TAG_CONFIGURATION.headerKey]: 'Video-1' }) => {
+  const createReponseProvider = (dict = { [DEFAULT_CACHE_TAG_HEADER_KEY]: 'Video-1' }) => {
     return {
       provide: RESPONSE,
       useValue: {
@@ -20,11 +20,11 @@ describe(HttpCacheTagInterceptor.name, () => {
     }
   }
 
-  const setupStandardTestBed = (config: Partial<ICacheTagConfig> = {}) => (dict?: any) => TestBed.configureTestingModule({
+  const setupStandardTestBed = (config: Partial<IHttpCacheTagServerModuleConfig> = {}) => (dict?: any) => TestBed.configureTestingModule({
     imports: [
       HttpClientModule,
       HttpClientTestingModule,
-      HttpCacheTagExpressServerModule.withConfig(config)
+      FloHttpCacheTagExpressServerModule.config(config)
     ],
     providers: [createReponseProvider()]
   })
@@ -46,7 +46,7 @@ describe(HttpCacheTagInterceptor.name, () => {
     const responseSpy = spyOn(response, 'header')
 
     const url = 'http://some-cool-app/api/video/1'
-    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const headerKey = DEFAULT_CACHE_TAG_HEADER_KEY
     const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
     const sampleResponse = { headers: { [headerKey]: 'Video-1' }, status: 200, statusText: 'success' }
 
@@ -73,7 +73,7 @@ describe(HttpCacheTagInterceptor.name, () => {
     const responseSpy = spyOn(response, 'header')
 
     const url = 'http://some-cool-app/api/video/1'
-    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const headerKey = DEFAULT_CACHE_TAG_HEADER_KEY
     const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
     const sampleResponse = { headers: { [headerKey]: 'Video-1' }, status: 202, statusText: 'success' }
 
@@ -100,7 +100,7 @@ describe(HttpCacheTagInterceptor.name, () => {
     const responseSpy = spyOn(response, 'header')
 
     const url = 'http://some-cool-app/api/video/1'
-    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const headerKey = DEFAULT_CACHE_TAG_HEADER_KEY
     const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
     const sampleResponse = { headers: {}, status: 200, statusText: 'success' }
 
@@ -129,7 +129,7 @@ describe(HttpCacheTagInterceptor.name, () => {
     const responseSpy = spyOn(response, 'header')
 
     const url = 'http://some-cool-app/api/video/1'
-    const headerKey = DEFAULT_CACHE_TAG_CONFIGURATION.headerKey
+    const headerKey = DEFAULT_CACHE_TAG_HEADER_KEY
     const sampleResponseBody = { id: 1, videoName: 'puppy laughs ' }
     const sampleResponse = { headers: {}, status: 202, statusText: 'success' }
 

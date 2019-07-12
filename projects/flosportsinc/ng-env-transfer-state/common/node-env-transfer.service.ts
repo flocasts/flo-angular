@@ -5,7 +5,9 @@ export interface INodeEnvTransferService<T> {
   readonly env: T
 }
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class NodeEnvTransferService<T = any> implements INodeEnvTransferService<T> {
   constructor(@Inject(ENV) private _env: any) { }
   public readonly env: T = this._env

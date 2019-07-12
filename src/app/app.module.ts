@@ -2,8 +2,6 @@ import { BrowserModule } from '@angular/platform-browser'
 import { NgModule } from '@angular/core'
 import { AppRoutingModule } from './app-routing.module'
 import { AppComponent } from './app.component'
-import { FramerComponent } from './viewport-grid/viewport-grid.component'
-import { ViewportGridModule } from '@flosportsinc/ng-viewport-grid'
 import { HomeComponent } from './home/home.component'
 import { ReactiveFormsModule, FormsModule } from '@angular/forms'
 import { HlsComponent } from './hls/hls.component'
@@ -17,37 +15,48 @@ import { UniversalServicesComponent } from './universal-services/universal-servi
 import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
-import { MseModule } from '@flosportsinc/ng-media-source-extensions'
-import { WindowModule } from '@flosportsinc/ng-window'
+import { FloMseModule } from '@flosportsinc/ng-media-source-extensions'
+import { FloWindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
-import { NodeEnvTransferModule, NodeEnvTransferService } from '@flosportsinc/ng-env-transfer-state'
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
+import { FloGridListModule } from '@flosportsinc/ng-grid-list'
+import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
+import { GridListComponent } from './grid-list/grid-list.component'
+import { FullscreenComponent } from './fullscreen/fullscreen.component'
+import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 
 @NgModule({
   imports: [
+    FloGridListModule.config({
+      count: 2,
+      autoSelectNextEmptyOnCountChange: true
+    }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
-    NodeEnvTransferModule,
-    WindowModule,
-    MseModule,
+    FloFullscreenModule,
+    FloMseModule,
+    FloWindowModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
-    ViewportGridModule,
     TransferHttpCacheModule,
     HttpClientModule,
     SvgTransferStateModule,
+    FloNodeEnvTransferModule.config({
+      useValues: {
+        manuallyShared: 'yay!'
+      }
+    }),
     MarkdownModule.forRoot({ loader: HttpClient }),
     BrowserModule.withServerTransition({ appId: 'my-app' }),
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
   ],
   declarations: [
     AppComponent,
-    FramerComponent,
     HomeComponent,
     IconsComponent,
     HlsComponent,
@@ -57,11 +66,9 @@ import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
     UniversalServicesComponent,
     StylesComponent,
     AutoplayComponent,
-    NotFoundComponent
+    GridListComponent,
+    FullscreenComponent,
+    NotFoundComponent,
   ]
 })
-export class AppModule {
-  constructor(env: NodeEnvTransferService) {
-    console.log(env.env)
-  }
-}
+export class AppModule { }

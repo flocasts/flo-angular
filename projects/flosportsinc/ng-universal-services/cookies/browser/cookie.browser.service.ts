@@ -1,4 +1,4 @@
-import { ICookieService, StringDict, KeyValue } from './cookie.interfaces'
+import { ICookieService, StringDict, KeyValue } from '@flosportsinc/ng-universal-services/cookies'
 import { CookieAttributes, getJSON, remove, set } from 'js-cookie'
 import { Injectable } from '@angular/core'
 import { Subject } from 'rxjs'

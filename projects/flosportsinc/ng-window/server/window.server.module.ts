@@ -1,14 +1,13 @@
 import { NgModule, ModuleWithProviders } from '@angular/core'
-import { WINDOW } from './window.tokens'
-import { WindowModule } from './window.common.module'
+import { FloWindowModule, WINDOW } from '@flosportsinc/ng-window'
 
 @NgModule({
-  imports: [WindowModule]
+  imports: [FloWindowModule]
 })
-export class WindowServerModule {
+export class FloWindowServerModule {
   static withWindowObject(windowObject = {}): ModuleWithProviders {
     return {
-      ngModule: WindowServerModule,
+      ngModule: FloWindowServerModule,
       providers: [{
         provide: WINDOW,
         useValue: windowObject

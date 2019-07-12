@@ -1,0 +1,37 @@
+<h1>Grid List</h1>
+
+<flo-grid-list-view #gridRef [(count)]="count" (selectedElementChange)="elmChange($event)">
+  <div *floGridListOverlay>
+    <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>
+    <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>
+    <button (click)="gridRef.setCount(3)" [disabled]="gridRef.isCount(3)">3</button>
+    <button (click)="gridRef.setCount(4)" [disabled]="gridRef.isCount(4)">4</button>
+    <button (click)="gridRef.setCount(5)" [disabled]="gridRef.isCount(5)">5</button>
+    <button (click)="gridRef.setCount(6)" [disabled]="gridRef.isCount(6)">6</button>
+    <button (click)="gridRef.setCount(9)" [disabled]="gridRef.isCount(9)">9</button>
+    <button (click)="gridRef.setCount(15)" [disabled]="gridRef.isCount(15)">15</button>
+    <button (click)="gridRef.setCount(16)" [disabled]="gridRef.isCount(16)">16</button>
+    <button (click)="gridRef.setCount(25)" [disabled]="gridRef.isCount(25)">25</button>
+    <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
+    <button (click)="list.autoFill()">AUTOFILL</button>
+    <button *floIfFullscreen="fsElementRef" floClickToExitFullscreen>EXIT FULLSCREEN</button>
+    <button *floIfNotFullscreen="fsElementRef" [floClickToEnterFullscreen]="fsElementRef">FULLSCREEN</button>
+  </div>
+  <div *floGridListItemNone>EMPTY!</div>
+  <video *floGridListItemSome="let item" floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
+</flo-grid-list-view>
+
+<flo-grid-list #list [gridRef]="gridRef" [items]="items" [initialFill]="initialFill">
+  <div *floGridListItem="let row">
+    <span
+     [ngClass]="{ 'underline': row.roles.canSelect }"
+     [ngStyle]="{'font-weight': row.roles.isSelected ? 'bold': 'initial' }" (click)="row.actions.select()">{{ row?.item?.src }}</span>
+    (
+      <span *ngIf="row.roles.canAdd" class="underline" (click)="row.actions.add()">Add </span>
+      <span *ngIf="row.roles.canReplace" class="underline" (click)="row.actions.replace()">Replace </span>
+      <span *ngIf="row.roles.canSwap" class="underline" (click)="row.actions.swap()">Swap </span>
+      <span *ngIf="row.roles.canRemoveSelf" class="underline" (click)="row.actions.removeSelf()">RemoveSelf </span>
+      <span *ngIf="row.roles.canRemove" class="underline" (click)="row.actions.remove()">Remove </span>
+    )
+  </div>
+</flo-grid-list>

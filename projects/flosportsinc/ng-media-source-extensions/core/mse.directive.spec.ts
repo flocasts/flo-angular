@@ -1,14 +1,23 @@
 import { Component, NgModule, Input, SimpleChange } from '@angular/core'
 import { TestBed, async } from '@angular/core/testing'
-import { MseDirective, emitAndUnsubscribe } from './mse.directive'
+import { MseDirective } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { take } from 'rxjs/operators'
-import { SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY } from './mse.tokens'
-import { MseModule } from './mse.module'
-import { HlsModule } from '../hls/hls.module'
-import { DashModule } from '../dash/dash.module'
+import {
+  SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
+} from './mse.tokens'
+import { FloMseModule } from './mse.module'
+import {
+  FloHlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction,
+  defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientDestroyFunction,
+  defaultHlsPatternCheck
+} from '../hls/hls.module'
+import { FloDashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
+
+// tslint:disable: no-object-mutation
 
 export const TEST_SOURCES = {
   HLS: {
@@ -40,9 +49,41 @@ export class HlsTestComponent {
 }
 
 @NgModule({
-  imports: [MseModule, HlsModule, DashModule],
+  imports: [FloMseModule, FloHlsModule, FloDashModule],
   declarations: [HlsTestComponent],
-  exports: [HlsTestComponent]
+  exports: [HlsTestComponent],
+  providers: [
+    {
+      provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
+      useValue: DEFAULT_MODULE_CONFIG
+    },
+    {
+      provide: SUPPORTS_MSE_TARGET_NATIVELY,
+      useFactory: defaultHlsSupportedNativelyFunction,
+      multi: true
+    },
+    {
+      provide: SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
+      useFactory: defaultIsSupportedFactory,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
+      useFactory: defaultMseClientInitFunction,
+      deps: [MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG],
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
+      useFactory: defaultMseClientDestroyFunction,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+      useFactory: defaultHlsPatternCheck,
+      multi: true
+    }
+  ]
 })
 export class MseTestingModule { }
 
@@ -75,31 +116,6 @@ export const setMseTestBed = (supportsMle: boolean) => (native: boolean) => {
   })
 }
 
-const shouldUnsubscribeFromInternalNgOnDestroy = async(() => {
-  const wrapper = createMseSut()
-  const internalNgOnDestroy$ = (wrapper.instance as any)._ngOnDestroy$ as Subject<undefined>
-
-  internalNgOnDestroy$.pipe(take(1)).subscribe(response => {
-    expect(response).toBeUndefined()
-  })
-
-  wrapper.hoist.destroy()
-
-  expect(() => internalNgOnDestroy$.next()).toThrow(new ObjectUnsubscribedError())
-})
-
-const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
-  const wrapper = createMseSut()
-  wrapper.hoist.detectChanges()
-  const internalNgAfterViewInit$ = (wrapper.instance as any)._ngAfterViewInit$ as Subject<undefined>
-
-  expect(() => {
-    internalNgAfterViewInit$.pipe(take(1)).subscribe()
-  }).toThrow(new ObjectUnsubscribedError())
-
-  wrapper.hoist.destroy()
-})
-
 const shouldCompileTestComponent = done => {
   expect(createMseSut().hoist).toBeDefined()
   done()
@@ -110,116 +126,131 @@ const shouldCompilerDirective = done => {
   done()
 }
 
-const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-  const wrapper = createMseSut()
-  const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-  wrapper.instance.ngOnChanges({
-    floHls: sc
-  })
-  expect(spy).not.toHaveBeenCalled()
-}
+// const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
+//   const wrapper = createMseSut()
+//   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
+//   wrapper.instance.ngOnChanges({
+//     floHls: sc
+//   })
+//   expect(spy).not.toHaveBeenCalled()
+// }
 
 describe('rewrite these... problems', () => {
-  beforeEach(() => setMseTestBed(true)(false))
-  afterEach(() => TestBed.resetTestingModule())
+  // beforeEach(() => setMseTestBed(true)(false) )
+  // afterEach(() => TestBed.resetTestingModule())
 
-  it('should not continue emitAndUnsubscribe when already unsubscribed', () => {
-    const testSub = new Subject<any>()
-    testSub.unsubscribe()
-    const spy1 = spyOn(testSub, 'next')
-    const spy2 = spyOn(testSub, 'unsubscribe')
-    emitAndUnsubscribe(testSub)
-    expect(spy1).not.toHaveBeenCalled()
-    expect(spy2).not.toHaveBeenCalled()
-  })
-
-  it('should trigger source change task when MSE client is the same type', () => {
-    const sut = createMseSut()
-    sut.instance.srcChange.subscribe(srcChange => {
-      srcChange.current.tap({
-        none: () => expect(true).toEqual(false),
-        some: src => expect(src).toEqual(TEST_SOURCES.HLS.SMALL)
-      })
-      srcChange.previous.tap({
-        none: () => expect(true).toEqual(false),
-        some: src => expect(src).toEqual(TEST_SOURCES.HLS.TINY)
-      })
-    });
-    // tslint:disable-next-line:no-object-mutation
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-  })
-
-  it('should trigger source change task when MSE client is the diff type', () => {
-    const wrapper = createMseSut()
-    const task = (wrapper.instance as any)._mseInitTask[2]
-    const spy = spyOn(task, 'func').and.callThrough();
-    (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
-    wrapper.hoist.detectChanges()
-    expect(spy).toHaveBeenCalled()
-  })
-
-  it('should trigger destroy function for DI configurations', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._mseDestroyTask[1]
-    const spy = spyOn(task, 'func').and.callThrough()
-    sut.hoist.detectChanges()
-    sut.hoist.destroy()
-    expect(spy).toHaveBeenCalled()
-  })
-
-  it('should set src', () => {
-    const wrapper = createMseSut()
-    const instance = wrapper.instance as any
-    const task = (wrapper.instance as any)
-    const spy = spyOn(task, '_setSrc').and.callThrough()
-    const spy2 = spyOn(instance, '_executeInit').and.callThrough();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-    wrapper.hoist.detectChanges();
-    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-    wrapper.hoist.detectChanges()
-    expect(spy).toHaveBeenCalled()
-    // expect(spy2).toHaveBeenCalled()
-  })
-
-  // it('should take path when no init task provided', () => {
-  //   const sut = createMseSut()
-  //   sut.hoist.detectChanges()
-  //   const instance = sut.instance as any
-  //   const spy2 = spyOn(instance, '_executeInit');
-  //   (sut.hoist.componentInstance.src as any) = 'noinit1.file';
-  //   // sut.hoist.detectChanges();
-  //   (sut.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   // sut.hoist.detectChanges()
-  //   expect(spy2).toHaveBeenCalled()
+  // it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
+  //   const testSub = new Subject<any>()
+  //   testSub.unsubscribe()
+  //   const spy2 = spyOn(testSub, 'unsubscribe').and.callThrough()
+  //   const spy1 = spyOn(testSub, 'next').and.callThrough()
+  //   emitAndUnsubscribe(testSub)
+  //   expect(spy1).not.toHaveBeenCalled()
+  //   expect(spy2).not.toHaveBeenCalled()
+  //   done()
   // })
 
-  it('should not push src change when same src value during ngOnChanges', () => {
-    const sut = createMseSut()
-    const internalSrcChangeRef = (sut.instance as any)._srcChanges$
-    const spy = spyOn(internalSrcChangeRef, 'next')
-    sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
-    expect(spy).not.toHaveBeenCalled()
-  })
+  // it('should trigger source change task when MSE client is the same type', async(() => {
+  //   const sut = createMseSut()
+  //   sut.instance.srcChange.subscribe(srcChange => {
+  //     srcChange.current.tap({
+  //       none: () => expect(true).toEqual(false),
+  //       some: src => expect(src).toEqual(TEST_SOURCES.HLS.SMALL)
+  //     })
+  //     srcChange.previous.tap({
+  //       none: () => expect(true).toEqual(false),
+  //       some: src => expect(src).toEqual(TEST_SOURCES.HLS.TINY)
+  //     })
+  //   });
+  //   // tslint:disable-next-line:no-object-mutation
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  // }))
 
-  it('not call isMediaSource supported when other checks do not exist', () => {
-    const sut = createMseSut()
-    const task = (sut.instance as any)._isMediaSourceSupported[0]
-    const spy = spyOn(task, 'func');
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
-    sut.hoist.detectChanges()
-    expect(spy).not.toHaveBeenCalled()
-  })
+  // it('should trigger source change task when MSE client is the diff type', () => {
+  //   const wrapper = createMseSut()
+  //   const task = (wrapper.instance as any)._mseInitTask[2]
+  //   const spy = spyOn(task, 'func').and.callThrough();
+  //   (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
+  //   wrapper.hoist.detectChanges()
+  //   expect(spy).toHaveBeenCalled()
+  // })
 
-  it('not', () => {
-    TestBed.resetTestingModule()
-    setMseTestBed(false)(false)
-    const sut = createMseSut();
-    (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
-    sut.hoist.detectChanges()
-  })
+  // it('should trigger destroy function for DI configurations', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._mseDestroyTask[1]
+  //   const spy = spyOn(task, 'func').and.callThrough()
+  //   sut.instance.newClientOnSrcChange = false;
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   sut.hoist.destroy()
+  //   expect(spy).toHaveBeenCalled()
+  // })
+
+  // it('should trigger destroy function when set', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._mseDestroyTask[1]
+  //   const spy = spyOn(task, 'func').and.callThrough()
+  //   sut.instance.newClientOnSrcChange = true;
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.TINY
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   expect(spy).toHaveBeenCalled()
+  // })
+  // it('should set src', () => {
+  //   const wrapper = createMseSut()
+  //   const task = (wrapper.instance as any)
+  //   const spy = spyOn(task, '_setSrc').and.callThrough();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+  //   wrapper.hoist.detectChanges();
+  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+  //   wrapper.hoist.detectChanges()
+  //   expect(spy).toHaveBeenCalled()
+  // })
+
+  // it('should handle input newClientOnSrcChange', () => {
+  //   const sut = createMseSut()
+  //   const instance = (sut.instance as any)
+  //   instance.newClientOnSrcChange = ''
+  //   sut.hoist.detectChanges()
+  //   expect(instance.newClientOnSrcChange).toEqual(true)
+
+  //   instance.newClientOnSrcChange = true
+  //   expect(instance.newClientOnSrcChange).toEqual(true)
+
+  //   instance.newClientOnSrcChange = false
+  //   expect(instance.newClientOnSrcChange).toEqual(false)
+  // })
+
+  // it('should not push src change when same src value during ngOnChanges', () => {
+  //   const sut = createMseSut()
+  //   const internalSrcChangeRef = (sut.instance as any)._srcChanges$
+  //   const spy = spyOn(internalSrcChangeRef, 'next')
+  //   sut.instance.ngOnChanges({ src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false) })
+  //   expect(spy).not.toHaveBeenCalled()
+  // })
+
+  // it('not call isMediaSource supported when other checks do not exist', () => {
+  //   const sut = createMseSut()
+  //   const task = (sut.instance as any)._isMediaSourceSupported[0]
+  //   const spy = spyOn(task, 'func');
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.HLS.SMALL
+  //   sut.hoist.detectChanges()
+  //   expect(spy).not.toHaveBeenCalled()
+  // })
+
+  // it('not', () => {
+  //   TestBed.resetTestingModule()
+  //   setMseTestBed(false)(false)
+  //   const sut = createMseSut();
+  //   (sut.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
+  //   sut.hoist.detectChanges()
+  // })
 })
 
 describe(`${MseDirective.name} when client supports Media Source Extensions`, () => {
@@ -230,15 +261,34 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
   it('should compile the directive under test', shouldCompilerDirective)
 
   it('should skip src change when value is same', () => {
-    skipSrcChangeWhenValueIs(new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false))
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, PRIMARY_SRC, false)
+    })
+    expect(spy).not.toHaveBeenCalled()
   })
 
-  it('should skip src change when value is undefined', () => {
-    skipSrcChangeWhenValueIs(new SimpleChange(undefined, undefined, false))
+  it('should... ', () => {
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, TEST_SOURCES.HLS.SMALL, false)
+    })
+    expect(spy).toHaveBeenCalled()
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(TEST_SOURCES.HLS.SMALL, PRIMARY_SRC, false)
+    })
   })
 
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
+  it('should... ', () => {
+    const wrapper = createMseSut()
+    const spy = spyOn(wrapper.instance, 'setMseClient')
+    wrapper.instance.ngOnChanges({
+      src: new SimpleChange(PRIMARY_SRC, TEST_SOURCES.MP4.BUNNY, false)
+    })
+    expect(spy).toHaveBeenCalled()
+  })
 })
 
 describe(`${MseDirective.name} when supports mse client natively`, () => {
@@ -247,7 +297,5 @@ describe(`${MseDirective.name} when supports mse client natively`, () => {
 
   it('should compile the test component', shouldCompileTestComponent)
   it('should compile the directive under test', shouldCompilerDirective)
-  it('should unsubscribe from internal ngOnDestroy$ subject after single event emission', shouldUnsubscribeFromInternalNgOnDestroy)
-  it('should unsubscribe from internal ngAfterViewInit$ subject after single event emission', shouldUnsubscribeFromInternalNgAfterViewInit)
 })
 

@@ -2,7 +2,7 @@
   "name": "@flosportsinc/ng-http-cache-tags",
   "version": "0.0.1",
   "peerDependencies": {
-    "@angular/common": "6",
-    "@angular/core": "6"
+    "@angular/common": ">= 6",
+    "@angular/core": ">= 6"
   }
 }

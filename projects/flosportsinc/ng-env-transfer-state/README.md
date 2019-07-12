@@ -10,26 +10,26 @@ Inside your `AppModule` install `NodeEnvTransferModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
+import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 
 @NgModule({
   imports: [
-    NodeEnvTransferModule
+    FloNodeEnvTransferModule
   ]
 })
 export class AppModule { }
 ```
 
-Inside your `BrowserModule` install `NodeEnvTransferBrowserModule` like so:
+Inside your `BrowserModule` install `FloNodeEnvTransferBrowserModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
+import { FloNodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-state/browser'
 
 @NgModule({
   imports: [
-    NodeEnvTransferBrowserModule, // default behavior simply return the values passed from Node or an empty object if none are found.
-    NodeEnvTransferBrowserModule.config({ // you can also merge custom values with server values
+    FloNodeEnvTransferBrowserModule, // default behavior simply return the values passed from Node or an empty object if none are found.
+    FloNodeEnvTransferBrowserModule.config({ // you can also merge custom values with server values
       mergeWithServer: {
         MyEnvValue1: true,
         MyEnvValue2: 'string',
@@ -41,16 +41,16 @@ import { NodeEnvTransferBrowserModule } from '@flosportsinc/ng-env-transfer-stat
 export class AppBrowserModule { }
 ```
 
-Inside your `ServerModule` install `NodeEnvTransferServerModule` like so:
+Inside your `ServerModule` install `FloNodeEnvTransferServerModule` like so:
 
 ```js
 import { NgModule } from '@angular/core'
-import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
+import { FloNodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state/server'
 
 @NgModule({
   imports: [
-    NodeEnvTransferServerModule, // defaul module passes nothing to the browser
-    NodeEnvTransferServerModule.config({
+    FloNodeEnvTransferServerModule, // default module passes nothing to the browser
+    FloNodeEnvTransferServerModule.config({
       selectKeys: [ // pass all variables listed here if they exist (is merged with pattern matched values from extractor property)
         'my_awesome_env_variable1',
         'my_awesome_env_variable2',
@@ -64,7 +64,7 @@ import { NodeEnvTransferServerModule } from '@flosportsinc/ng-env-transfer-state
 export class AppServerModule { }
 ```
 
-The collection of strings provided inside the `withSelectedKeys` static method will be plucked from `process.env` and transferred to the client. By default none are provided. Please be aware of the security risks involved when selecting environment variables. Do not expose sensitive information.
+The collection of strings provided inside the `withSelectedKeys` static method will be plucked from `process.env` and transferred to the client. By default variables with a prefix `NG_` are extraced from the server. Please be aware of the security risks involved when selecting environment variables. Do not expose sensitive information.
 
 
 ### Simple Usage

@@ -8,12 +8,6 @@
       "node"
     ],
     "paths": {
-      "@flosportsinc/ng-viewport-grid": [
-        "../dist/flosportsinc/ng-viewport-grid"
-      ],
-      "@flosportsinc/ng-viewport-grid/*": [
-        "../dist/flosportsinc/ng-viewport-grid/*"
-      ],
       "@flosportsinc/ng-media-source-extensions": [
         "../dist/flosportsinc/ng-media-source-extensions"
       ],
@@ -91,6 +85,18 @@
       ],
       "@flosportsinc/ng-video-events/*": [
         "../dist/flosportsinc/ng-video-events/*"
+      ],
+      "@flosportsinc/ng-grid-list": [
+        "../dist/flosportsinc/ng-grid-list"
+      ],
+      "@flosportsinc/ng-grid-list/*": [
+        "../dist/flosportsinc/ng-grid-list/*"
+      ],
+      "@flosportsinc/ng-fullscreen": [
+        "../dist/flosportsinc/ng-fullscreen"
+      ],
+      "@flosportsinc/ng-fullscreen/*": [
+        "../dist/flosportsinc/ng-fullscreen/*"
       ],
       "@flosportsinc/ng-chromecast": [
         "../dist/flosportsinc/ng-chromecast"

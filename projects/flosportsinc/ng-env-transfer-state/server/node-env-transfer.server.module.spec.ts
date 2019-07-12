@@ -1,8 +1,12 @@
 import { TestBed } from '@angular/core/testing'
-import { NODE_ENV, ENV, ENV_CONFIG_SERVER } from './node-env-transfer.tokens'
-import { APP_BOOTSTRAP_LISTENER } from '@angular/core'
-import { TransferState } from '@angular/platform-browser'
-import { NodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory } from './node-env-transfer.server.module'
+import { NODE_ENV, ENV, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR } from '@flosportsinc/ng-env-transfer-state'
+import {
+  FloNodeEnvTransferServerModule, INodeEnvTransferServerModuleConfig, nodeEnvFactory,
+  DEFAULT_ENV_CONFIG_EXTRACTOR,
+  serverEnvConfigFactory,
+  defaultReplaceExtract,
+  DEFAULT_ENV_CONFIG_FILTER_KEYS
+} from './node-env-transfer.server.module'
 
 const defNode = { cool_key: 'cool value!' }
 
@@ -10,8 +14,8 @@ const setupTestBed =
   (nodeProcess?: Object) =>
     (config?: Partial<INodeEnvTransferServerModuleConfig>) => {
       const ServerModule = config
-        ? NodeEnvTransferServerModule.config(config)
-        : NodeEnvTransferServerModule
+        ? FloNodeEnvTransferServerModule.config(config)
+        : FloNodeEnvTransferServerModule
       TestBed.configureTestingModule({
         imports: [ServerModule],
         providers: [{
@@ -19,25 +23,24 @@ const setupTestBed =
           useValue: nodeProcess
         }]
       })
-      TestBed.get(APP_BOOTSTRAP_LISTENER)
     }
 
-describe(NodeEnvTransferServerModule.name, () => {
+describe(FloNodeEnvTransferServerModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   it('should pluck none by default A', () => {
     setupTestBed(defNode)({})
-    expect(TestBed.get(ENV_CONFIG_SERVER).selectKeys.length).toEqual(0)
+    expect(TestBed.get(ENV_CONFIG_SERVER_SELECTED).length).toEqual(0)
   })
 
   it('should pluck nonde by default B', () => {
     setupTestBed(defNode)()
-    expect(TestBed.get(ENV_CONFIG_SERVER as any).selectKeys.length).toEqual(0)
+    expect(TestBed.get(ENV_CONFIG_SERVER_SELECTED).length).toEqual(0)
   })
 
   it('should pluck keys', () => {
     setupTestBed(defNode)({ selectKeys: ['cool_key'] })
-    const toPluck = TestBed.get(ENV_CONFIG_SERVER).selectKeys
+    const toPluck = TestBed.get(ENV_CONFIG_SERVER_SELECTED)
     const env = TestBed.get(ENV)
 
     expect(toPluck.length).toEqual(1)
@@ -45,41 +48,47 @@ describe(NodeEnvTransferServerModule.name, () => {
     expect(env).toEqual({ cool_key: 'cool value!' })
   })
 
-  it('should bootstrap and set transfer state', () => {
-    setupTestBed(defNode)({ selectKeys: ['cool_key'] })
-
-    const factory = TestBed.get(APP_BOOTSTRAP_LISTENER)[0]
-    const ts = TestBed.get(TransferState) as TransferState
-    const spyTs = spyOn(ts, 'set').and.callThrough()
-
-    factory()
-
-    expect(spyTs).toHaveBeenCalledWith('NODE_ENV', { cool_key: 'cool value!' })
+  it('should ignore non-functions passed as replacer settting', () => {
+    const sut1 = serverEnvConfigFactory({ NG_KEY1: '1' }, {}, ['NG_KEY1'], '', 'thing' as any)
+    const sut2 = serverEnvConfigFactory({ NG_KEY1: '1' }, {}, ['NG_KEY1'], '', defaultReplaceExtract('NG_'))
+    expect(sut1).toEqual({ NG_KEY1: '1' })
+    expect(sut2).toEqual({ KEY1: '1' })
   })
 
-  it('handle default filter case', () => {
-    setupTestBed()()
-    expect(TestBed.get(ENV_CONFIG_SERVER)).toBeTruthy()
+  it('should merge useValues token value', () => {
+    const sut1 = serverEnvConfigFactory({ NG_KEY1: '1' }, {}, ['NG_KEY1'], '', 'thing' as any)
+    const sut2 = serverEnvConfigFactory({ NG_KEY1: '1' }, { val: 2 }, ['NG_KEY1'], '', defaultReplaceExtract('NG_'))
+    expect(sut1).toEqual({ NG_KEY1: '1' })
+    expect(sut2).toEqual({ KEY1: '1', val: 2 })
+  })
+
+  it('should use defaults when .config is called but not used', () => {
+    TestBed.configureTestingModule({
+      imports: [FloNodeEnvTransferServerModule.config()]
+    })
+
+    expect(TestBed.get(ENV_CONFIG_SERVER_EXTRACTOR)).toEqual(DEFAULT_ENV_CONFIG_EXTRACTOR)
+    expect(TestBed.get(ENV_CONFIG_SERVER_SELECTED)).toEqual(DEFAULT_ENV_CONFIG_FILTER_KEYS)
   })
 
   it('handle default filter case', () => {
     expect(nodeEnvFactory()).toEqual({})
   })
 
-  it('should selecte by pattern', () => {
+  it('should select by pattern', () => {
     setupTestBed({
       NODE_ENV_VAR: 'SOMETHING',
       FLO_SERVER_API: 'https://url.ref',
       FLO_SERVER_API2: 'https://url.ref2'
     })({
-      extractor: new RegExp('FLO_')
+      extractor: 'FLO_'
     })
 
     const env = TestBed.get(ENV)
 
     expect(Object.keys(env).length).toEqual(2)
-    expect(env.FLO_SERVER_API).toEqual('https://url.ref')
-    expect(env.FLO_SERVER_API2).toEqual('https://url.ref2')
+    expect(env.SERVER_API).toEqual('https://url.ref')
+    expect(env.SERVER_API2).toEqual('https://url.ref2')
   })
 
   it('should selecte by pattern and rename key', () => {
@@ -88,8 +97,7 @@ describe(NodeEnvTransferServerModule.name, () => {
       FLO_SERVER_API: 'https://url.ref',
       FLO_SERVER_API2: 'https://url.ref2'
     })({
-      extractor: new RegExp('FLO_'),
-      keyReplacer: key => key.replace('FLO_', '')
+      extractor: 'FLO_'
     })
 
     const env = TestBed.get(ENV)
@@ -101,19 +109,20 @@ describe(NodeEnvTransferServerModule.name, () => {
 
 
   it('should handle combination of selectedKeys + extractor pattern', () => {
-    const testEnv = { NODE_ENV_VAR: 'SOMETHING', FLO_SERVER_API: 'https://url.ref' }
+    const testEnv = { NODE_ENV_VAR: 'SOMETHING', NG_SERVER_API: 'https://url.ref' }
+    const testEnRes = { NODE_ENV_VAR: 'SOMETHING', SERVER_API: 'https://url.ref' }
     setupTestBed(testEnv)({
       selectKeys: ['NODE_ENV_VAR'],
-      extractor: new RegExp('FLO_')
+      extractor: 'NG_'
     })
 
     const env = TestBed.get(ENV)
-    expect(env).toEqual(testEnv)
+    expect(env).toEqual(testEnRes)
   })
 
   it('should have default regex pattern matcher of undefined', () => {
     setupTestBed()()
 
-    expect(TestBed.get(ENV_CONFIG_SERVER).extractor).toBeUndefined()
+    expect(TestBed.get(ENV_CONFIG_SERVER_EXTRACTOR)).toEqual(DEFAULT_ENV_CONFIG_EXTRACTOR)
   })
 })

@@ -1,7 +1,7 @@
 import { EMPTY } from 'rxjs'
 import { REQUEST } from '@nguniversal/express-engine/tokens'
 import { Inject, Injectable } from '@angular/core'
-import { ICookieService } from './cookie.interfaces'
+import { ICookieService } from '@flosportsinc/ng-universal-services/cookies'
 import { Request } from 'express'
 
 @Injectable()

@@ -1,9 +1,8 @@
 import { TestBed } from '@angular/core/testing'
 import { CookieServerModule } from './cookie.server.module'
-import { COOKIE_SERVICE } from '../common/cookie.tokens'
-import { ICookieService } from '../common/cookie.interfaces'
 import { REQUEST } from '@nguniversal/express-engine/tokens'
 import { EMPTY } from 'rxjs'
+import { COOKIE_SERVICE, ICookieService } from '@flosportsinc/ng-universal-services/cookies'
 
 const setupTb = () => {
   TestBed.configureTestingModule({

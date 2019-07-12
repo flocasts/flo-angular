@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core'
 import { Routes, RouterModule } from '@angular/router'
-import { FramerComponent } from './viewport-grid/viewport-grid.component'
 import { HomeComponent } from './home/home.component'
 import { HlsComponent } from './hls/hls.component'
 import { NotFoundComponent } from './not-found/not-found.component'
@@ -11,6 +10,8 @@ import { HlsApiComponent } from './hls/hls-api/hls-api.component'
 import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
 import { AutoplayComponent } from './autoplay/autoplay.component'
+import { GridListComponent } from './grid-list/grid-list.component'
+import { FullscreenComponent } from './fullscreen/fullscreen.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -23,11 +24,12 @@ const routes: Routes = [
       { path: 'api', component: HlsApiComponent }
     ]
   },
-  { path: 'viewport-grid', component: FramerComponent },
   { path: 'universal-services', component: UniversalServicesComponent },
   { path: 'icons', component: IconsComponent },
   { path: 'styles', component: StylesComponent },
   { path: 'autoplay', component: AutoplayComponent },
+  { path: 'grid-list', component: GridListComponent },
+  { path: 'fullscreen', component: FullscreenComponent },
   { path: '**', component: NotFoundComponent }
 ]
 
