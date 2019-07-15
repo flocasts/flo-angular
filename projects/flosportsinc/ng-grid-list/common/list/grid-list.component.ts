@@ -5,7 +5,7 @@ import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
 import {
   Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
-  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
+  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy, ViewEncapsulation
 } from '@angular/core'
 
 // tslint:disable: readonly-keyword
@@ -49,7 +49,8 @@ export class FloGridListItemDirective { }
   selector: 'flo-grid-list',
   templateUrl: './grid-list.component.html',
   styleUrls: ['./grid-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None
 })
 export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
   constructor(private _cdRef: ChangeDetectorRef,
@@ -59,6 +60,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   private _items: ReadonlyArray<TItem> = []
   private _initialFill = {}
+  private _itemsNgClass = {}
 
   @Input()
   get items() {
@@ -87,6 +89,15 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
   set initialFill(initialFill: Object) {
     this._initialFill = initialFill || {}
+  }
+
+  @Input()
+  get itemsNgClass() {
+    return this._itemsNgClass
+  }
+  set itemsNgClass(ngClass: object) {
+    this._itemsNgClass = ngClass
+    this.itemsNgClassChange.next(ngClass)
   }
 
   private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem): IFloGridListViewItemRoles => {
@@ -149,8 +160,8 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     })
   }
 
-  @Output()
-  public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+  @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+  @Output() public readonly itemsNgClassChange = new Subject<any>()
 
   @Input()
   public readonly gridRef?: FloGridListViewComponent<TItem>
