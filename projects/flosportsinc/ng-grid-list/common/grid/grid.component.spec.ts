@@ -55,8 +55,8 @@ const createSut = () => {
   }
 }
 
-const testInputProperty = (prop: string, testValue: any, ) => {
-  const sut = TestBed.createComponent(FloGridListViewComponent)
+export const testInputProperty = (prop: string, testValue: any, component: any = FloGridListViewComponent) => {
+  const sut = TestBed.createComponent(component)
   sut.componentInstance[prop] = testValue
   expect(sut.componentInstance[prop]).toEqual(testValue)
   sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testValue))
