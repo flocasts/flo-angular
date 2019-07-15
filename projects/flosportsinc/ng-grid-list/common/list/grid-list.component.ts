@@ -5,7 +5,7 @@ import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
 import {
   Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
-  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy, ViewEncapsulation
+  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
 } from '@angular/core'
 
 // tslint:disable: readonly-keyword
@@ -49,8 +49,7 @@ export class FloGridListItemDirective { }
   selector: 'flo-grid-list',
   templateUrl: './grid-list.component.html',
   styleUrls: ['./grid-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
   constructor(private _cdRef: ChangeDetectorRef,
@@ -61,6 +60,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   private _items: ReadonlyArray<TItem> = []
   private _initialFill = {}
   private _itemsNgClass = {}
+  private _itemsNgStyle = {}
 
   @Input()
   get items() {
@@ -98,6 +98,15 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   set itemsNgClass(ngClass: object) {
     this._itemsNgClass = ngClass
     this.itemsNgClassChange.next(ngClass)
+  }
+
+  @Input()
+  get itemsNgStyle() {
+    return this._itemsNgStyle
+  }
+  set itemsNgStyle(ngstyle: object) {
+    this._itemsNgStyle = ngstyle
+    this.itemsNgStyleChange.next(ngstyle)
   }
 
   private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem): IFloGridListViewItemRoles => {
@@ -162,6 +171,7 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
   @Output() public readonly itemsNgClassChange = new Subject<any>()
+  @Output() public readonly itemsNgStyleChange = new Subject<any>()
 
   @Input()
   public readonly gridRef?: FloGridListViewComponent<TItem>

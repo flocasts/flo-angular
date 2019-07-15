@@ -87,6 +87,10 @@ describe(FloGridListComponent.name, () => {
     it('should double bind', () => testInputProperty('itemsNgClass', 'col col-sm', FloGridListComponent))
   })
 
+  describe('itemsNgStyle property', () => {
+    it('should double bind', () => testInputProperty('itemsNgStyle', 'color: green', FloGridListComponent))
+  })
+
   describe('viewItems', () => {
     noop() // for coverage
     it('should return default empty item when not connected to grid', () => {
