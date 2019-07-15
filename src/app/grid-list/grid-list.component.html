@@ -21,7 +21,12 @@
   <video *floGridListItemSome="let item" floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
 </flo-grid-list-view>
 
-<flo-grid-list #list [gridRef]="gridRef" [items]="items" [initialFill]="initialFill">
+<flo-grid-list #list 
+  [gridRef]="gridRef" 
+  [items]="items" 
+  [initialFill]="initialFill" 
+  itemsNgClass="test"
+  [itemsNgStyle]="{ 'color': 'green' }">
   <div *floGridListItem="let row">
     <span
      [ngClass]="{ 'underline': row.roles.canSelect }"
