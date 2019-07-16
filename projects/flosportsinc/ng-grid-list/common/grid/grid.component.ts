@@ -2,17 +2,18 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser } from '@angular/common'
+import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, debounceTime } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
   HostListener,
-  AfterViewInit
+  AfterViewInit,
+  NgZone
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -318,7 +319,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.aspectRatio = percent
   }
 
-  public readonly isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
+  public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
@@ -435,7 +436,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    if (!isPlatformBrowser(this._platformId)) { return }
+    if (isPlatformServer(this._platformId)) { return }
 
     this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
     this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
@@ -445,7 +446,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     // initial setup of selected ID
     this.setSelectedIdViaIndex(this.selectedIndex)
 
-    if (!isPlatformBrowser(this._platformId)) { return }
+    if (isPlatformServer(this._platformId)) { return }
+
     merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
       tap(() => this._cdRef.detectChanges()),
