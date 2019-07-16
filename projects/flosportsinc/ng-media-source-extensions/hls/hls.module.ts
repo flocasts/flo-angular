@@ -61,17 +61,23 @@ export const selfHealSwitch = (client: Hls, errorData: Hls.errorData) => {
   // tslint:disable-next-line: no-if-statement
   if (!errorData.fatal) { return }
 
+  const report = { type: errorData.type, details: errorData.details, fatal: true }
+
   switch (errorData.type) {
     case Hls.ErrorTypes.NETWORK_ERROR:
-      console.log('Fatal network error encountered, trying to recover', errorData.details)
+      console.log('A fatal network error occurred, trying to recover...', report)
       client.startLoad()
       break
     case Hls.ErrorTypes.MEDIA_ERROR:
-      console.log('Fatal media error encountered, trying to recover', errorData.details)
+      console.log('A fatal media error occurred, trying to recover...', report)
       client.recoverMediaError()
       break
     default:
-      console.log('Fatal error, hls client destroyed', errorData.details)
+      console.error('A fatal error occurred, HLS client destroyed.', {
+        ...report,
+        event: (errorData as any).event,
+        message: ((errorData as any).err || {}).message
+      })
       client.destroy()
       break
   }
