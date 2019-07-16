@@ -60,17 +60,18 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
 export const selfHealSwitch = (client: Hls, errorData: Hls.errorData) => {
   // tslint:disable-next-line: no-if-statement
   if (!errorData.fatal) { return }
+
   switch (errorData.type) {
     case Hls.ErrorTypes.NETWORK_ERROR:
-      console.log('Fatal network error encountered, trying to recover', errorData)
+      console.log('Fatal network error encountered, trying to recover', errorData.details)
       client.startLoad()
       break
     case Hls.ErrorTypes.MEDIA_ERROR:
-      console.log('Fatal media error encountered, trying to recover', errorData)
+      console.log('Fatal media error encountered, trying to recover', errorData.details)
       client.recoverMediaError()
       break
     default:
-      console.log('Fatal error, hls client destroyed', errorData)
+      console.log('Fatal error, hls client destroyed', errorData.details)
       client.destroy()
       break
   }
