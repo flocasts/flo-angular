@@ -148,7 +148,7 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('trackByFn', () => true))
     it('should expose setter function', () => testInputPropSetFunc('trackByFn', 'setTrackByFn', (idx: number) => idx + 1))
     it('should start with token value', () =>
-      expect(createSut().instance.trackByFn(0, undefined)).toEqual(TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, undefined)))
+      expect(createSut().instance.trackByFn(0, undefined as any)).toEqual(TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, undefined)))
   })
 
   describe('selectedId property', () => {
