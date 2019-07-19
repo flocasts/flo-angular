@@ -26,6 +26,8 @@ export const FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = new InjectionToken('fs.
 
 export const FLO_GRID_LIST_ASPECT_RATIO = new InjectionToken('fs.grid.list.lst.aspect')
 
+export const FLO_GRID_LIST_TRACK_BY_FN = new InjectionToken('fs.grid.list.trackby')
+
 export interface IFloGridListBaseItem {
   readonly id: string
 }

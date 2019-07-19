@@ -12,7 +12,7 @@ import {
   FLO_GRID_LIST_OVERLAY_NG_STYLE, FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX,
   FLO_GRID_LIST_OVERLAY_STATIC, FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED,
   FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, FLO_GRID_LIST_ASPECT_RATIO
+  FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, FLO_GRID_LIST_ASPECT_RATIO, FLO_GRID_LIST_TRACK_BY_FN, IFloGridListBaseItem
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -39,6 +39,11 @@ export function defaultFloGridListGuidGenerator() {
     ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11)
       // tslint:disable-next-line: no-bitwise
       .replace(/[018]/g, (c: any) => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+  return lambda
+}
+
+export function defaultFloGridListTrackByFn() {
+  const lambda = () => (_idx: number, _item: IFloGridListBaseItem) => _item && _item.id
   return lambda
 }
 
@@ -81,7 +86,8 @@ export function defaultFloGridListGuidGenerator() {
     { provide: FLO_GRID_LIST_DRAG_DROP_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED },
     { provide: FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
     { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD },
-    { provide: FLO_GRID_LIST_ASPECT_RATIO, useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO }
+    { provide: FLO_GRID_LIST_ASPECT_RATIO, useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO },
+    { provide: FLO_GRID_LIST_TRACK_BY_FN, useFactory: defaultFloGridListTrackByFn }
   ]
 })
 export class FloGridListModule {
