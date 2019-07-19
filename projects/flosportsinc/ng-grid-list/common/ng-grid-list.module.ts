@@ -43,7 +43,7 @@ export function defaultFloGridListGuidGenerator() {
 }
 
 export function defaultFloGridListTrackByFn() {
-  const lambda = () => (_idx: number, _item: IFloGridListBaseItem) => _item && _item.id
+  const lambda = (_idx: number, _item: IFloGridListBaseItem) => _item && _item.id
   return lambda
 }
 

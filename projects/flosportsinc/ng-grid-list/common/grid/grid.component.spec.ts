@@ -10,7 +10,8 @@ import {
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+  FLO_GRID_LIST_TRACK_BY_FN
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -141,6 +142,13 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('maxheight', 400))
     it('should expose setter function', () => testInputPropSetFunc('maxheight', 'setMaxheight', 400))
     it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
+  })
+
+  describe('maxheight property', () => {
+    it('should double bind', () => testInputProperty('trackByFn', () => true))
+    it('should expose setter function', () => testInputPropSetFunc('trackByFn', 'setTrackByFn', (idx: number) => idx + 1))
+    it('should start with token value', () =>
+      expect(createSut().instance.trackByFn(0, undefined)).toEqual(TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, undefined)))
   })
 
   describe('selectedId property', () => {
