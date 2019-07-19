@@ -11,9 +11,7 @@ import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListI
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener,
-  AfterViewInit,
-  NgZone
+  HostListener, AfterViewInit, TrackByFunction
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -32,7 +30,8 @@ import {
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_ASPECT_RATIO
+  FLO_GRID_LIST_ASPECT_RATIO,
+  FLO_GRID_LIST_TRACK_BY_FN
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -71,7 +70,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
-    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number
+    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<TItem>
   ) { }
 
   @HostListener('fullscreenchange')
@@ -319,6 +319,20 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.aspectRatio = percent
   }
 
+  @Input()
+  get trackByFn() {
+    return this._trackByFn
+  }
+  set trackByFn(fn: TrackByFunction<TItem>) {
+    const _fn = typeof fn === 'function' ? fn : this._trackByFn
+    this._trackByFn = _fn
+    this.trackByFnChange.next(_fn)
+  }
+
+  public setTrackByFn(fn: TrackByFunction<TItem>) {
+    this.trackByFn = fn
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -363,6 +377,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
+  @Output() public readonly trackByFnChange = new Subject<TrackByFunction<TItem>>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
@@ -470,8 +485,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.onDestroySource.next()
     this.onDestroySource.complete()
   }
-
-  readonly trackByFn = (_idx: number, _item: TItem) => _item && _item.id
 
   readonly setItemAtIndex = (idx: number, val: TItem) => {
     // tslint:disable-next-line: readonly-array
