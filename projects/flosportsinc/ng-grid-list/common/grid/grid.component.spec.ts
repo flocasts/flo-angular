@@ -10,7 +10,8 @@ import {
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+  FLO_GRID_LIST_TRACK_BY_FN
 } from '../ng-grid-list.tokens'
 
 // tslint:disable: readonly-keyword
@@ -55,8 +56,8 @@ const createSut = () => {
   }
 }
 
-const testInputProperty = (prop: string, testValue: any, ) => {
-  const sut = TestBed.createComponent(FloGridListViewComponent)
+export const testInputProperty = (prop: string, testValue: any, component: any = FloGridListViewComponent) => {
+  const sut = TestBed.createComponent(component)
   sut.componentInstance[prop] = testValue
   expect(sut.componentInstance[prop]).toEqual(testValue)
   sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testValue))
@@ -141,6 +142,39 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('maxheight', 400))
     it('should expose setter function', () => testInputPropSetFunc('maxheight', 'setMaxheight', 400))
     it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
+  })
+
+  describe('trackByFn property', () => {
+    it('should double bind', () => testInputProperty('trackByFn', () => true))
+    it('should expose setter function', () => testInputPropSetFunc('trackByFn', 'setTrackByFn', (idx: number) => idx + 1))
+    it('should start with token value', () =>
+      expect(createSut().instance.trackByFn(0, undefined as any)).toEqual(TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, undefined)))
+
+    it('should handle undefined', () => {
+      const sample = undefined
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should handle empty object', () => {
+      const sample = {}
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should handle empty value', () => {
+      const sample = { value: undefined }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should undefined value.id', () => {
+      const sample = { value: { id: undefined } }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should return value.id', () => {
+      const sample = { value: { id: '123' } }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual('123')
+    })
   })
 
   describe('selectedId property', () => {

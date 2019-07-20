@@ -5,6 +5,7 @@ import { FloGridListModule } from '../ng-grid-list.module'
 import { FloGridListViewComponent } from '../grid/grid.component'
 import { maybe } from 'typescript-monads'
 import { By } from '@angular/platform-browser'
+import { testInputProperty } from '../grid/grid.component.spec'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -80,6 +81,14 @@ describe(FloGridListComponent.name, () => {
     const sut = createSut()
     expect(sut.hoistInstance._gridRef).toBeTruthy()
     expect(sut.hoistInstance._listRef).toBeTruthy()
+  })
+
+  describe('itemsNgClass property', () => {
+    it('should double bind', () => testInputProperty('itemsNgClass', 'col col-sm', FloGridListComponent))
+  })
+
+  describe('itemsNgStyle property', () => {
+    it('should double bind', () => testInputProperty('itemsNgStyle', 'color: green', FloGridListComponent))
   })
 
   describe('viewItems', () => {

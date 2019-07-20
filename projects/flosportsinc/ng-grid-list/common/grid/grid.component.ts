@@ -2,17 +2,16 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser } from '@angular/common'
+import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, debounceTime } from 'rxjs/operators'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener,
-  AfterViewInit
+  HostListener, AfterViewInit, TrackByFunction
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -31,7 +30,8 @@ import {
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_ASPECT_RATIO
+  FLO_GRID_LIST_ASPECT_RATIO,
+  FLO_GRID_LIST_TRACK_BY_FN
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -43,6 +43,8 @@ export interface IViewItem<T> {
   readonly isSelected: boolean
   readonly isNotSelected: boolean
 }
+
+export type ITrackByFn<TItem extends IFloGridListBaseItem = IFloGridListBaseItem> = TrackByFunction<IViewItem<TItem>>
 
 @Component({
   selector: 'flo-grid-list-view',
@@ -70,7 +72,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
-    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number
+    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>
   ) { }
 
   @HostListener('fullscreenchange')
@@ -318,7 +321,21 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.aspectRatio = percent
   }
 
-  public readonly isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
+  @Input()
+  get trackByFn() {
+    return this._trackByFn
+  }
+  set trackByFn(fn: ITrackByFn<TItem>) {
+    const _fn = typeof fn === 'function' ? fn : this._trackByFn
+    this._trackByFn = _fn
+    this.trackByFnChange.next(_fn)
+  }
+
+  public setTrackByFn(fn: ITrackByFn<TItem>) {
+    this.trackByFn = fn
+  }
+
+  public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
     return this.maxheight / this.aspectRatio
@@ -362,6 +379,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
+  @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
@@ -435,7 +453,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    if (!isPlatformBrowser(this._platformId)) { return }
+    if (isPlatformServer(this._platformId)) { return }
 
     this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
     this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
@@ -445,7 +463,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     // initial setup of selected ID
     this.setSelectedIdViaIndex(this.selectedIndex)
 
-    if (!isPlatformBrowser(this._platformId)) { return }
+    if (isPlatformServer(this._platformId)) { return }
+
     merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
       tap(() => this._cdRef.detectChanges()),
@@ -468,8 +487,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.onDestroySource.next()
     this.onDestroySource.complete()
   }
-
-  readonly trackByFn = (_idx: number, _item: TItem) => _item && _item.id
 
   readonly setItemAtIndex = (idx: number, val: TItem) => {
     // tslint:disable-next-line: readonly-array
