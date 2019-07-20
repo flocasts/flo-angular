@@ -1,6 +1,6 @@
 import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, Inject } from '@angular/core'
 import { takeUntil, filter, shareReplay, map, distinctUntilChanged } from 'rxjs/operators'
-import { FloPictureInPictureNativeService } from '../mpc-pip-native/mpc-pip-native.service'
+import { FloPictureInPictureNativeService } from '../mp-pip-native/mpc-pip-native.service'
 import { Subject, fromEvent, merge } from 'rxjs'
 import { DOCUMENT } from '@angular/common'
 

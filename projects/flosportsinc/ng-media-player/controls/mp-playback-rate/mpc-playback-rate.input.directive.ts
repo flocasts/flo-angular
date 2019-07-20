@@ -2,7 +2,7 @@ import {
   Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef,
   PLATFORM_ID, OnChanges, SimpleChanges, OnInit
 } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
 // import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mpc-play.tokens'
 
 // tslint:disable: no-if-statement

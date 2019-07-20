@@ -1,19 +1,19 @@
 export * from './video-player-controls.module'
 
-export * from './mpc-pause/mpc-pause.module'
-export * from './mpc-pause/mpc-pause.directive'
+export * from './mp-pause/mpc-pause.module'
+export * from './mp-pause/mpc-pause.directive'
 
-export * from './mpc-play/mpc-play.module'
-export * from './mpc-play/mpc-play.directive'
+export * from './mp-play/mpc-play.module'
+export * from './mp-play/mpc-play.directive'
 
-export * from './mpc-pip-native/mpc-pip-native.module'
-export * from './mpc-pip-native/mpc-pip-native.directive'
+export * from './mp-pip-native/mpc-pip-native.module'
+export * from './mp-pip-native/mpc-pip-native.directive'
 
-export * from './mpc-volume/mpc-volume.module'
-export * from './mpc-volume/mpc-volume.directive'
+export * from './mp-volume/mpc-volume.module'
+export * from './mp-volume/mpc-volume.directive'
 
-export * from './mpc-mute/mpc-mute.directive'
-export * from './mpc-mute/mpc-mute.module'
+export * from './mp-mute/mpc-mute.directive'
+export * from './mp-mute/mpc-mute.module'
 
 export * from './if-adjustable-volume/if-adjustable-volume.directive'
 export * from './if-adjustable-volume/if-adjustable-volume.module'

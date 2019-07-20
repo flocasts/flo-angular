@@ -1,5 +1,5 @@
 import { Directive, Inject, ChangeDetectorRef, PLATFORM_ID, Input, HostListener } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase } from '../mpc-base.directive'
+import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword

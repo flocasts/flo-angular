@@ -11,7 +11,7 @@ import { By } from '@angular/platform-browser'
 @Component({
   selector: 'flo-test-component-a1',
   template: `<video #videoRef></video>
-    <input type="range" [floMpc]="videoRef" [floMpcMeta]="meta" floMpcVolume>
+    <input type="range" [floMp]="videoRef" [floMpMeta]="meta" floMpVolume>
   `
 })
 export class FloTestA1Component {
