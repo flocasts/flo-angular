@@ -1,5 +1,5 @@
-import { FloMediaPlayerControlVolumeDirective } from './mpc-volume.directive'
-import { FloMediaPlayerControlsVolumeModule } from './mpc-volume.module'
+import { FloMediaPlayerControlVolumeDirective } from './mp-volume.directive'
+import { FloMediaPlayerControlsVolumeModule } from './mp-volume.module'
 import { Component, NgModule, Type } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { TestBed } from '@angular/core/testing'

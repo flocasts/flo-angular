@@ -10,7 +10,7 @@ import { FloMediaPlayerPauseControlDirective } from './mp-pause.directive'
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpcPause>PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpClickToPause>PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }
@@ -18,19 +18,19 @@ export class FloTestComponent {
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button floMp floMpPause>PLAY</button>`
+  template: `<video #videoRef></video><button floMp floMpClickToPause>PLAY</button>`
 })
 export class FloTestA1Component { }
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpPause]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpClickToPause]="false">PLAY</button>`
 })
 export class FloTestA2Component { }
 
 @NgModule({
-  declarations: [FloTestComponent, FloTestA1Component, FloTestA2Component],
-  imports: [CommonModule, FloMediaPlayerControlsPauseModule]
+  imports: [CommonModule, FloMediaPlayerControlsPauseModule],
+  declarations: [FloTestComponent, FloTestA1Component, FloTestA2Component]
 })
 export class TestModule { }
 

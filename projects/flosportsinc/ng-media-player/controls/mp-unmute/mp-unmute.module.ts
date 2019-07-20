@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerUnmuteControlDirective } from './mpc-unmute.directive'
-import { MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC, defaultUnmuteFactoryFunction } from './mpc-unmute.tokens'
+import { FloMediaPlayerUnmuteControlDirective } from './mp-unmute.directive'
+import { MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC, defaultUnmuteFactoryFunction } from './mp-unmute.tokens'
 
 @NgModule({
   declarations: [FloMediaPlayerUnmuteControlDirective],

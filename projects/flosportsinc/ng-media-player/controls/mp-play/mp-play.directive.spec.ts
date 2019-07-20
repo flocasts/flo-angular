@@ -10,7 +10,7 @@ import { FloMediaPlayerControlsPlayModule } from './mp-play.module'
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpcPlay>PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpClickToPlay>PLAY</button>`
 })
 export class FloTestA1Component {
   meta: { test: 123 }
@@ -18,19 +18,20 @@ export class FloTestA1Component {
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button floMp floMpPlay>PLAY</button>`
+  template: `<video #videoRef></video><button floMp floMpClickToPlay>PLAY</button>`
 })
 export class FloTestA2Component { }
 
 @Component({
   selector: 'flo-test-component-a3',
-  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpPlay]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpClickToPlay]="false">PLAY</button>`
 })
 export class FloTestA3Component { }
 
 @NgModule({
   declarations: [FloTestA1Component, FloTestA2Component, FloTestA3Component],
-  imports: [CommonModule, FloMediaPlayerControlsPlayModule]
+  imports: [CommonModule, FloMediaPlayerControlsPlayModule],
+  exports: [FloMediaPlayerControlsPlayModule]
 })
 export class TestModule { }
 

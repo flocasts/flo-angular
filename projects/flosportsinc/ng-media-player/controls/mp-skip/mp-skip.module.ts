@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerControlSkipBackDirective, FloMediaPlayerControlSkipForwardDirective } from './mpc-skip.directive'
+import { FloMediaPlayerControlSkipBackDirective, FloMediaPlayerControlSkipForwardDirective } from './mp-skip.directive'
 
 @NgModule({
   declarations: [FloMediaPlayerControlSkipBackDirective, FloMediaPlayerControlSkipForwardDirective],

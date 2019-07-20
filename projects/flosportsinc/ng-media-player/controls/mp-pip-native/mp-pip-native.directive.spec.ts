@@ -10,7 +10,7 @@
 
 // @Component({
 //   selector: 'flo-test-component',
-//   template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcMeta]="meta" floMpcPause>PLAY</button>`
+//   template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpPause>PLAY</button>`
 // })
 // export class FloTestComponent {
 //   meta: { test: 123 }

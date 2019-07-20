@@ -9,8 +9,8 @@ export * from './mp-play/mp-play.directive'
 export * from './mp-pip-native/mp-pip-native.module'
 export * from './mp-pip-native/mp-pip-native.directive'
 
-export * from './mp-volume/mpc-volume.module'
-export * from './mp-volume/mpc-volume.directive'
+export * from './mp-volume/mp-volume.module'
+export * from './mp-volume/mp-volume.directive'
 
 export * from './mp-mute/mp-mute.directive'
 export * from './mp-mute/mp-mute.module'
