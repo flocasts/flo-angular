@@ -1,16 +1,16 @@
 import { Component, NgModule, Type } from '@angular/core'
-import { FloMediaPlayerControlsPauseModule } from './mpc-pause.module'
+import { FloMediaPlayerControlsPauseModule } from './mp-pause.module'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloMediaPlayerPauseControlDirective } from './mpc-pause.directive'
+import { FloMediaPlayerPauseControlDirective } from './mp-pause.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
 @Component({
   selector: 'flo-test-component',
-  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcMeta]="meta" floMpcPause>PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpcPause>PLAY</button>`
 })
 export class FloTestComponent {
   meta: { test: 123 }
@@ -18,13 +18,13 @@ export class FloTestComponent {
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button floMpc floMpcPause>PLAY</button>`
+  template: `<video #videoRef></video><button floMp floMpPause>PLAY</button>`
 })
 export class FloTestA1Component { }
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcPause]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpPause]="false">PLAY</button>`
 })
 export class FloTestA2Component { }
 

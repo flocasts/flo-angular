@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
-import { FloVideoPlayerPlayControlDirective } from './mpc-play.directive'
-import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, defaultPlayFactoryFunction } from './mpc-play.tokens'
+import { FloVideoPlayerPlayControlDirective } from './mp-play.directive'
+import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, defaultPlayFactoryFunction } from './mp-play.tokens'
 
 @NgModule({
   declarations: [FloVideoPlayerPlayControlDirective],

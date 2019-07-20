@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core'
-import { FloMediaPlayerPauseControlDirective } from './mpc-pause.directive'
-import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, defaultPauseFactoryFunction } from './mpc-pause.tokens'
+import { FloMediaPlayerPauseControlDirective } from './mp-pause.directive'
+import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, defaultPauseFactoryFunction } from './mp-pause.tokens'
 
 @NgModule({
   declarations: [FloMediaPlayerPauseControlDirective],

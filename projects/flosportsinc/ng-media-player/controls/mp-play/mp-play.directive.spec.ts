@@ -2,15 +2,15 @@ import { Component, NgModule, Type, PLATFORM_ID } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPlayControlDirective } from './mpc-play.directive'
-import { FloMediaPlayerControlsPlayModule } from './mpc-play.module'
+import { FloVideoPlayerPlayControlDirective } from './mp-play.directive'
+import { FloMediaPlayerControlsPlayModule } from './mp-play.module'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
 @Component({
   selector: 'flo-test-component-a1',
-  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcMeta]="meta" floMpcPlay>PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpMeta]="meta" floMpcPlay>PLAY</button>`
 })
 export class FloTestA1Component {
   meta: { test: 123 }
@@ -18,13 +18,13 @@ export class FloTestA1Component {
 
 @Component({
   selector: 'flo-test-component-a2',
-  template: `<video #videoRef></video><button floMpc floMpcPlay>PLAY</button>`
+  template: `<video #videoRef></video><button floMp floMpPlay>PLAY</button>`
 })
 export class FloTestA2Component { }
 
 @Component({
   selector: 'flo-test-component-a3',
-  template: `<video #videoRef></video><button [floMpc]="videoRef" [floMpcPlay]="false">PLAY</button>`
+  template: `<video #videoRef></video><button [floMp]="videoRef" [floMpPlay]="false">PLAY</button>`
 })
 export class FloTestA3Component { }
 

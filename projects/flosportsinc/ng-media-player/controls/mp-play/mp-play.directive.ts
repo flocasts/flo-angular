@@ -1,37 +1,37 @@
 import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
-import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './mpc-pause.tokens'
 import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mp-play.tokens'
 
 // tslint:disable: no-if-statement
-// tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
+// tslint:disable: readonly-keyword
 
 @Directive({
-  selector: '[floMp][floMpClickToPause]'
+  selector: '[floMp][floMpClickToPlay]',
 })
-export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloVideoPlayerPlayControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
-    @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction,
+    @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,
     @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
-  private _floMpClickToPause?: string | boolean
+  private _floMpClickToPlay?: string | boolean
 
   @Input()
-  get floMpClickToPause() {
-    return this._floMpClickToPause
+  get floMpClickToPlay() {
+    return this._floMpClickToPlay
   }
-  set floMpClickToPause(val: any) {
-    this._floMpClickToPause = coerceInputToBoolean(val)
+  set floMpClickToPlay(val: any) {
+    this._floMpClickToPlay = coerceInputToBoolean(val)
   }
 
   @HostListener('click')
   click() {
     this.cd.detectChanges()
 
-    if (!this.floMpClickToPause) { return }
+    if (!this.floMpClickToPlay) { return }
 
     this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpMeta))
   }

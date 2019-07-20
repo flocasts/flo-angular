@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
 import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
-import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mpc-mute.tokens'
+import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mp-mute.tokens'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
