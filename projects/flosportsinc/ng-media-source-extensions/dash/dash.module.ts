@@ -6,16 +6,13 @@ import {
   SUPPORTS_MSE_TARGET_NATIVELY,
   IMseInitFunc,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-  IMseSrcChangeFunc,
   IMseInit,
   IMseDestroy,
-  IMseSrcChange,
   IMsePatternCheck,
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  MseModule
+  FloMseModule
 } from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
@@ -57,18 +54,6 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
   }
 }
 
-export function defaultDashClientSrcChangeFunction(): IMseSrcChange<MediaPlayerClass> {
-  const func: IMseSrcChangeFunc<MediaPlayerClass> = srcChangeEvent => {
-    srcChangeEvent.clientRef.reset()
-    srcChangeEvent.clientRef.attachView(srcChangeEvent.videoElement)
-    srcChangeEvent.clientRef.attachSource(srcChangeEvent.src)
-  }
-  return {
-    exectionKey,
-    func
-  }
-}
-
 export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass> {
   const func: IMseDestroyFunc<MediaPlayerClass> = destroyEvent => {
     const hadAutoPlay = destroyEvent.videoElement.autoplay
@@ -91,8 +76,8 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
 }
 
 @NgModule({
-  imports: [MseModule],
-  exports: [MseModule],
+  imports: [FloMseModule],
+  exports: [FloMseModule],
   providers: [
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
@@ -110,11 +95,6 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
       multi: true
     },
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_SRC_CHANGE_TASK,
-      useFactory: defaultDashClientSrcChangeFunction,
-      multi: true
-    },
-    {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
       useFactory: defaultDashClientDestroyFunction,
       multi: true
@@ -126,4 +106,4 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
     }
   ]
 })
-export class DashModule { }
+export class FloDashModule { }

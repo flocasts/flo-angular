@@ -1,14 +1,14 @@
 import { TestBed } from '@angular/core/testing'
 import { NgModule } from '@angular/core'
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
-import { AdBlockBrowserModule } from './ad-block.browser.module'
+import { FloAdBlockBrowserModule } from './ad-block.browser.module'
 import { AdBlockService } from '@flosportsinc/ng-ad-block'
 import { take } from 'rxjs/operators'
 
 @NgModule({
   imports: [
     HttpClientTestingModule,
-    AdBlockBrowserModule.usingUrl('http://mysite.com/ads.js')
+    FloAdBlockBrowserModule.usingUrl('http://mysite.com/ads.js')
   ]
 })
 export class AdBlockBrowserTestModule { }
@@ -16,7 +16,7 @@ export class AdBlockBrowserTestModule { }
 const getService = () => TestBed.get(AdBlockService) as AdBlockService
 const getHttpMock = () => TestBed.get(HttpTestingController as any) as HttpTestingController
 
-describe(AdBlockBrowserModule.name, () => {
+describe(FloAdBlockBrowserModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   beforeEach(() => {

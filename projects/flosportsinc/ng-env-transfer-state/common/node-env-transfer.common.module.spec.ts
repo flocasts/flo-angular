@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing'
 import { ENV_CONFIG_TS_KEY, NODE_ENV_USE_VALUES } from './node-env-transfer.tokens'
-import { NodeEnvTransferModule } from './node-env-transfer.common.module'
+import { FloNodeEnvTransferModule } from './node-env-transfer.common.module'
 
-describe(NodeEnvTransferModule.name, () => {
+describe(FloNodeEnvTransferModule.name, () => {
   afterEach(() => TestBed.resetTestingModule())
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferModule]
+      imports: [FloNodeEnvTransferModule]
     })
   })
 
@@ -19,7 +19,7 @@ describe(NodeEnvTransferModule.name, () => {
   it('should construct with config object', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferModule.config({
+      imports: [FloNodeEnvTransferModule.config({
         useValues: {
           test: 'a-ok'
         }
@@ -32,7 +32,7 @@ describe(NodeEnvTransferModule.name, () => {
   it('should construct with empty config object', () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({
-      imports: [NodeEnvTransferModule.config()]
+      imports: [FloNodeEnvTransferModule.config()]
     })
     const sut = TestBed.get(NODE_ENV_USE_VALUES)
     expect(sut).toEqual({})

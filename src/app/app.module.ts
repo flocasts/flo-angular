@@ -15,8 +15,8 @@ import { UniversalServicesComponent } from './universal-services/universal-servi
 import { HlsDemoComponent } from './hls/hls-demo/hls-demo.component'
 import { HlsReadmeComponent } from './hls/hls-readme/hls-readme.component'
 import { HlsApiComponent } from './hls/hls-api/hls-api.component'
-import { MseModule } from '@flosportsinc/ng-media-source-extensions'
-import { WindowModule } from '@flosportsinc/ng-window'
+import { FloMseModule } from '@flosportsinc/ng-media-source-extensions'
+import { FloWindowModule } from '@flosportsinc/ng-window'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { IconsComponent } from './icons/icons.component'
 import { StylesComponent } from './styles/styles.component'
@@ -24,7 +24,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { FloVideoAutoplayModule } from '@flosportsinc/ng-video-autoplay'
 import { FloVideoEventsModule } from '@flosportsinc/ng-video-events'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
-import { NodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
+import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
@@ -32,20 +32,21 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 @NgModule({
   imports: [
     FloGridListModule.config({
-      count: 2
+      count: 2,
+      autoSelectNextEmptyOnCountChange: true
     }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     FloFullscreenModule,
-    WindowModule,
-    MseModule,
+    FloMseModule,
+    FloWindowModule,
     FormsModule,
     ReactiveFormsModule,
     AppRoutingModule,
     TransferHttpCacheModule,
     HttpClientModule,
     SvgTransferStateModule,
-    NodeEnvTransferModule.config({
+    FloNodeEnvTransferModule.config({
       useValues: {
         manuallyShared: 'yay!'
       }

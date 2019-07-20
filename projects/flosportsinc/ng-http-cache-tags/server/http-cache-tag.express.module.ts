@@ -7,7 +7,7 @@ import {
 } from './http-cache-tag.tokens'
 import { Response } from 'express'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
-import { HttpCacheTagServerModule, IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
+import { FloHttpCacheTagServerModule, IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
 
 export const immutableAppend =
   (str: string) =>
@@ -34,7 +34,7 @@ export function DEFAULT_EXPRESS_WRITE_HEADER_FACTORY(inj: Injector): IWriteRespo
 }
 
 @NgModule({
-  imports: [HttpCacheTagServerModule],
+  imports: [FloHttpCacheTagServerModule],
   providers: [
     {
       provide: CACHE_TAG_WRITE_HEADER_FACTORY,
@@ -43,10 +43,10 @@ export function DEFAULT_EXPRESS_WRITE_HEADER_FACTORY(inj: Injector): IWriteRespo
     }
   ]
 })
-export class HttpCacheTagExpressServerModule {
+export class FloHttpCacheTagExpressServerModule {
   static config(config: Partial<IHttpCacheTagServerModuleConfig>): ModuleWithProviders {
     return {
-      ngModule: HttpCacheTagExpressServerModule,
+      ngModule: FloHttpCacheTagExpressServerModule,
       providers: [
         {
           provide: CACHE_TAG_RESPONSE_CODES,

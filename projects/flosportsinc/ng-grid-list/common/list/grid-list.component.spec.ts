@@ -5,6 +5,7 @@ import { FloGridListModule } from '../ng-grid-list.module'
 import { FloGridListViewComponent } from '../grid/grid.component'
 import { maybe } from 'typescript-monads'
 import { By } from '@angular/platform-browser'
+import { testInputProperty } from '../grid/grid.component.spec'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -82,6 +83,14 @@ describe(FloGridListComponent.name, () => {
     expect(sut.hoistInstance._listRef).toBeTruthy()
   })
 
+  describe('itemsNgClass property', () => {
+    it('should double bind', () => testInputProperty('itemsNgClass', 'col col-sm', FloGridListComponent))
+  })
+
+  describe('itemsNgStyle property', () => {
+    it('should double bind', () => testInputProperty('itemsNgStyle', 'color: green', FloGridListComponent))
+  })
+
   describe('viewItems', () => {
     noop() // for coverage
     it('should return default empty item when not connected to grid', () => {
@@ -149,11 +158,11 @@ describe(FloGridListComponent.name, () => {
 
     it('should actions.swap()', () => {
       const sut = createSut()
+      const spy = spyOn(sut.hoistInstance._gridRef, 'swapItems').and.callThrough()
+      const anchor = sut.gridListDebug.query(By.css('#swapFuncAnchor'))
       sut.hoistInstance._listRef.autoFill()
       sut.hoistInstance._gridRef.setSelectedIndex(1)
       sut.hoistFixture.detectChanges()
-      const spy = spyOn(sut.hoistInstance._gridRef, 'swapItems').and.callThrough()
-      const anchor = sut.gridListDebug.query(By.css('#swapFuncAnchor'))
       anchor.nativeElement.click()
       expect(spy).toHaveBeenCalledWith(SAMPLE_ITEM_1)
     })

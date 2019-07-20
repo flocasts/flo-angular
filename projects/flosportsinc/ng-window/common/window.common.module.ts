@@ -25,4 +25,4 @@ export function isWindowDefinedFactory() {
     }
   ]
 })
-export class WindowModule { }
+export class FloWindowModule { }

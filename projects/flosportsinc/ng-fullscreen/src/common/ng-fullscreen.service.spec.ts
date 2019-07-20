@@ -1,9 +1,10 @@
-import { TestBed, async } from '@angular/core/testing'
+import { TestBed, async, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing'
 import { FloFullscreenService } from './ng-fullscreen.service'
 import { FloFullscreenCommonModule } from './ng-fullscreen.module'
 import { PLATFORM_ID } from '@angular/core'
 import { take, skip } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
+import { isIphone } from './util'
 
 describe(FloFullscreenService.name, () => {
   // tslint:disable-next-line: no-let
@@ -26,9 +27,9 @@ describe(FloFullscreenService.name, () => {
       expect(service).toBeTruthy()
     })
 
-    it('should return false true fullscreenIsSupported', () => {
-      expect(service.fullscreenIsSupported()).toEqual(true)
-    })
+    it('should return false true fullscreenIsSupported', async(() => {
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(true))
+    }))
 
     // it('should default fullscreen obs', done => {
     //   service.fullscreen$.pipe(take(1)).subscribe(c => {
@@ -83,7 +84,7 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('canGoFullscreen$ should return true when fullscreen is supported and not in fullscreen ', done => {
-      service.canGoFullscreen$.pipe(take(1)).subscribe(val => {
+      service.canGoFullscreen().pipe(take(1)).subscribe(val => {
         expect(val).toEqual(true)
         done()
       })
@@ -99,6 +100,31 @@ describe(FloFullscreenService.name, () => {
       const fullscreenchange = new Event('fullscreenchange')
       doc.dispatchEvent(requestFullscreen)
       doc.dispatchEvent(fullscreenchange)
+    })
+
+    it('', () => {
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(isIphone()).toEqual(true)
+    })
+
+    it('should reference passthrough elm if required', () => {
+      const elm = document.createElement('div')
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm)
+    })
+    it('should reference nested video elements if required', () => {
+      const elm = document.createElement('div')
+      const elm2 = document.createElement('video')
+      elm.append(elm2)
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm2)
+    })
+    it('should reference passthrough elm if required', () => {
+      const elm = document.createElement('div')
+      spyOnProperty(window.navigator, 'userAgent').and.returnValue('iPhone')
+      setService()
+      expect(service.extractVideoForIphoneIfRequired(elm)).toEqual(elm)
     })
   })
 
@@ -118,13 +144,21 @@ describe(FloFullscreenService.name, () => {
     })
 
     it('should return false from canGoFullscreen', async(() => {
-      service.canGoFullscreen$.subscribe(val => {
+      service.canGoFullscreen().subscribe(val => {
         expect(val).toEqual(false)
       })
     }))
 
     it('should return false from fullscreenIsSupported', async(() => {
-      expect(service.fullscreenIsSupported()).toEqual(false)
+      service.fullscreenIsSupported().subscribe(res => expect(res).toEqual(false))
     }))
+
+    it('should return false from fullscreen', async(() => {
+      service.fullscreen$.subscribe(res => expect(res).toEqual(false))
+    }))
+
+    it('isIphone should return false', () => {
+      expect(isIphone()).toEqual(false)
+    })
   })
 })

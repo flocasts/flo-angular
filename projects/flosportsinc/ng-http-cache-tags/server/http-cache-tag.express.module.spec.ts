@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing'
 import { HttpCacheTagInterceptor } from './http-cache-tag.interceptor'
-import { HttpCacheTagExpressServerModule, immutableAppend } from './http-cache-tag.express.module'
+import { FloHttpCacheTagExpressServerModule, immutableAppend } from './http-cache-tag.express.module'
 import { RESPONSE } from '@nguniversal/express-engine/tokens'
 import { IHttpCacheTagServerModuleConfig } from './http-cache-tag.module'
 import {
@@ -10,7 +10,7 @@ import {
   CACHE_TAG_RESPONSE_CODES, DEFAULT_CACHE_TAG_RESPONSE_CODES
 } from './http-cache-tag.tokens'
 
-describe(HttpCacheTagExpressServerModule.name, () => {
+describe(FloHttpCacheTagExpressServerModule.name, () => {
   afterEach(TestBed.resetTestingModule)
 
   const RESPONSE_PROVIDER = {
@@ -27,7 +27,7 @@ describe(HttpCacheTagExpressServerModule.name, () => {
   }
 
   const setupStandardTestBed = (config = {}) => TestBed.configureTestingModule({
-    imports: [HttpCacheTagExpressServerModule.config(config)],
+    imports: [FloHttpCacheTagExpressServerModule.config(config)],
     providers: [RESPONSE_PROVIDER]
   })
 

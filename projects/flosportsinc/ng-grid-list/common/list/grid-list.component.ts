@@ -59,6 +59,8 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   private _items: ReadonlyArray<TItem> = []
   private _initialFill = {}
+  private _itemsNgClass = {}
+  private _itemsNgStyle = {}
 
   @Input()
   get items() {
@@ -87,6 +89,24 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
   }
   set initialFill(initialFill: Object) {
     this._initialFill = initialFill || {}
+  }
+
+  @Input()
+  get itemsNgClass() {
+    return this._itemsNgClass
+  }
+  set itemsNgClass(ngClass: object) {
+    this._itemsNgClass = ngClass
+    this.itemsNgClassChange.next(ngClass)
+  }
+
+  @Input()
+  get itemsNgStyle() {
+    return this._itemsNgStyle
+  }
+  set itemsNgStyle(ngstyle: object) {
+    this._itemsNgStyle = ngstyle
+    this.itemsNgStyleChange.next(ngstyle)
   }
 
   private generateItemRoles = (grid: FloGridListViewComponent<TItem>, item: TItem): IFloGridListViewItemRoles => {
@@ -149,8 +169,9 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
     })
   }
 
-  @Output()
-  public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+  @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem>>()
+  @Output() public readonly itemsNgClassChange = new Subject<any>()
+  @Output() public readonly itemsNgStyleChange = new Subject<any>()
 
   @Input()
   public readonly gridRef?: FloGridListViewComponent<TItem>

@@ -1,4 +1,5 @@
 import { InjectionToken } from '@angular/core'
+import { ITrackByFn } from './grid/grid.component'
 
 export const FLO_GRID_LIST_ITEMS = new InjectionToken('fs.grid.list.items')
 
@@ -25,6 +26,8 @@ export const FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED = new InjectionToken('fs
 export const FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = new InjectionToken('fs.grid.list.lst.autofill')
 
 export const FLO_GRID_LIST_ASPECT_RATIO = new InjectionToken('fs.grid.list.lst.aspect')
+
+export const FLO_GRID_LIST_TRACK_BY_FN = new InjectionToken<ITrackByFn>('fs.grid.list.trackby')
 
 export interface IFloGridListBaseItem {
   readonly id: string

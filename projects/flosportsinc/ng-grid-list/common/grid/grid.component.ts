@@ -2,15 +2,16 @@
 // tslint:disable: readonly-keyword
 // tslint:disable: no-if-statement
 
-import { isPlatformServer, isPlatformBrowser } from '@angular/common'
+import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
-import { fillWith, chunk, swapItemsViaIndices } from './helpers'
-import { Subject, fromEvent, of, interval, merge } from 'rxjs'
+import { swapItemsViaIndices } from './helpers'
+import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
-  TemplateRef, ViewChild, ViewChildren, QueryList, Renderer2, AfterViewInit, OnDestroy, OnInit, ChangeDetectorRef, HostListener
+  TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
+  HostListener, AfterViewInit, TrackByFunction
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -29,9 +30,21 @@ import {
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_ASPECT_RATIO
+  FLO_GRID_LIST_ASPECT_RATIO,
+  FLO_GRID_LIST_TRACK_BY_FN
 } from '../ng-grid-list.tokens'
-import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
+
+export interface IViewItem<T> {
+  readonly value?: T
+  readonly hasValue: boolean
+  readonly flexBasis: number
+  readonly padTop: number
+  readonly isShowingBorder: boolean
+  readonly isSelected: boolean
+  readonly isNotSelected: boolean
+}
+
+export type ITrackByFn<TItem extends IFloGridListBaseItem = IFloGridListBaseItem> = TrackByFunction<IViewItem<TItem>>
 
 @Component({
   selector: 'flo-grid-list-view',
@@ -39,10 +52,9 @@ import { DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defau
   styleUrls: ['./grid.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements AfterViewInit, OnInit, OnDestroy {
+export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
-    private _rd: Renderer2,
     private _cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
@@ -60,8 +72,17 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_CLASS) private _overlayNgClass: Object,
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
-    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: string
+    @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>
   ) { }
+
+  @HostListener('fullscreenchange')
+  @HostListener('webkitfullscreenchange')
+  @HostListener('mozfullscreenchange')
+  @HostListener('MSFullscreenChange')
+  fullscreenchange() {
+    this.update()
+  }
 
   @Input()
   get items() {
@@ -110,6 +131,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public setMin(min: number) {
     this.min = min
+  }
+
+  @Input()
+  get shouldSelectNextEmpty() {
+    return this._shouldSelectNextEmpty
+  }
+  set shouldSelectNextEmpty(val: boolean) {
+    this._shouldSelectNextEmpty = val
+    this.shouldSelectNextEmptyChange.next(val)
+  }
+
+  public setShouldSelectNextEmpty(val: boolean) {
+    this.shouldSelectNextEmpty = val
   }
 
   @Input()
@@ -277,44 +311,55 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   get aspectRatio() {
     return this._aspectRatio
   }
-  set aspectRatio(ratio: string) {
-    const _ratio = typeof ratio === 'string' && ratio.includes('%') ? ratio : DEFAULT_FLO_GRID_LIST_ASPECT_RATIO
+  set aspectRatio(ratio: number) {
+    const _ratio = typeof ratio === 'number' ? ratio : this._aspectRatio
     this._aspectRatio = _ratio
     this.aspectRatioChange.next(_ratio)
   }
 
-  public setAspectRatio(percent: string) {
+  public setAspectRatio(percent: number) {
     this.aspectRatio = percent
   }
 
-  isFullscreen = () => isPlatformBrowser(this._platformId) ? 1 >= window.outerHeight - window.innerHeight : false
-  getNativeAspectRatio = () => `${window.screen.height / window.screen.width * 100}%`
-  getAspectRatio = () => this.isFullscreen() ? this.getNativeAspectRatio() : this.aspectRatio
-
-  @HostListener('fullscreenchange')
-  @HostListener('webkitfullscreenchange')
-  @HostListener('mozfullscreenchange')
-  @HostListener('MSFullscreenChange')
-  fullscreenchange() {
-    this._cdRef.detectChanges()
+  @Input()
+  get trackByFn() {
+    return this._trackByFn
+  }
+  set trackByFn(fn: ITrackByFn<TItem>) {
+    const _fn = typeof fn === 'function' ? fn : this._trackByFn
+    this._trackByFn = _fn
+    this.trackByFnChange.next(_fn)
   }
 
-  get viewItems() {
-    return new Array<IMaybe<TItem>>(this.count)
-      .fill(maybe())
-      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
-      .map((value, idx) => {
-        const isSelected = this.selectedIndex === idx
-        return {
-          hasValue: value.isSome(),
-          value: value.valueOrUndefined(),
-          isShowingBorder: isSelected && this.count > 1,
-          isSelected,
-          isNotSelected: !isSelected,
-          aspectRatio: this.getAspectRatio()
-        }
-      })
+  public setTrackByFn(fn: ITrackByFn<TItem>) {
+    this.trackByFn = fn
   }
+
+  public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
+
+  get baseMaxWidth() {
+    return this.maxheight / this.aspectRatio
+  }
+
+  get maxWidth() {
+    return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
+  }
+
+  get aspectRatioPercentage() {
+    return this.aspectRatio * 100
+  }
+
+  get top() {
+    return this.isIE11
+      ? this.count === 2
+        ? '25%'
+        : 0
+      : this.count === 2 || this.isFullscreen()
+        ? 'inherit'
+        : 0
+  }
+
+  private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
   @Output() public readonly countChange = new Subject<number>()
@@ -323,6 +368,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly maxheightChange = new Subject<number>()
   @Output() public readonly selectedIdChange = new Subject<string>()
   @Output() public readonly selectedIndexChange = new Subject<number>()
+  @Output() public readonly selectedElementChange = new Subject<HTMLElement>()
   @Output() public readonly overlayEnabledChange = new Subject<boolean>()
   @Output() public readonly overlayStaticChange = new Subject<boolean>()
   @Output() public readonly overlayStartChange = new Subject<boolean>()
@@ -331,8 +377,11 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
-  @Output() public readonly aspectRatioChange = new Subject<string>()
-  @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange)
+  @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
+  @Output() public readonly aspectRatioChange = new Subject<number>()
+  @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
+  @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
+  @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
   @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
@@ -361,10 +410,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'initial' : 'none'
+  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
 
   public readonly trySelectNextEmpty = () =>
-    maybe(this.viewItems.slice(0, this.count).findIndex(b => !b.hasValue))
+    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex((b: any) => !b.hasValue))
       .filter(idx => idx >= 0)
       .tapSome(idx => this.setSelectedIndex(idx))
 
@@ -378,26 +427,66 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
+  createViewItems = () => {
+    const square = Math.ceil(Math.sqrt(this.count))
+
+    const stub = new Array<IMaybe<TItem>>(this.count)
+      .fill(maybe())
+      .map((val, idx) => this.items[idx] ? maybe(this.items[idx]) : val)
+
+    return stub.map<IViewItem<TItem>>((value, idx) => {
+      const isSelected = this.selectedIndex === idx
+      return {
+        hasValue: value.isSome(),
+        value: value.valueOrUndefined(),
+        flexBasis: 100 / square,
+        padTop: this.aspectRatioPercentage / square,
+        isShowingBorder: isSelected && this.count > 1,
+        isSelected,
+        isNotSelected: !isSelected
+      }
+    })
+  }
+
+  update() {
+    this.viewItemSource.next(this.createViewItems())
+  }
+
   ngOnInit() {
-    // initial setup of selected id
-    this.setSelectedIdViaIndex(this.selectedIndex)
+    if (isPlatformServer(this._platformId)) { return }
+
+    this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
+    this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
   }
 
   ngAfterViewInit() {
-    this.updateGridStyles(this.gridItemContainers.length)
+    // initial setup of selected ID
+    this.setSelectedIdViaIndex(this.selectedIndex)
 
-    if (isPlatformBrowser(this._platformId)) {
-      this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-      this.gridItemContainers.changes.pipe(takeUntil(this.onDestroy)).subscribe(a => this.updateGridStyles(a.length))
-    }
+    if (isPlatformServer(this._platformId)) { return }
+
+    merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
+      startWith(this.selectedIndex),
+      tap(() => this._cdRef.detectChanges()),
+      map(idx => maybe(this.gridItemContainers.toArray()[idx]).flatMapAuto(a => a.nativeElement)),
+      map(e => e
+        .flatMapAuto(elm => Array.from(elm.children)
+          .find(a => a.classList.contains('list-item-some') || a.classList.contains('list-item-none')))
+        .flatMapAuto(a => {
+          return {
+            id: e.flatMapAuto(b => b.id).filter(b => b !== '').valueOrUndefined(),
+            elm: a.children.item(0)
+          }
+        })),
+      distinctUntilChanged((x, y) => x.flatMapAuto(b => b.id).valueOrUndefined() === y.flatMapAuto(b => b.id).valueOrUndefined()),
+      takeUntil(this.onDestroy)
+    ).subscribe(maybeElement => maybeElement.map(a => a.elm).tapSome((val: HTMLElement) => this.selectedElementChange.next(val)))
   }
 
   ngOnDestroy() {
     this.onDestroySource.next()
     this.onDestroySource.complete()
   }
-
-  readonly trackByFn = (_idx: number, _item: TItem) => _item && _item.id
 
   readonly setItemAtIndex = (idx: number, val: TItem) => {
     // tslint:disable-next-line: readonly-array
@@ -406,13 +495,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setItems(_cloned)
   }
 
-  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number) => {
-    if (typeof fromIndex === 'number') {
-      this.setItems(swapItemsViaIndices(this.items, toIndex, fromIndex))
-    } else {
-      this.setItemAtIndex(toIndex, toVal)
-    }
-  }
+  readonly swapItemsAtIndex = (toIndex: number, toVal: TItem, fromIndex?: number) => typeof fromIndex === 'number'
+    ? this.setItems(swapItemsViaIndices(this.items, toIndex, fromIndex))
+    : this.setItemAtIndex(toIndex, toVal)
 
   public readonly setValueOfSelected = (val: TItem) => this.setItemAtIndex(this.selectedIndex, val)
 
@@ -454,11 +539,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem, toIndex = this.selectedIndex) =>
       this.isIndexEmpty(toIndex) && this.isItemInNotAnotherIndex(item, toIndex)
 
-  public readonly canReplaceItem = (item: TItem, toIndex = this.selectedIndex) => {
-    return this.isItemNotSelected(item) && !this.canAddItem(item, toIndex) // this.isItemInView(item)
-  }
+  public readonly canReplaceItem =
+    (item: TItem, toIndex = this.selectedIndex) =>
+      this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
 
-  public readonly setItem = (item: TItem, idx = this.selectedIndex) => this.setItemAtIndex(idx, item)
+  public readonly setItem =
+    (item: TItem, idx = this.selectedIndex) =>
+      this.setItemAtIndex(idx, item)
 
   public readonly removeItem =
     (item: TItem) =>
@@ -486,7 +573,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setSelectedId(undefined)
   }
 
-  public readonly findNextEmptyIndex = () => this.viewItems.findIndex(a => !a.hasValue)
+  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex((a: any) => !a.hasValue)
 
   public readonly fillNextEmpty =
     (item: TItem) =>
@@ -494,62 +581,5 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         .filter(idx => idx >= 0)
         .tapSome(idx => this.setItem(item, idx))
 
-  private readonly calcNumRowsColumns = (n: number) => {
-    const squared = Math.sqrt(n)
-    const columns = Math.ceil(squared)
-    const rows = columns
-    const shouldFill = n === 2
-    return {
-      columns,
-      rows,
-      gridBoxColumns: shouldFill ? columns * 2 : columns,
-      gridBoxRows: shouldFill ? columns * 2 : rows,
-      shouldFill
-    }
-  }
-
-  private readonly updateGridStyles = (count: number) => {
-    const gridCounts = this.calcNumRowsColumns(count)
-    const element = this.gridContainer.nativeElement
-    const maxWidth = `${this.maxheight * 1.777777778}px`
-    const maxWidthKey = 'max-width'
-    const maxHeightKey = 'max-height'
-    const displayKey = 'display'
-    const gridAreaKey = 'grid-area'
-    const alignSelfKey = 'align-self'
-
-    if (this.gridContainer) {
-      this._rd.removeStyle(element, maxHeightKey)
-      this._rd.setStyle(element, maxWidthKey, maxWidth)
-      if (gridCounts.columns <= 1) {
-        this._rd.setStyle(element, displayKey, 'block')
-      } else {
-        const children = this.gridItemContainers.map(a => a.nativeElement)
-
-        this._rd.setStyle(element, displayKey, 'grid')
-        this._rd.setStyle(element, 'grid-template-columns', fillWith(gridCounts.gridBoxColumns, '1fr '))
-        this._rd.setStyle(element, 'grid-template-rows', fillWith(gridCounts.gridBoxRows, '1fr '))
-
-        if (gridCounts.shouldFill) {
-          this._rd.removeStyle(element, maxWidthKey)
-          this._rd.setStyle(element, maxHeightKey, `${this.maxheight}px`)
-
-          const groups = Math.ceil(children.length / gridCounts.columns) + 1
-
-          chunk(groups, children).forEach((col, groupIdx) => {
-            col.forEach((val, idx) => {
-              this._rd.setStyle(val, gridAreaKey, `${groupIdx * 2 + 2} / ${idx * 2 + 1} / span 2 / span 2`)
-              this._rd.setStyle(val, alignSelfKey, 'center')
-            })
-          })
-        } else {
-          this._rd.setStyle(element, maxWidthKey, maxWidth)
-          children.forEach(child => {
-            this._rd.removeStyle(child, gridAreaKey)
-            this._rd.removeStyle(child, alignSelfKey)
-          })
-        }
-      }
-    }
-  }
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 }
