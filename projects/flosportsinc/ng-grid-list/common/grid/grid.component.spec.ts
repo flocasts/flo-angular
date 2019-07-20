@@ -144,11 +144,37 @@ describe(FloGridListViewComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
   })
 
-  describe('maxheight property', () => {
+  describe('trackByFn property', () => {
     it('should double bind', () => testInputProperty('trackByFn', () => true))
     it('should expose setter function', () => testInputPropSetFunc('trackByFn', 'setTrackByFn', (idx: number) => idx + 1))
     it('should start with token value', () =>
       expect(createSut().instance.trackByFn(0, undefined as any)).toEqual(TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, undefined)))
+
+    it('should handle undefined', () => {
+      const sample = undefined
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should handle empty object', () => {
+      const sample = {}
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should handle empty value', () => {
+      const sample = { value: undefined }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should undefined value.id', () => {
+      const sample = { value: { id: undefined } }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual(undefined)
+    })
+    it('should return value.id', () => {
+      const sample = { value: { id: '123' } }
+      const sut = TestBed.get(FLO_GRID_LIST_TRACK_BY_FN)(0, sample)
+      expect(sut).toEqual('123')
+    })
   })
 
   describe('selectedId property', () => {
