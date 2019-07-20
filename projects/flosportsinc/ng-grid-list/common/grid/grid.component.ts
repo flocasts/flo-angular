@@ -44,6 +44,8 @@ export interface IViewItem<T> {
   readonly isNotSelected: boolean
 }
 
+export type ITrackByFn<TItem extends IFloGridListBaseItem = IFloGridListBaseItem> = TrackByFunction<IViewItem<TItem>>
+
 @Component({
   selector: 'flo-grid-list-view',
   templateUrl: './grid.component.html',
@@ -71,7 +73,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
-    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<TItem>
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>
   ) { }
 
   @HostListener('fullscreenchange')
@@ -323,13 +325,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   get trackByFn() {
     return this._trackByFn
   }
-  set trackByFn(fn: TrackByFunction<TItem>) {
+  set trackByFn(fn: ITrackByFn<TItem>) {
     const _fn = typeof fn === 'function' ? fn : this._trackByFn
     this._trackByFn = _fn
     this.trackByFnChange.next(_fn)
   }
 
-  public setTrackByFn(fn: TrackByFunction<TItem>) {
+  public setTrackByFn(fn: ITrackByFn<TItem>) {
     this.trackByFn = fn
   }
 
@@ -377,7 +379,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
-  @Output() public readonly trackByFnChange = new Subject<TrackByFunction<TItem>>()
+  @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 

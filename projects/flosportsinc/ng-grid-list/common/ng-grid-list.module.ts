@@ -1,5 +1,5 @@
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
-import { FloGridListViewComponent } from './grid/grid.component'
+import { FloGridListViewComponent, IViewItem, ITrackByFn } from './grid/grid.component'
 import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
@@ -43,7 +43,9 @@ export function defaultFloGridListGuidGenerator() {
 }
 
 export function defaultFloGridListTrackByFn() {
-  const lambda = (_idx: number, _item: IFloGridListBaseItem) => _item && _item.id
+  const lambda: ITrackByFn<IFloGridListBaseItem> =
+    (_idx: number, item: IViewItem<IFloGridListBaseItem>) =>
+      item && item.value && item.value.id
   return lambda
 }
 
