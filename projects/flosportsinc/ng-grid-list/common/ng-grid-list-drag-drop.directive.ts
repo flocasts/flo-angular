@@ -7,6 +7,7 @@ interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
+// tslint:disable: no-if-statement
 @Directive({
   selector: '[floGridListDragDrop]',
 })
@@ -34,6 +35,8 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
   }
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
+    if (evt.preventDefault) { evt.preventDefault() }
+    if (evt.stopPropagation) { evt.stopPropagation() }
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
       .map(from => ({ from, to: { index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem } }))
