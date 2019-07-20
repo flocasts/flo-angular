@@ -10,7 +10,7 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mpc
 // tslint:disable: readonly-keyword
 
 @Directive({
-  selector: 'input[type="range"][floMp][floMpPlaybackRate]',
+  selector: 'input[type="range"],input[type="number"],[floMp][floMpPlaybackRate]',
 })
 export class FloVideoPlayerPlaybackRateInputControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
   implements OnInit, OnChanges {

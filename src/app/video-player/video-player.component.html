@@ -36,19 +36,10 @@
       <button *floIfMediaLoopEnabled="vidRef" [floMp]="vidRef" floMpClickToDisableRepeat>DISABLE REPEAT</button>
     </span>
     <span>
-      <input type="range" [floMp]="vidRef" floMpPlaybackRate>
-      <span>{{ vidRef.playbackRate }}x</span>
-      <!-- <datalist id="steplist">
-        <option>0</option>
-        <option>.5</option>
-        <option>1</option>
-        <option>1.5</option>
-        <option>2</option>
-      </datalist> -->
-      <!-- TODO: PLAYBACK SPEED -->
+      <input type="range" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
+      <input type="number" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
       <!-- 
         <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
-        <input [floMp]="vidRef" floMpPlaybackRate type="range"> 
       -->
     </span>
   </div>

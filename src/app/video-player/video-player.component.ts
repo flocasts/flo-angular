@@ -7,4 +7,6 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoPlayerComponent {
+  // tslint:disable-next-line: readonly-keyword
+  value = 1
 }
