@@ -1,5 +1,19 @@
 :host {
-  display: block;
-  height: 50px;
-  background-color: black;
+  height: 25px; // TODO: config?
+  background-color: black; // TODO: config?
+  display: flex;
+  align-items: center;
+
+  &.fs.mp.controller {
+    button {
+      display: flex;
+      border: none;
+      background-color: transparent;
+      color: white; // TODO: config?
+      font-size: 16px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }

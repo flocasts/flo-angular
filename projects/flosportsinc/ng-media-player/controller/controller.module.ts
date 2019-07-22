@@ -4,7 +4,9 @@ import { FloMediaPlayerControllerComponent } from './controller.component'
 import { CommonModule } from '@angular/common'
 import {
   FloMediaPlayerPlayBtnControlTemplateDirective,
-  FloMediaPlayerPlayBtnControlContentTemplateDirective
+  FloMediaPlayerPlayBtnControlContentTemplateDirective,
+  FloMediaPlayerPauseBtnControlTemplateDirective,
+  FloMediaPlayerPauseBtnControlContentTemplateDirective
 } from './controller.directives'
 
 @NgModule({
@@ -14,16 +16,18 @@ import {
   ],
   declarations: [
     FloMediaPlayerControllerComponent,
-
     FloMediaPlayerPlayBtnControlTemplateDirective,
-    FloMediaPlayerPlayBtnControlContentTemplateDirective
+    FloMediaPlayerPlayBtnControlContentTemplateDirective,
+    FloMediaPlayerPauseBtnControlTemplateDirective,
+    FloMediaPlayerPauseBtnControlContentTemplateDirective
   ],
   exports: [
     FloMediaPlayerControlsModule,
     FloMediaPlayerControllerComponent,
-
     FloMediaPlayerPlayBtnControlTemplateDirective,
-    FloMediaPlayerPlayBtnControlContentTemplateDirective
+    FloMediaPlayerPlayBtnControlContentTemplateDirective,
+    FloMediaPlayerPauseBtnControlTemplateDirective,
+    FloMediaPlayerPauseBtnControlContentTemplateDirective
   ]
 })
 export class FloMediaPlayerControllerModule { }
