@@ -1,0 +1,48 @@
+<span>
+  <ng-container *ngTemplateOutlet="floMpPlayTmpl || floMpPlayTmplDefault"></ng-container>
+  <ng-template #floMpPlayTmplDefault>
+    <button *floIfMediaPaused="mediaRef" [floMp]="mediaRef" floMpClickToPlay>
+      <ng-container *ngTemplateOutlet="floMpPlayTmplContent || floMpPlayContentTmplDefault"></ng-container>
+      <ng-template #floMpPlayContentTmplDefault>PLAY</ng-template>
+    </button>
+  </ng-template>
+  <!-- <ng-container *ngIf="floMpPlayContent; then caseA; else caseB"> </ng-container>
+    <ng-template #caseA>
+        <ng-container *ngTemplateOutlet="floMpPlay"></ng-container>
+     </ng-template>
+    <ng-template #caseB>
+      <button *floIfMediaPaused="mediaRef" [floMp]="mediaRef" floMpClickToPlay>
+            YYY
+      </button>
+    </ng-template> -->
+  <!-- <ng-container [ngSwitchCase]="floMpPlay"> -->
+  <!-- <ng-container *ngTemplateOutlet="floMpPlay || floMpPlayDefault"></ng-container>
+    <ng-template #floMpPlayDefault>
+      <button *floIfMediaPaused="mediaRef" [floMp]="mediaRef" floMpClickToPlay>
+        <ng-container *ngTemplateOutlet="floMpPlayContent || floMpPlayContentDefault"></ng-container>
+        <ng-template #floMpPlayContentDefault>PLAY</ng-template> -->
+  <!-- <span #ref><ng-content select="[floMpDefaultPauseBtnContent]"></ng-content></span>  -->
+  <!-- <span *ngIf="ref.children.length == 0">Play</span> -->
+  <!-- <div #ref><ng-content select="[floMpDefaultPauseBtnContent]"></ng-content></div> 
+          <span *ngIf="ref.children.length == 0">Play</span> -->
+  <!-- <ng-content #ref select="[floMpDefaultPlayBtnContent]"></ng-content> -->
+  <!-- <span *ngIf="ref && ref.children.length == 0">Play</span> -->
+
+  <!-- <ng-template #ref1><span>PLAY</span></ng-template>
+        <span [floNoContent]="ref1"><ng-content select="[floMpDefaultPlayBtnContent]"></ng-content></span> -->
+
+  <!-- </button>
+    </ng-template> -->
+  <!-- <ng-container *ngTemplateOutlet="floMpPause || floMpPauseDefault"></ng-container> -->
+  <!-- <ng-template #floMpPauseDefault>
+      <button *floIfMediaPlaying="mediaRef" [floMp]="mediaRef" floMpClickToPause>
+        <div #ref><ng-content select="[floMpDefaultPauseBtnContent]"></ng-content></div> 
+        <span *ngIf="ref.children.length == 0">Play</span>
+      </button>
+    </ng-template> -->
+  <!-- </ng-container> -->
+  <!-- <button *floIfMediaPaused="mediaRef" [floMp]="mediaRef" floMpClickToPlay #floMpPlayDefault>Play</button>
+  <button *floIfMediaPlaying="mediaRef" [floMp]="mediaRef" floMpClickToPause>Pause</button> -->
+</span>
+
+<!-- &Vert; -->

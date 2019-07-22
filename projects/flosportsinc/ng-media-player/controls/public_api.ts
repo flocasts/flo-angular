@@ -1,5 +1,7 @@
 export * from './video-player-controls.module'
 
+export * from './mp-base.directive'
+
 export * from './mp-pause/mp-pause.module'
 export * from './mp-pause/mp-pause.directive'
 
