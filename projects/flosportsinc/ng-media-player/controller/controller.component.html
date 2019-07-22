@@ -3,25 +3,14 @@
   <ng-template #floMpPlayTmplDefault>
     <button *floIfMediaPaused="mediaRef" [floMp]="mediaRef" floMpClickToPlay>
       <ng-container *ngTemplateOutlet="floMpPlayTmplContent || floMpPlayContentTmplDefault"></ng-container>
-      <ng-template #floMpPlayContentTmplDefault>&#9658;
-          <!-- <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-              <path fill="#FFFFFF" d="M0.643206042,0.321603021 L14.4099072,7.20495361 C14.8489992,7.42449961 15.0269764,7.9584312 14.8074304,8.3975232 C14.7214182,8.56954755 14.5819316,8.70903421 14.4099072,8.79504639 L0.643206042,15.678397 C0.423660044,15.78817 0.156694248,15.6991814 0.0469212484,15.4796354 C0.0160644852,15.4179219 1.76768319e-16,15.3498716 4.4408921e-16,15.2808738 L-4.4408921e-16,0.719126217 C-4.74149377e-16,0.473666328 0.198984556,0.274681773 0.444444444,0.274681773 C0.513442265,0.274681773 0.581492516,0.290746258 0.643206042,0.321603021 Z"></path>
-            </svg> -->
-      </ng-template>
+      <ng-template #floMpPlayContentTmplDefault>&#9658;</ng-template>
     </button>
   </ng-template>
   <ng-container *ngTemplateOutlet="floMpPauseTmpl || floMpPauseTmplDefault"></ng-container>
   <ng-template #floMpPauseTmplDefault>
     <button *floIfMediaPlaying="mediaRef" [floMp]="mediaRef" floMpClickToPause>
       <ng-container *ngTemplateOutlet="floMpPauseContentTmpl || floMpPauseContentTmplDefault"></ng-container>
-      <ng-template #floMpPauseContentTmplDefault>&#x1f507;
-        <!-- <svg width="16px" height="16px" viewBox="0 0 16 16" version="1.1">
-          <g fill="#FFFFFF">
-            <rect x="0" y="0" width="6.22222222" height="16" rx="0.444444444"></rect>
-            <rect x="9.77777778" y="0" width="6.22222222" height="16" rx="0.444444444"></rect>
-          </g>
-        </svg> -->
-      </ng-template>
+      <ng-template #floMpPauseContentTmplDefault>&#x1f507;</ng-template>
     </button>
   </ng-template>
 </span>
