@@ -16,7 +16,7 @@ export class FloMediaPlayerControllerComponent {
   @ContentChild(FloMediaPlayerPlayBtnControlTemplateDirective, { read: TemplateRef }) readonly floMpPlayTmpl: TemplateRef<HTMLElement>
   // tslint:disable-next-line: max-line-length
   @ContentChild(FloMediaPlayerPlayBtnControlContentTemplateDirective, { read: TemplateRef }) readonly floMpPlayTmplContent: TemplateRef<HTMLButtonElement>
-  // @ContentChild(FloVideoPlayerPauseControlTemplateDirective, { read: TemplateRef }) readonly floMpPause: TemplateRef<HTMLElement>
+  // @ContentChild(FloMediaPlayerPauseControlTemplateDirective, { read: TemplateRef }) readonly floMpPause: TemplateRef<HTMLElement>
 
   // tslint:disable: use-life-cycle-interface
   ngOnInit() {

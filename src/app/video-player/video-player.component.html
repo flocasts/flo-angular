@@ -6,10 +6,16 @@
 </video>
 
 <flo-media-player-controller [mediaRef]="vidRef">
-  <!-- <button *floMpPlay>
+  <!-- <button floMpPlayControlTmpl>
     TESTTING FIULL
   </button> -->
-  <!-- <span *floMpPlayContent>&#9658;</span> -->
+  <!-- <ng-container *floMpPlayControlTmpl>
+    <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>
+      TEST12
+    </button>
+  </ng-container> -->
+
+  <!-- <span *floMpPlayControlContentTmpl>&#9658;</span> -->
   <!--
   <i flo-pause-btn></i> -->
 </flo-media-player-controller>

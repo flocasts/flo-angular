@@ -2,7 +2,7 @@ import { Component, NgModule, Type, PLATFORM_ID } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common'
-import { FloVideoPlayerPlayControlDirective } from './mp-play.directive'
+import { FloMediaPlayerPlayControlDirective } from './mp-play.directive'
 import { FloMediaPlayerControlsPlayModule } from './mp-play.module'
 
 // tslint:disable: readonly-keyword
@@ -47,7 +47,7 @@ const createsut = <T>(type: Type<T>) => {
   }
 }
 
-describe(FloVideoPlayerPlayControlDirective.name, () => {
+describe(FloMediaPlayerPlayControlDirective.name, () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [TestModule]

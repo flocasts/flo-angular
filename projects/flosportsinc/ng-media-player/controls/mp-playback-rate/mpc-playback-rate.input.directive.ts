@@ -12,7 +12,7 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-
 @Directive({
   selector: 'input[type="range"],input[type="number"],[floMp][floMpPlaybackRate]',
 })
-export class FloVideoPlayerPlaybackRateInputControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
+export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
   implements OnInit, OnChanges {
   constructor(private elmRef: ElementRef<HTMLInputElement>,
     private cd: ChangeDetectorRef,
