@@ -1,8 +1,10 @@
 :host {
+  width: 600px; // TODO: config?
   height: 25px; // TODO: config?
   background-color: black; // TODO: config?
   display: flex;
   align-items: center;
+  justify-content: space-between;
 
   &.fs.mp.controller {
     button {
@@ -11,9 +13,16 @@
       background-color: transparent;
       color: white; // TODO: config?
       font-size: 16px;
+      padding: 0;
+      svg {
+        fill: white; // TODO: config?
+      }
       &:hover {
         cursor: pointer;
       }
     }
+  }
+  .grp {
+    display: flex;
   }
 }

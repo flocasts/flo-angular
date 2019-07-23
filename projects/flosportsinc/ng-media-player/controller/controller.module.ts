@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core'
+import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 import { FloMediaPlayerControlsModule } from '@flosportsinc/ng-media-player/controls'
 import { FloMediaPlayerControllerComponent } from './controller.component'
 import { CommonModule } from '@angular/common'
@@ -12,6 +13,7 @@ import {
 @NgModule({
   imports: [
     CommonModule,
+    FloFullscreenModule,
     FloMediaPlayerControlsModule
   ],
   declarations: [

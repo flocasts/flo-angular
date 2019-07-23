@@ -1,85 +1,22 @@
 <h2>Flo Media Player Suite</h2>
 
-<h3>Controls</h3>
-<video #vidRef floMse playsinline controls width="600"
-  src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8">
-</video>
-
-<flo-media-player-controller [mediaRef]="vidRef">
-  <!-- <button floMpPlayControlTmpl>
-    TESTTING FIULL
-  </button> -->
-  <!-- <ng-container *floMpPlayControlTmpl>
-    <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>
-      TEST12
-    </button>
-  </ng-container> -->
-
-  <!-- <span *floMpPlayControlContentTmpl>&#9658;</span> -->
-  <!--
-  <i flo-pause-btn></i> -->
-</flo-media-player-controller>
-<!-- <div style="background-color: black; height: 50px;" [floMp]="vidRef" floMpController>
-  <span>
-    <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpPlay floMpClickToPlay>Play</button>
-    <button *floIfMediaPlaying="vidRef" [floMp]="vidRef" floMpPlay floMpClickToPause>Pause</button>
-  </span>
-</div>
- -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<!-- <flo-media-player> -->
+  <video #vidRef floMse playsinline controls width="600" src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
+  <flo-media-player-controller [mediaRef]="vidRef"></flo-media-player-controller>
+<!-- </flo-media-player> -->
 
 <div>
   <div>
     <!-- TODO: TIMELINE SCRUBBER -->
   </div>
-  <div>
-    <button *floIfMediaUnmuted="vidRef" [floMp]="vidRef" floMpClickToMute>Mute</button>
-    <button *floIfMediaMuted="vidRef" [floMp]="vidRef" floMpClickToUnmute>Unmute</button>
-    <input *floIfMediaAdjustableVolume [floMp]="vidRef" floMpVolume type="range">
     <!--
         <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]" floMpClickToMute>Low</span>
         <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]" floMpClickToMute>Medium</span>
         <span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]" floMpClickToMute>High</span>
       -->
-  </div>
   <div>
     <span>
       <!-- TODO: PLAY AGAIN AFTER ENDED (NOT LOOP) -->
-    </span>
-    <span>
-      <button *floIfMediaPaused="vidRef" [floMp]="vidRef" floMpClickToPlay>Play</button>
-      <button *floIfMediaPlaying="vidRef" [floMp]="vidRef" floMpClickToPause>Pause</button>
     </span>
     <span>
       <button [floMp]="vidRef" [floMpClickToSkipBack]="15000">-15</button>
@@ -95,16 +32,6 @@
       <!-- 
         <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
       -->
-    </span>
-  </div>
-  <div>
-    <span>
-      <button *floIfFullscreen floClickToExitFullscreen>Exit</button>
-      <button *floIfNotFullscreen [floClickToEnterFullscreen]="vidRef">Fullscreen</button>
-    </span>
-    <span>
-      <button *floIfMediaCanEnterNativePip="vidRef" [floMp]="vidRef" floMpClickToEnterNativePip>PiP</button>
-      <button *floIfMediaCanExitNativePip="vidRef" [floMp]="vidRef" floMpClickToExitNativePip>Exit PiP</button>
     </span>
   </div>
 
