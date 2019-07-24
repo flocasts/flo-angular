@@ -6,7 +6,7 @@
   justify-content: space-between;
 
   &.fs.mp.controller {
-    button {
+    button, input {
       display: flex;
       border: none;
       background-color: transparent;
