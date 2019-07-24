@@ -1,6 +1,5 @@
 :host {
   max-width: 100%; // TODO: config?
-  height: 25px; // TODO: config?
   background-color: black; // TODO: config?
   display: flex;
   align-items: center;
@@ -14,12 +13,17 @@
       color: white; // TODO: config?
       font-size: 16px;
       padding: 0;
+      margin: 0;
       svg {
         fill: white; // TODO: config?
-        height: 24px; // TODO: config?
-        width: 24px; // TODO: config?
+        height: 28px; // TODO: config?
+        width: 28px; // TODO: config?
         opacity: .8; // TODO: config?
-        transition: opacity 0.4s ease-out // TODO: config?
+        // transition: opacity 0.4s ease-out; // TODO: config?
+        // -webkit-backface-visibility: hidden; // safari flicker fix
+        // backface-visibility: hidden; // safari flicker fix
+        // -webkit-transform: translateZ(0) scale(1.0, 1.0); // safari flicker fix
+        // transform: translateZ(0); // safari flicker fix
       }
       &:hover {
         cursor: pointer;
@@ -34,6 +38,5 @@
   }
   .grp {
     display: flex;
-    height: 100%;
   }
 }
