@@ -1,5 +1,5 @@
 :host {
-  width: 600px; // TODO: config?
+  max-width: 100%; // TODO: config?
   height: 25px; // TODO: config?
   background-color: black; // TODO: config?
   display: flex;
@@ -16,13 +16,24 @@
       padding: 0;
       svg {
         fill: white; // TODO: config?
+        height: 24px; // TODO: config?
+        width: 24px; // TODO: config?
+        opacity: .8; // TODO: config?
+        transition: opacity 0.4s ease-out // TODO: config?
       }
       &:hover {
         cursor: pointer;
+        svg {
+          opacity: 1;
+        }
       }
+    }
+    .input.volume {
+      width: 75px;
     }
   }
   .grp {
     display: flex;
+    height: 100%;
   }
 }
