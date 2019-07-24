@@ -19,10 +19,8 @@ export class FloMediaPlayerControllerComponent {
 
   @HostListener('mousedown', ['$event'])
   mousedown(evt: MouseEvent) {
-    // console.log(evt)
     // tslint:disable-next-line: no-if-statement
     if (!(evt.target instanceof HTMLInputElement)) {
-      // console.log(evt.target.type === 'range')
       evt.preventDefault()
     }
   }
@@ -45,7 +43,5 @@ export class FloMediaPlayerControllerComponent {
   ngOnInit() {
     // tslint:disable-next-line: no-object-mutation
     this.mediaRef.controls = false
-
-    console.log(this.mediaRef.readyState)
   }
 }
