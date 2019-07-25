@@ -1,7 +1,7 @@
 defaults: &defaults
   resource_class: xlarge
   docker:
-    - image: circleci/node:12.4-browsers
+    - image: circleci/node:12.6-browsers
 
 version: 2
 jobs:
