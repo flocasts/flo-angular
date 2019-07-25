@@ -97,6 +97,12 @@
       ],
       "@flosportsinc/ng-fullscreen/*": [
         "../dist/flosportsinc/ng-fullscreen/*"
+      ],
+      "@flosportsinc/ng-fetch-fill": [
+        "../dist/flosportsinc/ng-fetch-fill"
+      ],
+      "@flosportsinc/ng-fetch-fill/*": [
+        "../dist/flosportsinc/ng-fetch-fill/*"
       ]
     }
   },
