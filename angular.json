@@ -779,6 +779,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-fetch-fill/src/test.ts",
             "tsConfig": "projects/flosportsinc/ng-fetch-fill/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-fetch-fill/karma.conf.js"
