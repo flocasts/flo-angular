@@ -17,7 +17,8 @@ export class NotFoundComponent {
     'ng-env-transfer-state',
     'ng-ima',
     'ng-tabs',
-    'ng-video-events'
+    'ng-video-events',
+    'ng-fetch-fill'
   ]
 
   constructor(private ar: ActivatedRoute) { }
