@@ -8,4 +8,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
 })
 export class FetchFillComponent  {
 
+  readonly items: ReadonlyArray<any> = [
+    { id: 1, name: 'test stream' },
+    { id: 2, name: 'another stream' }
+  ]
 }
