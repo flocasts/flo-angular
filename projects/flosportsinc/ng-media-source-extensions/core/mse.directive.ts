@@ -60,7 +60,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
     }
   }
 
-  private get disabled() { return !this.enabled }
+  get disabled() { return !this.enabled }
 
   @Input()
   get src() {
