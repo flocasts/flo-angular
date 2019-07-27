@@ -1,9 +1,7 @@
 import { Component, NgModule, Input, SimpleChange } from '@angular/core'
-import { TestBed, async, fakeAsync, tick } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 import { MseDirective } from './mse.directive'
 import { By } from '@angular/platform-browser'
-import { Subject, ObjectUnsubscribedError } from 'rxjs'
-import { take } from 'rxjs/operators'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
@@ -137,9 +135,8 @@ const shouldCompilerDirective = done => {
 // }
 
 describe('rewrite these... problems', () => {
-
-  // beforeEach(() => setMseTestBed(true)(false) )
-  // afterEach(() => TestBed.resetTestingModule())
+  beforeEach(() => setMseTestBed(true)(false) )
+  afterEach(() => TestBed.resetTestingModule())
 
   // it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
   //   const testSub = new Subject<any>()
@@ -202,16 +199,16 @@ describe('rewrite these... problems', () => {
   //   sut.hoist.detectChanges()
   //   expect(spy).toHaveBeenCalled()
   // })
-  // it('should set src', () => {
-  //   const wrapper = createMseSut()
-  //   const task = (wrapper.instance as any)
-  //   const spy = spyOn(task, '_setSrc').and.callThrough();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-  //   wrapper.hoist.detectChanges();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   wrapper.hoist.detectChanges()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+  it('should set src', () => {
+    const wrapper = createMseSut()
+    const task = (wrapper.instance as any)
+    const spy = spyOn(task, 'setSrcUrl').and.callThrough();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+    wrapper.hoist.detectChanges();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+    wrapper.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
 
   // it('should handle input newClientOnSrcChange', () => {
   //   const sut = createMseSut()
