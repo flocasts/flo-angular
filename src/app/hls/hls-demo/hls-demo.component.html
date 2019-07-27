@@ -41,7 +41,7 @@
 <button #unmute>Unmute video</button>
 <div class="video-responsive-container">
   <video *ngIf="config$ | async as config"
-  floMse="false"
+  floMse
   class="video-responsive"
   floVideoEvents
   [src]="config?.src"
