@@ -44,7 +44,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
 
   public readonly videoElement = this._elementRef.nativeElement
 
-  private _enabled: boolean
+  private _enabled = true
   private _src?: string
   private _mseClient?: TMseClient
 
