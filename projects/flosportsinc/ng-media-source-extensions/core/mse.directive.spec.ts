@@ -125,15 +125,6 @@ const shouldCompilerDirective = done => {
   done()
 }
 
-// const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-//   const wrapper = createMseSut()
-//   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-//   wrapper.instance.ngOnChanges({
-//     floHls: sc
-//   })
-//   expect(spy).not.toHaveBeenCalled()
-// }
-
 describe('rewrite these... problems', () => {
   beforeEach(() => setMseTestBed(true)(false) )
   afterEach(() => TestBed.resetTestingModule())
@@ -168,7 +159,7 @@ describe('rewrite these... problems', () => {
 
   // it('should trigger source change task when MSE client is the diff type', () => {
   //   const wrapper = createMseSut()
-  //   const task = (wrapper.instance as any)._mseInitTask[2]
+  //   const task = (wrapper.instance as any)._mseInitTasks[0]
   //   const spy = spyOn(task, 'func').and.callThrough();
   //   (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
   //   wrapper.hoist.detectChanges()
@@ -199,6 +190,7 @@ describe('rewrite these... problems', () => {
   //   sut.hoist.detectChanges()
   //   expect(spy).toHaveBeenCalled()
   // })
+
   it('should set src', () => {
     const wrapper = createMseSut()
     const task = (wrapper.instance as any)
