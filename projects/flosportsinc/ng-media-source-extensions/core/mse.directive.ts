@@ -44,8 +44,23 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
 
   public readonly videoElement = this._elementRef.nativeElement
 
+  private _enabled = true
   private _src?: string
   private _mseClient?: TMseClient
+
+  @Input('floMse')
+  get enabled() {
+    return this._enabled
+  }
+  set enabled(val: boolean) {
+    if ((val as any) === 'false' || val === false || (val as any) === 0 || val === undefined || val === null) {
+      this._enabled = false
+    } else {
+      this._enabled = true
+    }
+  }
+
+  get disabled() { return !this.enabled }
 
   @Input()
   get src() {
@@ -100,7 +115,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
   private readonly setSrcUrl = (src: string) => this.videoElement.setAttribute('src', src)
 
   public ngOnDestroy() {
-    if (this.floMseClient) {
+    if (this.enabled && this.floMseClient) {
       this.getCurrentTasks().flatMap(a => a.destroy).tapSome(fn => {
         fn({
           clientRef: this.floMseClient as TMseClient,
@@ -111,6 +126,8 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
   }
 
   public ngOnInit() {
+    if (this.disabled) { return }
+
     maybe(this.src)
       .map(src => this.getCurrentTasks()
         .flatMap(a => a.initialize)
@@ -129,6 +146,12 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
 
   public ngOnChanges(changes: SimpleChanges) {
     if (!changes.src || changes.src.firstChange) { return }
+
+    // if floMse is disabled, we just want to pass the "src" through as normal
+    if (this.disabled && this.src) {
+      this.setSrcUrl(this.src)
+      return
+    }
 
     maybe(changes.src.currentValue)
       .filter(src => src !== changes.src.previousValue)
