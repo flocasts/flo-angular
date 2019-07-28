@@ -9,6 +9,7 @@ export const FLO_GRID_LIST_MAX_COUNT = new InjectionToken('fs.grid.list.count.ma
 export const FLO_GRID_LIST_MAX_HEIGHT = new InjectionToken('fs.grid.list.maxheight')
 export const FLO_GRID_LIST_SELECTED_INDEX = new InjectionToken('fs.grid.list.selectedIndex')
 export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = new InjectionToken('fs.grid.list.selectNext')
+export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken('fs.grid.list.id.prefix')
 
 export const FLO_GRID_LIST_GUID_GEN = new InjectionToken('fs.grid.list.guid')
 
