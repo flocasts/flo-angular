@@ -48,10 +48,11 @@ const SAMPLE_ITEM_1 = { id: '1', prop: 'prop1' }
 const SAMPLE_ITEM_2 = { id: '2', prop: 'prop2' }
 const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
 
-const createSut = () => {
+const createSut = (detectChanges = true) => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
   const fixture = hoistFixture.debugElement.query(By.directive(FloGridListViewComponent))
-  hoistFixture.detectChanges()
+  // tslint:disable-next-line: no-if-statement
+  if (detectChanges) { hoistFixture.detectChanges() }
   return {
     hoistFixture,
     hoistInstance: fixture.componentInstance,
@@ -453,10 +454,33 @@ describe(FloGridListViewComponent.name, () => {
       })
     })
 
-    it('should be ignored on platform server', async(() => {
+    it('should show when enabled on on platform server', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
-        imports: [FloGridListModule],
+        imports: [FloGridListModule.config({
+          overlay: { enabled: true }
+        })],
+        declarations: [FloGridTilesTestComponent],
+        providers: [{
+          provide: PLATFORM_ID,
+          useValue: 'server'
+        }]
+      }).compileComponents()
+      const sut = createSut()
+      sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(false)
+      })
+      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(true)
+      })
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
+      expect(elementHasHiddenClass).toBeFalsy()
+    }))
+
+    it('should hide when enabled on on platform server', async(() => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule.config({ overlay: { enabled: false }})],
         declarations: [FloGridTilesTestComponent],
         providers: [{
           provide: PLATFORM_ID,
@@ -470,7 +494,7 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
-      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.list-overlay-hide'))
       expect(elementHasHiddenClass).toBeTruthy()
     }))
   })

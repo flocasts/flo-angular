@@ -419,7 +419,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
   public readonly fadeStream = (isPlatformServer(this._platformId)
-    ? of(false)
+    ? of(this.overlayEnabled)
     : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
@@ -485,6 +485,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ngAfterViewInit() {
     // initial setup of selected ID
     this.setSelectedIdViaIndex(this.selectedIndex)
+
+    this._cdRef.detectChanges()
 
     if (isPlatformServer(this._platformId)) { return }
 
