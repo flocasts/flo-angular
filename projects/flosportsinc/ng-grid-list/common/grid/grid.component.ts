@@ -56,7 +56,7 @@ export type ITrackByFn<TItem extends IFloGridListBaseItem = IFloGridListBaseItem
 export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
-    private _cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -93,7 +93,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   set items(items: ReadonlyArray<TItem | undefined>) {
     this._items = items
     this.itemsChange.next(items)
-    this._cdRef.markForCheck()
   }
 
   public setItems(items: ReadonlyArray<TItem | undefined>) {
@@ -440,7 +439,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public readonly cycleOverlay = () => {
     this.fadeoutIntervalReset.next(true)
-    this._cdRef.markForCheck()
+    this.cdRef.markForCheck()
   }
 
   readonly constructContainerId = (token: string | number) => `${this.containerIdPrefix}${token}`
@@ -471,6 +470,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   update() {
     this.viewItemSource.next(this.createViewItems())
+    this.cdRef.detectChanges()
   }
 
   ngOnInit() {
@@ -486,13 +486,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     // initial setup of selected ID
     this.setSelectedIdViaIndex(this.selectedIndex)
 
-    this._cdRef.detectChanges()
-
     if (isPlatformServer(this._platformId)) { return }
 
     merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
-      tap(() => this._cdRef.detectChanges()),
       map(idx => maybe(this.gridItemContainers.toArray()[idx]).flatMapAuto(a => a.nativeElement)),
       map(e => e
         .flatMapAuto(elm => Array.from(elm.children)
