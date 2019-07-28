@@ -46,6 +46,12 @@ export interface FloGridListModuleConfiguration {
   /** Starting selection box. Defaults to 0 */
   readonly selectedIndex: number
 
+  /**
+   * Starting selection box. Defaults to '__fs_grid__' which would give the outer div
+   * items the following pattern: <div id="__fs_grid__someItemId1"></div>
+   **/
+  readonly containerIdPrefix: string
+
   /** When view count increases, set selection box to next empty square  */
   readonly autoSelectNextEmptyOnCountChange: boolean
 

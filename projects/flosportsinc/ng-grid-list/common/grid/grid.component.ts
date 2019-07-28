@@ -31,7 +31,8 @@ import {
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_TRACK_BY_FN
+  FLO_GRID_LIST_TRACK_BY_FN,
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -73,7 +74,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
-    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
+    @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string
   ) { }
 
   @HostListener('fullscreenchange')
@@ -335,6 +337,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.trackByFn = fn
   }
 
+  @Input()
+  get containerIdPrefix() {
+    return this._containerIdPrefix
+  }
+  set containerIdPrefix(prefix: string) {
+    this._containerIdPrefix = prefix
+    this.containerIdPrefixChange.next(prefix)
+  }
+
+  public setContainerIdPrefix(prefix: string) {
+    this.containerIdPrefix = prefix
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -380,6 +395,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
+  @Output() public readonly containerIdPrefixChange = new Subject<string>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
@@ -427,7 +443,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
-  PREFIX_TOKEN = '__fs_grid_some__'
+  readonly constructContainerId = (token: string | number) => `${this.containerIdPrefix}${token}`
 
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
@@ -447,9 +463,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         isSelected,
         isNotSelected: !isSelected,
         containerId: value.map(i => i.id)
-          .map(a => `${this.PREFIX_TOKEN}${a}`)
-          .valueOr(`${this.PREFIX_TOKEN}${idx}`)
-      } // item?.value?.id || '__fs_gs_some__' + idx
+          .map(this.constructContainerId)
+          .valueOr(this.constructContainerId(idx))
+      }
     })
   }
 
