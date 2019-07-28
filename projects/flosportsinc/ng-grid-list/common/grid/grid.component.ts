@@ -5,8 +5,8 @@
 import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
-import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
+import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
@@ -474,10 +474,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   ngOnInit() {
-    if (isPlatformServer(this._platformId)) { return }
+    const takeByPlatform = <T>(source: Observable<T>) => isPlatformServer(this._platformId)
+      ? source.pipe(take(1))
+      : source.pipe(takeUntil(this.onDestroy))
 
-    this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-    this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
+    this.fadeStream.pipe(takeByPlatform).subscribe(show => this.toggleCursor(show))
+    this.cdRefChange.pipe(takeByPlatform).subscribe(() => this.update())
   }
 
   ngAfterViewInit() {
