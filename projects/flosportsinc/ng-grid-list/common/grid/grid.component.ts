@@ -427,6 +427,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this._cdRef.markForCheck()
   }
 
+  PREFIX_TOKEN = '__fs_grid_some__'
+
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
 
@@ -443,8 +445,11 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         padTop: this.aspectRatioPercentage / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
-        isNotSelected: !isSelected
-      }
+        isNotSelected: !isSelected,
+        containerId: value.map(i => i.id)
+          .map(a => `${this.PREFIX_TOKEN}${a}`)
+          .valueOr(`${this.PREFIX_TOKEN}${idx}`)
+      } // item?.value?.id || '__fs_gs_some__' + idx
     })
   }
 
