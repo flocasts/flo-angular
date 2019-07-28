@@ -47,7 +47,9 @@ export interface FloGridListModuleConfiguration {
   readonly selectedIndex: number
 
   /**
-   * Starting selection box. Defaults to '__fs_grid__' which would give the outer div
+   * Prefix the grid-list-item container ID's so they do not conflict downstream
+   * if ID is used elsewhere in the application.
+   * Defaults to '__fs_grid__' which would give the outer div
    * items the following pattern: <div id="__fs_grid__someItemId1"></div>
    **/
   readonly containerIdPrefix: string
