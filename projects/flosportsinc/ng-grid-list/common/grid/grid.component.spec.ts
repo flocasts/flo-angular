@@ -10,12 +10,14 @@ import {
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, FLO_GRID_LIST_TRACK_BY_FN,
-  FLO_GRID_LIST_CONTAINER_ID_PREFIX
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  FLO_GRID_LIST_FILL_TO_FIT
 } from '../ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
   DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
-  DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX
+  DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  DEFAULT_FLO_GRID_LIST_FILL_TO_FIT
 } from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
@@ -190,6 +192,57 @@ describe(FloGridListViewComponent.name, () => {
 
       expect(prefixedIds.length).toEqual(1)
       expect(innerIds.length).toEqual(1)
+    })
+  })
+
+  describe('fillToFit property', () => {
+    it('should double bind', () => testInputProperty('fillToFit', false))
+    it('should expose setter function', () => testInputPropSetFunc('fillToFit', 'setFillToFit', false))
+    it('should start with token value', () =>
+      expect(createSut().instance.fillToFit).toEqual(TestBed.get(FLO_GRID_LIST_FILL_TO_FIT)))
+    it('should start with default token value', () =>
+      expect(createSut().instance.fillToFit).toEqual(DEFAULT_FLO_GRID_LIST_FILL_TO_FIT))
+
+    it('should configure via module', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridTestingModule, FloGridListModule.config({
+          overlay: {
+            throttle: 6000,
+            fadeout: 1
+          },
+          fillToFit: true
+        })]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const elms = sut.fixture.queryAll(By.css('.fill-to-fit'))
+
+      expect(elms.length).toEqual(1)
+    })
+
+    it('should configure via module', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridTestingModule, FloGridListModule.config({
+          overlay: {
+            throttle: 6000,
+            fadeout: 1
+          },
+          fillToFit: false
+        })]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const elms = sut.fixture.queryAll(By.css('.fill-to-fit'))
+
+      expect(elms.length).toEqual(0)
     })
   })
 
@@ -480,7 +533,7 @@ describe(FloGridListViewComponent.name, () => {
     it('should hide when enabled on on platform server', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
-        imports: [FloGridListModule.config({ overlay: { enabled: false }})],
+        imports: [FloGridListModule.config({ overlay: { enabled: false } })],
         declarations: [FloGridTilesTestComponent],
         providers: [{
           provide: PLATFORM_ID,
