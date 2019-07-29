@@ -1,9 +1,7 @@
 import { Component, NgModule, Input, SimpleChange } from '@angular/core'
-import { TestBed, async } from '@angular/core/testing'
+import { TestBed } from '@angular/core/testing'
 import { MseDirective } from './mse.directive'
 import { By } from '@angular/platform-browser'
-import { Subject, ObjectUnsubscribedError } from 'rxjs'
-import { take } from 'rxjs/operators'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
@@ -41,11 +39,12 @@ export interface HlsMessage {
 
 @Component({
   selector: 'flo-test-component',
-  template: '<video controls floMse [src]="src"></video>'
+  template: '<video controls [floMse]="enabled" [src]="src"></video>'
 })
 export class HlsTestComponent {
-  // tslint:disable-next-line:readonly-keyword
+  // tslint:disable:readonly-keyword
   @Input() public src?: string = PRIMARY_SRC
+  @Input() public enabled: any = true
 }
 
 @NgModule({
@@ -126,18 +125,9 @@ const shouldCompilerDirective = done => {
   done()
 }
 
-// const skipSrcChangeWhenValueIs = (sc: SimpleChange) => {
-//   const wrapper = createMseSut()
-//   const spy = spyOn((wrapper.instance as any)._srcChanges$, 'next')
-//   wrapper.instance.ngOnChanges({
-//     floHls: sc
-//   })
-//   expect(spy).not.toHaveBeenCalled()
-// }
-
 describe('rewrite these... problems', () => {
-  // beforeEach(() => setMseTestBed(true)(false) )
-  // afterEach(() => TestBed.resetTestingModule())
+  beforeEach(() => setMseTestBed(true)(false) )
+  afterEach(() => TestBed.resetTestingModule())
 
   // it('should not continue emitAndUnsubscribe when already unsubscribed', done => {
   //   const testSub = new Subject<any>()
@@ -169,7 +159,7 @@ describe('rewrite these... problems', () => {
 
   // it('should trigger source change task when MSE client is the diff type', () => {
   //   const wrapper = createMseSut()
-  //   const task = (wrapper.instance as any)._mseInitTask[2]
+  //   const task = (wrapper.instance as any)._mseInitTasks[0]
   //   const spy = spyOn(task, 'func').and.callThrough();
   //   (wrapper.hoist.componentInstance.src as any) = TEST_SOURCES.DASH.PARKOR
   //   wrapper.hoist.detectChanges()
@@ -200,16 +190,17 @@ describe('rewrite these... problems', () => {
   //   sut.hoist.detectChanges()
   //   expect(spy).toHaveBeenCalled()
   // })
-  // it('should set src', () => {
-  //   const wrapper = createMseSut()
-  //   const task = (wrapper.instance as any)
-  //   const spy = spyOn(task, '_setSrc').and.callThrough();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
-  //   wrapper.hoist.detectChanges();
-  //   (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
-  //   wrapper.hoist.detectChanges()
-  //   expect(spy).toHaveBeenCalled()
-  // })
+
+  it('should set src', () => {
+    const wrapper = createMseSut()
+    const task = (wrapper.instance as any)
+    const spy = spyOn(task, 'setSrcUrl').and.callThrough();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit1.file'
+    wrapper.hoist.detectChanges();
+    (wrapper.hoist.componentInstance.src as any) = 'noinit2.file'
+    wrapper.hoist.detectChanges()
+    expect(spy).toHaveBeenCalled()
+  })
 
   // it('should handle input newClientOnSrcChange', () => {
   //   const sut = createMseSut()
@@ -288,6 +279,59 @@ describe(`${MseDirective.name} when client supports Media Source Extensions`, ()
       src: new SimpleChange(PRIMARY_SRC, TEST_SOURCES.MP4.BUNNY, false)
     })
     expect(spy).toHaveBeenCalled()
+  })
+
+  describe('should allow for toggling of entire directive', () => {
+    it('', () => {
+      const sut = createMseSut()
+      const spy = spyOn(sut.instance as any, 'setSrcUrl')
+      sut.hoist.componentInstance.enabled = true
+      sut.hoist.detectChanges()
+
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('', () => {
+      const sut = createMseSut()
+      const spy = spyOn(sut.instance as any, 'setSrcUrl').and.callThrough()
+      sut.hoist.componentInstance.enabled = false
+      sut.hoist.detectChanges()
+
+      sut.instance.ngOnChanges({ src: { currentValue: PRIMARY_SRC } as any })
+      expect(sut.instance.enabled).toEqual(false)
+      expect(spy).toHaveBeenCalled()
+    })
+
+    it('', () => {
+      const sut = createMseSut()
+      const spy = spyOn(sut.instance as any, 'setSrcUrl').and.callThrough()
+      sut.hoist.componentInstance.enabled = ''
+      sut.hoist.detectChanges()
+
+      expect(sut.instance.enabled).toEqual(true)
+      expect(spy).not.toHaveBeenCalled()
+    })
+
+    it('', () => {
+      const sut = createMseSut()
+      const spy = spyOn(sut.instance as any, 'setSrcUrl').and.callThrough()
+      sut.hoist.componentInstance.enabled = 'false'
+      sut.hoist.detectChanges()
+      sut.instance.ngOnChanges({ src: { currentValue: PRIMARY_SRC } as any })
+
+      expect(sut.instance.enabled).toEqual(false)
+      expect(spy).toHaveBeenCalled()
+    })
+
+    it('', () => {
+      const sut = createMseSut()
+      const spy = spyOn(sut.instance as any, 'setSrcUrl').and.callThrough()
+      sut.hoist.componentInstance.enabled = 'true'
+      sut.hoist.detectChanges()
+
+      expect(sut.instance.enabled).toEqual(true)
+      expect(spy).not.toHaveBeenCalled()
+    })
   })
 })
 
