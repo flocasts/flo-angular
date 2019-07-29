@@ -3,13 +3,14 @@ import { ITrackByFn } from './grid/grid.component'
 
 export const FLO_GRID_LIST_ITEMS = new InjectionToken('fs.grid.list.items')
 
-export const FLO_GRID_LIST_COUNT = new InjectionToken('fs.grid.list.count')
-export const FLO_GRID_LIST_MIN_COUNT = new InjectionToken('fs.grid.list.count.min')
-export const FLO_GRID_LIST_MAX_COUNT = new InjectionToken('fs.grid.list.count.max')
-export const FLO_GRID_LIST_MAX_HEIGHT = new InjectionToken('fs.grid.list.maxheight')
-export const FLO_GRID_LIST_SELECTED_INDEX = new InjectionToken('fs.grid.list.selectedIndex')
-export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = new InjectionToken('fs.grid.list.selectNext')
-export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken('fs.grid.list.id.prefix')
+export const FLO_GRID_LIST_COUNT = new InjectionToken<number>('fs.grid.list.count')
+export const FLO_GRID_LIST_MIN_COUNT = new InjectionToken<number>('fs.grid.list.count.min')
+export const FLO_GRID_LIST_MAX_COUNT = new InjectionToken<number>('fs.grid.list.count.max')
+export const FLO_GRID_LIST_MAX_HEIGHT = new InjectionToken<number>('fs.grid.list.maxheight')
+export const FLO_GRID_LIST_SELECTED_INDEX = new InjectionToken<number>('fs.grid.list.selectedIndex')
+export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = new InjectionToken<boolean>('fs.grid.list.selectNext')
+export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken<string>('fs.grid.list.id.prefix')
+export const FLO_GRID_LIST_FILL_TO_FIT = new InjectionToken<boolean>('fs.grid.list.fill.fit')
 
 export const FLO_GRID_LIST_GUID_GEN = new InjectionToken('fs.grid.list.guid')
 

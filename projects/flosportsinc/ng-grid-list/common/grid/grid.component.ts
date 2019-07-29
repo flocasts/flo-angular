@@ -32,7 +32,8 @@ import {
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN,
-  FLO_GRID_LIST_CONTAINER_ID_PREFIX
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  FLO_GRID_LIST_FILL_TO_FIT
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -75,7 +76,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
     @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
-    @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string
+    @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
+    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean
   ) { }
 
   @HostListener('fullscreenchange')
@@ -349,6 +351,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.containerIdPrefix = prefix
   }
 
+  @Input()
+  get fillToFit() {
+    return this._fillToFit
+  }
+  set fillToFit(enable: boolean) {
+    this._fillToFit = enable
+    this.fillToFitChange.next(enable)
+  }
+
+  public setFillToFit(enable: boolean) {
+    this.fillToFit = enable
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -395,6 +410,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly containerIdPrefixChange = new Subject<string>()
+  @Output() public readonly fillToFitChange = new Subject<boolean>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 

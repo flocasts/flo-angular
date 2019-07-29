@@ -14,7 +14,8 @@ import {
   FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED, FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN, IFloGridListBaseItem,
-  FLO_GRID_LIST_CONTAINER_ID_PREFIX
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  FLO_GRID_LIST_FILL_TO_FIT
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -34,7 +35,8 @@ import {
   DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD,
   DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
-  DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX
+  DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  DEFAULT_FLO_GRID_LIST_FILL_TO_FIT
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
@@ -93,7 +95,8 @@ export function defaultFloGridListTrackByFn() {
     { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD },
     { provide: FLO_GRID_LIST_ASPECT_RATIO, useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO },
     { provide: FLO_GRID_LIST_TRACK_BY_FN, useFactory: defaultFloGridListTrackByFn },
-    { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX }
+    { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
+    { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: DEFAULT_FLO_GRID_LIST_FILL_TO_FIT }
   ]
 })
 export class FloGridListModule {
@@ -120,6 +123,7 @@ export class FloGridListModule {
         { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: cfg.list && cfg.list.fillInitialListValues !== undefined ? cfg.list.fillInitialListValues : DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
         { provide: FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, useValue: cfg.autoSelectNextEmptyOnCountChange !== undefined ? cfg.autoSelectNextEmptyOnCountChange : DEFAULT_FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY },
         { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: cfg.containerIdPrefix !== undefined ? cfg.containerIdPrefix : DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
+        { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: cfg.fillToFit !== undefined ? cfg.fillToFit : DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
       ]
     }
   }
