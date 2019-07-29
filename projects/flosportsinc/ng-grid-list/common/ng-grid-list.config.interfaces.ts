@@ -62,6 +62,12 @@ export interface FloGridListModuleConfiguration {
    */
   readonly syncServerAspectRatio: string | boolean
 
+  /**
+   * Prevent horizontal bars inside of grid tiles when media is not the correct aspect-ratio
+   * This will apply css { 'object-fill': 'cover' }, among others.
+   */
+  readonly fillToFit: boolean
+
   /** List configuration */
   readonly list: Partial<ListConfiguration>
 

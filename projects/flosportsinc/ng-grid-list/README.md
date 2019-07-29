@@ -33,14 +33,18 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
   imports: [
     FloGridListModule.config({
       autoSelectNextEmptyItem: false,
-      dragDropEnabled: true,
-      dragDropFromListsEnabled: true,
+      containerIdPrefix: '__fs_grid__',
+      fillToFit: true,
       items: [],
       count: 4,
       max: 25,
       min: 1,
       maxHeight: 600,
       selectedIndex: 0,
+      dragDrop: {
+        enabled: true,
+        allowedFromLists: true
+      },
       overlay: {
         throttle: 30,
         static: false,
