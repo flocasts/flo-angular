@@ -1,4 +1,7 @@
-import { Component, Input, ChangeDetectionStrategy, ContentChild, TemplateRef, HostBinding, HostListener, ElementRef } from '@angular/core'
+import {
+  Component, Input, ChangeDetectionStrategy, ContentChild, TemplateRef,
+  HostBinding, HostListener, ElementRef, ChangeDetectorRef, OnInit, OnDestroy
+} from '@angular/core'
 import {
   FloMediaPlayerPlayBtnControlTemplateDirective,
   FloMediaPlayerPlayBtnControlContentTemplateDirective,
@@ -6,27 +9,28 @@ import {
   FloMediaPlayerPauseBtnControlContentTemplateDirective
 } from './controller.directives'
 
+// tslint:disable: no-if-statement
+// tslint:disable: readonly-keyword
+
 @Component({
   selector: 'flo-media-player-controller',
   templateUrl: './controller.component.html',
   styleUrls: ['./controller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloMediaPlayerControllerComponent {
-  constructor(private elm: ElementRef<HTMLDivElement>) {}
+export class FloMediaPlayerControllerComponent implements OnInit, OnDestroy {
+  constructor(private elm: ElementRef<HTMLDivElement>, private cd: ChangeDetectorRef) { }
 
-  // tslint:disable: readonly-keyword
-  @HostBinding('class.fs') readonly fs  = true
-  @HostBinding('class.mp') readonly mp  = true
-  @HostBinding('class.controller') readonly controller  = true
+  @HostBinding('class.fs') readonly fs = true
+  @HostBinding('class.mp') readonly mp = true
+  @HostBinding('class.controller') readonly controller = true
   @HostBinding('class.hide')
-  get hidden() {
-    return false // !this.mediaRef || this.mediaRef.controls
+  get hide() {
+    return !this.mediaRef || this.mediaRef.controls
   }
 
   @HostListener('mousedown', ['$event'])
   mousedown(evt: MouseEvent) {
-    // tslint:disable-next-line: no-if-statement
     if (!(evt.target instanceof HTMLInputElement)) {
       evt.preventDefault()
     }
@@ -46,9 +50,24 @@ export class FloMediaPlayerControllerComponent {
   @ContentChild(FloMediaPlayerPauseBtnControlContentTemplateDirective, { read: TemplateRef })
   readonly floMpPauseContentTmpl: TemplateRef<HTMLButtonElement>
 
-  // tslint:disable: use-life-cycle-interface
+  private observer?: MutationObserver
+
   ngOnInit() {
-    // TODO: !!
+    this.cd.markForCheck()
     // tslint:disable-next-line: no-object-mutation
+    this.observer = new MutationObserver(records => {
+      if (records.filter(b => b.type === 'attributes').find(b => b.attributeName === 'controls')) {
+        this.cd.markForCheck()
+      }
+    })
+    this.observer.observe(this.mediaRef, {
+      childList: false,
+      attributes: true,
+      subtree: false
+    })
+  }
+
+  ngOnDestroy() {
+    if (this.observer) { this.observer.disconnect() }
   }
 }
