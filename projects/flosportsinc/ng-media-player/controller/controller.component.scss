@@ -2,8 +2,12 @@
   max-width: 100%; // TODO: config?
   background-color: black; // TODO: config?
   display: flex;
-  align-items: center;
-  justify-content: space-between;
+  flex-direction: column;
+  .grp {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   &.hide {
     display: none;
@@ -45,8 +49,5 @@
     .input.volume {
       width: 75px;
     }
-  }
-  .grp {
-    display: flex;
   }
 }
