@@ -1,8 +1,11 @@
-import { Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
+import {
+  Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID,
+  ElementRef, TemplateRef, ViewContainerRef, OnDestroy, OnInit
+} from '@angular/core'
 import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
-import { fromEvent, combineLatest } from 'rxjs'
+import { fromEvent, combineLatest, Subject, interval } from 'rxjs'
+import { map, distinctUntilChanged, takeUntil, tap } from 'rxjs/operators'
 import { isPlatformServer } from '@angular/common'
-import { map, distinctUntilChanged } from 'rxjs/operators'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -11,14 +14,16 @@ import { map, distinctUntilChanged } from 'rxjs/operators'
 @Directive({
   selector: '[floMpDuration]'
 })
-export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
-  constructor(private cd: ChangeDetectorRef, private elmRef: ElementRef<HTMLElement>, @Inject(PLATFORM_ID) protected platformId: string) {
+export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> implements
+  OnInit, OnDestroy {
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, private cd: ChangeDetectorRef,
+    @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }
 
   private _floMpDuration?: HTMLMediaElement
 
-  @Input('floMpDuration')
+  @Input('floMpDurationOf')
   get mediaRef() {
     return this._floMpDuration
   }
@@ -41,11 +46,15 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
     }
   }
 
-  // tslint:disable-next-line: use-life-cycle-interface
+  private destroy$ = new Subject()
+  private context = { $implicit: { current: this.formatdate(0), duration: this.formatdate(0) } }
+
   ngOnInit() {
-    if (isPlatformServer(this.platformId)) { return }
+    // if (isPlatformServer(this.platformId)) { return }
 
     if (this.mediaRef) {
+      this.vc.createEmbeddedView(this.tr, this.context)
+
       const timeupdate = fromEvent(this.mediaRef, 'timeupdate').pipe(
         map(evt => Math.floor((evt.target as HTMLMediaElement).currentTime)),
         distinctUntilChanged()
@@ -58,12 +67,19 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
         map(res => {
           return {
             current: this.formatdate(res[0]),
-            duratiion: this.formatdate(res[1])
+            duration: this.formatdate(res[1])
           }
-        })
+        }),
+        takeUntil(this.destroy$)
       ).subscribe(res => {
-        console.log(res)
+        this.context.$implicit = res
+        this.cd.markForCheck()
       })
     }
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next()
+    this.destroy$.complete()
   }
 }

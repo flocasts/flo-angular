@@ -1,4 +1,4 @@
-import { Component, Input, ChangeDetectionStrategy, ContentChild, TemplateRef, HostBinding, HostListener } from '@angular/core'
+import { Component, Input, ChangeDetectionStrategy, ContentChild, TemplateRef, HostBinding, HostListener, ElementRef } from '@angular/core'
 import {
   FloMediaPlayerPlayBtnControlTemplateDirective,
   FloMediaPlayerPlayBtnControlContentTemplateDirective,
@@ -13,9 +13,16 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FloMediaPlayerControllerComponent {
+  constructor(private elm: ElementRef<HTMLDivElement>) {}
+
+  // tslint:disable: readonly-keyword
   @HostBinding('class.fs') readonly fs  = true
   @HostBinding('class.mp') readonly mp  = true
   @HostBinding('class.controller') readonly controller  = true
+  @HostBinding('class.hide')
+  get hidden() {
+    return false // !this.mediaRef || this.mediaRef.controls
+  }
 
   @HostListener('mousedown', ['$event'])
   mousedown(evt: MouseEvent) {
@@ -41,7 +48,7 @@ export class FloMediaPlayerControllerComponent {
 
   // tslint:disable: use-life-cycle-interface
   ngOnInit() {
+    // TODO: !!
     // tslint:disable-next-line: no-object-mutation
-    this.mediaRef.controls = false
   }
 }

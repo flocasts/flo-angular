@@ -53,13 +53,20 @@
     </svg>
   </button>
   <input *floIfMediaAdjustableVolume class="fs mp input volume" [floMp]="mediaRef" floMpVolume type="range">
+
+  <!-- <div [floMp]="mediaRef" floMpDuration  class="test">
+    time here
+  </div> -->
+  <div *floMpDuration="let time of mediaRef" style="color: white;">
+    {{ time.current.formatted }} / {{ time.duration.formatted }}
+  </div>
 </span>
 
 <!-- RIGHT GROUP -->
 <span class="grp">
   <!-- SETTINGS MENU -->
 
-  <div *floMpDuration="mediaRef"></div>
+  
 
   <!-- REPEAT -->
   <button *floIfMediaLoopDisabled="mediaRef" [floMp]="mediaRef" floMpClickToEnableRepeat>

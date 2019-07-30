@@ -5,14 +5,22 @@
   align-items: center;
   justify-content: space-between;
 
+  &.hide {
+    display: none;
+  }
   &.fs.mp.controller {
+    .test {
+      display: flex;
+      align-items: center;
+      color: white;
+    }
     button, input {
       display: flex;
       border: none;
       background-color: transparent;
       color: white; // TODO: config?
       font-size: 16px;
-      padding: 0;
+      padding: 1px;
       margin: 0;
       svg {
         fill: white; // TODO: config?

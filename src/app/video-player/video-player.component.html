@@ -2,21 +2,21 @@
 
 <!-- <flo-media-player> -->
 <div style="max-width: 100%;">
-  <video #vidRef floMse playsinline controls width="600" src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
-  <flo-media-player-controller [mediaRef]="vidRef"></flo-media-player-controller>
+  <video #vidRef floMse playsinline controls width="600" src="https://cdn-florigin.flowrestling.org/streams/27270/playlist_1564211942000_1564227129128.m3u8"></video>
+  <flo-media-player-controller [mediaRef]="vidRef">
+
+  </flo-media-player-controller>
 </div>
 <!-- </flo-media-player> -->
 
 <!-- TODO: TIMELINE SCRUBBER -->
 <!-- TODO: PLAY NEXT (SKIP TO NEXT VIDEO) -->
 <!-- TODO: PLAY AGAIN AFTER ENDED (NOT LOOP) -->
-
 <!--
-<span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]" floMpClickToMute>Low</span>
-<span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]" floMpClickToMute>Medium</span>
-<span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]" floMpClickToMute>High</span>
+  <span *floIfVolumeRange="let ref from videoRef when range [0, 0.2]" floMpClickToMute>Low</span>
+  <span *floIfVolumeRange="let ref from videoRef when range [0.2, 0.5]" floMpClickToMute>Medium</span>
+  <span *floIfVolumeRange="let ref from videoRef when range [0.5, 1]" floMpClickToMute>High</span>
 -->
-
 <!--
   <input type="range" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
   <input type="number" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
