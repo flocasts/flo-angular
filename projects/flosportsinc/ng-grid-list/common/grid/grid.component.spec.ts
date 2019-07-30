@@ -1,7 +1,6 @@
 import { async, TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing'
 import { FloGridListViewComponent } from './grid.component'
 import { FloGridListModule } from '../ng-grid-list.module'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_ASPECT_RATIO } from '../ng-grid-list.module.defaults'
 import { take } from 'rxjs/operators'
 import { PLATFORM_ID, Component, NgModule } from '@angular/core'
 import { By } from '@angular/platform-browser'
@@ -10,9 +9,16 @@ import {
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
-  FLO_GRID_LIST_TRACK_BY_FN
+  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY, FLO_GRID_LIST_TRACK_BY_FN,
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  FLO_GRID_LIST_FILL_TO_FIT
 } from '../ng-grid-list.tokens'
+import {
+  DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+  DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
+  DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  DEFAULT_FLO_GRID_LIST_FILL_TO_FIT
+} from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -24,7 +30,7 @@ import {
       <div *floGridListOverlay>
         Overlay controls go here
       </div>
-      <div *floGridListItemSome="let item" class="some">{{ item.value.value }}</div>
+      <div *floGridListItemSome="let item" class="some" [attr.id]="'t_' + item.value.id">{{ item.value.value }}</div>
       <div *floGridListItemNone class="none">EMPTY</div>
     </flo-grid-list-view>
   `
@@ -44,10 +50,11 @@ const SAMPLE_ITEM_1 = { id: '1', prop: 'prop1' }
 const SAMPLE_ITEM_2 = { id: '2', prop: 'prop2' }
 const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
 
-const createSut = () => {
+const createSut = (detectChanges = true) => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
   const fixture = hoistFixture.debugElement.query(By.directive(FloGridListViewComponent))
-  hoistFixture.detectChanges()
+  // tslint:disable-next-line: no-if-statement
+  if (detectChanges) { hoistFixture.detectChanges() }
   return {
     hoistFixture,
     hoistInstance: fixture.componentInstance,
@@ -142,6 +149,101 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('maxheight', 400))
     it('should expose setter function', () => testInputPropSetFunc('maxheight', 'setMaxheight', 400))
     it('should start with token value', () => expect(createSut().instance.maxheight).toEqual(TestBed.get(FLO_GRID_LIST_MAX_HEIGHT)))
+  })
+
+  describe('containerIdPrefix property', () => {
+    it('should double bind', () => testInputProperty('containerIdPrefix', '_cool_prefx_yo_'))
+    it('should expose setter function', () => testInputPropSetFunc('containerIdPrefix', 'setContainerIdPrefix', '_cool_prefx_yo_'))
+    it('should start with token value', () =>
+      expect(createSut().instance.containerIdPrefix).toEqual(TestBed.get(FLO_GRID_LIST_CONTAINER_ID_PREFIX)))
+    it('should start with default token value', () =>
+      expect(createSut().instance.containerIdPrefix).toEqual(DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX))
+
+    it('should separate container IDs and content IDs', () => {
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const prefixedIds = sut.fixture.queryAll(By.css('#__fs_grid__1'))
+      const innerIds = sut.fixture.queryAll(By.css('#t_1'))
+
+      expect(prefixedIds.length).toEqual(1)
+      expect(innerIds.length).toEqual(1)
+    })
+
+    it('should configure via module', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridTestingModule, FloGridListModule.config({
+          overlay: {
+            throttle: 6000,
+            fadeout: 1
+          },
+          containerIdPrefix: '-test_prefix_config-'
+        })]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const prefixedIds = sut.fixture.queryAll(By.css('#-test_prefix_config-1'))
+      const innerIds = sut.fixture.queryAll(By.css('#t_1'))
+
+      expect(prefixedIds.length).toEqual(1)
+      expect(innerIds.length).toEqual(1)
+    })
+  })
+
+  describe('fillToFit property', () => {
+    it('should double bind', () => testInputProperty('fillToFit', false))
+    it('should expose setter function', () => testInputPropSetFunc('fillToFit', 'setFillToFit', false))
+    it('should start with token value', () =>
+      expect(createSut().instance.fillToFit).toEqual(TestBed.get(FLO_GRID_LIST_FILL_TO_FIT)))
+    it('should start with default token value', () =>
+      expect(createSut().instance.fillToFit).toEqual(DEFAULT_FLO_GRID_LIST_FILL_TO_FIT))
+
+    it('should configure via module', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridTestingModule, FloGridListModule.config({
+          overlay: {
+            throttle: 6000,
+            fadeout: 1
+          },
+          fillToFit: true
+        })]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const elms = sut.fixture.queryAll(By.css('.fill-to-fit'))
+
+      expect(elms.length).toEqual(1)
+    })
+
+    it('should configure via module', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridTestingModule, FloGridListModule.config({
+          overlay: {
+            throttle: 6000,
+            fadeout: 1
+          },
+          fillToFit: false
+        })]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoistInstance.items = [SAMPLE_ITEM_1]
+      sut.hoistFixture.detectChanges()
+
+      const elms = sut.fixture.queryAll(By.css('.fill-to-fit'))
+
+      expect(elms.length).toEqual(0)
+    })
   })
 
   describe('trackByFn property', () => {
@@ -405,10 +507,33 @@ describe(FloGridListViewComponent.name, () => {
       })
     })
 
-    it('should be ignored on platform server', async(() => {
+    it('should show when enabled on on platform server', async(() => {
       TestBed.resetTestingModule()
       TestBed.configureTestingModule({
-        imports: [FloGridListModule],
+        imports: [FloGridListModule.config({
+          overlay: { enabled: true }
+        })],
+        declarations: [FloGridTilesTestComponent],
+        providers: [{
+          provide: PLATFORM_ID,
+          useValue: 'server'
+        }]
+      }).compileComponents()
+      const sut = createSut()
+      sut.instance.hideOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(false)
+      })
+      sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
+        expect(res).toEqual(true)
+      })
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
+      expect(elementHasHiddenClass).toBeFalsy()
+    }))
+
+    it('should hide when enabled on on platform server', async(() => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule.config({ overlay: { enabled: false } })],
         declarations: [FloGridTilesTestComponent],
         providers: [{
           provide: PLATFORM_ID,
@@ -422,7 +547,7 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.showOverlay.pipe(take(1)).subscribe(res => {
         expect(res).toEqual(false)
       })
-      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.fg.list-overlay-hide'))
+      const elementHasHiddenClass = sut.hoistFixture.debugElement.query(By.css('.list-overlay-hide'))
       expect(elementHasHiddenClass).toBeTruthy()
     }))
   })

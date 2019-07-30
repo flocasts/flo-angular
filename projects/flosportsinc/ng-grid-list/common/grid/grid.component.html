@@ -17,12 +17,12 @@
         [floGridListDragDropGridRef]="this"
         [style.flex-basis.%]="item.flexBasis"
         [style.padding-top.%]="item.padTop"
-        [attr.id]="item?.value?.id || '__fs_gs_some__' + idx">
+        [attr.id]="item?.containerId">
         <ng-container [ngSwitch]="item.hasValue">
-          <div *ngSwitchCase="true" class="fg list-item-some">
+          <div *ngSwitchCase="true" class="fg list-item-some" [class.fill-to-fit]="fillToFit">
             <ng-container *ngTemplateOutlet="gridListItemSomeTemplate; context: { $implicit: item }"></ng-container>
           </div>
-          <div *ngSwitchCase="false" class="fg list-item-none">
+          <div *ngSwitchCase="false" class="fg list-item-none" [class.fill-to-fit]="fillToFit">
             <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
           </div>
         </ng-container>

@@ -5,8 +5,8 @@
 import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
-import { Subject, fromEvent, of, interval, merge, BehaviorSubject } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators'
+import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
+import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
 import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
@@ -31,7 +31,9 @@ import {
   IFloGridListBaseItem,
   FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
   FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_TRACK_BY_FN
+  FLO_GRID_LIST_TRACK_BY_FN,
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
+  FLO_GRID_LIST_FILL_TO_FIT
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -55,7 +57,7 @@ export type ITrackByFn<TItem extends IFloGridListBaseItem = IFloGridListBaseItem
 export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     public elmRef: ElementRef<HTMLElement>,
-    private _cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -73,7 +75,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_OVERLAY_NG_STYLE) private _overlayNgStyle: Object,
     @Inject(FLO_GRID_LIST_DRAG_DROP_ENABLED) private _dragDropEnabled: boolean,
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
-    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>
+    @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
+    @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
+    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean
   ) { }
 
   @HostListener('fullscreenchange')
@@ -91,7 +95,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   set items(items: ReadonlyArray<TItem | undefined>) {
     this._items = items
     this.itemsChange.next(items)
-    this._cdRef.markForCheck()
   }
 
   public setItems(items: ReadonlyArray<TItem | undefined>) {
@@ -335,6 +338,32 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.trackByFn = fn
   }
 
+  @Input()
+  get containerIdPrefix() {
+    return this._containerIdPrefix
+  }
+  set containerIdPrefix(prefix: string) {
+    this._containerIdPrefix = prefix
+    this.containerIdPrefixChange.next(prefix)
+  }
+
+  public setContainerIdPrefix(prefix: string) {
+    this.containerIdPrefix = prefix
+  }
+
+  @Input()
+  get fillToFit() {
+    return this._fillToFit
+  }
+  set fillToFit(enable: boolean) {
+    this._fillToFit = enable
+    this.fillToFitChange.next(enable)
+  }
+
+  public setFillToFit(enable: boolean) {
+    this.fillToFit = enable
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -380,6 +409,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
+  @Output() public readonly containerIdPrefixChange = new Subject<string>()
+  @Output() public readonly fillToFitChange = new Subject<boolean>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
@@ -403,7 +434,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
   public readonly fadeStream = (isPlatformServer(this._platformId)
-    ? of(false)
+    ? of(this.overlayEnabled)
     : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
@@ -424,8 +455,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public readonly cycleOverlay = () => {
     this.fadeoutIntervalReset.next(true)
-    this._cdRef.markForCheck()
+    this.cdRef.markForCheck()
   }
+
+  readonly constructContainerId = (token: string | number) => `${this.containerIdPrefix}${token}`
 
   createViewItems = () => {
     const square = Math.ceil(Math.sqrt(this.count))
@@ -443,20 +476,26 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         padTop: this.aspectRatioPercentage / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
-        isNotSelected: !isSelected
+        isNotSelected: !isSelected,
+        containerId: value.map(i => i.id)
+          .map(this.constructContainerId)
+          .valueOr(this.constructContainerId(idx))
       }
     })
   }
 
   update() {
     this.viewItemSource.next(this.createViewItems())
+    this.cdRef.detectChanges()
   }
 
   ngOnInit() {
-    if (isPlatformServer(this._platformId)) { return }
+    const takeByPlatform = <T>(source: Observable<T>) => isPlatformServer(this._platformId)
+      ? source.pipe(take(1))
+      : source.pipe(takeUntil(this.onDestroy))
 
-    this.fadeStream.pipe(takeUntil(this.onDestroy)).subscribe(show => this.toggleCursor(show))
-    this.cdRefChange.pipe(takeUntil(this.onDestroy)).subscribe(() => this.update())
+    this.fadeStream.pipe(takeByPlatform).subscribe(show => this.toggleCursor(show))
+    this.cdRefChange.pipe(takeByPlatform).subscribe(() => this.update())
   }
 
   ngAfterViewInit() {
@@ -467,7 +506,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
     merge(this.selectedIndexChange, this.itemsChange.pipe(map(() => this.selectedIndex))).pipe(
       startWith(this.selectedIndex),
-      tap(() => this._cdRef.detectChanges()),
       map(idx => maybe(this.gridItemContainers.toArray()[idx]).flatMapAuto(a => a.nativeElement)),
       map(e => e
         .flatMapAuto(elm => Array.from(elm.children)

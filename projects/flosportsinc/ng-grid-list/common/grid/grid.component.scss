@@ -2,6 +2,7 @@
   display: block;
   position: relative;
   background: black; // TODO: make a config value
+  overflow: hidden;
   &:fullscreen {
     position: inherit;
 
@@ -79,6 +80,13 @@
   
     &.list-cursor-hide {
       cursor: none;
+    }
+    &.fill-to-fit {
+      ::ng-deep> :first-child,
+      ::ng-deep>video {
+        object-fit: cover;
+        width: inherit;
+      }
     }
   }
 }

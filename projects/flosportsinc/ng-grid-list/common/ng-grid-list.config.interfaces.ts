@@ -46,6 +46,14 @@ export interface FloGridListModuleConfiguration {
   /** Starting selection box. Defaults to 0 */
   readonly selectedIndex: number
 
+  /**
+   * Prefix the grid-list-item container ID's so they do not conflict downstream
+   * if ID is used elsewhere in the application.
+   * Defaults to '__fs_grid__' which would give the outer div
+   * items the following pattern: <div id="__fs_grid__someItemId1"></div>
+   **/
+  readonly containerIdPrefix: string
+
   /** When view count increases, set selection box to next empty square  */
   readonly autoSelectNextEmptyOnCountChange: boolean
 
@@ -53,6 +61,12 @@ export interface FloGridListModuleConfiguration {
    *  defaults to 56.65% which is the reverse calculation for a 16/9 ratio
    */
   readonly syncServerAspectRatio: string | boolean
+
+  /**
+   * Prevent horizontal bars inside of grid tiles when media is not the correct aspect-ratio
+   * This will apply css { 'object-fill': 'cover' }, among others.
+   */
+  readonly fillToFit: boolean
 
   /** List configuration */
   readonly list: Partial<ListConfiguration>
