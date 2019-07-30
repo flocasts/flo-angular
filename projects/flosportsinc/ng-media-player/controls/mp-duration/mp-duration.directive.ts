@@ -77,6 +77,7 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
   }
 
   ngOnInit() {
+    // TODO: handle server platform
     // if (isPlatformServer(this.platformId)) { return }
 
     if (this.mediaRef) {
