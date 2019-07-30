@@ -2,15 +2,38 @@
   FETCH FILL
 </h1>
 
+<!-- <h3>Test Single Item Item</h3> -->
+
 <h3>Test Collection 1</h3>
-<ul floFetchFill>
-  <li floFetchFillItem="2"></li>
+<ul floFetchFill="geo">
+  <li>
+    <span>Item - 9684</span>
+    <span *floFetchFillItem="let response of 9684 usingOutputKey 9684">
+      Unavailable in your area {{ response.message }}
+    </span>
+  </li>
+  <li>
+    <span>Item - 9428</span>
+    <span *floFetchFillItem="let response of 9428 usingOutputKey 9428">
+      Unavailable in your area {{ response.message }}
+    </span>
+  </li>
 </ul>
 
-<!-- <h3>Test Collection 2</h3>
-<ul floFetchFill>
-  <li *ngFor="let item of items">
-    <span>{{ item.name }}</span>
-    <span [floFetchFillItem]="item.id"></span>
+<h3>Test Collection 2 (ngFor loop)</h3>
+<ul floFetchFill="geo">
+  <li *ngFor="let eventId of eventIds">
+    <span>Item - {{ eventId }}</span>
+    <span *floFetchFillItem="let response of eventId usingOutputKey eventId">
+      Unavailable in your area {{ response.message }}
+    </span>
+  </li>
+</ul>
+
+<!-- <h3>Test Collection 2 (ngFor loop)</h3>
+<ul floGeoIpInformationGroup>
+  <li *ngFor="let eventId of eventIds">
+    <span>Item - {{ eventId }}</span>
+    <flo-geo-information [eventId]="eventId"></flo-geo-information>
   </li>
 </ul> -->
