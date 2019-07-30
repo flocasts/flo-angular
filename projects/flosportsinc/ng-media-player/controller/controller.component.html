@@ -54,12 +54,13 @@
   </button>
   <input *floIfMediaAdjustableVolume class="fs mp input volume" [floMp]="mediaRef" floMpVolume type="range">
 
-  <!-- <div [floMp]="mediaRef" floMpDuration  class="test">
-    time here
-  </div> -->
-  <div *floMpDuration="let time of mediaRef" style="color: white;">
-    {{ time.current.formatted }} / {{ time.duration.formatted }}
-  </div>
+  <!-- CURRENT TIME -->
+  <button *floMpDuration="let time of mediaRef" [ngSwitch]="time.mode">
+    <span *ngSwitchDefault>{{ time.current.formatted }} / {{ time.duration.formatted }}</span>
+    <span *ngSwitchCase="0">{{ time.current.formatted }} / {{ time.duration.formatted }}</span>
+    <span *ngSwitchCase="1">{{ time.current.formatted }}</span>
+    <span *ngSwitchCase="2">-{{ time.remaining.formatted }}</span>
+  </button>
 </span>
 
 <!-- RIGHT GROUP -->
@@ -103,3 +104,10 @@
     </svg>
   </button>
 </span>
+
+
+<!--
+  <input type="range" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
+  <input type="number" [floMp]="vidRef" floMpPlaybackRate [(ngModel)]="value">
+  <button [floMp]="vidRef" floMpClickToSetPlaybackRate="2.0">2x</button>
+-->
