@@ -1,6 +1,7 @@
 import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, ChangeDetectorRef } from '@angular/core'
-import { Subject, fromEvent, merge, of } from 'rxjs'
-import { takeUntil, filter } from 'rxjs/operators'
+import { Subject, fromEvent, merge } from 'rxjs'
+import { takeUntil, mapTo, startWith } from 'rxjs/operators'
+import { either } from 'typescript-monads'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -12,32 +13,50 @@ export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnCha
   protected abstract biasRight: boolean
   protected abstract inputKey: string
 
+  attempt () {
+    if (!this.vc.length) {
+      const viewRef = this.vc.createEmbeddedView(this.tr)
+      const node = viewRef.rootNodes[0]
+      if (node) {
+        // node.focus()
+      }
+    }
+  }
+
   ngOnChanges(change: SimpleChanges) {
     const mediaRefInput = change[this.inputKey].currentValue
     if (mediaRefInput) {
       this.ngOnChanges$.next()
       if (mediaRefInput instanceof HTMLMediaElement) {
-        merge(of(mediaRefInput.paused).pipe(filter(Boolean)), fromEvent(mediaRefInput, 'pause'))
-          .pipe(takeUntil(this.ngOnChanges$))
-          .subscribe(() => {
-            if (this.biasRight && this.vc.length === 0) {
-              this.vc.createEmbeddedView(this.tr)
-            } else {
-              this.vc.clear()
-            }
-            this.cd.detectChanges()
-          })
+        const paused$ = fromEvent(mediaRefInput, 'pause').pipe(
+          mapTo(either<boolean, boolean>(undefined, true)),
+          startWith(mediaRefInput.paused ? either<boolean, boolean>(undefined, true) : either<boolean, boolean>(true, undefined))
+        )
 
-        merge(fromEvent(mediaRefInput, 'play'), fromEvent(mediaRefInput, 'playing'))
-          .pipe(takeUntil(this.ngOnChanges$))
-          .subscribe(() => {
-            if (this.biasRight) {
-              this.vc.clear()
-            } else if (this.vc.length === 0) {
-              this.vc.createEmbeddedView(this.tr)
+        const playing$ = merge(fromEvent(mediaRefInput, 'play'), fromEvent(mediaRefInput, 'playing')).pipe(
+          mapTo(either<boolean, boolean>(true, undefined)),
+          startWith(!mediaRefInput.paused ? either<boolean, boolean>(true, undefined) : either<boolean, boolean>(undefined, true))
+        )
+
+        merge(paused$, playing$).pipe(takeUntil(this.ngOnChanges$)).subscribe(res => {
+          res.tap({
+            left: () => {
+              if (!this.biasRight) {
+                this.attempt()
+              } else {
+                this.vc.clear()
+              }
+            },
+            right: () => {
+              if (this.biasRight) {
+                this.attempt()
+              } else {
+                this.vc.clear()
+              }
             }
-            this.cd.detectChanges()
           })
+          this.cd.markForCheck()
+        })
       }
     }
   }
@@ -49,6 +68,7 @@ export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnCha
 }
 
 const IF_MEDIA_PAUSED_SELECTOR = 'floIfMediaPaused'
+const IF_MEDIA_PLAYING_SELECTOR = 'floIfMediaPlaying'
 
 @Directive({
   selector: `[${IF_MEDIA_PAUSED_SELECTOR}]`,
@@ -61,8 +81,6 @@ export class FloMediaIfPausedDirective extends FloMediaPlayPauseBaseDirective {
   protected biasRight = true
   protected inputKey = IF_MEDIA_PAUSED_SELECTOR
 }
-
-const IF_MEDIA_PLAYING_SELECTOR = 'floIfMediaPlaying'
 
 @Directive({
   selector: `[${IF_MEDIA_PLAYING_SELECTOR}]`,
