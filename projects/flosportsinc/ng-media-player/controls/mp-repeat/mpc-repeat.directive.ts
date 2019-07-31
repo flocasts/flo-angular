@@ -1,5 +1,5 @@
 import { Directive, HostListener, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import {
   MEDIA_PLAYER_CONTROLS_ENABLE_REPEAT_FUNC, RepeatControlFunction,
   MEDIA_PLAYER_CONTROLS_DISABLE_REPEAT_FUNC
@@ -9,7 +9,7 @@ import {
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
-export abstract class FloMediaPlayerRepeatControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export abstract class FloMediaPlayerRepeatControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(protected cd: ChangeDetectorRef, protected elmRef: ElementRef<HTMLElement>,
     @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)

@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC, UnmuteControlFunction } from './mp-unmute.tokens'
 
 // tslint:disable: no-if-statement
@@ -9,7 +9,7 @@ import { MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC, UnmuteControlFunction } from './mp-u
 @Directive({
   selector: '[floMp][floMpClickToUnmute]'
 })
-export class FloMediaPlayerUnmuteControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerUnmuteControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private cd: ChangeDetectorRef, private elmRef: ElementRef<HTMLElement>,
     @Inject(MEDIA_PLAYER_CONTROLS_UNMUTE_FUNC) private func: UnmuteControlFunction,
     @Inject(PLATFORM_ID) protected platformId: string) {

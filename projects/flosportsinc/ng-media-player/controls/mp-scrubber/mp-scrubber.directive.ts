@@ -2,7 +2,7 @@ import {
   Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID,
   TemplateRef, ViewContainerRef, OnDestroy, OnInit, HostListener, ElementRef
 } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { fromEvent, combineLatest } from 'rxjs'
 import { map, distinctUntilChanged, startWith, debounceTime, takeUntil, tap, mapTo, debounce, skip } from 'rxjs/operators'
 
@@ -19,7 +19,7 @@ export enum FloMediaDurationViewMode {
 @Directive({
   selector: 'input[type="range"][floMp][floMpScrubber]'
 })
-export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> implements OnInit {
+export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements OnInit {
   constructor(private elmRef: ElementRef<HTMLInputElement>, private cd: ChangeDetectorRef,
     @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)

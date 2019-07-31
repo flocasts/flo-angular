@@ -1,4 +1,4 @@
-import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import {
@@ -12,7 +12,7 @@ import {
 @Directive({
   selector: 'input[type="range"][floMp][floMpVolume]'
 })
-export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
+export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta>
   implements OnChanges, OnDestroy {
   constructor(private elmRef: ElementRef<HTMLInputElement>,
     private cd: ChangeDetectorRef,

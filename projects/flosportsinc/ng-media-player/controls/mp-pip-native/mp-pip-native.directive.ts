@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { FloPictureInPictureNativeService } from './mp-pip-native.service'
 
 // tslint:disable: no-if-statement
@@ -9,7 +9,7 @@ import { FloPictureInPictureNativeService } from './mp-pip-native.service'
 @Directive({
   selector: '[floMp][floMpClickToEnterNativePip]'
 })
-export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef,
     @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
@@ -42,7 +42,7 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 @Directive({
   selector: '[floMp][floMpClickToExitNativePip]'
 })
-export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   private _floMpClickToExitNativePip?: string | boolean
 
   constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: string) {

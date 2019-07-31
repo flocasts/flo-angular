@@ -2,7 +2,7 @@ import {
   Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID,
   TemplateRef, ViewContainerRef, OnDestroy, OnInit
 } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { fromEvent, combineLatest, Subject, BehaviorSubject } from 'rxjs'
 import { map, distinctUntilChanged, takeUntil, tap, startWith, debounceTime } from 'rxjs/operators'
 import { isPlatformServer } from '@angular/common'
@@ -20,7 +20,7 @@ export enum FloMediaDurationViewMode {
 @Directive({
   selector: '[floMpDuration]'
 })
-export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> implements
+export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements
   OnInit, OnDestroy {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, private cd: ChangeDetectorRef,
     @Inject(PLATFORM_ID) protected platformId: string) {

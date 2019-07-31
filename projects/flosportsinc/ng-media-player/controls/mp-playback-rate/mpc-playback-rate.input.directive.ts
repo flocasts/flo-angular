@@ -2,7 +2,7 @@ import {
   Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef,
   PLATFORM_ID, OnChanges, SimpleChanges, OnInit
 } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 // import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mpc-play.tokens'
 
 // tslint:disable: no-if-statement
@@ -12,7 +12,7 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-
 @Directive({
   selector: 'input[type="range"][floMp][floMpPlaybackRate],input[type="number"][floMp][floMpPlaybackRate]',
 })
-export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta>
+export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta>
   implements OnInit, OnChanges {
   constructor(private elmRef: ElementRef<HTMLInputElement>,
     private cd: ChangeDetectorRef,

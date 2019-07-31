@@ -1,6 +1,6 @@
 import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
 import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './mp-pause.tokens'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -9,7 +9,7 @@ import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-
 @Directive({
   selector: '[floMp][floMpClickToPause]'
 })
-export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction,

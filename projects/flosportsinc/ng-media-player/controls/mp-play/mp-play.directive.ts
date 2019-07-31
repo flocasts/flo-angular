@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mp-play.tokens'
 
 // tslint:disable: no-if-statement
@@ -9,7 +9,7 @@ import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mp-play.
 @Directive({
   selector: '[floMp][floMpClickToPlay]',
 })
-export class FloMediaPlayerPlayControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerPlayControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
     @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,

@@ -2,7 +2,7 @@ import { Inject, PLATFORM_ID, Input } from '@angular/core'
 import { isPlatformBrowser } from '@angular/common'
 import { maybe } from 'typescript-monads'
 
-export abstract class FloMediaPlayerControlDirectiveBase<TMeta = any> {
+export abstract class FloMediaPlayerControlBaseDirective<TMeta = any> {
   constructor(@Inject(PLATFORM_ID) protected platformId: string) { }
 
   @Input() readonly floMp?: HTMLMediaElement

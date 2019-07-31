@@ -1,11 +1,11 @@
 import { Directive, Inject, ChangeDetectorRef, PLATFORM_ID, HostListener } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
-export abstract class FloMediaPlayerControlSkipDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export abstract class FloMediaPlayerControlSkipDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
     super(platformId)
   }

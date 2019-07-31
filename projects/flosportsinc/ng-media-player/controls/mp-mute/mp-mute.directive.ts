@@ -1,5 +1,5 @@
 import { Directive, Input, HostListener, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
-import { FloMediaPlayerControlDirectiveBase, coerceInputToBoolean } from '../mp-base.directive'
+import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mp-mute.tokens'
 
 // tslint:disable: no-if-statement
@@ -9,7 +9,7 @@ import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mp-mute.
 @Directive({
   selector: '[floMp][floMpClickToMute]'
 })
-export class FloMediaPlayerMuteControlDirective<TMeta = any> extends FloMediaPlayerControlDirectiveBase<TMeta> {
+export class FloMediaPlayerMuteControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private cd: ChangeDetectorRef, private elmRef: ElementRef<HTMLElement>,
     @Inject(MEDIA_PLAYER_CONTROLS_MUTE_FUNC) private func: MuteControlFunction,
     @Inject(PLATFORM_ID) protected platformId: string) {
