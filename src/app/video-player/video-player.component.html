@@ -4,9 +4,7 @@
 <div style="max-width: 100%;">
   <video #vidRef1 floMse playsinline width="500" (click)="setRef(vidRef1)" src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
   <video #vidRef2 floMse playsinline width="500" (click)="setRef(vidRef2)" src="https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8"></video>
-  <flo-media-player-controller [mediaRef]="ref || vidRef1">
-
-  </flo-media-player-controller>
+  <flo-media-player-controller [mediaRef]="ref || vidRef1"></flo-media-player-controller>
 </div>
 <!-- </flo-media-player> -->
 

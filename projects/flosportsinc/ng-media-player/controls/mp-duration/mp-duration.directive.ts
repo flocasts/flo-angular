@@ -1,10 +1,10 @@
 import {
   Directive, Input, ChangeDetectorRef,
-  TemplateRef, ViewContainerRef, OnDestroy, OnInit
+  TemplateRef, ViewContainerRef, OnDestroy, SimpleChanges, OnChanges
 } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
-import { fromEvent, combineLatest, Subject, BehaviorSubject } from 'rxjs'
-import { map, distinctUntilChanged, takeUntil, startWith, debounceTime } from 'rxjs/operators'
+import { fromEvent, combineLatest, Subject, BehaviorSubject, iif, of, merge } from 'rxjs'
+import { map, distinctUntilChanged, takeUntil, startWith, debounceTime, mapTo } from 'rxjs/operators'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -20,7 +20,7 @@ export enum FloMediaDurationViewMode {
   selector: '[floMpDuration]'
 })
 export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements
-  OnInit, OnDestroy {
+  OnChanges, OnDestroy {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, private cd: ChangeDetectorRef) {
     super()
   }
@@ -52,7 +52,7 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
     }
   }
 
-  private destroy$ = new Subject()
+  private changes$ = new Subject()
   private modeSource = new BehaviorSubject<FloMediaDurationViewMode>(FloMediaDurationViewMode.FULL)
   private displayMode$ = this.modeSource.asObservable()
   private context = {
@@ -74,26 +74,37 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
     }
   }
 
-  ngOnInit() {
+  ngOnChanges(sc: SimpleChanges) {
     // TODO: handle server platform
     // if (isPlatformServer(this.platformId)) { return }
-
+    this.changes$.next()
+    this.vc.clear()
     if (this.mediaRef) {
+      const mediaElm = this.mediaRef as HTMLMediaElement
       const viewRef = this.vc.createEmbeddedView(this.tr, this.context)
       const rootNode = viewRef.rootNodes[0] as HTMLElement
       rootNode.addEventListener('click', () => this.nextViewMode())
 
-      const timeupdate = fromEvent(this.mediaRef, 'timeupdate').pipe(
-        map(evt => Math.floor((evt.target as HTMLMediaElement).currentTime)),
-        distinctUntilChanged(),
-        startWith(0) // TODO: or some start time defined earlier
-      )
-      const durationchange = fromEvent(this.mediaRef, 'durationchange').pipe(
-        map(evt => parseInt('' + (evt.target as HTMLMediaElement).duration, 10))
+      const currentTime$ = fromEvent(mediaElm, 'timeupdate').pipe(
+        map(evt => (evt.target as HTMLMediaElement).currentTime),
+        startWith(mediaElm.currentTime), // TODO: or some start time defined earlier
+        map(a => Math.floor(a)),
+        distinctUntilChanged()
       )
 
-      combineLatest(timeupdate, durationchange, this.displayMode$).pipe(
-        debounceTime(30),
+      const durationchange = fromEvent(mediaElm, 'durationchange').pipe(
+        map(evt => parseInt('' + (evt.target as HTMLMediaElement).duration, 10)),
+        distinctUntilChanged()
+      )
+
+      const dur = (mediaElm as HTMLMediaElement).readyState >= 1
+        ? of(mediaElm.duration)
+        : fromEvent(mediaElm, 'loadedmetadata').pipe(map(evt => (evt.target as HTMLMediaElement).duration))
+
+      const duration$ = merge(durationchange, dur).pipe(map(a => Math.floor(a)))
+
+      combineLatest(currentTime$, duration$, this.displayMode$).pipe(
+        debounceTime(60),
         map(res => {
           return {
             mode: res[2],
@@ -102,7 +113,7 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
             remaining: this.formatdate(res[1] - res[0])
           }
         }),
-        takeUntil(this.destroy$)
+        takeUntil(this.changes$)
       ).subscribe(res => {
         this.context.$implicit = res
         this.cd.markForCheck()
@@ -111,7 +122,7 @@ export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMedi
   }
 
   ngOnDestroy() {
-    this.destroy$.next()
-    this.destroy$.complete()
+    this.changes$.next()
+    this.changes$.complete()
   }
 }
