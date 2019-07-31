@@ -7,6 +7,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoPlayerComponent {
-  // tslint:disable-next-line: readonly-keyword
+  // tslint:disable: readonly-keyword
   value = 1
+
+  ref: any
+
+  setRef(ref: any) {
+    // tslint:disable-next-line: no-object-mutation
+    this.ref = ref
+  }
 }
