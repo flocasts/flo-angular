@@ -58,7 +58,6 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
 }
 
 export const selfHealSwitch = (client: Hls, errorData: Hls.errorData) => {
-  // tslint:disable-next-line: no-if-statement
   if (!errorData.fatal) { return }
 
   const report = { type: errorData.type, details: errorData.details, fatal: true }

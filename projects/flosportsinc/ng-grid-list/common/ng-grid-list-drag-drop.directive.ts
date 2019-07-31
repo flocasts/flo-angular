@@ -7,7 +7,7 @@ interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
-// tslint:disable: no-if-statement
+
 @Directive({
   selector: '[floGridListDragDrop]',
 })

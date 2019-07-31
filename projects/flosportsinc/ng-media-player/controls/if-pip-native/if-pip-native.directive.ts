@@ -4,7 +4,6 @@ import { FloPictureInPictureNativeService } from '../mp-pip-native/mp-pip-native
 import { Subject, fromEvent, merge } from 'rxjs'
 import { DOCUMENT } from '@angular/common'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 
 export abstract class FloMediaPipNativeBaseDirective implements OnDestroy, OnChanges {

@@ -5,7 +5,6 @@ import {
   MEDIA_PLAYER_CONTROLS_DISABLE_REPEAT_FUNC
 } from './mpc-repeat.tokens'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 

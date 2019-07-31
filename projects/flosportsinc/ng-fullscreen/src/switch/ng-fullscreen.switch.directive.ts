@@ -8,7 +8,6 @@ import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { isIphone } from '../common/util'
 import { FS_FULLSCREEN_IOS_POLL_MS, FS_FULLSCREEN_IOS_POLL_ENABLED } from '../common/ng-fullscreen.tokens'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 export abstract class FloFullscreenDirective implements OnDestroy, OnInit, OnChanges {
   constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, protected fs: FloFullscreenService,

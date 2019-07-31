@@ -1,9 +1,8 @@
 import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Directive, ChangeDetectorRef } from '@angular/core'
 import { Subject, fromEvent, merge } from 'rxjs'
-import { takeUntil, mapTo, startWith } from 'rxjs/operators'
+import { takeUntil, mapTo, startWith, tap } from 'rxjs/operators'
 import { either } from 'typescript-monads'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 
 export abstract class FloMediaPlayPauseBaseDirective implements OnDestroy, OnChanges {

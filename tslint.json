@@ -132,7 +132,7 @@
     "no-delete": true,
     "no-method-signature": false,
     "no-expression-statement": false,
-    "no-if-statement": true,
+    "no-if-statement": false,
     "trackBy-function": true,
     "validate-decorators": [
       true,

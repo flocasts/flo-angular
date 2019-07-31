@@ -1,9 +1,8 @@
 import { Directive, ChangeDetectorRef, OnDestroy, HostListener, ElementRef, SimpleChanges, OnChanges } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
-import { map, takeUntil, startWith, tap, debounceTime } from 'rxjs/operators'
+import { map, takeUntil, startWith, tap, debounceTime, take, mapTo, distinctUntilChanged } from 'rxjs/operators'
 import { fromEvent, Subject, of, merge } from 'rxjs'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 
@@ -56,16 +55,19 @@ export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMedi
       this.cd.markForCheck()
       const duration$ = (media.readyState >= 1
         ? of(media.duration)
-        : fromEvent(media, 'loadedmetadata').pipe(map(evt => (evt.target as HTMLMediaElement).duration))).pipe(
+        : fromEvent(media, 'loadedmetadata').pipe(map(evt => (evt.target as HTMLMediaElement).duration)))
+        .pipe(
           map(Math.ceil),
           map(a => a - 1),
+          debounceTime(0),
           tap(duration => this.inputElement.max = duration.toString()))
 
       const timeupdate$ = fromEvent(media, 'timeupdate').pipe(
+        debounceTime(0),
         map(evt => (evt.target as HTMLMediaElement).currentTime),
         startWith(media.currentTime),
         map(Math.ceil),
-        debounceTime(0),
+        distinctUntilChanged(),
         tap(res => {
           this.inputElement.valueAsNumber = res
         }))

@@ -1,7 +1,5 @@
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
-import { DOCUMENT, isPlatformServer } from '@angular/common'
-
-// tslint:disable: no-if-statement
+import { DOCUMENT } from '@angular/common'
 
 export interface IFloPictureInPictureNativeService {
   readonly platformSupportsPip: (mediaElement: HTMLMediaElement | SafariPipStandardHTMLMediaElement) => boolean

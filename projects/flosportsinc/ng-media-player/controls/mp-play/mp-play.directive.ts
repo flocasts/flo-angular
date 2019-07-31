@@ -2,7 +2,6 @@ import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef }
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { VIDEO_PLAYER_CONTROLS_PLAY_FUNC, PlayControlFunction } from './mp-play.tokens'
 
-// tslint:disable: no-if-statement
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
 

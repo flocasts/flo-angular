@@ -9,8 +9,8 @@ import {
   FloMediaPlayerPauseBtnControlContentTemplateDirective
 } from './controller.directives'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
+// tslint:disable: no-object-mutation
 
 @Component({
   selector: 'flo-media-player-controller',
@@ -68,6 +68,11 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnD
   }
 
   ngOnChanges(sc: SimpleChanges) {
+    if (sc.mediaRef.previousValue) {
+      console.log(sc.mediaRef)
+      sc.mediaRef.previousValue.muted = true
+      sc.mediaRef.currentValue.muted = false
+    }
   }
 
   ngOnDestroy() {

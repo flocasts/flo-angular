@@ -6,7 +6,6 @@ import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { fromEvent, combineLatest, Subject, BehaviorSubject, iif, of, merge } from 'rxjs'
 import { map, distinctUntilChanged, takeUntil, startWith, debounceTime, mapTo } from 'rxjs/operators'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 

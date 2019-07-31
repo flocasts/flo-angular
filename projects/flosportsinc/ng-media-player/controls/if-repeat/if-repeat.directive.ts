@@ -2,7 +2,6 @@ import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Dir
 import { debounceTime, startWith, takeUntil } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 

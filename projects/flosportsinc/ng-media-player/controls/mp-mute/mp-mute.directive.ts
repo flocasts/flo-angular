@@ -2,7 +2,6 @@ import { Directive, Input, HostListener, Inject, ChangeDetectorRef, ElementRef }
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { MEDIA_PLAYER_CONTROLS_MUTE_FUNC, MuteControlFunction } from './mp-mute.tokens'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 

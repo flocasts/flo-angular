@@ -6,7 +6,6 @@ import {
 } from '@angular/core'
 
 // tslint:disable: no-object-mutation
-// tslint:disable: no-if-statement
 
 @Directive({
   selector: 'input[type="range"][floMp][floMpVolume]'

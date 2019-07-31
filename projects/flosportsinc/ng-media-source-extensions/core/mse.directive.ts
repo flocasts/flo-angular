@@ -22,8 +22,7 @@ import { maybe } from 'typescript-monads'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
-// tslint:disable: no-if-statement
-// tslint:disable:readonly-array
+// tslint:disable: readonly-array
 
 export interface IMseClientReadyEvent<TMseClient> {
   readonly mseClient: TMseClient

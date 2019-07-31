@@ -7,7 +7,6 @@ export function defaultUnmuteFactoryFunction(): UnmuteControlFunction {
   const lambda = (mediaRef: HTMLMediaElement, _elmRef: ElementRef<HTMLElement>, _meta: any) => {
     // tslint:disable: no-object-mutation
     mediaRef.muted = false
-    // tslint:disable-next-line: no-if-statement
     if (mediaRef.volume === 0) {
       mediaRef.volume = 1
     }

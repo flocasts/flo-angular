@@ -3,7 +3,6 @@ import { FloFullscreenService } from '../common/ng-fullscreen.service'
 import { take } from 'rxjs/operators'
 import { DOCUMENT } from '@angular/common'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 @Directive({

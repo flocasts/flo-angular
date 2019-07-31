@@ -2,7 +2,6 @@ import { Directive, Input, HostListener, ChangeDetectorRef } from '@angular/core
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { FloPictureInPictureNativeService } from './mp-pip-native.service'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 

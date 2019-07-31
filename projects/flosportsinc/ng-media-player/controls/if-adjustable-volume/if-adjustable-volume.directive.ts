@@ -1,7 +1,6 @@
 import { Directive, Input, TemplateRef, ViewContainerRef, Inject, OnInit, PLATFORM_ID } from '@angular/core'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 
-// tslint:disable: no-if-statement
 // tslint:disable: no-object-mutation
 
 @Directive({

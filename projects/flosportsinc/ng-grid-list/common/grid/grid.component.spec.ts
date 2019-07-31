@@ -53,7 +53,6 @@ const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
 const createSut = (detectChanges = true) => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
   const fixture = hoistFixture.debugElement.query(By.directive(FloGridListViewComponent))
-  // tslint:disable-next-line: no-if-statement
   if (detectChanges) { hoistFixture.detectChanges() }
   return {
     hoistFixture,
@@ -287,7 +286,6 @@ describe(FloGridListViewComponent.name, () => {
   describe('fullscreen', () => {
     it('no', () => {
       const sut = createSut()
-      // tslint:disable-next-line: no-if-statement
       if (window.outerHeight - window.innerHeight <= 1) {
         expect(sut.instance.isFullscreen()).toEqual(true)
       } else {

@@ -2,7 +2,6 @@ import { OnDestroy, OnChanges, TemplateRef, ViewContainerRef, SimpleChanges, Dir
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil, map, distinctUntilChanged, startWith } from 'rxjs/operators'
 
-// tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
 
 export abstract class FloMediaMutedBaseDirective implements OnDestroy, OnChanges {
