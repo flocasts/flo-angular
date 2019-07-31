@@ -1,10 +1,7 @@
-import {
-  Directive, Input, ChangeDetectorRef,
-  TemplateRef, ViewContainerRef, OnDestroy, OnInit, HostListener, ElementRef
-} from '@angular/core'
+import { Directive, ChangeDetectorRef, OnDestroy, HostListener, ElementRef, SimpleChanges, OnChanges } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
-import { fromEvent, combineLatest } from 'rxjs'
-import { map, distinctUntilChanged, startWith, debounceTime, takeUntil, tap, mapTo, debounce, skip } from 'rxjs/operators'
+import { map, takeUntil, startWith, tap, debounceTime } from 'rxjs/operators'
+import { fromEvent, Subject, of, merge } from 'rxjs'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -19,18 +16,24 @@ export enum FloMediaDurationViewMode {
 @Directive({
   selector: 'input[type="range"][floMp][floMpScrubber]'
 })
-export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements OnInit {
+export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta>
+  implements OnChanges, OnDestroy {
   constructor(private elmRef: ElementRef<HTMLInputElement>, private cd: ChangeDetectorRef) {
     super()
   }
-
-  wasPaused: any
 
   private readonly setVideoTime = (vol: number) => {
     this.mediaElementRef.tapSome(ve => {
       ve.currentTime = +vol
       this.cd.markForCheck()
     })
+  }
+
+  private changes = new Subject()
+  private changes$ = this.changes.asObservable()
+
+  get inputElement() {
+    return this.elmRef.nativeElement
   }
 
   @HostListener('change', ['$event'])
@@ -43,27 +46,38 @@ export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMedi
     this.setVideoTime((evt.target as HTMLInputElement).valueAsNumber)
   }
 
-  ngOnInit() {
-    this.elmRef.nativeElement.valueAsNumber = 0
-    this.elmRef.nativeElement.step = `1`
+  ngOnChanges(sc: SimpleChanges) {
+    if (!sc.mediaElementRef) { return }
 
-    this.mediaElementRef.tapSome(v => {
-      fromEvent(v, 'loadedmetadata').subscribe(s => {
-        this.elmRef.nativeElement.max = v.duration.toString()
-        this.cd.markForCheck()
-      })
+    this.changes.next()
+    this.inputElement.step = `1`
 
-      const timeupdate = fromEvent(v, 'timeupdate').pipe(
+    this.mediaElementRef.tapSome(media => {
+      this.cd.markForCheck()
+      const duration$ = (media.readyState >= 1
+        ? of(media.duration)
+        : fromEvent(media, 'loadedmetadata').pipe(map(evt => (evt.target as HTMLMediaElement).duration))).pipe(
+          map(Math.ceil),
+          map(a => a - 1),
+          tap(duration => this.inputElement.max = duration.toString()))
+
+      const timeupdate$ = fromEvent(media, 'timeupdate').pipe(
         map(evt => (evt.target as HTMLMediaElement).currentTime),
-        distinctUntilChanged()
-      )
+        startWith(media.currentTime),
+        map(Math.ceil),
+        debounceTime(0),
+        tap(res => {
+          this.inputElement.valueAsNumber = res
+        }))
 
-      timeupdate.pipe(
-        // takeUntil(this.destroy$)
-      ).subscribe(res => {
-        this.elmRef.nativeElement.valueAsNumber = res
+      merge(timeupdate$, duration$).pipe(takeUntil(this.changes$)).subscribe(() => {
         this.cd.markForCheck()
       })
     })
+  }
+
+  ngOnDestroy() {
+    this.changes.next()
+    this.changes.complete()
   }
 }

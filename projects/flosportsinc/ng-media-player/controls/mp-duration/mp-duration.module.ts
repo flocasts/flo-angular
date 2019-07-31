@@ -3,7 +3,6 @@ import { FloMediaPlayerDurationControlDirective } from './mp-duration.directive'
 
 @NgModule({
   declarations: [FloMediaPlayerDurationControlDirective],
-  exports: [FloMediaPlayerDurationControlDirective],
-  providers: []
+  exports: [FloMediaPlayerDurationControlDirective]
 })
 export class FloMediaPlayerControlsDurationModule { }

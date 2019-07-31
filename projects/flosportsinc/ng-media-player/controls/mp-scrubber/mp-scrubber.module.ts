@@ -3,7 +3,6 @@ import { FloMediaPlayerScrubberControlDirective } from './mp-scrubber.directive'
 
 @NgModule({
   declarations: [FloMediaPlayerScrubberControlDirective],
-  exports: [FloMediaPlayerScrubberControlDirective],
-  providers: []
+  exports: [FloMediaPlayerScrubberControlDirective]
 })
 export class FloMediaPlayerControlsScrubberModule { }

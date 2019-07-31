@@ -68,7 +68,6 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnD
   }
 
   ngOnChanges(sc: SimpleChanges) {
-    console.log(sc)
   }
 
   ngOnDestroy() {
