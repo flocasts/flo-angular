@@ -1,4 +1,4 @@
-import { Directive, HostListener, Inject, ChangeDetectorRef, PLATFORM_ID, ElementRef } from '@angular/core'
+import { Directive, HostListener, Inject, ChangeDetectorRef, ElementRef } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import {
   MEDIA_PLAYER_CONTROLS_ENABLE_REPEAT_FUNC, RepeatControlFunction,
@@ -10,9 +10,8 @@ import {
 // tslint:disable: no-object-mutation
 
 export abstract class FloMediaPlayerRepeatControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
-  constructor(protected cd: ChangeDetectorRef, protected elmRef: ElementRef<HTMLElement>,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+  constructor(protected cd: ChangeDetectorRef, protected elmRef: ElementRef<HTMLElement>) {
+    super()
   }
 
   protected abstract inputKey: string
@@ -22,7 +21,7 @@ export abstract class FloMediaPlayerRepeatControlDirective<TMeta = any> extends 
   click() {
     this.cd.detectChanges()
 
-    this.maybeMediaElement().tapSome(ve => {
+    this.mediaElementRef.tapSome(ve => {
       this.executionFunc(ve, this.elmRef, this.floMpMeta)
     })
   }
@@ -36,9 +35,8 @@ const ENABLE_SELECTOR = 'floMpClickToEnableRepeat'
 })
 export class FloMediaPlayerRepeatEnableControlDirective<TMeta = any> extends FloMediaPlayerRepeatControlDirective<TMeta> {
   constructor(protected cd: ChangeDetectorRef, protected elmRef: ElementRef<HTMLElement>,
-    @Inject(PLATFORM_ID) protected platformId: string,
     @Inject(MEDIA_PLAYER_CONTROLS_ENABLE_REPEAT_FUNC) protected func: RepeatControlFunction) {
-    super(cd, elmRef, platformId)
+    super(cd, elmRef)
   }
 
   inputKey = ENABLE_SELECTOR
@@ -53,9 +51,8 @@ const DISABLE_SELECTOR = 'floMpClickToDisableRepeat'
 })
 export class FloMediaPlayerRepeatDisableControlDirective<TMeta = any> extends FloMediaPlayerRepeatControlDirective<TMeta> {
   constructor(protected cd: ChangeDetectorRef, protected elmRef: ElementRef<HTMLElement>,
-    @Inject(PLATFORM_ID) protected platformId: string,
     @Inject(MEDIA_PLAYER_CONTROLS_DISABLE_REPEAT_FUNC) protected func: RepeatControlFunction) {
-    super(cd, elmRef, platformId)
+    super(cd, elmRef)
   }
 
   inputKey = DISABLE_SELECTOR

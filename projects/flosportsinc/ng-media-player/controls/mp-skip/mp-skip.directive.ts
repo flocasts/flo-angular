@@ -1,4 +1,4 @@
-import { Directive, Inject, ChangeDetectorRef, PLATFORM_ID, HostListener } from '@angular/core'
+import { Directive, ChangeDetectorRef, HostListener } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 
 // tslint:disable: no-if-statement
@@ -6,8 +6,8 @@ import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 // tslint:disable: no-object-mutation
 
 export abstract class FloMediaPlayerControlSkipDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
-  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+  constructor(protected cd: ChangeDetectorRef) {
+    super()
   }
 
   protected abstract skipTimeFunc: (videoElement: HTMLVideoElement) => void
@@ -30,7 +30,7 @@ export abstract class FloMediaPlayerControlSkipDirective<TMeta = any> extends Fl
 
     if (!input) { return }
 
-    this.maybeMediaElement()
+    this.mediaElementRef
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome(this.skipTimeFunc)
   }
@@ -43,8 +43,8 @@ const SKIP_BACK_SELECTOR = 'floMpClickToSkipBack'
   inputs: [SKIP_BACK_SELECTOR]
 })
 export class FloMediaPlayerControlSkipBackDirective<TMeta = any> extends FloMediaPlayerControlSkipDirective<TMeta> {
-  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
-    super(cd, platformId)
+  constructor(protected cd: ChangeDetectorRef) {
+    super(cd)
   }
   protected skipTimeFunc = (ve: HTMLVideoElement) => ve.currentTime = ve.currentTime - this.getInput()
   protected inputKey = SKIP_BACK_SELECTOR
@@ -57,8 +57,8 @@ const SKIP_FORWARD_SELECTOR = 'floMpClickToSkipForward'
   inputs: [SKIP_FORWARD_SELECTOR]
 })
 export class FloMediaPlayerControlSkipForwardDirective<TMeta = any> extends FloMediaPlayerControlSkipDirective<TMeta> {
-  constructor(protected cd: ChangeDetectorRef, @Inject(PLATFORM_ID) protected platformId: string) {
-    super(cd, platformId)
+  constructor(protected cd: ChangeDetectorRef) {
+    super(cd)
   }
   protected skipTimeFunc = (ve: HTMLVideoElement) => ve.currentTime = ve.currentTime + this.getInput()
   protected inputKey = SKIP_FORWARD_SELECTOR

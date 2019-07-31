@@ -1,5 +1,5 @@
 import {
-  Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID,
+  Directive, Input, ChangeDetectorRef,
   TemplateRef, ViewContainerRef, OnDestroy, OnInit, HostListener, ElementRef
 } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
@@ -20,15 +20,14 @@ export enum FloMediaDurationViewMode {
   selector: 'input[type="range"][floMp][floMpScrubber]'
 })
 export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements OnInit {
-  constructor(private elmRef: ElementRef<HTMLInputElement>, private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+  constructor(private elmRef: ElementRef<HTMLInputElement>, private cd: ChangeDetectorRef) {
+    super()
   }
 
   wasPaused: any
 
   private readonly setVideoTime = (vol: number) => {
-    this.maybeMediaElement().tapSome(ve => {
+    this.mediaElementRef.tapSome(ve => {
       ve.currentTime = +vol
       this.cd.markForCheck()
     })
@@ -48,7 +47,7 @@ export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMedi
     this.elmRef.nativeElement.valueAsNumber = 0
     this.elmRef.nativeElement.step = `1`
 
-    this.maybeMediaElement().tapSome(v => {
+    this.mediaElementRef.tapSome(v => {
       fromEvent(v, 'loadedmetadata').subscribe(s => {
         this.elmRef.nativeElement.max = v.duration.toString()
         this.cd.markForCheck()

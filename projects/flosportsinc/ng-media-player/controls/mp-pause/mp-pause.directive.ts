@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef, PLATFORM_ID } from '@angular/core'
+import { Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef } from '@angular/core'
 import { VIDEO_PLAYER_CONTROLS_PAUSE_FUNC, PauseControlFunction } from './mp-pause.tokens'
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 
@@ -12,9 +12,8 @@ import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-
 export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   constructor(private elmRef: ElementRef<HTMLElement>,
     private cd: ChangeDetectorRef,
-    @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+    @Inject(VIDEO_PLAYER_CONTROLS_PAUSE_FUNC) private func: PauseControlFunction) {
+    super()
   }
 
   private _floMpClickToPause?: string | boolean
@@ -33,6 +32,6 @@ export class FloMediaPlayerPauseControlDirective<TMeta = any> extends FloMediaPl
 
     if (!this.floMpClickToPause) { return }
 
-    this.maybeMediaElement().tapSome(ve => this.func(ve, this.elmRef, this.floMpMeta))
+    this.mediaElementRef.tapSome(ve => this.func(ve, this.elmRef, this.floMpMeta))
   }
 }

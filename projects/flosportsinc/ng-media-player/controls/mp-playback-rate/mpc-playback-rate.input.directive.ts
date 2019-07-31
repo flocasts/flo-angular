@@ -1,5 +1,5 @@
 import {
-  Directive, Input, HostListener, ElementRef, Inject, ChangeDetectorRef,
+  Directive, Input, HostListener, ElementRef, ChangeDetectorRef,
   PLATFORM_ID, OnChanges, SimpleChanges, OnInit
 } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
@@ -17,8 +17,8 @@ export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extend
   constructor(private elmRef: ElementRef<HTMLInputElement>,
     private cd: ChangeDetectorRef,
     // @Inject(VIDEO_PLAYER_CONTROLS_PLAY_FUNC) private func: PlayControlFunction,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+    ) {
+    super()
   }
 
   @Input() readonly min = '0'
@@ -34,7 +34,7 @@ export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extend
   }
 
   ngOnInit() {
-    this.maybeMediaElement().tapSome(v => {
+    this.mediaElementRef.tapSome(v => {
       this.elmRef.nativeElement.value = `${v.playbackRate}`
     })
   }
@@ -68,7 +68,7 @@ export class FloMediaPlayerPlaybackRateInputControlDirective<TMeta = any> extend
 
   private readonly setVideoPlaybackRate = (rate: number) => {
     this.cd.detectChanges()
-    this.maybeMediaElement().tapSome(ve => {
+    this.mediaElementRef.tapSome(ve => {
       ve.playbackRate = rate
     })
   }

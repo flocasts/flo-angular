@@ -1,4 +1,4 @@
-import { Directive, Input, HostListener, Inject, PLATFORM_ID, ChangeDetectorRef } from '@angular/core'
+import { Directive, Input, HostListener, ChangeDetectorRef } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective, coerceInputToBoolean } from '../mp-base.directive'
 import { FloPictureInPictureNativeService } from './mp-pip-native.service'
 
@@ -10,9 +10,8 @@ import { FloPictureInPictureNativeService } from './mp-pip-native.service'
   selector: '[floMp][floMpClickToEnterNativePip]'
 })
 export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
-  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef) {
+    super()
   }
 
   private _floMpClickToEnterNativePip?: string | boolean
@@ -31,7 +30,7 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 
     if (!this.floMpClickToEnterNativePip) { return }
 
-    this.maybeMediaElement()
+    this.mediaElementRef
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
         this.ps.enterPip(ve)
@@ -45,8 +44,8 @@ export class FloMediaPlayerControlPipNativeEnterDirective<TMeta = any> extends F
 export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> {
   private _floMpClickToExitNativePip?: string | boolean
 
-  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef, @Inject(PLATFORM_ID) platformId: string) {
-    super(platformId)
+  constructor(private ps: FloPictureInPictureNativeService, private cd: ChangeDetectorRef) {
+    super()
   }
 
   @Input()
@@ -63,7 +62,7 @@ export class FloMediaPlayerControlPipNativeExitDirective<TMeta = any> extends Fl
 
     if (!this.floMpClickToExitNativePip) { return }
 
-    this.maybeMediaElement()
+    this.mediaElementRef
       .filter(a => a instanceof HTMLVideoElement)
       .tapSome((ve: HTMLVideoElement) => {
         this.ps.exitPip(ve)

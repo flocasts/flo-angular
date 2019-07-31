@@ -2,8 +2,7 @@ import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { Subject, fromEvent } from 'rxjs'
 import { takeUntil } from 'rxjs/operators'
 import {
-  Directive, HostListener, ElementRef, Inject, PLATFORM_ID,
-  OnDestroy, OnChanges, SimpleChanges, Input, ChangeDetectorRef
+  Directive, HostListener, ElementRef, OnDestroy, OnChanges, SimpleChanges, Input, ChangeDetectorRef
 } from '@angular/core'
 
 // tslint:disable: no-object-mutation
@@ -15,9 +14,8 @@ import {
 export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta>
   implements OnChanges, OnDestroy {
   constructor(private elmRef: ElementRef<HTMLInputElement>,
-    private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+    private cd: ChangeDetectorRef) {
+    super()
   }
 
   @Input() readonly min = '0'
@@ -30,7 +28,7 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
   private readonly getCurrentInputValue = () => +this.elmRef.nativeElement.value
   private readonly setVideoVolume = (vol: number) => {
     this.cd.detectChanges()
-    this.maybeMediaElement().tapSome(ve => {
+    this.mediaElementRef.tapSome(ve => {
       if (ve.muted) {
         ve.volume = 0
         ve.muted = false
@@ -51,7 +49,7 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
 
     this.ngOnChange$.next()
 
-    this.maybeMediaElement().tapSome(ve => {
+    this.mediaElementRef.tapSome(ve => {
       fromEvent(ve, 'volumechange').pipe(takeUntil(this.ngOnChange$))
         .subscribe(_ => {
           if (ve.muted) {

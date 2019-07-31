@@ -1,11 +1,10 @@
 import {
-  Directive, Input, Inject, ChangeDetectorRef, PLATFORM_ID,
+  Directive, Input, ChangeDetectorRef,
   TemplateRef, ViewContainerRef, OnDestroy, OnInit
 } from '@angular/core'
 import { FloMediaPlayerControlBaseDirective } from '../mp-base.directive'
 import { fromEvent, combineLatest, Subject, BehaviorSubject } from 'rxjs'
-import { map, distinctUntilChanged, takeUntil, tap, startWith, debounceTime } from 'rxjs/operators'
-import { isPlatformServer } from '@angular/common'
+import { map, distinctUntilChanged, takeUntil, startWith, debounceTime } from 'rxjs/operators'
 
 // tslint:disable: no-if-statement
 // tslint:disable: readonly-keyword
@@ -22,9 +21,8 @@ export enum FloMediaDurationViewMode {
 })
 export class FloMediaPlayerDurationControlDirective<TMeta = any> extends FloMediaPlayerControlBaseDirective<TMeta> implements
   OnInit, OnDestroy {
-  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, private cd: ChangeDetectorRef,
-    @Inject(PLATFORM_ID) protected platformId: string) {
-    super(platformId)
+  constructor(protected tr: TemplateRef<any>, protected vc: ViewContainerRef, private cd: ChangeDetectorRef) {
+    super()
   }
 
   private _floMpDuration?: HTMLMediaElement
