@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core'
+import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
 
 @Component({
   selector: 'app-video-player',
@@ -8,12 +8,17 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
 })
 export class VideoPlayerComponent {
   // tslint:disable: readonly-keyword
+  // tslint:disable: no-object-mutation
   value = 1
-
   ref: any
 
+  @ViewChild('vidRef1') vidRef1: ElementRef<HTMLVideoElement>
+
+  ngAfterViewInit() {
+    this.ref = this.vidRef1.nativeElement
+  }
+
   setRef(ref: any) {
-    // tslint:disable-next-line: no-object-mutation
     this.ref = ref
   }
 }

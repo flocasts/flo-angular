@@ -1,6 +1,6 @@
 import {
   Component, Input, ChangeDetectionStrategy, ContentChild, TemplateRef,
-  HostBinding, HostListener, ElementRef, ChangeDetectorRef, OnInit, OnDestroy
+  HostBinding, HostListener, ElementRef, ChangeDetectorRef, OnInit, OnDestroy, SimpleChanges, OnChanges
 } from '@angular/core'
 import {
   FloMediaPlayerPlayBtnControlTemplateDirective,
@@ -18,7 +18,7 @@ import {
   styleUrls: ['./controller.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloMediaPlayerControllerComponent implements OnInit, OnDestroy {
+export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnDestroy {
   constructor(private elm: ElementRef<HTMLDivElement>, private cd: ChangeDetectorRef) { }
 
   @HostBinding('class.fs') readonly fs = true
@@ -26,7 +26,7 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnDestroy {
   @HostBinding('class.controller') readonly controller = true
   @HostBinding('class.hide')
   get hide() {
-    return !this.mediaRef || this.mediaRef.controls
+    return !this.mediaRef || !(this.mediaRef instanceof HTMLMediaElement) || this.mediaRef.controls
   }
 
   @HostListener('mousedown', ['$event'])
@@ -55,16 +55,20 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.cd.markForCheck()
     // tslint:disable-next-line: no-object-mutation
-    this.observer = new MutationObserver(records => {
-      if (records.filter(b => b.type === 'attributes').find(b => b.attributeName === 'controls')) {
-        this.cd.markForCheck()
-      }
-    })
-    this.observer.observe(this.mediaRef, {
-      childList: false,
-      attributes: true,
-      subtree: false
-    })
+    // this.observer = new MutationObserver(records => {
+    //   if (records.filter(b => b.type === 'attributes').find(b => b.attributeName === 'controls')) {
+    //     this.cd.markForCheck()
+    //   }
+    // })
+    // this.observer.observe(this.mediaRef, {
+    //   childList: false,
+    //   attributes: true,
+    //   subtree: false
+    // })
+  }
+
+  ngOnChanges(sc: SimpleChanges) {
+    console.log(sc)
   }
 
   ngOnDestroy() {
