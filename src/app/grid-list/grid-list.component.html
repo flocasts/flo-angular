@@ -15,10 +15,8 @@
       <button (click)="gridRef.setCount(25)" [disabled]="gridRef.isCount(25)">25</button>
       <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
       <button (click)="list.autoFill()">AUTOFILL</button>
-      <button *floIfFullscreen="fsElementRef" floClickToExitFullscreen>EXIT FULLSCREEN</button>
-      <button *floIfNotFullscreen="fsElementRef" [floClickToEnterFullscreen]="fsElementRef">FULLSCREEN</button>
     </div>
-    <flo-media-player-controller [mediaRef]="currentElm"></flo-media-player-controller>
+    <flo-media-player-controller [mediaRef]="currentElm" [fullscreenRef]="gridRef.elmRef.nativeElement"></flo-media-player-controller>
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" #vid floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>

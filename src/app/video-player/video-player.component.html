@@ -1,11 +1,9 @@
 <h2>Flo Media Player Suite</h2>
 
 <!-- <flo-media-player> -->
-<!-- <div style="max-width: 100%;"> -->
-  <video #vidRef1 floMse autoplay playsinline width="500" [class.outlined]="ref === vidRef1" (click)="setRef(vidRef1)" src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
-  <video #vidRef2 floMse autoplay playsinline width="500" [class.outlined]="ref === vidRef2" (click)="setRef(vidRef2)" src="https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8"></video>
-  <flo-media-player-controller [mediaRef]="ref || vidRef1"></flo-media-player-controller>
-<!-- </div> -->
+<video #vidRef1 floMse playsinline width="500" [muted]="ref !== vidRef1" [class.outlined]="ref === vidRef1" (click)="setRef(vidRef1)" src="https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8"></video>
+<video #vidRef2 floMse playsinline width="500" [muted]="ref !== vidRef2" [class.outlined]="ref === vidRef2" (click)="setRef(vidRef2)" src="https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8"></video>
+<flo-media-player-controller [mediaRef]="ref"></flo-media-player-controller>
 <!-- </flo-media-player> -->
 
 <!-- TODO: TIMELINE SCRUBBER -->

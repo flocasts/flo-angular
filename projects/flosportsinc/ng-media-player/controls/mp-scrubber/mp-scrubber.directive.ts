@@ -24,7 +24,7 @@ export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMedi
   private readonly setVideoTime = (vol: number) => {
     this.mediaElementRef.tapSome(ve => {
       ve.currentTime = +vol
-      this.cd.markForCheck()
+      this.cd.detectChanges()
     })
   }
 
@@ -73,7 +73,7 @@ export class FloMediaPlayerScrubberControlDirective<TMeta = any> extends FloMedi
         }))
 
       merge(timeupdate$, duration$).pipe(takeUntil(this.changes$)).subscribe(() => {
-        this.cd.markForCheck()
+        this.cd.detectChanges()
       })
     })
   }

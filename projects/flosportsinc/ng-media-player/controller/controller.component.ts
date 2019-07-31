@@ -38,6 +38,18 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnD
 
   @Input() readonly mediaRef: HTMLMediaElement
 
+  private _fullscreenRef: HTMLElement
+
+  @Input()
+  get fullscreenRef() {
+    return this._fullscreenRef || this.mediaRef
+  }
+  set fullscreenRef(val: HTMLElement) {
+    this._fullscreenRef = val instanceof HTMLElement
+      ? val
+      : this.mediaRef
+  }
+
   @ContentChild(FloMediaPlayerPlayBtnControlTemplateDirective, { read: TemplateRef })
   readonly floMpPlayTmpl: TemplateRef<HTMLElement>
 
@@ -68,11 +80,10 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnD
   }
 
   ngOnChanges(sc: SimpleChanges) {
-    if (sc.mediaRef.previousValue) {
-      console.log(sc.mediaRef)
-      sc.mediaRef.previousValue.muted = true
-      sc.mediaRef.currentValue.muted = false
-    }
+    // if (sc.mediaRef.previousValue) {
+    //   sc.mediaRef.previousValue.muted = true
+    //   sc.mediaRef.currentValue.muted = false
+    // }
   }
 
   ngOnDestroy() {
