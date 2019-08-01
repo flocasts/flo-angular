@@ -71,6 +71,7 @@ export class FloMediaPlayerControlVolumeDirective<TMeta = any> extends FloMediaP
   }
 
   ngOnDestroy() {
+    this.ngOnChange$.next()
     this.ngOnChange$.complete()
   }
 }

@@ -23,10 +23,9 @@ export abstract class FloMediaMutedBaseDirective implements OnDestroy, OnChanges
           distinctUntilChanged(),
           takeUntil(this.ngOnChanges$))
           .subscribe(isMuted => {
+            this.vc.clear()
             if (this.biasRight && !isMuted || !this.biasRight && isMuted) {
               this.vc.createEmbeddedView(this.tr)
-            } else {
-              this.vc.clear()
             }
           })
       }

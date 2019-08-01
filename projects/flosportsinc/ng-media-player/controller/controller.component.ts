@@ -80,6 +80,7 @@ export class FloMediaPlayerControllerComponent implements OnInit, OnChanges, OnD
   }
 
   ngOnChanges(sc: SimpleChanges) {
+    // this.cd.markForCheck()
     // if (sc.mediaRef.previousValue) {
     //   sc.mediaRef.previousValue.muted = true
     //   sc.mediaRef.currentValue.muted = false

@@ -9,6 +9,9 @@
     justify-content: space-between;
   }
 
+  &.hide-when-no-media {
+    visibility: hidden;
+  }
   &.hide {
     display: none;
   }
