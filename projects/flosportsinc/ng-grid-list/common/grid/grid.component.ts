@@ -33,7 +33,8 @@ import {
   FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  FLO_GRID_LIST_FILL_TO_FIT
+  FLO_GRID_LIST_FILL_TO_FIT,
+  FLO_GRID_LIST_DRAG_IMAGE_KEY
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -77,7 +78,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
     @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
     @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
-    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean
+    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_IMAGE_KEY) private _dragImageItemKey: string
   ) { }
 
   @HostListener('fullscreenchange')
@@ -364,6 +366,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.fillToFit = enable
   }
 
+  @Input()
+  get dragImageItemKey() {
+    return this._dragImageItemKey
+  }
+  set dragImageItemKey(key: string) {
+    this._dragImageItemKey = key
+    this.dragImageItemKeyChange.next(key)
+  }
+
+  public setDragImageItemKey(key: string) {
+    this.dragImageItemKey = key
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -411,6 +426,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly containerIdPrefixChange = new Subject<string>()
   @Output() public readonly fillToFitChange = new Subject<boolean>()
+  @Output() public readonly dragImageItemKeyChange = new Subject<string>()
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
@@ -472,6 +488,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       return {
         hasValue: value.isSome(),
         value: value.valueOrUndefined(),
+        dragImage: value.map(v => v[this.dragImageItemKey]).valueOrUndefined(),
         flexBasis: 100 / square,
         padTop: this.aspectRatioPercentage / square,
         isShowingBorder: isSelected && this.count > 1,
