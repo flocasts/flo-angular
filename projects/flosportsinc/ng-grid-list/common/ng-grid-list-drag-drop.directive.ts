@@ -58,27 +58,34 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     evt.preventDefault()
   }
 
+  private dragImageElmRef?: HTMLElement
+
   @HostListener('dragstart', ['$event']) dragstart(evt: DragEvent) {
     maybe(evt.dataTransfer)
       .tapSome(dt => {
         dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
         this.floGridListDragDropDragImage.tapSome(img => {
-          // console.log(evt)
-          img.style.maxWidth = '100%'
-          const h = (evt.target as HTMLElement).clientHeight
-          const w = (evt.target as HTMLElement).clientWidth
-          img.height = 100
-          img.width = 50
-          // const d = document.createElement('div')
-          // d.style.position = 'absolute'
-          // d.style.height = `${h}px`
-          // d.style.width = `${w}px`
-          // d.appendChild(img)
-          // document.body.appendChild(d)
-          // console.log(img)
-          dt.setDragImage(img, 0, 0)
+          const height = (evt.target as HTMLElement).clientHeight
+          const width = (evt.target as HTMLElement).clientWidth
+          const imgContainer = document.createElement('div')
+          img.style.width = '100%'
+          img.style.height = '100%'
+          imgContainer.style.position = 'absolute'
+          imgContainer.style.height = `${height}px`
+          imgContainer.style.width = `${width}px`
+          imgContainer.style.top = '0'
+          imgContainer.style.left = '-10000px'
+          imgContainer.appendChild(img)
+          document.body.appendChild(imgContainer)
+          this.dragImageElmRef = imgContainer
+          dt.setDragImage(imgContainer, evt.layerX, evt.layerY)
         })
       })
+  }
+
+  @HostListener('dragend', ['$event']) dragend(evt: DragEvent) {
+    evt.preventDefault()
+    if (this.dragImageElmRef) { this.dragImageElmRef.remove() }
   }
 
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
