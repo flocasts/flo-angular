@@ -13,8 +13,9 @@ interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
   selector: '[floGridListDragDrop]',
 })
 export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any) { }
+  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private _doc: any) { }
 
+  private _document = this._doc as HTMLDocument
   private _floGridListDragDrop = false
 
   @Input()
@@ -32,7 +33,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     return img
   }
 
-  private findImageInDom = (src: string) => maybe((this.doc as HTMLDocument).querySelector(`img[src="${src}"]`) as HTMLImageElement | null)
+  private findImageInDom = (src: string) => maybe(this._document.querySelector(`img[src="${src}"]`) as HTMLImageElement | null)
 
   @Input()
   get floGridListDragDropDragImage() {
@@ -54,11 +55,12 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropIndex: number
   @Input() floGridListDragDropGridRef?: FloGridListViewComponent<TItem>
 
-  @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
-    evt.preventDefault()
-  }
-
   private dragImageElmRef?: HTMLElement
+
+  private preventDefaults(evt: DragEvent) {
+    if (evt.preventDefault) { evt.preventDefault() }
+    if (evt.stopPropagation) { evt.stopPropagation() }
+  }
 
   @HostListener('dragstart', ['$event']) dragstart(evt: DragEvent) {
     maybe(evt.dataTransfer)
@@ -83,14 +85,37 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       })
   }
 
+  findUpTag(el: HTMLElement) {
+    while (el.parentNode) {
+      el = el.parentNode as any
+      if (el.classList.contains('list-item-container')) {
+        return el
+      }
+    }
+    return null
+  }
+
+  @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
+    this.preventDefaults(evt)
+    // console.log('PAINT ME', evt)
+
+    Array.from(this._document.querySelectorAll('.fg.dragover')).forEach(a => a.classList.remove('dragover'))
+    const z = this.findUpTag((evt.target as HTMLElement))
+    // (evt.target as HTMLElement).classList.add('fg', 'dragover')
+    if (z) {
+      z.classList.add('fg', 'dragover')
+    }
+  }
+
   @HostListener('dragend', ['$event']) dragend(evt: DragEvent) {
-    evt.preventDefault()
+    this.preventDefaults(evt)
+    Array.from(this._document.querySelectorAll('.fg.dragover')).forEach(a => a.classList.remove('dragover'))
     if (this.dragImageElmRef) { this.dragImageElmRef.remove() }
   }
 
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
-    if (evt.preventDefault) { evt.preventDefault() }
-    if (evt.stopPropagation) { evt.stopPropagation() }
+    this.preventDefaults(evt)
+    Array.from(this._document.querySelectorAll('.fg.dragover')).forEach(a => a.classList.remove('dragover'))
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
