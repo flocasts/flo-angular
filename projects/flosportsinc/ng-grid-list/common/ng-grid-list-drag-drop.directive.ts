@@ -1,7 +1,8 @@
-import { ElementRef, Directive, HostListener, Input } from '@angular/core'
+import { ElementRef, Directive, HostListener, Input, Inject } from '@angular/core'
 import { IFloGridListBaseItem } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe, IMaybe } from 'typescript-monads'
+import { DOCUMENT } from '@angular/common'
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
 
@@ -12,7 +13,7 @@ interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
   selector: '[floGridListDragDrop]',
 })
 export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>) { }
+  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any) { }
 
   private _floGridListDragDrop = false
 
@@ -31,6 +32,8 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     return img
   }
 
+  private findImageInDom = (src: string) => maybe((this.doc as HTMLDocument).querySelector(`img[src="${src}"]`) as HTMLImageElement | null)
+
   @Input()
   get floGridListDragDropDragImage() {
     return this._floGridListDragDropDragImage
@@ -38,8 +41,12 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   set floGridListDragDropDragImage(val: IMaybe<HTMLImageElement>) {
     this._floGridListDragDropDragImage = val instanceof HTMLImageElement
       ? maybe<HTMLImageElement>(val)
-      : typeof(val) === 'string'
-        ? maybe<HTMLImageElement>(this.createImg(val)) // TODO: this is last check, lookup dom references and clone node before this method
+      : typeof (val) === 'string'
+        ? this.findImageInDom(val as string)
+          .match({
+            some: maybe,
+            none: () => maybe<HTMLImageElement>(this.createImg(val))
+          })
         : maybe<HTMLImageElement>()
   }
 
