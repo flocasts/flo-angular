@@ -8,7 +8,8 @@ export const FLO_GRID_LIST_MIN_COUNT = new InjectionToken<number>('fs.grid.list.
 export const FLO_GRID_LIST_MAX_COUNT = new InjectionToken<number>('fs.grid.list.count.max')
 export const FLO_GRID_LIST_MAX_HEIGHT = new InjectionToken<number>('fs.grid.list.maxheight')
 export const FLO_GRID_LIST_SELECTED_INDEX = new InjectionToken<number>('fs.grid.list.selectedIndex')
-export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = new InjectionToken<boolean>('fs.grid.list.selectNext')
+export const FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT_CHANGE = new InjectionToken<boolean>('fs.grid.list.select.next.count')
+export const FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD = new InjectionToken<boolean>('fs.grid.list.select.next.add')
 export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken<string>('fs.grid.list.id.prefix')
 export const FLO_GRID_LIST_FILL_TO_FIT = new InjectionToken<boolean>('fs.grid.list.fill.fit')
 
