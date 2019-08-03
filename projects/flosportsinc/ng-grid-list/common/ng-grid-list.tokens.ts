@@ -11,7 +11,8 @@ export const FLO_GRID_LIST_SELECTED_INDEX = new InjectionToken<number>('fs.grid.
 export const FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY = new InjectionToken<boolean>('fs.grid.list.selectNext')
 export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken<string>('fs.grid.list.id.prefix')
 export const FLO_GRID_LIST_FILL_TO_FIT = new InjectionToken<boolean>('fs.grid.list.fill.fit')
-export const FLO_GRID_LIST_DRAG_IMAGE_KEY = new InjectionToken<boolean>('fs.grid.list.drag.img')
+export const FLO_GRID_LIST_DRAG_IMAGE_KEY = new InjectionToken<boolean>('fs.grid.list.drag.img.key')
+export const FLO_GRID_LIST_DRAG_IMAGE_DEFAULT = new InjectionToken<boolean>('fs.grid.list.drag.img.default')
 
 export const FLO_GRID_LIST_GUID_GEN = new InjectionToken('fs.grid.list.guid')
 

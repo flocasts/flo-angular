@@ -62,7 +62,22 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     maybe(evt.dataTransfer)
       .tapSome(dt => {
         dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
-        this.floGridListDragDropDragImage.tapSome(img => dt.setDragImage(img, 0, 0))
+        this.floGridListDragDropDragImage.tapSome(img => {
+          // console.log(evt)
+          img.style.maxWidth = '100%'
+          const h = (evt.target as HTMLElement).clientHeight
+          const w = (evt.target as HTMLElement).clientWidth
+          img.height = 100
+          img.width = 50
+          // const d = document.createElement('div')
+          // d.style.position = 'absolute'
+          // d.style.height = `${h}px`
+          // d.style.width = `${w}px`
+          // d.appendChild(img)
+          // document.body.appendChild(d)
+          // console.log(img)
+          dt.setDragImage(img, 0, 0)
+        })
       })
   }
 

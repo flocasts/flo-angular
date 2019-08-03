@@ -7,11 +7,11 @@
 <div class="fg mg-auto" style="display: flex; align-items: center;" [style.max-width.px]="baseMaxWidth">
   <div [style.padding-top.%]="aspectRatioPercentage"></div>
   <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
-    <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
+    <ng-container *ngFor="let item of viewItemChange | async; index as idx; let cnt = count; trackBy: trackByFn">
       <div #floGridListItemContainer
         class="fg list-item-container"
         (click)="setSelectedIndex(idx)"
-        [floGridListDragDrop]="dragDropEnabled"
+        [floGridListDragDrop]="dragDropEnabled && cnt > 1"
         [floGridListDragDropItem]="item.value"
         [floGridListDragDropIndex]="idx"
         [floGridListDragDropGridRef]="this"

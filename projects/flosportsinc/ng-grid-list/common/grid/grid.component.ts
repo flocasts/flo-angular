@@ -11,7 +11,7 @@ import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListI
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction
+  HostListener, AfterViewInit, TrackByFunction, Optional
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -34,7 +34,8 @@ import {
   FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   FLO_GRID_LIST_FILL_TO_FIT,
-  FLO_GRID_LIST_DRAG_IMAGE_KEY
+  FLO_GRID_LIST_DRAG_IMAGE_KEY,
+  FLO_GRID_LIST_DRAG_IMAGE_DEFAULT
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -79,7 +80,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
     @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
     @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
-    @Inject(FLO_GRID_LIST_DRAG_IMAGE_KEY) private _dragImageItemKey: string
+    @Inject(FLO_GRID_LIST_DRAG_IMAGE_KEY) private _dragImageItemKey: string,
+    @Optional() @Inject(FLO_GRID_LIST_DRAG_IMAGE_DEFAULT) private _dragImageDefault?: string
   ) { }
 
   @HostListener('fullscreenchange')
@@ -488,7 +490,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       return {
         hasValue: value.isSome(),
         value: value.valueOrUndefined(),
-        dragImage: value.map(v => v[this.dragImageItemKey]).valueOrUndefined(),
+        dragImage: value.map(v => v[this.dragImageItemKey]).valueOr(this._dragImageDefault),
         flexBasis: 100 / square,
         padTop: this.aspectRatioPercentage / square,
         isShowingBorder: isSelected && this.count > 1,
