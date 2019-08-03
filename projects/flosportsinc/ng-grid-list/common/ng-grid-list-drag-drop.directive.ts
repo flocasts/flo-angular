@@ -92,7 +92,6 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
     this.preventDefaults(evt)
-    Array.from(this._document.querySelectorAll('.fg.dragover')).forEach(a => a.classList.remove('dragover'))
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
