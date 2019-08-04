@@ -52,6 +52,7 @@ export class FloGridTestingModule { }
 const SAMPLE_ITEM_1 = { id: '1', prop: 'prop1' }
 const SAMPLE_ITEM_2 = { id: '2', prop: 'prop2' }
 const SAMPLE_ITEM_3 = { id: '3', prop: 'prop3' }
+const SAMPLE_ITEM_4 = { id: '4', prop: 'prop4' }
 
 const createSut = (detectChanges = true) => {
   const hoistFixture = TestBed.createComponent(FloGridTilesTestComponent)
@@ -441,6 +442,51 @@ describe(FloGridListViewComponent.name, () => {
       expect(createSut().instance.selectNextEmptyOnAdd).toEqual(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)))
     it('should start with default token value', () =>
       expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD))
+
+    it('configure from NgModule', () => {
+      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)
+
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule.config({ selectNextEmptyOnAdd: true })],
+        declarations: [FloGridTilesTestComponent]
+      }).compileComponents()
+
+      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(true)
+    })
+
+    describe('should select next empty when enabled', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ selectNextEmptyOnAdd: true })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+
+      it('basic case', () => {
+        const sut = createSut()
+        sut.instance.setCount(4)
+        sut.instance.setItems([SAMPLE_ITEM_1, SAMPLE_ITEM_2])
+        sut.instance.setItem(SAMPLE_ITEM_3, 2)
+        sut.hoistFixture.detectChanges()
+
+        expect(sut.instance.selectedIndex).toBe(3)
+        expect(sut.instance.items[2]).toEqual(SAMPLE_ITEM_3)
+        expect(sut.instance.items[3]).toBeUndefined()
+      })
+
+      it('ignoring when no empty slots are available', () => {
+        const sut = createSut()
+        sut.instance.setCount(2)
+        sut.instance.setItems([SAMPLE_ITEM_1, SAMPLE_ITEM_2, SAMPLE_ITEM_3])
+        sut.instance.setItem(SAMPLE_ITEM_4, 2)
+        sut.hoistFixture.detectChanges()
+
+        expect(sut.instance.selectedIndex).toBe(0)
+        expect(sut.instance.items[2]).toEqual(SAMPLE_ITEM_4)
+      })
+    })
   })
 
   describe('when count equals 1', () => {
