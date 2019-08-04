@@ -201,7 +201,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
-  public setSelectedIndex(index: number) {
+  public setSelectedIndex = (index: number) => {
     this.selectedIndex = index
     this.setSelectedIdViaIndex(index)
   }
@@ -460,9 +460,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
 
   public readonly trySelectNextEmpty = () =>
-    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex((b: any) => !b.hasValue))
+    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex(b => !b.hasValue))
       .filter(idx => idx >= 0)
-      .tapSome(idx => this.setSelectedIndex(idx))
+      .tapSome(this.setSelectedIndex)
 
   private readonly setSelectedIdViaIndex = (idx: number) => {
     this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())
@@ -598,8 +598,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
 
   public readonly setItem =
-    (item: TItem, idx = this.selectedIndex) =>
+    (item: TItem, idx = this.selectedIndex) => {
       this.setItemAtIndex(idx, item)
+      if (this.selectNextEmptyOnAdd) {
+        this.trySelectNextEmpty()
+      }
+    }
 
   public readonly removeItem =
     (item: TItem) =>
@@ -618,16 +622,16 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setItems(_cloned)
   }
 
-  public readonly swapItems = (item: TItem, idx = this.selectedIndex) => {
-    this.setItems(swapItemsViaIndices(this.items, idx, this.getItemIndex(item)))
-  }
+  public readonly swapItems =
+    (item: TItem, idx = this.selectedIndex) =>
+      this.setItems(swapItemsViaIndices(this.items, idx, this.getItemIndex(item)))
 
   public readonly resetItems = () => {
     this.items = []
     this.setSelectedId(undefined)
   }
 
-  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex((a: any) => !a.hasValue)
+  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex(a => !a.hasValue)
 
   public readonly fillNextEmpty =
     (item: TItem) =>
