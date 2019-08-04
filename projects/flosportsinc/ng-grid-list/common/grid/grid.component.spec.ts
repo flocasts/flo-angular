@@ -443,18 +443,6 @@ describe(FloGridListViewComponent.name, () => {
     it('should start with default token value', () =>
       expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD))
 
-    it('configure from NgModule', () => {
-      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)
-
-      TestBed.resetTestingModule()
-      TestBed.configureTestingModule({
-        imports: [FloGridListModule.config({ selectNextEmptyOnAdd: true })],
-        declarations: [FloGridTilesTestComponent]
-      }).compileComponents()
-
-      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(true)
-    })
-
     describe('should select next empty when enabled', () => {
       beforeEach(() => {
         TestBed.resetTestingModule()
@@ -462,6 +450,10 @@ describe(FloGridListViewComponent.name, () => {
           imports: [FloGridListModule.config({ selectNextEmptyOnAdd: true })],
           declarations: [FloGridTilesTestComponent]
         }).compileComponents()
+      })
+
+      it('configure from NgModule', () => {
+        expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(true)
       })
 
       it('basic case', () => {
