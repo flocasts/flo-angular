@@ -9,15 +9,18 @@ import {
   FLO_GRID_LIST_OVERLAY_START, FLO_GRID_LIST_OVERLAY_FADEOUT, FLO_GRID_LIST_OVERLAY_THROTTLE,
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
-  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT_CHANGE, FLO_GRID_LIST_TRACK_BY_FN,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  FLO_GRID_LIST_FILL_TO_FIT
+  FLO_GRID_LIST_FILL_TO_FIT,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD
 } from '../ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
   DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
   DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  DEFAULT_FLO_GRID_LIST_FILL_TO_FIT
+  DEFAULT_FLO_GRID_LIST_FILL_TO_FIT,
+  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
+  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT
 } from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
@@ -420,12 +423,24 @@ describe(FloGridListViewComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
   })
 
-  describe('selectNextEmptyOnCountChange property', () => {
-    it('should double bind', () => testInputProperty('selectNextEmptyOnCountChange', true))
+  describe('selectNextEmptyOnCount property', () => {
+    it('should double bind', () => testInputProperty('selectNextEmptyOnCount', true))
     it('should expose setter function', () =>
-      testInputPropSetFunc('selectNextEmptyOnCountChange', 'setSelectNextEmptyOnCountChange', true))
+      testInputPropSetFunc('selectNextEmptyOnCount', 'setSelectNextEmptyOnCount', true))
     it('should start with token value', () =>
-      expect(createSut().instance.selectNextEmptyOnCountChange).toEqual(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT_CHANGE)))
+      expect(createSut().instance.selectNextEmptyOnCount).toEqual(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT)))
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT))
+  })
+
+  describe('selectNextEmptyOnAdd property', () => {
+    it('should double bind', () => testInputProperty('selectNextEmptyOnAdd', true))
+    it('should expose setter function', () =>
+      testInputPropSetFunc('selectNextEmptyOnAdd', 'setSelectNextEmptyOnAdd', true))
+    it('should start with token value', () =>
+      expect(createSut().instance.selectNextEmptyOnAdd).toEqual(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)))
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD))
   })
 
   describe('when count equals 1', () => {
@@ -645,7 +660,7 @@ describe(FloGridListViewComponent.name, () => {
         TestBed.resetTestingModule()
         TestBed.configureTestingModule({
           imports: [FloGridTestingModule, FloGridListModule.config({
-            selectNextEmptyOnCountChange: true
+            selectNextEmptyOnCount: true
           })]
         }).compileComponents()
       })

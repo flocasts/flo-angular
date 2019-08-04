@@ -28,12 +28,13 @@ import {
   FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS,
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
-  IFloGridListBaseItem,
-  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT_CHANGE,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT,
   FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  FLO_GRID_LIST_FILL_TO_FIT
+  FLO_GRID_LIST_FILL_TO_FIT,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
+  IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -65,7 +66,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_MAX_COUNT) private _max: number,
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
-    @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT_CHANGE) private _selectNextEmptyOnCountChange: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT) private _selectNextEmptyOnCount: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD) private _selectNextEmptyOnAdd: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
@@ -114,7 +116,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
     if (this.selectedIndex >= val) { // Ensure seletedIndex doesn't go out of bounds visually
       this.setSelectedIndex(0)
-    } else if (this.selectNextEmptyOnCountChange) {
+    } else if (this.selectNextEmptyOnCount) {
       this.trySelectNextEmpty()
     }
   }
@@ -137,16 +139,29 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   @Input()
-  get selectNextEmptyOnCountChange() {
-    return this._selectNextEmptyOnCountChange
+  get selectNextEmptyOnCount() {
+    return this._selectNextEmptyOnCount
   }
-  set selectNextEmptyOnCountChange(val: boolean) {
-    this._selectNextEmptyOnCountChange = val
-    this.selectNextEmptyOnCountChangeChange.next(val)
+  set selectNextEmptyOnCount(val: boolean) {
+    this._selectNextEmptyOnCount = val
+    this.selectNextEmptyOnCountChange.next(val)
   }
 
-  public setSelectNextEmptyOnCountChange(val: boolean) {
-    this.selectNextEmptyOnCountChange = val
+  public setSelectNextEmptyOnCount(val: boolean) {
+    this.selectNextEmptyOnCount = val
+  }
+
+  @Input()
+  get selectNextEmptyOnAdd() {
+    return this._selectNextEmptyOnAdd
+  }
+  set selectNextEmptyOnAdd(val: boolean) {
+    this._selectNextEmptyOnAdd = val
+    this.selectNextEmptyOnAddChange.next(val)
+  }
+
+  public setSelectNextEmptyOnAdd(val: boolean) {
+    this.selectNextEmptyOnAdd = val
   }
 
   @Input()
@@ -406,7 +421,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
-  @Output() public readonly selectNextEmptyOnCountChangeChange = new Subject<boolean>()
+  @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
+  @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly containerIdPrefixChange = new Subject<string>()

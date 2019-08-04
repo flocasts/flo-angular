@@ -55,7 +55,7 @@ export interface FloGridListModuleConfiguration {
   readonly containerIdPrefix: string
 
   /** When view count increases, set selection box to next empty square  */
-  readonly selectNextEmptyOnCountChange: boolean
+  readonly selectNextEmptyOnCount: boolean
 
   /** When item is added (not via drag drop), set selection box to next empty square  */
   readonly selectNextEmptyOnAdd: boolean

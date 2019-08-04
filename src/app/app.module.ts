@@ -33,7 +33,8 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
   imports: [
     FloGridListModule.config({
       count: 2,
-      autoSelectNextEmptyOnCountChange: true
+      selectNextEmptyOnCountChange: true,
+      selectNextEmptyOnAdd: true
     }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
