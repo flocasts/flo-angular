@@ -1,7 +1,8 @@
 import {
   FloHlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
-  MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-  DEFAULT_MODULE_CONFIG,
+  MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+  MEDIA_SOURCE_EXTENSION_SELF_HEAL,
+  DEFAULT_MODULE_HLS_CONFIG,
   selfHealSwitch
 } from './hls.module'
 import { TestBed, async } from '@angular/core/testing'
@@ -148,10 +149,10 @@ describe(FloHlsModule.name, () => {
 
   describe('when using module config', () => {
     it('should handle empty config object', done => {
-      TestBed.configureTestingModule({ imports: [FloHlsModule.config()], declarations: [HlsTestComponent] })
+      TestBed.configureTestingModule({ imports: [FloHlsModule.config({})], declarations: [HlsTestComponent] })
 
-      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
-      expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_CONFIG)
+      expect(sut).toEqual(DEFAULT_MODULE_HLS_CONFIG)
       done()
     })
 
@@ -161,8 +162,8 @@ describe(FloHlsModule.name, () => {
         declarations: [HlsTestComponent]
       })
 
-      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG)
-      expect(sut).toEqual(DEFAULT_MODULE_CONFIG)
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_CONFIG)
+      expect(sut).toEqual(DEFAULT_MODULE_HLS_CONFIG)
       done()
     })
   })
