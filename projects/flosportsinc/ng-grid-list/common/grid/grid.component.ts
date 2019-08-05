@@ -28,12 +28,14 @@ import {
   FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS,
   FLO_GRID_LIST_DRAG_DROP_ENABLED,
-  IFloGridListBaseItem,
-  FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT,
   FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  FLO_GRID_LIST_FILL_TO_FIT
+  FLO_GRID_LIST_FILL_TO_FIT,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
+  IFloGridListBaseItem,
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -65,7 +67,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_MAX_COUNT) private _max: number,
     @Inject(FLO_GRID_LIST_MAX_HEIGHT) private _maxHeight: number,
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
-    @Inject(FLO_GRID_LIST_AUTO_SELECT_NEXT_EMPTY) private _shouldSelectNextEmpty: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT) private _selectNextEmptyOnCount: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD) private _selectNextEmptyOnAdd: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST) private _selectFromLowerIndicesFirst: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
@@ -114,7 +118,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
     if (this.selectedIndex >= val) { // Ensure seletedIndex doesn't go out of bounds visually
       this.setSelectedIndex(0)
-    } else if (this._shouldSelectNextEmpty) {
+    } else if (this.selectNextEmptyOnCount) {
       this.trySelectNextEmpty()
     }
   }
@@ -137,16 +141,42 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   @Input()
-  get shouldSelectNextEmpty() {
-    return this._shouldSelectNextEmpty
+  get selectNextEmptyOnCount() {
+    return this._selectNextEmptyOnCount
   }
-  set shouldSelectNextEmpty(val: boolean) {
-    this._shouldSelectNextEmpty = val
-    this.shouldSelectNextEmptyChange.next(val)
+  set selectNextEmptyOnCount(val: boolean) {
+    this._selectNextEmptyOnCount = val
+    this.selectNextEmptyOnCountChange.next(val)
   }
 
-  public setShouldSelectNextEmpty(val: boolean) {
-    this.shouldSelectNextEmpty = val
+  public setSelectNextEmptyOnCount(val: boolean) {
+    this.selectNextEmptyOnCount = val
+  }
+
+  @Input()
+  get selectNextEmptyOnAdd() {
+    return this._selectNextEmptyOnAdd
+  }
+  set selectNextEmptyOnAdd(val: boolean) {
+    this._selectNextEmptyOnAdd = val
+    this.selectNextEmptyOnAddChange.next(val)
+  }
+
+  public setSelectNextEmptyOnAdd(val: boolean) {
+    this.selectNextEmptyOnAdd = val
+  }
+
+  @Input()
+  get selectFromLowerIndicesFirst() {
+    return this._selectFromLowerIndicesFirst
+  }
+  set selectFromLowerIndicesFirst(val: boolean) {
+    this._selectFromLowerIndicesFirst = val
+    this.selectFromLowerIndicesFirstChange.next(val)
+  }
+
+  public setSelectFromLowerIndicesFirst(val: boolean) {
+    this.selectFromLowerIndicesFirst = val
   }
 
   @Input()
@@ -186,7 +216,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     }
   }
 
-  public setSelectedIndex(index: number) {
+  public setSelectedIndex = (index: number) => {
     this.selectedIndex = index
     this.setSelectedIdViaIndex(index)
   }
@@ -406,7 +436,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
-  @Output() public readonly shouldSelectNextEmptyChange = new Subject<boolean>()
+  @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
+  @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
+  @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly containerIdPrefixChange = new Subject<string>()
@@ -441,12 +473,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
-
-  public readonly trySelectNextEmpty = () =>
-    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex((b: any) => !b.hasValue))
-      .filter(idx => idx >= 0)
-      .tapSome(idx => this.setSelectedIndex(idx))
+  private readonly toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
+  public readonly trySelectNextEmpty = () => this.findNextEmptyIndex().tapSome(this.setSelectedIndex)
 
   private readonly setSelectedIdViaIndex = (idx: number) => {
     this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())
@@ -582,8 +610,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       this.isItemNotSelected(item) && !this.canAddItem(item, toIndex)
 
   public readonly setItem =
-    (item: TItem, idx = this.selectedIndex) =>
+    (item: TItem, idx = this.selectedIndex) => {
       this.setItemAtIndex(idx, item)
+      if (this.selectNextEmptyOnAdd) {
+        this.trySelectNextEmpty()
+      }
+    }
 
   public readonly removeItem =
     (item: TItem) =>
@@ -602,21 +634,31 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setItems(_cloned)
   }
 
-  public readonly swapItems = (item: TItem, idx = this.selectedIndex) => {
-    this.setItems(swapItemsViaIndices(this.items, idx, this.getItemIndex(item)))
-  }
+  public readonly swapItems =
+    (item: TItem, idx = this.selectedIndex) =>
+      this.setItems(swapItemsViaIndices(this.items, idx, this.getItemIndex(item)))
 
   public readonly resetItems = () => {
     this.items = []
     this.setSelectedId(undefined)
   }
 
-  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex((a: any) => !a.hasValue)
+  // TODO: TEST THIS SCENARIO!
+  public readonly findNextEmptyIndex = () => {
+    const findByBaseIndex = (startIndex = 0) => maybe(this.viewItemSource.getValue()
+      .slice(startIndex, this.count)
+      .findIndex(b => !b.hasValue))
+      .filter(idx => idx >= 0)
+      .map(a => a + startIndex)
+
+    return this.selectFromLowerIndicesFirst
+      ? findByBaseIndex()
+      : findByBaseIndex(this.selectedIndex).match({ some: maybe, none: findByBaseIndex })
+  }
 
   public readonly fillNextEmpty =
     (item: TItem) =>
-      maybe(this.findNextEmptyIndex())
-        .filter(idx => idx >= 0)
+      this.findNextEmptyIndex()
         .tapSome(idx => this.setItem(item, idx))
 
   private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode

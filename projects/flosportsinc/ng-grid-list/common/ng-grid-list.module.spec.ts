@@ -93,7 +93,8 @@ describe(FloGridListModule.name, () => {
         min: 4,
         selectedIndex: 1,
         maxHeight: 900,
-        autoSelectNextEmptyOnCountChange: false,
+        selectNextEmptyOnCount: false,
+        selectNextEmptyOnAdd: false,
         dragDrop: {
           enabled: false,
           allowFromLists: false

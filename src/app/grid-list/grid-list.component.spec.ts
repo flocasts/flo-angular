@@ -3,11 +3,12 @@ import { GridListComponent } from './grid-list.component'
 import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 import { By } from '@angular/platform-browser'
 import { FloFullscreenModule } from 'projects/flosportsinc/ng-fullscreen/src/ng-fullscreen.module'
+import { FormsModule } from '@angular/forms'
 
 describe(GridListComponent.name, () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [FloFullscreenModule, FloGridListModule],
+      imports: [FloFullscreenModule, FloGridListModule, FormsModule],
       declarations: [GridListComponent]
     }).compileComponents()
   }))
