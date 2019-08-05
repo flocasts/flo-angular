@@ -20,7 +20,8 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
     SvgTransferStateModule,
     FloGridListModule.config({
       count: 2,
-      autoSelectNextEmptyOnCountChange: true
+      selectNextEmptyOnCount: true,
+      selectNextEmptyOnAdd: true
     }),
     FloNodeEnvTransferModule.config({
       useValues: {

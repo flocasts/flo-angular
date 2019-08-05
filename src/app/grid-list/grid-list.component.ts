@@ -35,4 +35,9 @@ export class GridListComponent {
       ? this.currentElm
       : this.gridref.nativeElement
   }
+
+  public selectNextEmptyOnCount = true
+  public selectNextEmptyOnAdd = true
+  public selectFromLowerIndicesFirst = false
+  public maxheight = 600
 }
