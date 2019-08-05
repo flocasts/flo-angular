@@ -8,9 +8,10 @@ import {
 } from './mse.tokens'
 import { FloMseModule } from './mse.module'
 import {
-  FloHlsModule, DEFAULT_MODULE_CONFIG, MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG, defaultHlsSupportedNativelyFunction,
+  FloHlsModule, MEDIA_SOURCE_EXTENSION_HLS_CONFIG, defaultHlsSupportedNativelyFunction,
   defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientDestroyFunction,
-  defaultHlsPatternCheck
+  defaultHlsPatternCheck,
+  DEFAULT_MODULE_HLS_CONFIG
 } from '../hls/hls.module'
 import { FloDashModule } from '../dash/dash.module'
 import * as Hls from 'hls.js'
@@ -53,8 +54,8 @@ export class HlsTestComponent {
   exports: [HlsTestComponent],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-      useValue: DEFAULT_MODULE_CONFIG
+      provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+      useValue: DEFAULT_MODULE_HLS_CONFIG
     },
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
@@ -69,7 +70,7 @@ export class HlsTestComponent {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction,
-      deps: [MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG],
+      deps: [MEDIA_SOURCE_EXTENSION_HLS_CONFIG],
       multi: true
     },
     {
