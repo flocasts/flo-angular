@@ -60,6 +60,13 @@ export interface FloGridListModuleConfiguration {
   /** When item is added (not via drag drop), set selection box to next empty square  */
   readonly selectNextEmptyOnAdd: boolean
 
+  /**
+   * When calculating selection of empty grid space, setting this value true forces
+   * lower indcies (tiles to from the top left) to be chosen first.
+   * Default: false
+    */
+  readonly selectFromLowerIndicesFirst: boolean
+
   /** To prevent flickers from server rendered pages, enforce an aspect ratio.
    *  defaults to 56.65% which is the reverse calculation for a 16/9 ratio
    */

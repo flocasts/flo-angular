@@ -10,9 +10,8 @@ import {
   FLO_GRID_LIST_MAX_HEIGHT, FLO_GRID_LIST_SELECTED_INDEX, FLO_GRID_LIST_OVERLAY_STATIC,
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, FLO_GRID_LIST_TRACK_BY_FN,
-  FLO_GRID_LIST_CONTAINER_ID_PREFIX,
-  FLO_GRID_LIST_FILL_TO_FIT,
-  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD
+  FLO_GRID_LIST_CONTAINER_ID_PREFIX, FLO_GRID_LIST_FILL_TO_FIT,
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from '../ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
@@ -20,7 +19,8 @@ import {
   DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   DEFAULT_FLO_GRID_LIST_FILL_TO_FIT,
   DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
-  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT
+  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT,
+  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
@@ -422,6 +422,29 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('items', [{ id: '1' }]))
     it('should expose setter function', () => testInputPropSetFunc('items', 'setItems', [{ id: '1' }]))
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
+  })
+
+  describe('selectFromLowerIndicesFirst property', () => {
+    it('should double bind', () => testInputProperty('selectFromLowerIndicesFirst', true))
+    it('should expose setter function', () =>
+      testInputPropSetFunc('selectFromLowerIndicesFirst', 'setSelectFromLowerIndicesFirst', true))
+    it('should start with token value', () =>
+      expect(createSut().instance.selectFromLowerIndicesFirst).toEqual(TestBed.get(FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST)))
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST)).toEqual(DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST))
+
+    describe('when enabled', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ selectFromLowerIndicesFirst: true })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+      it('...', () => {
+        expect(createSut().instance.selectFromLowerIndicesFirst).toEqual(true)
+      })
+    })
   })
 
   describe('selectNextEmptyOnCount property', () => {
@@ -903,25 +926,25 @@ describe(FloGridListViewComponent.name, () => {
       sut.instance.setCount(4)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       tick(0)
-      expect(sut.instance.findNextEmptyIndex()).toEqual(1)
+      expect(sut.instance.findNextEmptyIndex().valueOrUndefined()).toEqual(1)
       discardPeriodicTasks()
     }))
 
-    it('should return -1 when no index is next', fakeAsync(() => {
+    it('should return undefined when no index is next', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(1)
       sut.hoistInstance.items = [SAMPLE_ITEM_1]
       tick(0)
-      expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
+      expect(sut.instance.findNextEmptyIndex().valueOrUndefined()).toBeUndefined()
       discardPeriodicTasks()
     }))
 
-    it('should return -1 when out of bounds', fakeAsync(() => {
+    it('should return undefined when out of bounds', fakeAsync(() => {
       const sut = createSut()
       sut.instance.setCount(2)
       sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
       tick(0)
-      expect(sut.instance.findNextEmptyIndex()).toEqual(-1)
+      expect(sut.instance.findNextEmptyIndex().valueOrUndefined()).toBeUndefined()
       discardPeriodicTasks()
     }))
   })

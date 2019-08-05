@@ -15,7 +15,8 @@ import {
   FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_TRACK_BY_FN, FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   FLO_GRID_LIST_FILL_TO_FIT, FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
-  IFloGridListBaseItem
+  IFloGridListBaseItem,
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -37,7 +38,8 @@ import {
   DEFAULT_FLO_GRID_LIST_ASPECT_RATIO,
   DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   DEFAULT_FLO_GRID_LIST_FILL_TO_FIT,
-  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD
+  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
+  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
@@ -85,6 +87,7 @@ export function defaultFloGridListTrackByFn() {
     { provide: FLO_GRID_LIST_SELECTED_INDEX, useValue: 0 },
     { provide: FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, useValue: DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT },
     { provide: FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, useValue: DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD },
+    { provide: FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST, useValue: DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST },
     { provide: FLO_GRID_LIST_OVERLAY_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_ENABLED },
     { provide: FLO_GRID_LIST_OVERLAY_STATIC, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_STATIC },
     { provide: FLO_GRID_LIST_OVERLAY_START, useValue: DEFAULT_FLO_GRID_LIST_OVERLAY_START },
@@ -125,6 +128,7 @@ export class FloGridListModule {
         { provide: FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD, useValue: cfg.list && cfg.list.fillInitialListValues !== undefined ? cfg.list.fillInitialListValues : DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED },
         { provide: FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, useValue: cfg.selectNextEmptyOnCount !== undefined ? cfg.selectNextEmptyOnCount : DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT },
         { provide: FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, useValue: cfg.selectNextEmptyOnAdd !== undefined ? cfg.selectNextEmptyOnAdd : DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD },
+        { provide: FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST, useValue: cfg.selectFromLowerIndicesFirst !== undefined ? cfg.selectFromLowerIndicesFirst : DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST },
         { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: cfg.containerIdPrefix !== undefined ? cfg.containerIdPrefix : DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
         { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: cfg.fillToFit !== undefined ? cfg.fillToFit : DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
       ]

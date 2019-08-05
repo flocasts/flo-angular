@@ -34,7 +34,8 @@ import {
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   FLO_GRID_LIST_FILL_TO_FIT,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
-  IFloGridListBaseItem
+  IFloGridListBaseItem,
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -68,6 +69,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_SELECTED_INDEX) private _selectedIndex: number,
     @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT) private _selectNextEmptyOnCount: boolean,
     @Inject(FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD) private _selectNextEmptyOnAdd: boolean,
+    @Inject(FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST) private _selectFromLowerIndicesFirst: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_ENABLED) private _overlayEnabled: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_START) private _overlayStart: boolean,
     @Inject(FLO_GRID_LIST_OVERLAY_FADEOUT) private _overlayFadeout: number,
@@ -162,6 +164,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public setSelectNextEmptyOnAdd(val: boolean) {
     this.selectNextEmptyOnAdd = val
+  }
+
+  @Input()
+  get selectFromLowerIndicesFirst() {
+    return this._selectFromLowerIndicesFirst
+  }
+  set selectFromLowerIndicesFirst(val: boolean) {
+    this._selectFromLowerIndicesFirst = val
+    this.selectFromLowerIndicesFirstChange.next(val)
+  }
+
+  public setSelectFromLowerIndicesFirst(val: boolean) {
+    this.selectFromLowerIndicesFirst = val
   }
 
   @Input()
@@ -423,6 +438,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
+  @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
   @Output() public readonly aspectRatioChange = new Subject<number>()
   @Output() public readonly trackByFnChange = new Subject<ITrackByFn<TItem>>()
   @Output() public readonly containerIdPrefixChange = new Subject<string>()
@@ -457,12 +473,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
-
-  public readonly trySelectNextEmpty = () =>
-    maybe(this.viewItemSource.getValue().slice(0, this.count).findIndex(b => !b.hasValue))
-      .filter(idx => idx >= 0)
-      .tapSome(this.setSelectedIndex)
+  private readonly toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
+  public readonly trySelectNextEmpty = () => this.findNextEmptyIndex().tapSome(this.setSelectedIndex)
 
   private readonly setSelectedIdViaIndex = (idx: number) => {
     this.setSelectedId(maybe(this.items[idx]).map(a => a.id).valueOrUndefined())
@@ -631,12 +643,22 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.setSelectedId(undefined)
   }
 
-  public readonly findNextEmptyIndex = () => this.viewItemSource.getValue().findIndex(a => !a.hasValue)
+  // TODO: TEST THIS SCENARIO!
+  public readonly findNextEmptyIndex = () => {
+    const findByBaseIndex = (startIndex = 0) => maybe(this.viewItemSource.getValue()
+      .slice(startIndex, this.count)
+      .findIndex(b => !b.hasValue))
+      .filter(idx => idx >= 0)
+      .map(a => a + startIndex)
+
+    return this.selectFromLowerIndicesFirst
+      ? findByBaseIndex()
+      : findByBaseIndex(this.selectedIndex).match({ some: maybe, none: findByBaseIndex })
+  }
 
   public readonly fillNextEmpty =
     (item: TItem) =>
-      maybe(this.findNextEmptyIndex())
-        .filter(idx => idx >= 0)
+      this.findNextEmptyIndex()
         .tapSome(idx => this.setItem(item, idx))
 
   private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode

@@ -12,12 +12,17 @@
     <input id="selectNextEmptyOnAdd" name="selectNextEmptyOnAdd" type="checkbox" [(ngModel)]="selectNextEmptyOnAdd">
     <label for="selectNextEmptyOnAdd">Select next empty cell when item is added</label>
   </div>
+  <div>
+    <input id="selectFromLowerIndicesFirst" name="selectFromLowerIndicesFirst" type="checkbox" [(ngModel)]="selectFromLowerIndicesFirst">
+    <label for="selectFromLowerIndicesFirst">Select empty tiles from the top left side (lower indices) first.</label>
+  </div>
 </form>
 
 <flo-grid-list-view #gridRef 
   (selectedElementChange)="elmChange($event)"
   [(count)]="count"
   [(maxheight)]="maxheight"
+  [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
   [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
   [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">
   <div *floGridListOverlay>
