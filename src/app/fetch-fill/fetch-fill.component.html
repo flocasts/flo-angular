@@ -25,7 +25,7 @@
   <li *ngFor="let eventId of eventIds">
     <span>Item - {{ eventId }}</span>
     <span *floFetchFillItem="let response of eventId usingOutputKey eventId">
-      Unavailable in your area {{ response.message }}
+      <span>Unavailable in your area</span> <span [title]="response.message">I</span>
     </span>
   </li>
 </ul>

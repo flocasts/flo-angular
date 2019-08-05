@@ -1,45 +1,12 @@
-import {
-  Directive, ContentChildren, AfterContentInit, Input, QueryList,
-  Inject, Optional, TemplateRef, ViewContainerRef, ChangeDetectorRef
-} from '@angular/core'
+import { Directive, ContentChildren, AfterContentInit, Input, QueryList, Inject, Optional } from '@angular/core'
 import { LOADERS, ILoader } from './ng-fetch-fill.tokens'
-import { IResult } from 'typescript-monads'
+import { FloFetchFillItemDirective } from './ng-fetch-fill-item.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 // tslint:disable: no-input-rename
 // tslint:disable: readonly-array
 // tslint:disable: no-if-statement
-
-@Directive({
-  selector: '[floFetchFillItem]'
-})
-export class FloFetchFillItemDirective<TItem> {
-  constructor(private tr: TemplateRef<any>, private vc: ViewContainerRef, private cd: ChangeDetectorRef) { }
-
-  private _outputKey: string
-
-  @Input('floFetchFillItemOf') readonly input: TItem
-  @Input('floFetchFillItemUsingOutputKey')
-  get outputKey () {
-    return this._outputKey
-  }
-  set outputKey(val: Object) {
-    this._outputKey = val.toString()
-  }
-
-  setResponse(res: IResult<TItem, TItem>) {
-    if (res.isOk()) {
-      this.vc.createEmbeddedView(this.tr, {
-        $implicit: res.unwrap()
-      })
-    } else {
-      this.vc.clear()
-    }
-
-    this.cd.detectChanges()
-  }
-}
 
 @Directive({
   selector: '[floFetchFill]'
