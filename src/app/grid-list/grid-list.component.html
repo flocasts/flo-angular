@@ -30,8 +30,12 @@
       <label for="dragDropHoverBgEnabled">dragDropHoverBgEnabled</label>
     </div>
     <div>
-      <input id="dragDropHoverBgColor" name="dragDropHoverBgColor" type="text" [(ngModel)]="dragDropHoverBgColor">
-      <label for="dragDropHoverBgColor">dragDropHoverBgColor</label>
+      <input id="dragDropHoverBgColor" name="dragDropHoverBgColor" type="color" [(ngModel)]="dragDropHoverBgColor">
+      <label for="dragDropHoverBgColor">dragDropHoverBgColor {{ dragDropHoverBgColor }}</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgOpacity" name="dragDropHoverBgOpacity" type="range" min="0" max="1" step="0.05" [(ngModel)]="dragDropHoverBgOpacity">
+      <label for="dragDropHoverBgOpacity">dragDropHoverBgOpacity <strong>{{ dragDropHoverBgOpacity | number: '1.2' }}</strong></label>
     </div>
   </div>
 </form>
@@ -43,6 +47,7 @@
   [(dragDropEnabled)]="dragDropEnabled"
   [(dragDropHoverBgEnabled)]="dragDropHoverBgEnabled"
   [(dragDropHoverBgColor)]="dragDropHoverBgColor"
+  [(dragDropHoverBgOpacity)]="dragDropHoverBgOpacity"
   [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
   [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
   [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">

@@ -32,6 +32,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropGridRef?: FloGridListViewComponent<TItem>
   @Input() floGridListDragDropHoverBgEnabled?: boolean
   @Input() floGridListDragDropHoverBgColor?: string
+  @Input() floGridListDragDropHoverBgOpacity?: string | number
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
@@ -48,12 +49,18 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
   }
 
+  private resetStyles = (elm: HTMLElement) => {
+    elm.style.backgroundColor = 'inherit'
+    elm.style.opacity = 'inherit'
+  }
+
   private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>('.list-item-overlay'))
-  private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(e => e.style.backgroundColor = 'inherit')
+  private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(this.resetStyles)
   private setItemOverlayStyle = (elm: HTMLElement) => maybe(this.floGridListDragDropHoverBgColor)
     .flatMap(color => this.maybeItemOverlay(elm).map(element => ({ element, color })))
     .filter(res => res.element.style.backgroundColor !== res.color)
     .tapSome(res => {
+      if (this.floGridListDragDropHoverBgOpacity) { res.element.style.opacity = this.floGridListDragDropHoverBgOpacity.toString() }
       res.element.style.backgroundColor = res.color
       res.element.classList.add('dragging')
     })

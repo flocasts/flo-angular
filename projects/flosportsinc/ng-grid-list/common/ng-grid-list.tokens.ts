@@ -28,6 +28,7 @@ export const FLO_GRID_LIST_DRAG_DROP_ENABLED = new InjectionToken<boolean>('fs.g
 export const FLO_GRID_LIST_DRAG_DROP_FROM_LISTS_ENABLED = new InjectionToken<boolean>('fs.grid.list.dragdroplists.enabled')
 export const FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED = new InjectionToken<boolean>('fs.grid.list.hover.enabled')
 export const FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR = new InjectionToken<string>('fs.grid.list.hover.bgcolor')
+export const FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY = new InjectionToken<string>('fs.grid.list.hover.bgopacity')
 
 
 export const FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = new InjectionToken('fs.grid.list.lst.autofill')

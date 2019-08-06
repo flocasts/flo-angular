@@ -37,7 +37,8 @@ import {
   IFloGridListBaseItem,
   FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -86,6 +87,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED) private _dragDropHoverBgEnabled: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
 
   @HostListener('fullscreenchange')
@@ -424,6 +426,19 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.dragDropHoverBgColor = style
   }
 
+  @Input()
+  get dragDropHoverBgOpacity() {
+    return this._dragDropHoverBgOpacity
+  }
+  set dragDropHoverBgOpacity(val: string | number) {
+    this._dragDropHoverBgOpacity = val
+    this.dragDropHoverBgOpacityChange.next(val)
+  }
+
+  public setDragDropHoverBgOpacity(val: string) {
+    this.dragDropHoverBgOpacity = val
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -468,6 +483,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
   @Output() public readonly dragDropHoverBgEnabledChange = new Subject<boolean>()
   @Output() public readonly dragDropHoverBgColorChange = new Subject<string>()
+  @Output() public readonly dragDropHoverBgOpacityChange = new Subject<string | number>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
