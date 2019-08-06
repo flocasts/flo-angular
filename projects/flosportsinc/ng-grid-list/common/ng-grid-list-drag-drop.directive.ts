@@ -11,7 +11,6 @@ import { Subject } from 'rxjs'
 // tslint:disable: no-let
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
-const DRAG_CLASS = 'dragging'
 
 @Directive({
   selector: '[floGridListDragDrop]',
@@ -31,12 +30,14 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropItem: TItem
   @Input() floGridListDragDropIndex: number
   @Input() floGridListDragDropGridRef?: FloGridListViewComponent<TItem>
+  @Input() floGridListDragDropHoverBgEnabled?: boolean
+  @Input() floGridListDragDropHoverBgColor?: string
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
   private _document = this.doc as HTMLDocument
   private getTiles = () => this._document.querySelectorAll<HTMLDivElement>('.fg.list-item-container')
-  private removeTileDragStyling = () => this.getTiles().forEach(t => t.classList.remove(DRAG_CLASS))
+  private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
     if (evt.preventDefault) { evt.preventDefault() }
     if (evt.stopPropagation) { evt.stopPropagation() }
@@ -47,27 +48,36 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
   }
 
+  private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>('.list-item-overlay'))
+  private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(e => {
+    e.style.backgroundColor = 'inherit'
+  })
+  private setItemOverlayStyle = (elm: HTMLElement) => maybe(this.floGridListDragDropHoverBgColor)
+    .flatMap(color => this.maybeItemOverlay(elm).map(element => ({ element, color })))
+    .filter(res => res.element.style.backgroundColor !== res.color)
+    .tapSome(res => {
+      res.element.style.backgroundColor = res.color
+    })
+
   @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
     this.preventDefaults(evt)
     this.floGridListDragDropDragoverChange.next(evt)
+
+    if (!this.floGridListDragDropHoverBgEnabled) { return }
+
     this.getTiles().forEach(elm => {
-      if (!elm.contains(evt.target as HTMLDivElement)) {
-        if (elm.classList.contains(DRAG_CLASS)) {
-          elm.classList.remove(DRAG_CLASS)
-        }
+      if (elm.contains(evt.target as HTMLDivElement)) {
+        this.setItemOverlayStyle(elm)
       } else {
-        elm.classList.add(DRAG_CLASS)
-        // const d = elm.querySelector<HTMLDivElement>('.selection-border')
-        // if (d) {
-        //   d.style.transition = 'unset'
-        // }
+        this.clearItemOverlayStyle(elm)
       }
     })
   }
 
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
     this.preventDefaults(evt)
-    this.removeTileDragStyling()
+
+    if (this.floGridListDragDropHoverBgEnabled) { this.removeTileDragStyling() }
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)

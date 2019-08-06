@@ -41,5 +41,7 @@ export class GridListComponent {
   public selectFromLowerIndicesFirst = false
   public dragDropEnabled = true
   public dragDropListsEnabled = true
+  public dragDropHoverBgEnabled = true
+  public dragDropHoverBgColor = 'red'
   public maxheight = 600
 }

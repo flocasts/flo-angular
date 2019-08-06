@@ -83,12 +83,6 @@
       opacity: 0;
     }
 
-    &.dragging,
-    &.dragging .list-item-overlay {
-      background-color: rgba(128, 128, 128, 0.80); // TODO: config
-      opacity: 1;
-    }
-
     &.list-cursor-hide {
       cursor: none;
     }

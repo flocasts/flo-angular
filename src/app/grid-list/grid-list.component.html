@@ -17,12 +17,22 @@
     <label for="selectFromLowerIndicesFirst">Select empty tiles from the top left side (lower indices) first.</label>
   </div>
   <div>
-    <input id="dragDropEnabled" name="dragDropEnabled" type="checkbox" [(ngModel)]="dragDropEnabled">
-    <label for="dragDropEnabled">Drag-Drop Enabled</label>
-  </div>
-  <div>
-    <input id="dragDropListsEnabled" name="dragDropListsEnabled" type="checkbox" [(ngModel)]="dragDropListsEnabled">
-    <label for="dragDropListsEnabled">Drag-Drop Lists Enabled</label>
+    <div>
+      <input id="dragDropEnabled" name="dragDropEnabled" type="checkbox" [(ngModel)]="dragDropEnabled">
+      <label for="dragDropEnabled">Drag-Drop Enabled</label>
+    </div>
+    <div>
+      <input id="dragDropListsEnabled" name="dragDropListsEnabled" type="checkbox" [(ngModel)]="dragDropListsEnabled">
+      <label for="dragDropListsEnabled">Drag-Drop Lists Enabled</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgEnabled" name="dragDropHoverBgEnabled" type="checkbox" [(ngModel)]="dragDropHoverBgEnabled">
+      <label for="dragDropHoverBgEnabled">dragDropHoverBgEnabled</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgColor" name="dragDropHoverBgColor" type="text" [(ngModel)]="dragDropHoverBgColor">
+      <label for="dragDropHoverBgColor">dragDropHoverBgColor</label>
+    </div>
   </div>
 </form>
 
@@ -31,6 +41,8 @@
   [(count)]="count"
   [(maxheight)]="maxheight"
   [(dragDropEnabled)]="dragDropEnabled"
+  [(dragDropHoverBgEnabled)]="dragDropHoverBgEnabled"
+  [(dragDropHoverBgColor)]="dragDropHoverBgColor"
   [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
   [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
   [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">
