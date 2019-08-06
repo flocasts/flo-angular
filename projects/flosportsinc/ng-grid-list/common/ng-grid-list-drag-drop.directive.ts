@@ -11,6 +11,9 @@ import { Subject } from 'rxjs'
 // tslint:disable: no-let
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
+const CLASS_DRAGGING = 'dragging'
+const CLASS_CONTAINER = '.fg.list-item-container'
+const CLASS_ITEM_OVERLAY = '.list-item-overlay'
 
 @Directive({
   selector: '[floGridListDragDrop]',
@@ -37,7 +40,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
   private _document = this.doc as HTMLDocument
-  private getTiles = () => this._document.querySelectorAll<HTMLDivElement>('.fg.list-item-container')
+  private getTiles = () => this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER)
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
     if (evt.preventDefault) { evt.preventDefault() }
@@ -54,7 +57,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     elm.style.opacity = 'inherit'
   }
 
-  private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>('.list-item-overlay'))
+  private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>(CLASS_ITEM_OVERLAY))
   private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(this.resetStyles)
   private setItemOverlayStyle = (elm: HTMLElement) => maybe(this.floGridListDragDropHoverBgColor)
     .flatMap(color => this.maybeItemOverlay(elm).map(element => ({ element, color })))
@@ -62,7 +65,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     .tapSome(res => {
       if (this.floGridListDragDropHoverBgOpacity) { res.element.style.opacity = this.floGridListDragDropHoverBgOpacity.toString() }
       res.element.style.backgroundColor = res.color
-      res.element.classList.add('dragging')
+      res.element.classList.add(CLASS_DRAGGING)
     })
 
   @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
@@ -90,7 +93,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       // ingore subtle fade-out styles
       setTimeout(() => {
         this.getTiles().forEach(a => {
-          this.maybeItemOverlay(a).tapSome(b => b.classList.remove('dragging'))
+          this.maybeItemOverlay(a).tapSome(b => b.classList.remove(CLASS_DRAGGING))
         })
       }, 200) // FADE TIME: 200ms
      }
