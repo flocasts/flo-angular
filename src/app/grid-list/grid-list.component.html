@@ -1,6 +1,30 @@
 <h1>Grid List</h1>
+<form>
+  <div>
+    <input id="maxheight" name="maxheight" type="range" min="0" max="1200" [(ngModel)]="maxheight">
+    <label for="maxheight">maxheight</label>
+  </div>
+  <div>
+    <input id="selectNextEmptyOnCount" name="selectNextEmptyOnCount" type="checkbox" [(ngModel)]="selectNextEmptyOnCount">
+    <label for="selectNextEmptyOnCount">Select next empty cell when count changes</label>
+  </div>
+  <div>
+    <input id="selectNextEmptyOnAdd" name="selectNextEmptyOnAdd" type="checkbox" [(ngModel)]="selectNextEmptyOnAdd">
+    <label for="selectNextEmptyOnAdd">Select next empty cell when item is added</label>
+  </div>
+  <div>
+    <input id="selectFromLowerIndicesFirst" name="selectFromLowerIndicesFirst" type="checkbox" [(ngModel)]="selectFromLowerIndicesFirst">
+    <label for="selectFromLowerIndicesFirst">Select empty tiles from the top left side (lower indices) first.</label>
+  </div>
+</form>
 
-<flo-grid-list-view #gridRef [(count)]="count" (selectedElementChange)="elmChange($event)">
+<flo-grid-list-view #gridRef 
+  (selectedElementChange)="elmChange($event)"
+  [(count)]="count"
+  [(maxheight)]="maxheight"
+  [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
+  [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
+  [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">
   <div *floGridListOverlay>
     <div>
       <button (click)="gridRef.setCount(1)" [disabled]="gridRef.isCount(1)">1</button>

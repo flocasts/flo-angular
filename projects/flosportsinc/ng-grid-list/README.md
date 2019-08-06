@@ -32,7 +32,9 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 @NgModule({
   imports: [
     FloGridListModule.config({
-      autoSelectNextEmptyItem: false,
+      selectNextEmptyOnCount: false,
+      selectNextEmptyOnAdd: false
+      selectFromLowerIndicesFirst: false,
       containerIdPrefix: '__fs_grid__',
       fillToFit: true,
       items: [],

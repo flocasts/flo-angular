@@ -35,7 +35,8 @@ import { FloMediaPlayerModule } from '@flosportsinc/ng-media-player'
   imports: [
     FloGridListModule.config({
       count: 2,
-      autoSelectNextEmptyOnCountChange: true
+      selectNextEmptyOnCount: true,
+      selectNextEmptyOnAdd: true
     }),
     FloVideoEventsModule,
     FloVideoAutoplayModule,
