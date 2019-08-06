@@ -39,5 +39,7 @@ export class GridListComponent {
   public selectNextEmptyOnCount = true
   public selectNextEmptyOnAdd = true
   public selectFromLowerIndicesFirst = false
+  public dragDropEnabled = true
+  public dragDropListsEnabled = true
   public maxheight = 600
 }

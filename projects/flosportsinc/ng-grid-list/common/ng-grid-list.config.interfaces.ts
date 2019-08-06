@@ -18,6 +18,9 @@ export interface DragDropConfiguration {
 
   /** Allow drag/drop of list onto grid. Defaults to true */
   readonly allowFromLists: boolean
+
+  /** Color applied to an item in the grid during dragover events.  */
+  readonly dragoverBgColor: boolean
 }
 
 export interface ListConfiguration {

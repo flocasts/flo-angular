@@ -16,12 +16,21 @@
     <input id="selectFromLowerIndicesFirst" name="selectFromLowerIndicesFirst" type="checkbox" [(ngModel)]="selectFromLowerIndicesFirst">
     <label for="selectFromLowerIndicesFirst">Select empty tiles from the top left side (lower indices) first.</label>
   </div>
+  <div>
+    <input id="dragDropEnabled" name="dragDropEnabled" type="checkbox" [(ngModel)]="dragDropEnabled">
+    <label for="dragDropEnabled">Drag-Drop Enabled</label>
+  </div>
+  <div>
+    <input id="dragDropListsEnabled" name="dragDropListsEnabled" type="checkbox" [(ngModel)]="dragDropListsEnabled">
+    <label for="dragDropListsEnabled">Drag-Drop Lists Enabled</label>
+  </div>
 </form>
 
 <flo-grid-list-view #gridRef 
   (selectedElementChange)="elmChange($event)"
   [(count)]="count"
   [(maxheight)]="maxheight"
+  [(dragDropEnabled)]="dragDropEnabled"
   [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
   [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
   [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">
