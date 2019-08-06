@@ -19,7 +19,7 @@ export class GridListComponent {
 
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
-  count = 2
+  count = 9
 
   @ViewChild('gridRef', { read: ElementRef }) gridref: ElementRef<HTMLElement>
 

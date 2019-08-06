@@ -1,18 +1,23 @@
-import { ElementRef, Directive, HostListener, Input } from '@angular/core'
+import { ElementRef, Directive, HostListener, Input, Inject, Output } from '@angular/core'
 import { IFloGridListBaseItem } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
-
-interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
+import { DOCUMENT } from '@angular/common'
+import { Subject } from 'rxjs'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
 // tslint:disable: no-if-statement
+// tslint:disable: no-let
+
+interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }
+const DRAG_CLASS = 'dragging'
+
 @Directive({
   selector: '[floGridListDragDrop]',
 })
 export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>) { }
+  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any) { }
 
   private _floGridListDragDrop = false
 
@@ -27,16 +32,39 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropIndex: number
   @Input() floGridListDragDropGridRef?: FloGridListViewComponent<TItem>
 
-  @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
-    evt.preventDefault()
+  @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
+
+  private _document = this.doc as HTMLDocument
+  private getTiles = () => this._document.querySelectorAll<HTMLDivElement>('.fg.list-item-container')
+  private removeTileDragStyling = () => this.getTiles().forEach(t => t.classList.remove(DRAG_CLASS))
+  private preventDefaults(evt: DragEvent) {
+    if (evt.preventDefault) { evt.preventDefault() }
+    if (evt.stopPropagation) { evt.stopPropagation() }
   }
+
   @HostListener('dragstart', ['$event']) dragstart(evt: DragEvent) {
     maybe(evt.dataTransfer)
       .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
   }
+
+  @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
+    this.preventDefaults(evt)
+    this.floGridListDragDropDragoverChange.next(evt)
+    this.getTiles().forEach(elm => {
+      if (!elm.contains(evt.target as HTMLDivElement)) {
+        if (elm.classList.contains(DRAG_CLASS)) {
+          elm.classList.remove(DRAG_CLASS)
+        }
+      } else {
+        elm.classList.add(DRAG_CLASS)
+      }
+    })
+  }
+
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
-    if (evt.preventDefault) { evt.preventDefault() }
-    if (evt.stopPropagation) { evt.stopPropagation() }
+    this.preventDefaults(evt)
+    this.removeTileDragStyling()
+
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
       .map(from => ({ from, to: { index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem } }))
