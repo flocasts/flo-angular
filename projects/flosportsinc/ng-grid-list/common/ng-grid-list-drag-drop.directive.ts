@@ -49,14 +49,13 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   }
 
   private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>('.list-item-overlay'))
-  private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(e => {
-    e.style.backgroundColor = 'inherit'
-  })
+  private clearItemOverlayStyle = (elm: HTMLElement) => this.maybeItemOverlay(elm).tapSome(e => e.style.backgroundColor = 'inherit')
   private setItemOverlayStyle = (elm: HTMLElement) => maybe(this.floGridListDragDropHoverBgColor)
     .flatMap(color => this.maybeItemOverlay(elm).map(element => ({ element, color })))
     .filter(res => res.element.style.backgroundColor !== res.color)
     .tapSome(res => {
       res.element.style.backgroundColor = res.color
+      res.element.classList.add('dragging')
     })
 
   @HostListener('dragover', ['$event']) dragover(evt: DragEvent) {
@@ -77,7 +76,17 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
     this.preventDefaults(evt)
 
-    if (this.floGridListDragDropHoverBgEnabled) { this.removeTileDragStyling() }
+    // clear styles
+    if (this.floGridListDragDropHoverBgEnabled) {
+      this.removeTileDragStyling()
+
+      // ingore subtle fade-out styles
+      setTimeout(() => {
+        this.getTiles().forEach(a => {
+          this.maybeItemOverlay(a).tapSome(b => b.classList.remove('dragging'))
+        })
+      }, 250) // FADE TIME
+     }
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)

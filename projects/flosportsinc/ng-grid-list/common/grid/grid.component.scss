@@ -77,6 +77,9 @@
         box-shadow: inset 0px 0px 0px 2px white; // TODO: make a config value
         transition: .2s ease-in-out all; // TODO same config as outer animation
       }
+      &.dragging {
+        transition: none
+      }
     }
 
     &.list-overlay-hide {
