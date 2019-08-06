@@ -57,6 +57,10 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
         }
       } else {
         elm.classList.add(DRAG_CLASS)
+        // const d = elm.querySelector<HTMLDivElement>('.selection-border')
+        // if (d) {
+        //   d.style.transition = 'unset'
+        // }
       }
     })
   }
