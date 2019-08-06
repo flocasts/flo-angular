@@ -92,7 +92,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
         this.getTiles().forEach(a => {
           this.maybeItemOverlay(a).tapSome(b => b.classList.remove('dragging'))
         })
-      }, 250) // FADE TIME
+      }, 200) // FADE TIME: 200ms
      }
 
     maybe(evt.dataTransfer)

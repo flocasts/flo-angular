@@ -140,6 +140,9 @@ export class FloGridListModule {
         { provide: FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST, useValue: cfg.selectFromLowerIndicesFirst !== undefined ? cfg.selectFromLowerIndicesFirst : DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST },
         { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: cfg.containerIdPrefix !== undefined ? cfg.containerIdPrefix : DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
         { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: cfg.fillToFit !== undefined ? cfg.fillToFit : DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgEnabled !== undefined ? cfg.dragDrop.dragOverBgEnabled : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgColor !== undefined ? cfg.dragDrop.dragOverBgColor : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgOpacity !== undefined ? cfg.dragDrop.dragOverBgOpacity : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
       ]
     }
   }
