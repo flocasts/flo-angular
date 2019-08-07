@@ -27,7 +27,6 @@ import {
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from '../ng-grid-list.module.defaults'
-import { FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive';
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
