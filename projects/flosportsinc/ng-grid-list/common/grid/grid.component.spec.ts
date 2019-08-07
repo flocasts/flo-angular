@@ -13,7 +13,11 @@ import {
   FLO_GRID_LIST_CONTAINER_ID_PREFIX, FLO_GRID_LIST_FILL_TO_FIT,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE
 } from '../ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
@@ -429,11 +433,41 @@ describe(FloGridListViewComponent.name, () => {
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
   })
 
+  describe('dragDropImageEnabled property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageEnabled', false))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropImageEnabled', 'setDragDropImageEnabled', false))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropImageEnabled).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED)))
+  })
+
+  describe('dragDropImageItemKey property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageItemKey', 'some-string'))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropImageItemKey', 'setDragDropImageItemKey', 'some-string'))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropImageItemKey).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY)))
+  })
+
+  describe('dragDropImageDefaultSome property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageDefaultSome', 'some-string'))
+    it('should expose setter function', () =>
+      testInputPropSetFunc('dragDropImageDefaultSome', 'setDragDropImageDefaultSome', 'some-string'))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropImageDefaultSome).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)))
+  })
+
+  describe('dragDropImageDefaultNone property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageDefaultNone', 'some-string'))
+    it('should expose setter function', () =>
+      testInputPropSetFunc('dragDropImageDefaultNone', 'setDragDropImageDefaultNone', 'some-string'))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropImageDefaultNone).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)))
+  })
+
   describe('dragDropHoverBgEnabled property', () => {
     it('should double bind', () => testInputProperty('dragDropHoverBgEnabled', false))
     it('should expose setter function', () => testInputPropSetFunc('dragDropHoverBgEnabled', 'setDragDropHoverBgEnabled', false))
     it('should start with token value', () =>
-      expect(createSut().instance.dragDropHoverBgEnabled).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)))
+      expect(createSut().instance.dragDropImageEnabled).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)))
     it('should start with default token value', () =>
       expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED))
 

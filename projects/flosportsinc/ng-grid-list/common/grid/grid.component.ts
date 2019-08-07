@@ -34,11 +34,15 @@ import {
   FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   FLO_GRID_LIST_FILL_TO_FIT,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
-  IFloGridListBaseItem,
   FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE,
+  IFloGridListBaseItem
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -87,7 +91,11 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED) private _dragDropHoverBgEnabled: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
-    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED) private _dragDropImageEnabled: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY) private _dragDropImageItemKey: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME) private _dragDropImageDefaultSome: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE) private _dragDropImageDefaultNone: string,
   ) { }
 
   @HostListener('fullscreenchange')
@@ -439,6 +447,58 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.dragDropHoverBgOpacity = val
   }
 
+  @Input()
+  get dragDropImageEnabled() {
+    return this._dragDropImageEnabled
+  }
+  set dragDropImageEnabled(val: boolean) {
+    this._dragDropImageEnabled = val
+    this.dragDropImageEnabledChange.next(val)
+  }
+
+  public setDragDropImageEnabled(val: boolean) {
+    this.dragDropImageEnabled = val
+  }
+
+  @Input()
+  get dragDropImageItemKey() {
+    return this._dragDropImageItemKey
+  }
+  set dragDropImageItemKey(val: string) {
+    this._dragDropImageItemKey = val
+    this.dragDropImageItemKeyChange.next(val)
+  }
+
+  public setDragDropImageItemKey(val: string) {
+    this.dragDropImageItemKey = val
+  }
+
+  @Input()
+  get dragDropImageDefaultSome() {
+    return this._dragDropImageDefaultSome
+  }
+  set dragDropImageDefaultSome(val: string) {
+    this._dragDropImageDefaultSome = val
+    this.dragDropImageDefaultSomeChange.next(val)
+  }
+
+  public setDragDropImageDefaultSome(val: string) {
+    this.dragDropImageDefaultSome = val
+  }
+
+  @Input()
+  get dragDropImageDefaultNone() {
+    return this._dragDropImageDefaultNone
+  }
+  set dragDropImageDefaultNone(val: string) {
+    this._dragDropImageDefaultNone = val
+    this.dragDropImageDefaultNoneChange.next(val)
+  }
+
+  public setDragDropImageDefaultNone(val: string) {
+    this.dragDropImageDefaultNone = val
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -484,6 +544,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropHoverBgEnabledChange = new Subject<boolean>()
   @Output() public readonly dragDropHoverBgColorChange = new Subject<string>()
   @Output() public readonly dragDropHoverBgOpacityChange = new Subject<string | number>()
+  @Output() public readonly dragDropImageEnabledChange = new Subject<boolean>()
+  @Output() public readonly dragDropImageItemKeyChange = new Subject<string>()
+  @Output() public readonly dragDropImageDefaultSomeChange = new Subject<string>()
+  @Output() public readonly dragDropImageDefaultNoneChange = new Subject<string>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
