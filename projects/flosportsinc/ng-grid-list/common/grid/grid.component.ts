@@ -7,7 +7,10 @@ import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
+import {
+  FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective,
+  FloGridListItemSomeDragDirective, FloGridListItemNoneDragDirective
+} from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
@@ -94,8 +97,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number,
     @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED) private _dragDropImageEnabled: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY) private _dragDropImageItemKey: string,
-    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME) private _dragDropImageDefaultSome: string,
-    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE) private _dragDropImageDefaultNone: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME) private _dragDropImageSome: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE) private _dragDropImageNone: string,
   ) { }
 
   @HostListener('fullscreenchange')
@@ -474,29 +477,29 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   }
 
   @Input()
-  get dragDropImageDefaultSome() {
-    return this._dragDropImageDefaultSome
+  get dragDropImageSome() {
+    return this._dragDropImageSome
   }
-  set dragDropImageDefaultSome(val: string) {
-    this._dragDropImageDefaultSome = val
-    this.dragDropImageDefaultSomeChange.next(val)
+  set dragDropImageSome(val: string) {
+    this._dragDropImageSome = val
+    this.dragDropImageSomeChange.next(val)
   }
 
-  public setDragDropImageDefaultSome(val: string) {
-    this.dragDropImageDefaultSome = val
+  public setDragDropImageSome(val: string) {
+    this.dragDropImageSome = val
   }
 
   @Input()
-  get dragDropImageDefaultNone() {
-    return this._dragDropImageDefaultNone
+  get dragDropImageNone() {
+    return this._dragDropImageNone
   }
-  set dragDropImageDefaultNone(val: string) {
-    this._dragDropImageDefaultNone = val
-    this.dragDropImageDefaultNoneChange.next(val)
+  set dragDropImageNone(val: string) {
+    this._dragDropImageNone = val
+    this.dragDropImageNoneChange.next(val)
   }
 
-  public setDragDropImageDefaultNone(val: string) {
-    this.dragDropImageDefaultNone = val
+  public setDragDropImageNone(val: string) {
+    this.dragDropImageNone = val
   }
 
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
@@ -546,8 +549,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly dragDropHoverBgOpacityChange = new Subject<string | number>()
   @Output() public readonly dragDropImageEnabledChange = new Subject<boolean>()
   @Output() public readonly dragDropImageItemKeyChange = new Subject<string>()
-  @Output() public readonly dragDropImageDefaultSomeChange = new Subject<string>()
-  @Output() public readonly dragDropImageDefaultNoneChange = new Subject<string>()
+  @Output() public readonly dragDropImageSomeChange = new Subject<string>()
+  @Output() public readonly dragDropImageNoneChange = new Subject<string>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
@@ -563,6 +566,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemSomeDragDirective, { read: TemplateRef }) readonly gridListItemSomeDragTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemNoneDragDirective, { read: TemplateRef }) readonly gridListItemNoneDragTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   public dragSource = new Subject<DragEvent>()
@@ -612,14 +617,18 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
     return stub.map<IViewItem<TItem>>((value, idx) => {
       const isSelected = this.selectedIndex === idx
+      const hasValue = value.isSome()
       return {
-        hasValue: value.isSome(),
-        value: value.valueOrUndefined(),
+        isSelected,
+        isNotSelected: !isSelected,
         flexBasis: 100 / square,
         padTop: this.aspectRatioPercentage / square,
         isShowingBorder: isSelected && this.count > 1,
-        isSelected,
-        isNotSelected: !isSelected,
+        hasValue,
+        value: value.valueOrUndefined(),
+        dragImage: hasValue
+          ? value.flatMapAuto(v => v[this.dragDropImageItemKey]).valueOr(this._dragDropImageSome)
+          : maybe(this.dragDropImageNone).valueOrUndefined(),
         containerId: value.map(i => i.id)
           .map(this.constructContainerId)
           .valueOr(this.constructContainerId(idx))

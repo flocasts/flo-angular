@@ -98,5 +98,18 @@
         width: inherit;
       }
     }
+    &.offscreen {
+      position: absolute;
+      top: 0;
+      left: -10000px;
+      display: block;
+      height: 100%;
+      width: 100%;
+      z-index: 100;
+      ::ng-deep * {
+        height: 100%;
+        width: 100%;
+      }
+    }
   }
 }

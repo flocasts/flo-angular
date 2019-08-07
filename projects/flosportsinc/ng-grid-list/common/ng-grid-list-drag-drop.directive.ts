@@ -1,7 +1,7 @@
 import { ElementRef, Directive, HostListener, Input, Inject, Output } from '@angular/core'
 import { IFloGridListBaseItem } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
-import { maybe } from 'typescript-monads'
+import { maybe, IMaybe } from 'typescript-monads'
 import { DOCUMENT } from '@angular/common'
 import { Subject } from 'rxjs'
 
@@ -22,6 +22,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any) { }
 
   private _floGridListDragDrop = false
+  private _floGridListDragDropDragImage = maybe<HTMLImageElement>()
 
   @Input()
   get floGridListDragDrop() { return this._floGridListDragDrop }
@@ -37,9 +38,34 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropHoverBgColor?: string
   @Input() floGridListDragDropHoverBgOpacity?: string | number
 
+  private createImg = (src: string) => {
+    const img = new Image()
+    img.src = src
+    return img
+  }
+
+  @Input() floGridListDragDropDragRef: any
+
+  @Input()
+  get floGridListDragDropDragImage() {
+    return this._floGridListDragDropDragImage
+  }
+  set floGridListDragDropDragImage(val: IMaybe<HTMLImageElement>) {
+    this._floGridListDragDropDragImage = val instanceof HTMLImageElement
+      ? maybe<HTMLImageElement>(val)
+      : typeof (val) === 'string'
+        ? this.findImageInDom(val as string)
+          .match({
+            some: maybe,
+            none: () => maybe<HTMLImageElement>(this.createImg(val))
+          })
+        : maybe<HTMLImageElement>()
+  }
+
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
   private _document = this.doc as HTMLDocument
+  private findImageInDom = (src: string) => maybe(this._document.querySelector(`img[src="${src}"]`) as HTMLImageElement | null)
   private getTiles = () => this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER)
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
@@ -49,7 +75,31 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   @HostListener('dragstart', ['$event']) dragstart(evt: DragEvent) {
     maybe(evt.dataTransfer)
-      .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
+      .tapSome(dt => {
+        dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
+        const height = (evt.target as HTMLElement).clientHeight
+        const width = (evt.target as HTMLElement).clientWidth
+        this.floGridListDragDropDragRef.style.height = `${height}px`
+        this.floGridListDragDropDragRef.style.width = `${width}px`
+
+        dt.setDragImage(this.floGridListDragDropDragRef, evt.layerX, evt.layerY)
+        // this.floGridListDragDropDragImage.tapSome(img => {
+        //   const height = (evt.target as HTMLElement).clientHeight
+        //   const width = (evt.target as HTMLElement).clientWidth
+        //   // const imgContainer = document.createElement('div')
+        //   img.style.width = '100%'
+        //   img.style.height = '100%'
+        //   // imgContainer.style.position = 'absolute'
+        //   // imgContainer.style.height = `${height}px`
+        //   // imgContainer.style.width = `${width}px`
+        //   // imgContainer.style.top = '0'
+        //   // imgContainer.style.left = '-10000px'
+        //   // imgContainer.appendChild(img)
+        //   // document.body.appendChild(imgContainer)
+        //   // this.dragImageElmRef = imgContainer
+        //   dt.setDragImage(imgContainer, evt.layerX, evt.layerY)
+        // })
+      })
   }
 
   private resetStyles = (elm: HTMLElement) => {
@@ -83,6 +133,13 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     })
   }
 
+  private dragImageElmRef?: HTMLElement
+
+  @HostListener('dragend', ['$event']) dragend(evt: DragEvent) {
+    this.preventDefaults(evt)
+    if (this.dragImageElmRef) { this.dragImageElmRef.remove() }
+  }
+
   @HostListener('drop', ['$event']) drop(evt: DragEvent) {
     this.preventDefaults(evt)
 
@@ -96,7 +153,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
           this.maybeItemOverlay(a).tapSome(b => b.classList.remove(CLASS_DRAGGING))
         })
       }, 200) // FADE TIME: 200ms
-     }
+    }
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)

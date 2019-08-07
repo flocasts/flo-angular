@@ -5,7 +5,8 @@ import {
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED, DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
   DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
-  DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED, DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME
 } from '@flosportsinc/ng-grid-list'
 
 @Component({
@@ -17,8 +18,9 @@ import {
 export class GridListComponent {
   // tslint:disable-next-line: readonly-keyword
   public items: ReadonlyArray<any> = [
-    { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8' } as any,
-    { id: '789', src: 'https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8' },
+    // tslint:disable: max-line-length
+    { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8', dragImage: 'https://d16w8nkko3rzy2.cloudfront.net/16200/thumbnail.jpg?ts=1564790375' } as any,
+    { id: '789', src: 'https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8', dragImage: 'https://d16w8nkko3rzy2.cloudfront.net/18671/thumbnail.jpg?ts=1564668622' },
     { id: '456', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4' },
     { id: '000', src: 'https://cdn-flo.flowrestling.org/uploaded/xnJpnlmxVj0ZX3d17gLJDPaewJ2dYBv3/playlist.m3u8' },
     { id: 'wut', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4' }
@@ -51,5 +53,7 @@ export class GridListComponent {
   public dragDropHoverBgEnabled = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED
   public dragDropHoverBgColor = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR
   public dragDropHoverBgOpacity = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  public dragDropImageNone = DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE
+  public dragDropImageSome = DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME
   public maxheight = DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
 }

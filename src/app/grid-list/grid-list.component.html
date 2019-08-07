@@ -39,7 +39,6 @@
     </div>
   </div>
 </form>
-
 <flo-grid-list-view #gridRef 
   (selectedElementChange)="elmChange($event)"
   [(count)]="count"
@@ -69,6 +68,8 @@
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
+  <img *floGridListItemSomeDrag="let item" [src]="item.dragImage">
+  <div *floGridListItemNoneDrag style="background-color: red;">EMPTY!</div>
 </flo-grid-list-view>
 
 <flo-grid-list #list 

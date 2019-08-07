@@ -447,20 +447,20 @@ describe(FloGridListViewComponent.name, () => {
       expect(createSut().instance.dragDropImageItemKey).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY)))
   })
 
-  describe('dragDropImageDefaultSome property', () => {
-    it('should double bind', () => testInputProperty('dragDropImageDefaultSome', 'some-string'))
+  describe('dragDropImageSome property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageSome', 'some-string'))
     it('should expose setter function', () =>
-      testInputPropSetFunc('dragDropImageDefaultSome', 'setDragDropImageDefaultSome', 'some-string'))
+      testInputPropSetFunc('dragDropImageSome', 'setDragDropImageSome', 'some-string'))
     it('should start with token value', () =>
-      expect(createSut().instance.dragDropImageDefaultSome).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)))
+      expect(createSut().instance.dragDropImageSome).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)))
   })
 
-  describe('dragDropImageDefaultNone property', () => {
-    it('should double bind', () => testInputProperty('dragDropImageDefaultNone', 'some-string'))
+  describe('dragDropImageNone property', () => {
+    it('should double bind', () => testInputProperty('dragDropImageNone', 'some-string'))
     it('should expose setter function', () =>
-      testInputPropSetFunc('dragDropImageDefaultNone', 'setDragDropImageDefaultNone', 'some-string'))
+      testInputPropSetFunc('dragDropImageNone', 'setDragDropImageNone', 'some-string'))
     it('should start with token value', () =>
-      expect(createSut().instance.dragDropImageDefaultNone).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)))
+      expect(createSut().instance.dragDropImageNone).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)))
   })
 
   describe('dragDropHoverBgEnabled property', () => {
