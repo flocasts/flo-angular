@@ -2,7 +2,7 @@
 <form>
   <div>
     <input id="maxheight" name="maxheight" type="range" min="0" max="1200" [(ngModel)]="maxheight">
-    <label for="maxheight">maxheight</label>
+    <label for="maxheight">maxheight {{ maxheight }}</label>
   </div>
   <div>
     <input id="selectNextEmptyOnCount" name="selectNextEmptyOnCount" type="checkbox" [(ngModel)]="selectNextEmptyOnCount">
@@ -16,12 +16,38 @@
     <input id="selectFromLowerIndicesFirst" name="selectFromLowerIndicesFirst" type="checkbox" [(ngModel)]="selectFromLowerIndicesFirst">
     <label for="selectFromLowerIndicesFirst">Select empty tiles from the top left side (lower indices) first.</label>
   </div>
+  <div>
+    <div>
+      <input id="dragDropEnabled" name="dragDropEnabled" type="checkbox" [(ngModel)]="dragDropEnabled">
+      <label for="dragDropEnabled">Drag-Drop Enabled</label>
+    </div>
+    <div>
+      <input id="dragDropListsEnabled" name="dragDropListsEnabled" type="checkbox" [(ngModel)]="dragDropListsEnabled">
+      <label for="dragDropListsEnabled">Drag-Drop Lists Enabled</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgEnabled" name="dragDropHoverBgEnabled" type="checkbox" [(ngModel)]="dragDropHoverBgEnabled">
+      <label for="dragDropHoverBgEnabled">dragDropHoverBgEnabled</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgColor" name="dragDropHoverBgColor" type="color" [(ngModel)]="dragDropHoverBgColor">
+      <label for="dragDropHoverBgColor">dragDropHoverBgColor {{ dragDropHoverBgColor }}</label>
+    </div>
+    <div>
+      <input id="dragDropHoverBgOpacity" name="dragDropHoverBgOpacity" type="range" min="0" max="1" step="0.05" [(ngModel)]="dragDropHoverBgOpacity">
+      <label for="dragDropHoverBgOpacity">dragDropHoverBgOpacity <strong>{{ dragDropHoverBgOpacity | number: '1.2' }}</strong></label>
+    </div>
+  </div>
 </form>
 
 <flo-grid-list-view #gridRef 
   (selectedElementChange)="elmChange($event)"
   [(count)]="count"
   [(maxheight)]="maxheight"
+  [(dragDropEnabled)]="dragDropEnabled"
+  [(dragDropHoverBgEnabled)]="dragDropHoverBgEnabled"
+  [(dragDropHoverBgColor)]="dragDropHoverBgColor"
+  [(dragDropHoverBgOpacity)]="dragDropHoverBgOpacity"
   [(selectFromLowerIndicesFirst)]="selectFromLowerIndicesFirst"
   [(selectNextEmptyOnCount)]="selectNextEmptyOnCount"
   [(selectNextEmptyOnAdd)]="selectNextEmptyOnAdd">

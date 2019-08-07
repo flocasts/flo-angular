@@ -35,7 +35,10 @@ import {
   FLO_GRID_LIST_FILL_TO_FIT,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
   IFloGridListBaseItem,
-  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -81,7 +84,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
     @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
     @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
-    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean
+    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED) private _dragDropHoverBgEnabled: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
 
   @HostListener('fullscreenchange')
@@ -394,6 +400,45 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.fillToFit = enable
   }
 
+  @Input()
+  get dragDropHoverBgEnabled() {
+    return this._dragDropHoverBgEnabled
+  }
+  set dragDropHoverBgEnabled(enable: boolean) {
+    this._dragDropHoverBgEnabled = enable
+    this.dragDropHoverBgEnabledChange.next(enable)
+  }
+
+  public setDragDropHoverBgEnabled(enable: boolean) {
+    this.dragDropHoverBgEnabled = enable
+  }
+
+  @Input()
+  get dragDropHoverBgColor() {
+    return this._dragDropHoverBgColor
+  }
+  set dragDropHoverBgColor(style: string) {
+    this._dragDropHoverBgColor = style
+    this.dragDropHoverBgColorChange.next(style)
+  }
+
+  public setDragDropHoverBgColor(style: string) {
+    this.dragDropHoverBgColor = style
+  }
+
+  @Input()
+  get dragDropHoverBgOpacity() {
+    return this._dragDropHoverBgOpacity
+  }
+  set dragDropHoverBgOpacity(val: string | number) {
+    this._dragDropHoverBgOpacity = val
+    this.dragDropHoverBgOpacityChange.next(val)
+  }
+
+  public setDragDropHoverBgOpacity(val: string) {
+    this.dragDropHoverBgOpacity = val
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -436,6 +481,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
+  @Output() public readonly dragDropHoverBgEnabledChange = new Subject<boolean>()
+  @Output() public readonly dragDropHoverBgColorChange = new Subject<string>()
+  @Output() public readonly dragDropHoverBgOpacityChange = new Subject<string | number>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
@@ -453,7 +501,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
+  public dragSource = new Subject<DragEvent>()
+
   private cursorInsideElement = merge(
+    this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))

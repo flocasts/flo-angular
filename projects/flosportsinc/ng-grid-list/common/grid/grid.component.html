@@ -11,10 +11,14 @@
       <div #floGridListItemContainer
         class="fg list-item-container"
         (click)="setSelectedIndex(idx)"
+        (floGridListDragDropDragoverChange)="dragSource.next($event)"
         [floGridListDragDrop]="dragDropEnabled"
         [floGridListDragDropItem]="item.value"
         [floGridListDragDropIndex]="idx"
         [floGridListDragDropGridRef]="this"
+        [floGridListDragDropHoverBgEnabled]="dragDropHoverBgEnabled"
+        [floGridListDragDropHoverBgColor]="dragDropHoverBgColor"
+        [floGridListDragDropHoverBgOpacity]="dragDropHoverBgOpacity"
         [style.flex-basis.%]="item.flexBasis"
         [style.padding-top.%]="item.padTop"
         [attr.id]="item?.containerId">
@@ -26,7 +30,7 @@
             <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
           </div>
         </ng-container>
-        <div class="fg" [class.list-item-selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
+        <div class="fg list-item-overlay" [class.selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
       </div>
     </ng-container>
   </div>
