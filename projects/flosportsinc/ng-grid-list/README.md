@@ -45,7 +45,10 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
       selectedIndex: 0,
       dragDrop: {
         enabled: true,
-        allowedFromLists: true
+        allowedFromLists: true,
+        dragOverBgEnabled: true,
+        dragOverBgColor: '#808080',
+        dragOverBgOpacity: 0.70
       },
       overlay: {
         throttle: 30,

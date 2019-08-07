@@ -1,5 +1,12 @@
 import { Component, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core'
 import { isIphone } from '@flosportsinc/ng-fullscreen'
+import {
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, DEFAULT_FLO_GRID_LIST_MAX_HEIGHT,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED, DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
+  DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
+} from '@flosportsinc/ng-grid-list'
 
 @Component({
   selector: 'app-grid-list',
@@ -19,7 +26,7 @@ export class GridListComponent {
 
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
-  count = 2
+  count = 9
 
   @ViewChild('gridRef', { read: ElementRef }) gridref: ElementRef<HTMLElement>
 
@@ -36,8 +43,13 @@ export class GridListComponent {
       : this.gridref.nativeElement
   }
 
-  public selectNextEmptyOnCount = true
-  public selectNextEmptyOnAdd = true
-  public selectFromLowerIndicesFirst = false
-  public maxheight = 600
+  public selectNextEmptyOnCount = DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT
+  public selectNextEmptyOnAdd = DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD
+  public selectFromLowerIndicesFirst = DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  public dragDropEnabled = DEFAULT_FLO_GRID_LIST_DRAG_DROP_ENABLED
+  public dragDropListsEnabled = DEFAULT_FLO_GRID_LIST_DRAG_DROP_LISTS_ENABLED
+  public dragDropHoverBgEnabled = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED
+  public dragDropHoverBgColor = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR
+  public dragDropHoverBgOpacity = DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  public maxheight = DEFAULT_FLO_GRID_LIST_MAX_HEIGHT
 }
