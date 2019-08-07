@@ -1,13 +1,23 @@
 import { FloGridListModule } from './ng-grid-list.module'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module.defaults'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { NgModule, Component } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT, FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT,
   FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_FADEOUT,
-  FLO_GRID_LIST_OVERLAY_START
+  FLO_GRID_LIST_OVERLAY_START,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME,
+  FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE
 } from './ng-grid-list.tokens'
+import {
+  DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE
+} from './ng-grid-list.module.defaults'
 
 interface TItem {
   readonly title: string
@@ -128,5 +138,31 @@ describe(FloGridListModule.name, () => {
     fixture.detectChanges()
 
     fixture.debugElement.query(By.css('#setViewCount9')).nativeElement.click()
+  })
+
+  describe('dragDrop configuration', () => {
+    it('should use defaults when unchanged', () => {
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED)
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY)
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)
+    })
+    it('should construct with dragDrop configuration', () => {
+      TestBed.resetTestingModule()
+      TestBed.configureTestingModule({
+        imports: [FloGridListModule.config({
+          dragDrop: {
+            dragImageEnabled: false,
+            dragImageItemKey: 'test_key',
+            dragImageDefaultSome: 'https://some-image-some.jpg',
+            dragImageDefaultNone: 'https://some-image-none.jpg',
+          }
+        })]
+      })
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ENABLED)).toEqual(false)
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_ITEM_KEY)).toEqual('test_key')
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_SOME)).toEqual('https://some-image-some.jpg')
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_IMAGE_DEFAULT_NONE)).toEqual('https://some-image-none.jpg')
+    })
   })
 })

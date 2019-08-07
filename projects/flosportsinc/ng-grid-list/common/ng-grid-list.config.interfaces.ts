@@ -27,6 +27,18 @@ export interface DragDropConfiguration {
 
   /** Color applied to an item in the grid during dragover events.  */
   readonly dragOverBgOpacity: string | number
+
+  /** When set false, uses default browser drag behavior */
+  readonly dragImageEnabled: boolean
+
+  /** Name of key on <TItem> objects that contain a URL/reference to image element. Default: 'dragImage' */
+  readonly dragImageItemKey: string
+
+  /** URL/reference to image element for filled tiles. Default: undefined */
+  readonly dragImageDefaultSome: string
+
+  /** URL/reference to image element for empty tiles. Default: undefined */
+  readonly dragImageDefaultNone: string
 }
 
 export interface ListConfiguration {
