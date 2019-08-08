@@ -70,6 +70,14 @@
   </div>
   <div *floGridListItemNone>EMPTY!</div>
   <video *floGridListItemSome="let item" #vid floMse playsinline autoplay [src]="item.value.src" [muted]="item.isNotSelected"></video>
+  <div *floGridListItemSomeDrag="let item" style="height: 100%; width: 100%;">
+    <img *ngIf="item.value.dragImage !== undefined" style="height: 100%; width: 100%;" [src]="item.value.dragImage">
+    <div *ngIf="item.value.dragImage === undefined" style="height: 100%; width: 100%; background-color: green; text-align: center">
+      <h4>{{ item.value.src }}</h4>
+      <h4>Missing Image Source</h4>
+    </div>
+  </div>
+  <div *floGridListItemNoneDrag style="background-color: red; height: 100%; width: 100%;">I am an empty cell</div>
 </flo-grid-list-view>
 
 <flo-grid-list #list 

@@ -98,5 +98,10 @@
         width: inherit;
       }
     }
+    &.offscreen {
+      position: absolute;
+      top: 0;
+      left: -9999px;
+    }
   }
 }

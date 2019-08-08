@@ -17,8 +17,9 @@ import {
 export class GridListComponent {
   // tslint:disable-next-line: readonly-keyword
   public items: ReadonlyArray<any> = [
-    { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8' } as any,
-    { id: '789', src: 'https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8' },
+    // tslint:disable: max-line-length
+    { id: '123', src: 'https://cdn-flo.flodogs.com/uploaded/mzEp5zBJ943XvZXba7DnVmvD2zZPqJk6/playlist.m3u8', dragImage: 'https://d16w8nkko3rzy2.cloudfront.net/16200/thumbnail.jpg?ts=1564790375' } as any,
+    { id: '789', src: 'https://cdn-flo.flowrestling.org/uploaded/G3op3lQBy394D561vB33By4ZWB2dqD7V/playlist.m3u8', dragImage: 'https://d16w8nkko3rzy2.cloudfront.net/18671/thumbnail.jpg?ts=1564668622' },
     { id: '456', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WeAreGoingOnBullrun.mp4' },
     { id: '000', src: 'https://cdn-flo.flowrestling.org/uploaded/xnJpnlmxVj0ZX3d17gLJDPaewJ2dYBv3/playlist.m3u8' },
     { id: 'wut', src: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/WhatCarCanYouGetForAGrand.mp4' }
@@ -26,7 +27,7 @@ export class GridListComponent {
 
   readonly initialFill = { 0: '789', 3: 'wut' }
   // tslint:disable: readonly-keyword
-  count = 9
+  count = 4
 
   @ViewChild('gridRef', { read: ElementRef }) gridref: ElementRef<HTMLElement>
 
