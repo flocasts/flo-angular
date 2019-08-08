@@ -40,6 +40,8 @@ import {
       </div>
       <div *floGridListItemSome="let item" class="some" [attr.id]="'t_' + item.value.id">{{ item.value.value }}</div>
       <div *floGridListItemNone class="none">EMPTY</div>
+      <div *floGridListItemSomeDrag>EMPTY DRAG OVERLAY</div>
+      <div *floGridListItemNoneDrag>SOME DRAG OVERLAY</div>
     </flo-grid-list-view>
   `
 })

@@ -7,7 +7,10 @@ import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
+import {
+  FloGridListOverlayDirective, FloGridListItemNoneDirective,
+  FloGridListItemSomeDirective, FloGridListItemSomeDragDirective, FloGridListItemNoneDragDirective
+} from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
@@ -499,6 +502,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemSomeDragDirective, { read: TemplateRef }) readonly gridListItemSomeDragTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemNoneDragDirective, { read: TemplateRef }) readonly gridListItemNoneDragTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   public dragSource = new Subject<DragEvent>()

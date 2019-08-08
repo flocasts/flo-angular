@@ -10,7 +10,14 @@ import { FloGridListViewComponent } from './grid/grid.component'
 @Component({
   selector: 'flo-test-component',
   template: `<flo-grid-list-view #gridRef></flo-grid-list-view>
-    <div floGridListDragDrop [floGridListDragDropGridRef]="gridRef" [floGridListDragDropHoverBgEnabled]="true">TEST</div>
+    <div #dragContainerRef>DRAGGER</div>
+    <div floGridListDragDrop
+      [floGridListDragDropHoverBgColor]="'#000'"
+      [floGridListDragDropDragRef]="dragContainerRef"
+      [floGridListDragDropGridRef]="gridRef"
+      [floGridListDragDropHoverBgEnabled]="true">
+      TEST
+    </div>
   `
 })
 class TestComponent { }

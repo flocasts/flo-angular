@@ -8,6 +8,14 @@
   <div [style.padding-top.%]="aspectRatioPercentage"></div>
   <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
     <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
+      <div #offscreenDragContainer [ngSwitch]="item.hasValue" class="fg offscreen">
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngTemplateOutlet="gridListItemSomeDragTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="false">
+          <ng-container *ngTemplateOutlet="gridListItemNoneDragTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+      </div>
       <div #floGridListItemContainer
         class="fg list-item-container"
         (click)="setSelectedIndex(idx)"
@@ -16,6 +24,7 @@
         [floGridListDragDropItem]="item.value"
         [floGridListDragDropIndex]="idx"
         [floGridListDragDropGridRef]="this"
+        [floGridListDragDropDragRef]="gridListItemSomeDragTemplate || gridListItemNoneDragTemplate ? offscreenDragContainer : undefined"
         [floGridListDragDropHoverBgEnabled]="dragDropHoverBgEnabled"
         [floGridListDragDropHoverBgColor]="dragDropHoverBgColor"
         [floGridListDragDropHoverBgOpacity]="dragDropHoverBgOpacity"

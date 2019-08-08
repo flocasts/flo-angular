@@ -1,5 +1,5 @@
-import { ElementRef, Directive, HostListener, Input, Inject, Output } from '@angular/core'
-import { IFloGridListBaseItem } from './ng-grid-list.tokens'
+import { ElementRef, Directive, HostListener, Input, Inject, Output, OnDestroy, AfterContentInit } from '@angular/core'
+import { IFloGridListBaseItem, FLO_GRID_LIST_GUID_GEN } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
 import { DOCUMENT } from '@angular/common'
@@ -18,10 +18,13 @@ const CLASS_ITEM_OVERLAY = '.list-item-overlay'
 @Directive({
   selector: '[floGridListDragDrop]',
 })
-export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement> {
-  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any) { }
+export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement>
+  implements OnDestroy, AfterContentInit {
+  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any,
+    @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
 
   private _floGridListDragDrop = false
+  private _document = this.doc as HTMLDocument
 
   @Input()
   get floGridListDragDrop() { return this._floGridListDragDrop }
@@ -36,10 +39,10 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   @Input() floGridListDragDropHoverBgEnabled?: boolean
   @Input() floGridListDragDropHoverBgColor?: string
   @Input() floGridListDragDropHoverBgOpacity?: string | number
+  @Input() floGridListDragDropDragRef?: HTMLElement
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
-  private _document = this.doc as HTMLDocument
   private getTiles = () => this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER)
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
@@ -47,9 +50,46 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     if (evt.stopPropagation) { evt.stopPropagation() }
   }
 
+  dragId = `__fs_drag_${(this.guid() as string).slice(0, 8)}__`
+  maybeClonedExists = () => maybe(this._document.getElementById(this.dragId))
+
+  extractDisplayInfoFromDragEvent = (evt: DragEvent) => {
+    const elm = evt.target as HTMLElement
+    const clientRect = elm.getBoundingClientRect()
+    return {
+      offsetX: evt.clientX - clientRect.left,
+      offsetY: evt.clientY - clientRect.top,
+      height: `${elm.clientHeight}px`,
+      width: `${elm.clientWidth}px`
+    }
+  }
+
+  mutateClonedOffsetPlaceholder = (elm: HTMLDivElement) => {
+    elm.style.position = 'absolute'
+    elm.style.top = '-9999px'
+    elm.style.left = '-9999px'
+    elm.style.zIndex = '5000'
+    if (this.floGridListDragDropItem) {
+      elm.style.zIndex = elm.style.zIndex + 1
+    }
+    elm.id = this.dragId
+    return elm
+  }
+
   @HostListener('dragstart', ['$event']) dragstart(evt: DragEvent) {
     maybe(evt.dataTransfer)
-      .tapSome(dt => dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem })))
+      .tapSome(dt => {
+        dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
+        if (this.floGridListDragDropDragRef) {
+          this.maybeClonedExists()
+            .tapSome(cloned => {
+              const info = this.extractDisplayInfoFromDragEvent(evt)
+              cloned.style.height = info.height
+              cloned.style.width = info.width
+              dt.setDragImage(cloned, info.offsetX, info.offsetY)
+            })
+        }
+      })
   }
 
   private resetStyles = (elm: HTMLElement) => {
@@ -96,7 +136,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
           this.maybeItemOverlay(a).tapSome(b => b.classList.remove(CLASS_DRAGGING))
         })
       }, 200) // FADE TIME: 200ms
-     }
+    }
 
     maybe(evt.dataTransfer)
       .map(dt => JSON.parse(dt.getData('text')) as IDragDropMap<TItem>)
@@ -112,5 +152,22 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
             some: _ => res.gridRef.swapItems(res.replace.from.value, res.replace.to.index)
           })
       })
+  }
+
+  ngAfterContentInit() {
+    if (this.floGridListDragDrop) {
+
+      this.maybeClonedExists()
+        .tapNone(() => {
+          if (this.floGridListDragDropDragRef) {
+            const elm = this.mutateClonedOffsetPlaceholder(this.floGridListDragDropDragRef.cloneNode(true) as HTMLDivElement)
+            this._document.body.append(elm)
+          }
+        })
+    }
+  }
+
+  ngOnDestroy() {
+    this.maybeClonedExists().tapSome(a => a.remove())
   }
 }
