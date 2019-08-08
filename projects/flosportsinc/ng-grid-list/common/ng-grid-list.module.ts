@@ -55,10 +55,12 @@ import {
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
-  const lambda = () =>
-    ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11)
-      // tslint:disable-next-line: no-bitwise
-      .replace(/[018]/g, (c: any) => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+  const lambda = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    // tslint:disable: no-bitwise
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
   return lambda
 }
 
