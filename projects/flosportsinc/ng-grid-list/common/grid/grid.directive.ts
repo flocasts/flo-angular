@@ -20,3 +20,17 @@ export class FloGridListItemSomeDirective<TElement extends HTMLElement> {
 export class FloGridListItemNoneDirective<TElement extends HTMLElement> {
   constructor(public elmRef: ElementRef<TElement>) { }
 }
+
+@Directive({
+  selector: '[floGridListItemSomeDrag]'
+})
+export class FloGridListItemSomeDragDirective<TElement extends HTMLElement> {
+  constructor(public elmRef: ElementRef<TElement>) { }
+}
+
+@Directive({
+  selector: '[floGridListItemNoneDrag]',
+})
+export class FloGridListItemNoneDragDirective<TElement extends HTMLElement> {
+  constructor(public elmRef: ElementRef<TElement>) { }
+}
