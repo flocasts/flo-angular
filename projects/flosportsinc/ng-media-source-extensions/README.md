@@ -58,7 +58,10 @@ import { FloHlsModule, FloMseModule } from '@flosportsinc/ng-media-source-extens
       floConfig: {
         selfHeal: true // attempts to fix errors automatically
       },
-      hlsConfig: {} // See: https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning
+      hlsConfig: {
+        capLevelToPlayerSize: true, // this module defaults to responsive renditions
+        startLevel: -1 // this module defaults to auto start leveling
+      } // See: https://github.com/video-dev/hls.js/blob/master/docs/API.md#fine-tuning
     })
   ]
 })
