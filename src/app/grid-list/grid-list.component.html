@@ -10,8 +10,8 @@
   </div>
   <div>
     <label for="count"><strong>Count</strong></label>
-    <input id="countRange" name="count" type="range" min="0" max="64" step="1" [(ngModel)]="count">
-    <input id="countText" name="count" type="number" min="0" max="64" [(ngModel)]="count">
+    <input id="countRange" name="count" type="range" [min]="min" [max]="max" step="1" [(ngModel)]="count">
+    <input id="countText" name="count" type="number" [min]="min" [max]="max" [(ngModel)]="count">
   </div>
   <div>
     <label for="maxheight"><strong>Max Height</strong></label>
