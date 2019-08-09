@@ -1,8 +1,34 @@
 <h1>Grid List</h1>
 <form>
   <div>
-    <input id="maxheight" name="maxheight" type="range" min="0" max="1200" [(ngModel)]="maxheight">
-    <label for="maxheight">maxheight {{ maxheight }}</label>
+    <label for="min"><strong>Min</strong></label>
+    <input id="min" name="min" type="text" type="number" [(ngModel)]="min">
+  </div>
+  <div>
+    <label for="max"><strong>Max</strong></label>
+    <input id="max" name="max" type="text" type="number" [(ngModel)]="max">
+  </div>
+  <div>
+    <label for="count"><strong>Count</strong></label>
+    <input id="countRange" name="count" type="range" min="0" max="64" step="1" [(ngModel)]="count">
+    <input id="countText" name="count" type="number" min="0" max="64" [(ngModel)]="count">
+  </div>
+  <div>
+    <label for="maxheight"><strong>Max Height</strong></label>
+    <input id="maxheightRange" name="maxheight" type="range" min="0" max="1200" [(ngModel)]="maxheight">
+    <input id="maxheightText" name="maxheight" type="number" min="0" max="1200" [(ngModel)]="maxheight">
+  </div>
+  <div>
+    <input id="overlayEnabled" name="overlayEnabled" type="checkbox" [(ngModel)]="overlayEnabled">
+    <label for="overlayEnabled">Overlay Enabled</label>
+  </div>
+  <div>
+    <input id="overlayStatic" name="overlayStatic" type="checkbox" [(ngModel)]="overlayStatic">
+    <label for="overlayStatic">Overlay Static</label>
+  </div>
+  <div>
+    <input id="fillToFit" name="fillToFit" type="checkbox" [(ngModel)]="fillToFit">
+    <label for="fillToFit">Fill to fit</label>
   </div>
   <div>
     <input id="selectNextEmptyOnCount" name="selectNextEmptyOnCount" type="checkbox" [(ngModel)]="selectNextEmptyOnCount">
@@ -27,23 +53,28 @@
     </div>
     <div>
       <input id="dragDropHoverBgEnabled" name="dragDropHoverBgEnabled" type="checkbox" [(ngModel)]="dragDropHoverBgEnabled">
-      <label for="dragDropHoverBgEnabled">dragDropHoverBgEnabled</label>
+      <label for="dragDropHoverBgEnabled">Drag-Drop Hover BgEnabled</label>
     </div>
     <div>
       <input id="dragDropHoverBgColor" name="dragDropHoverBgColor" type="color" [(ngModel)]="dragDropHoverBgColor">
-      <label for="dragDropHoverBgColor">dragDropHoverBgColor {{ dragDropHoverBgColor }}</label>
+      <label for="dragDropHoverBgColor">Drag-Drop Hover BgColor {{ dragDropHoverBgColor }}</label>
     </div>
     <div>
       <input id="dragDropHoverBgOpacity" name="dragDropHoverBgOpacity" type="range" min="0" max="1" step="0.05" [(ngModel)]="dragDropHoverBgOpacity">
-      <label for="dragDropHoverBgOpacity">dragDropHoverBgOpacity <strong>{{ dragDropHoverBgOpacity | number: '1.2' }}</strong></label>
+      <label for="dragDropHoverBgOpacity">Drag-Drop Hover BgOpacity <strong>{{ dragDropHoverBgOpacity | number: '1.2' }}</strong></label>
     </div>
   </div>
 </form>
 
 <flo-grid-list-view #gridRef 
   (selectedElementChange)="elmChange($event)"
+  [(min)]="min"
+  [(max)]="max"
   [(count)]="count"
   [(maxheight)]="maxheight"
+  [(overlayEnabled)]="overlayEnabled"
+  [(overlayStatic)]="overlayStatic"
+  [(fillToFit)]="fillToFit"
   [(dragDropEnabled)]="dragDropEnabled"
   [(dragDropHoverBgEnabled)]="dragDropHoverBgEnabled"
   [(dragDropHoverBgColor)]="dragDropHoverBgColor"
@@ -56,12 +87,6 @@
     <button (click)="gridRef.setCount(2)" [disabled]="gridRef.isCount(2)">2</button>
     <button (click)="gridRef.setCount(3)" [disabled]="gridRef.isCount(3)">3</button>
     <button (click)="gridRef.setCount(4)" [disabled]="gridRef.isCount(4)">4</button>
-    <button (click)="gridRef.setCount(5)" [disabled]="gridRef.isCount(5)">5</button>
-    <button (click)="gridRef.setCount(6)" [disabled]="gridRef.isCount(6)">6</button>
-    <button (click)="gridRef.setCount(9)" [disabled]="gridRef.isCount(9)">9</button>
-    <button (click)="gridRef.setCount(15)" [disabled]="gridRef.isCount(15)">15</button>
-    <button (click)="gridRef.setCount(16)" [disabled]="gridRef.isCount(16)">16</button>
-    <button (click)="gridRef.setCount(25)" [disabled]="gridRef.isCount(25)">25</button>
     <button (click)="gridRef.resetItems()">CLEAR ITEMS</button>
     <button (click)="list.autoFill()">AUTOFILL</button>
     <button *floIfFullscreen="fsElementRef" floClickToExitFullscreen>EXIT FULLSCREEN</button>

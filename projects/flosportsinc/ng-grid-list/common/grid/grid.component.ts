@@ -138,15 +138,34 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @Input()
   get min() {
-    return this._count
+    return this._min
   }
   set min(val: number) {
-    this._count = val
-    this.minChange.next(this._count)
+    this._min = val
+    this.minChange.next(this._min)
+    if (this.count < val) {
+      this.setCount(val)
+    }
   }
 
   public setMin(min: number) {
     this.min = min
+  }
+
+  @Input()
+  get max() {
+    return this._max
+  }
+  set max(val: number) {
+    this._max = val
+    this.maxChange.next(this._max)
+    if (this.count > val) {
+      this.setCount(val)
+    }
+  }
+
+  public setMax(min: number) {
+    this.max = min
   }
 
   @Input()
@@ -186,19 +205,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public setSelectFromLowerIndicesFirst(val: boolean) {
     this.selectFromLowerIndicesFirst = val
-  }
-
-  @Input()
-  get max() {
-    return this._max
-  }
-  set max(val: number) {
-    this._max = val
-    this.maxChange.next(this._max)
-  }
-
-  public setMax(min: number) {
-    this.max = min
   }
 
   @Input()
