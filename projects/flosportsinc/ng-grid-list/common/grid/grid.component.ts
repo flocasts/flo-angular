@@ -533,7 +533,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
-  public readonly showOverlay = this.fadeStream.pipe(map(b => this.overlayEnabled && b), tap(console.log))
+  public readonly showOverlay = this.fadeStream.pipe(map(b => this.overlayEnabled && b))
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
   private readonly toggleCursor = (show: boolean) => this.rd.setStyle(this.elmRef.nativeElement, 'cursor', show ? 'default' : 'none')
