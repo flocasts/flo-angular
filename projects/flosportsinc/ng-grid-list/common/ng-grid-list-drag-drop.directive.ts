@@ -1,9 +1,12 @@
-import { ElementRef, Directive, HostListener, Input, Inject, Output, OnDestroy, AfterContentInit } from '@angular/core'
 import { IFloGridListBaseItem, FLO_GRID_LIST_GUID_GEN } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
-import { DOCUMENT } from '@angular/common'
+import { DOCUMENT, isPlatformServer } from '@angular/common'
 import { Subject } from 'rxjs'
+import {
+  ElementRef, Directive, HostListener, Input, Inject, Output,
+  OnDestroy, AfterContentInit, Renderer2, PLATFORM_ID
+} from '@angular/core'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -20,7 +23,9 @@ const CLASS_ITEM_OVERLAY = '.list-item-overlay'
 })
 export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TElement extends HTMLElement>
   implements OnDestroy, AfterContentInit {
-  constructor(public elmRef: ElementRef<TElement>, @Inject(DOCUMENT) private doc: any,
+  constructor(public elmRef: ElementRef<TElement>, private rd: Renderer2,
+    @Inject(PLATFORM_ID) private platformId: string,
+    @Inject(DOCUMENT) private doc: any,
     @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
 
   private _floGridListDragDrop = false
@@ -155,13 +160,14 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   }
 
   ngAfterContentInit() {
+    if (isPlatformServer(this.platformId)) { return }
     if (this.floGridListDragDrop) {
 
       this.maybeClonedExists()
         .tapNone(() => {
           if (this.floGridListDragDropDragRef) {
             const elm = this.mutateClonedOffsetPlaceholder(this.floGridListDragDropDragRef.cloneNode(true) as HTMLDivElement)
-            this._document.body.append(elm)
+            this.rd.appendChild(this._document.body, elm)
           }
         })
     }
