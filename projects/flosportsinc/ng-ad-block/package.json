@@ -1,6 +1,12 @@
 {
   "name": "@flosportsinc/ng-ad-block",
   "version": "0.0.1",
+  "private": false,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flocasts/flo-angular"
+  },
   "peerDependencies": {
     "@angular/common": ">= 6",
     "@angular/core": ">= 6"
