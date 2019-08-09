@@ -1,9 +1,12 @@
-import { ElementRef, Directive, HostListener, Input, Inject, Output, OnDestroy, AfterContentInit, Renderer2, PLATFORM_ID } from '@angular/core'
 import { IFloGridListBaseItem, FLO_GRID_LIST_GUID_GEN } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import { Subject } from 'rxjs'
+import {
+  ElementRef, Directive, HostListener, Input, Inject, Output,
+  OnDestroy, AfterContentInit, Renderer2, PLATFORM_ID
+} from '@angular/core'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
