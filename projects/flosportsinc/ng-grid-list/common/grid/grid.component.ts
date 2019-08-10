@@ -5,7 +5,7 @@
 import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
-import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable, combineLatest } from 'rxjs'
+import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,

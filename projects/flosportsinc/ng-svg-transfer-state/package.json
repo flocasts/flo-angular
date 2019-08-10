@@ -2,12 +2,24 @@
   "name": "@flosportsinc/ng-svg-transfer-state",
   "version": "0.0.1",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flocasts/flo-angular/issues"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/flocasts/flo-angular"
   },
+  "author": "Patrick Michalina <patrickmichalina@mac.com>",
+  "contributors": [],
   "peerDependencies": {
     "@angular/common": ">= 6",
     "@angular/core": ">= 6"
-  }
+  },
+  "keywords": [
+    "angular",
+    "universal",
+    "flosports",
+    "svg",
+    "node"
+  ]
 }
