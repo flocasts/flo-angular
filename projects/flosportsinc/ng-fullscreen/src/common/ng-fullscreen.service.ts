@@ -1,3 +1,5 @@
+
+import { isIphone } from './util'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
 import { Injectable, Inject, PLATFORM_ID } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
@@ -9,7 +11,6 @@ import {
   FS_FULLSCREEN_ENABLED, FullscreenEnabledKeys, FS_FULLSCREEN_ENABLED_FUNC, FullscreenEnabledFunc,
   FS_FULLSCREEN_IOS_POLL_MS, FS_FULLSCREEN_IOS_POLL_ENABLED
 } from './ng-fullscreen.tokens'
-import { isIphone } from './util'
 
 const isKeyTrue =
   (platformKeys: ReadonlyArray<string>) =>
@@ -23,9 +24,13 @@ const fullscreenChangeError =
 
 const filterAndExecute =
   (ref: HTMLElement | HTMLDocument) =>
-    (arr: ReadonlyArray<string>) => arr
-      .filter(a => typeof ref[a] === 'function')
-      .forEach(a => ref[a]())
+    (arr: ReadonlyArray<string>) => {
+      const funcStringIdx = arr.findIndex(a => typeof ref[a] === 'function')
+      // tslint:disable-next-line: no-if-statement
+      if (funcStringIdx >= 0) {
+        ref[arr[funcStringIdx]]()
+      }
+    }
 
 export interface IFloFullscreenService {
   readonly fullscreen$: Observable<boolean>
