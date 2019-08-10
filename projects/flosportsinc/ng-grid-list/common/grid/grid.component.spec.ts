@@ -25,7 +25,8 @@ import {
   DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
 } from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
@@ -134,7 +135,7 @@ describe(FloGridListViewComponent.name, () => {
 
     it('should handle out of bounds when value is set above maximum', () => {
       const sut = TestBed.createComponent(FloGridListViewComponent)
-      const testNumber = 64
+      const testNumber = DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT + 1
 
       sut.componentInstance.setCount(testNumber)
       sut.detectChanges()
@@ -147,12 +148,29 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('min', 4))
     it('should expose setter function', () => testInputPropSetFunc('min', 'setMin', 4))
     it('should start with token value', () => expect(createSut().instance.min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_COUNT)))
+    it('should enforce', () => {
+      const sut = TestBed.createComponent(FloGridListViewComponent)
+      expect(sut.componentInstance.count).toEqual(1)
+      sut.componentInstance.setMin(2)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(2)
+    })
   })
 
   describe('max property', () => {
     it('should double bind', () => testInputProperty('max', 52))
     it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
     it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_COUNT)))
+    it('should enforce', () => {
+      const sut = TestBed.createComponent(FloGridListViewComponent)
+      expect(sut.componentInstance.count).toEqual(1)
+      sut.componentInstance.setCount(14)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(14)
+      sut.componentInstance.setMax(5)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(5)
+    })
   })
 
   describe('maxheight property', () => {

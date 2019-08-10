@@ -35,7 +35,8 @@ export interface IHlsModuleConfig {
 }
 
 export const DEFAULT_MODULE_HLS_CONFIG: Partial<IHlsConfig> = {
-  capLevelToPlayerSize: true
+  capLevelToPlayerSize: true,
+  startLevel: -1
 }
 
 export function defaultIsSupportedFactory() {

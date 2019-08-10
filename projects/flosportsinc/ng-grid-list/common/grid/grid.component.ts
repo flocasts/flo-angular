@@ -13,7 +13,7 @@ import {
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction
+  HostListener, AfterViewInit, TrackByFunction, Renderer2
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -65,6 +65,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   constructor(
     public elmRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
+    private rd: Renderer2,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -137,15 +138,34 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @Input()
   get min() {
-    return this._count
+    return this._min
   }
   set min(val: number) {
-    this._count = val
-    this.minChange.next(this._count)
+    this._min = val
+    this.minChange.next(this._min)
+    if (this.count < val) {
+      this.setCount(val)
+    }
   }
 
   public setMin(min: number) {
     this.min = min
+  }
+
+  @Input()
+  get max() {
+    return this._max
+  }
+  set max(val: number) {
+    this._max = val
+    this.maxChange.next(this._max)
+    if (this.count > val) {
+      this.setCount(val)
+    }
+  }
+
+  public setMax(min: number) {
+    this.max = min
   }
 
   @Input()
@@ -185,19 +205,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public setSelectFromLowerIndicesFirst(val: boolean) {
     this.selectFromLowerIndicesFirst = val
-  }
-
-  @Input()
-  get max() {
-    return this._max
-  }
-  set max(val: number) {
-    this._max = val
-    this.maxChange.next(this._max)
-  }
-
-  public setMax(min: number) {
-    this.max = min
   }
 
   @Input()
@@ -525,10 +532,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
-  public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
+  public readonly showOverlay = this.fadeStream.pipe(map(b => this.overlayEnabled && b))
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private readonly toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
+  private readonly toggleCursor = (show: boolean) => this.rd.setStyle(this.elmRef.nativeElement, 'cursor', show ? 'default' : 'none')
   public readonly trySelectNextEmpty = () => this.findNextEmptyIndex().tapSome(this.setSelectedIndex)
 
   private readonly setSelectedIdViaIndex = (idx: number) => {

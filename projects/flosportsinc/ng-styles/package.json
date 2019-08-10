@@ -1,8 +1,22 @@
 {
   "name": "@flosportsinc/ng-styles",
   "version": "0.0.1",
+  "bugs": {
+    "url": "https://github.com/flocasts/flo-angular/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flocasts/flo-angular"
+  },
+  "author": "Patrick Michalina <patrickmichalina@mac.com>",
+  "contributors": [],
   "peerDependencies": {
     "@angular/common": ">= 6",
     "@angular/core": ">= 6"
-  }
+  },
+  "keywords": [
+    "angular",
+    "universal",
+    "flosports"
+  ]
 }
