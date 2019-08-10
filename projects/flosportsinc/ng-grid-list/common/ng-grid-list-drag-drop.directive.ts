@@ -178,6 +178,8 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   }
 
   ngOnDestroy() {
-    this.maybeClonedExists().tapSome(a => a.remove())
+    this.maybeClonedExists()
+      .filter(a => a.parentNode !== null)
+      .tapSome(a => (a.parentNode as Node).removeChild(a))
   }
 }
