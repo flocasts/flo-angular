@@ -52,6 +52,9 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
+  private supportsDragImage = () => isPlatformServer(this.platformId)
+    ? false
+    : 'setDragImage' in ((window as any).DataTransfer || (window as any).Clipboard).prototype
   private getTiles = () => Array.from(this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER))
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
@@ -60,7 +63,9 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   }
 
   dragId = `__fs_drag_${(this.guid() as string).slice(0, 8)}__`
-  maybeClonedExists = () => maybe(this._document.getElementById(this.dragId))
+  maybeClonedExists = () => this.floGridListDragDropDragRef && this.supportsDragImage()
+    ? maybe(this._document.getElementById(this.dragId))
+    : maybe<HTMLElement>()
 
   extractDisplayInfoFromDragEvent = (evt: DragEvent) => {
     const elm = evt.target as HTMLElement
@@ -85,17 +90,15 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     maybe(evt.dataTransfer)
       .tapSome(dt => {
         dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
-        if (this.floGridListDragDropDragRef && typeof dt.setDragImage === 'function') {
-          this.maybeClonedExists()
-            .tapSome(cloned => {
-              const info = this.extractDisplayInfoFromDragEvent(evt)
-              const zIndexPlus = Date.now().toString()
-              this.rd.setStyle(cloned, 'height', info.height)
-              this.rd.setStyle(cloned, 'width', info.width)
-              this.rd.setStyle(cloned, 'z-index', zIndexPlus.substr(zIndexPlus.length - 7))
-              dt.setDragImage(cloned, info.offsetX, info.offsetY)
-            })
-        }
+        this.maybeClonedExists()
+          .tapSome(cloned => {
+            const info = this.extractDisplayInfoFromDragEvent(evt)
+            const zIndexPlus = Date.now().toString()
+            this.rd.setStyle(cloned, 'height', info.height)
+            this.rd.setStyle(cloned, 'width', info.width)
+            this.rd.setStyle(cloned, 'z-index', zIndexPlus.substr(zIndexPlus.length - 7))
+            dt.setDragImage(cloned, info.offsetX, info.offsetY)
+          })
       })
   }
 
@@ -165,16 +168,13 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   ngAfterContentInit() {
     if (isPlatformServer(this.platformId)) { return }
-    if (this.floGridListDragDrop) {
-
-      this.maybeClonedExists()
-        .tapNone(() => {
-          if (this.floGridListDragDropDragRef) {
-            const elm = this.mutateClonedOffsetPlaceholder(this.floGridListDragDropDragRef.cloneNode(true) as HTMLDivElement)
-            this.rd.appendChild(this._document.body, elm)
-          }
-        })
-    }
+    this.maybeClonedExists()
+      .tapNone(() => {
+        if (this.floGridListDragDropDragRef) {
+          const elm = this.mutateClonedOffsetPlaceholder(this.floGridListDragDropDragRef.cloneNode(true) as HTMLDivElement)
+          this.rd.appendChild(this._document.body, elm)
+        }
+      })
   }
 
   ngOnDestroy() {
