@@ -52,7 +52,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
-  private getTiles = () => this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER)
+  private getTiles = () => Array.from(this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER))
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
     if (evt.preventDefault) { evt.preventDefault() }
@@ -85,7 +85,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     maybe(evt.dataTransfer)
       .tapSome(dt => {
         dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
-        if (this.floGridListDragDropDragRef) {
+        if (this.floGridListDragDropDragRef && typeof dt.setDragImage === 'function') {
           this.maybeClonedExists()
             .tapSome(cloned => {
               const info = this.extractDisplayInfoFromDragEvent(evt)
