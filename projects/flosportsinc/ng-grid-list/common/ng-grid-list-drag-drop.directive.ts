@@ -170,7 +170,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     if (isPlatformServer(this.platformId)) { return }
     this.maybeClonedExists()
       .tapNone(() => {
-        if (this.floGridListDragDropDragRef) {
+        if (this.floGridListDragDropDragRef && this.supportsDragImage()) {
           const elm = this.mutateClonedOffsetPlaceholder(this.floGridListDragDropDragRef.cloneNode(true) as HTMLDivElement)
           this.rd.appendChild(this._document.body, elm)
         }
