@@ -4,7 +4,13 @@ import { NgModule, ModuleWithProviders } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
 import { FloGridListModuleConfiguration } from './ng-grid-list.config.interfaces'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid/grid.directive'
+import {
+  FloGridListOverlayDirective,
+  FloGridListItemNoneDirective,
+  FloGridListItemSomeDirective,
+  FloGridListItemSomeDragDirective,
+  FloGridListItemNoneDragDirective
+} from './grid/grid.directive'
 import {
   FLO_GRID_LIST_COUNT, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_MIN_COUNT,
   FLO_GRID_LIST_MAX_COUNT, FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_START,
@@ -16,7 +22,10 @@ import {
   FLO_GRID_LIST_TRACK_BY_FN, FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   FLO_GRID_LIST_FILL_TO_FIT, FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
   IFloGridListBaseItem,
-  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -39,14 +48,19 @@ import {
   DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX,
   DEFAULT_FLO_GRID_LIST_FILL_TO_FIT,
   DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
-  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
-  const lambda = () =>
-    ([1e7] as any + -1e3 + -4e3 + -8e3 + -1e11)
-      // tslint:disable-next-line: no-bitwise
-      .replace(/[018]/g, (c: any) => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16))
+  const lambda = () => 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+    // tslint:disable: no-bitwise
+    const r = Math.random() * 16 | 0
+    const v = c === 'x' ? r : (r & 0x3 | 0x8)
+    return v.toString(16)
+  })
   return lambda
 }
 
@@ -66,6 +80,8 @@ export function defaultFloGridListTrackByFn() {
     FloGridListOverlayDirective,
     FloGridListItemSomeDirective,
     FloGridListItemNoneDirective,
+    FloGridListItemSomeDragDirective,
+    FloGridListItemNoneDragDirective,
     FloGridListDragDropDirective
   ],
   exports: [
@@ -75,6 +91,8 @@ export function defaultFloGridListTrackByFn() {
     FloGridListOverlayDirective,
     FloGridListItemSomeDirective,
     FloGridListItemNoneDirective,
+    FloGridListItemSomeDragDirective,
+    FloGridListItemNoneDragDirective,
     FloGridListDragDropDirective
   ],
   providers: [
@@ -101,7 +119,10 @@ export function defaultFloGridListTrackByFn() {
     { provide: FLO_GRID_LIST_ASPECT_RATIO, useValue: DEFAULT_FLO_GRID_LIST_ASPECT_RATIO },
     { provide: FLO_GRID_LIST_TRACK_BY_FN, useFactory: defaultFloGridListTrackByFn },
     { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
-    { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: DEFAULT_FLO_GRID_LIST_FILL_TO_FIT }
+    { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
+    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
+    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
+    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
   ]
 })
 export class FloGridListModule {
@@ -131,6 +152,9 @@ export class FloGridListModule {
         { provide: FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST, useValue: cfg.selectFromLowerIndicesFirst !== undefined ? cfg.selectFromLowerIndicesFirst : DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST },
         { provide: FLO_GRID_LIST_CONTAINER_ID_PREFIX, useValue: cfg.containerIdPrefix !== undefined ? cfg.containerIdPrefix : DEFAULT_FLO_GRID_LIST_CONTAINER_ID_PREFIX },
         { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: cfg.fillToFit !== undefined ? cfg.fillToFit : DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgEnabled !== undefined ? cfg.dragDrop.dragOverBgEnabled : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgColor !== undefined ? cfg.dragDrop.dragOverBgColor : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgOpacity !== undefined ? cfg.dragDrop.dragOverBgOpacity : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
       ]
     }
   }

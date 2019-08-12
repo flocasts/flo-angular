@@ -8,13 +8,26 @@
   <div [style.padding-top.%]="aspectRatioPercentage"></div>
   <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
     <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
+      <div #offscreenDragContainer [ngSwitch]="item.hasValue" class="fg offscreen">
+        <ng-container *ngSwitchCase="false">
+          <ng-container *ngTemplateOutlet="gridListItemNoneDragTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+        <ng-container *ngSwitchCase="true">
+          <ng-container *ngTemplateOutlet="gridListItemSomeDragTemplate; context: { $implicit: item }"></ng-container>
+        </ng-container>
+      </div>
       <div #floGridListItemContainer
         class="fg list-item-container"
         (click)="setSelectedIndex(idx)"
+        (floGridListDragDropDragoverChange)="dragSource.next($event)"
         [floGridListDragDrop]="dragDropEnabled"
         [floGridListDragDropItem]="item.value"
         [floGridListDragDropIndex]="idx"
         [floGridListDragDropGridRef]="this"
+        [floGridListDragDropDragRef]="gridListItemSomeDragTemplate || gridListItemNoneDragTemplate ? offscreenDragContainer : undefined"
+        [floGridListDragDropHoverBgEnabled]="dragDropHoverBgEnabled"
+        [floGridListDragDropHoverBgColor]="dragDropHoverBgColor"
+        [floGridListDragDropHoverBgOpacity]="dragDropHoverBgOpacity"
         [style.flex-basis.%]="item.flexBasis"
         [style.padding-top.%]="item.padTop"
         [attr.id]="item?.containerId">
@@ -26,7 +39,7 @@
             <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
           </div>
         </ng-container>
-        <div class="fg" [class.list-item-selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
+        <div class="fg list-item-overlay" [class.selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
       </div>
     </ng-container>
   </div>

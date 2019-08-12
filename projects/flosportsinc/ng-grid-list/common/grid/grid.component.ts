@@ -7,11 +7,14 @@ import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
-import { FloGridListOverlayDirective, FloGridListItemNoneDirective, FloGridListItemSomeDirective } from './grid.directive'
+import {
+  FloGridListOverlayDirective, FloGridListItemNoneDirective,
+  FloGridListItemSomeDirective, FloGridListItemSomeDragDirective, FloGridListItemNoneDragDirective
+} from './grid.directive'
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction
+  HostListener, AfterViewInit, TrackByFunction, Renderer2
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -35,7 +38,10 @@ import {
   FLO_GRID_LIST_FILL_TO_FIT,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
   IFloGridListBaseItem,
-  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -60,6 +66,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   constructor(
     public elmRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
+    private rd: Renderer2,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -81,7 +88,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_ASPECT_RATIO) private _aspectRatio: number,
     @Inject(FLO_GRID_LIST_TRACK_BY_FN) private _trackByFn: TrackByFunction<IViewItem<TItem>>,
     @Inject(FLO_GRID_LIST_CONTAINER_ID_PREFIX) private _containerIdPrefix: string,
-    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean
+    @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED) private _dragDropHoverBgEnabled: boolean,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
 
   @HostListener('fullscreenchange')
@@ -129,15 +139,34 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @Input()
   get min() {
-    return this._count
+    return this._min
   }
   set min(val: number) {
-    this._count = val
-    this.minChange.next(this._count)
+    this._min = val
+    this.minChange.next(this._min)
+    if (this.count < val) {
+      this.setCount(val)
+    }
   }
 
   public setMin(min: number) {
     this.min = min
+  }
+
+  @Input()
+  get max() {
+    return this._max
+  }
+  set max(val: number) {
+    this._max = val
+    this.maxChange.next(this._max)
+    if (this.count > val) {
+      this.setCount(val)
+    }
+  }
+
+  public setMax(min: number) {
+    this.max = min
   }
 
   @Input()
@@ -177,19 +206,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   public setSelectFromLowerIndicesFirst(val: boolean) {
     this.selectFromLowerIndicesFirst = val
-  }
-
-  @Input()
-  get max() {
-    return this._max
-  }
-  set max(val: number) {
-    this._max = val
-    this.maxChange.next(this._max)
-  }
-
-  public setMax(min: number) {
-    this.max = min
   }
 
   @Input()
@@ -394,6 +410,45 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     this.fillToFit = enable
   }
 
+  @Input()
+  get dragDropHoverBgEnabled() {
+    return this._dragDropHoverBgEnabled
+  }
+  set dragDropHoverBgEnabled(enable: boolean) {
+    this._dragDropHoverBgEnabled = enable
+    this.dragDropHoverBgEnabledChange.next(enable)
+  }
+
+  public setDragDropHoverBgEnabled(enable: boolean) {
+    this.dragDropHoverBgEnabled = enable
+  }
+
+  @Input()
+  get dragDropHoverBgColor() {
+    return this._dragDropHoverBgColor
+  }
+  set dragDropHoverBgColor(style: string) {
+    this._dragDropHoverBgColor = style
+    this.dragDropHoverBgColorChange.next(style)
+  }
+
+  public setDragDropHoverBgColor(style: string) {
+    this.dragDropHoverBgColor = style
+  }
+
+  @Input()
+  get dragDropHoverBgOpacity() {
+    return this._dragDropHoverBgOpacity
+  }
+  set dragDropHoverBgOpacity(val: string | number) {
+    this._dragDropHoverBgOpacity = val
+    this.dragDropHoverBgOpacityChange.next(val)
+  }
+
+  public setDragDropHoverBgOpacity(val: string) {
+    this.dragDropHoverBgOpacity = val
+  }
+
   public readonly isFullscreen = () => isPlatformServer(this._platformId) ? false : 1 >= window.outerHeight - window.innerHeight
 
   get baseMaxWidth() {
@@ -436,6 +491,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly overlayNgClassChange = new Subject<Object>()
   @Output() public readonly overlayNgStyleChange = new Subject<Object>()
   @Output() public readonly dragDropEnabledChange = new Subject<boolean>()
+  @Output() public readonly dragDropHoverBgEnabledChange = new Subject<boolean>()
+  @Output() public readonly dragDropHoverBgColorChange = new Subject<string>()
+  @Output() public readonly dragDropHoverBgOpacityChange = new Subject<string | number>()
   @Output() public readonly selectNextEmptyOnCountChange = new Subject<boolean>()
   @Output() public readonly selectNextEmptyOnAddChange = new Subject<boolean>()
   @Output() public readonly selectFromLowerIndicesFirstChange = new Subject<boolean>()
@@ -451,9 +509,14 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListItemNoneDirective, { read: TemplateRef }) readonly gridListItemNoneTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemSomeDragDirective, { read: TemplateRef }) readonly gridListItemSomeDragTemplate: TemplateRef<HTMLElement>
+  @ContentChild(FloGridListItemNoneDragDirective, { read: TemplateRef }) readonly gridListItemNoneDragTemplate: TemplateRef<HTMLElement>
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
+  public dragSource = new Subject<DragEvent>()
+
   private cursorInsideElement = merge(
+    this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
@@ -470,10 +533,10 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     : merge(this.cursorInsideElement, this.fadeoutIntervalWithReset)
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
-  public readonly showOverlay = this.overlayEnabled ? this.fadeStream : of(false)
+  public readonly showOverlay = this.fadeStream.pipe(map(b => this.overlayEnabled && b))
   public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
 
-  private readonly toggleCursor = (show: boolean) => this.elmRef.nativeElement.style.cursor = show ? 'default' : 'none'
+  private readonly toggleCursor = (show: boolean) => this.rd.setStyle(this.elmRef.nativeElement, 'cursor', show ? 'default' : 'none')
   public readonly trySelectNextEmpty = () => this.findNextEmptyIndex().tapSome(this.setSelectedIndex)
 
   private readonly setSelectedIdViaIndex = (idx: number) => {

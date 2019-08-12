@@ -9,7 +9,16 @@ import { FloGridListViewComponent } from './grid/grid.component'
 
 @Component({
   selector: 'flo-test-component',
-  template: '<flo-grid-list-view #gridRef></flo-grid-list-view><div floGridListDragDrop [floGridListDragDropGridRef]="gridRef">TEST</div>'
+  template: `<flo-grid-list-view #gridRef></flo-grid-list-view>
+    <div #dragContainerRef>DRAGGER</div>
+    <div floGridListDragDrop
+      [floGridListDragDropHoverBgColor]="'#000'"
+      [floGridListDragDropDragRef]="dragContainerRef"
+      [floGridListDragDropGridRef]="gridRef"
+      [floGridListDragDropHoverBgEnabled]="true">
+      TEST
+    </div>
+  `
 })
 class TestComponent { }
 
@@ -89,7 +98,7 @@ describe(FloGridListDragDropDirective.name, () => {
 
       const dataTransfer = new DataTransfer()
       dataTransfer.setData('text', JSON.stringify({ index: 4, value: directiveInstance.floGridListDragDropItem }))
-      const evt = new DragEvent('drop', { dataTransfer, relatedTarget: gridNativeEl  })
+      const evt = new DragEvent('drop', { dataTransfer, relatedTarget: gridNativeEl })
       directiveEl.triggerEventHandler('drop', evt)
 
       expect(spy).toHaveBeenCalledWith(3, directiveInstance.floGridListDragDropItem, 4)
@@ -110,7 +119,7 @@ describe(FloGridListDragDropDirective.name, () => {
 
       const dataTransfer = new DataTransfer()
       dataTransfer.setData('text', JSON.stringify({ index: 4, value: directiveInstance.floGridListDragDropItem }))
-      const evt = new DragEvent('drop', { dataTransfer, relatedTarget: gridNativeEl  })
+      const evt = new DragEvent('drop', { dataTransfer, relatedTarget: gridNativeEl })
       directiveEl.triggerEventHandler('drop', evt)
 
       expect(spy).toHaveBeenCalledWith({ id: '2', some: 'thing' }, 3)

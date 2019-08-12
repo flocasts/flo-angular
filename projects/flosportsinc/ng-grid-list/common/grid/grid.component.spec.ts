@@ -11,7 +11,9 @@ import {
   FLO_GRID_LIST_ITEMS, FLO_GRID_LIST_DRAG_DROP_ENABLED, FLO_GRID_LIST_ASPECT_RATIO,
   FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT, FLO_GRID_LIST_TRACK_BY_FN,
   FLO_GRID_LIST_CONTAINER_ID_PREFIX, FLO_GRID_LIST_FILL_TO_FIT,
-  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD, FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR
 } from '../ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT,
@@ -20,7 +22,11 @@ import {
   DEFAULT_FLO_GRID_LIST_FILL_TO_FIT,
   DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_ADD,
   DEFAULT_FLO_GRID_LIST_SELECT_NEXT_EMPTY_ON_COUNT,
-  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST
+  DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT
 } from '../ng-grid-list.module.defaults'
 
 // tslint:disable: readonly-keyword
@@ -35,6 +41,8 @@ import {
       </div>
       <div *floGridListItemSome="let item" class="some" [attr.id]="'t_' + item.value.id">{{ item.value.value }}</div>
       <div *floGridListItemNone class="none">EMPTY</div>
+      <div *floGridListItemSomeDrag>EMPTY DRAG OVERLAY</div>
+      <div *floGridListItemNoneDrag>SOME DRAG OVERLAY</div>
     </flo-grid-list-view>
   `
 })
@@ -128,7 +136,7 @@ describe(FloGridListViewComponent.name, () => {
 
     it('should handle out of bounds when value is set above maximum', () => {
       const sut = TestBed.createComponent(FloGridListViewComponent)
-      const testNumber = 64
+      const testNumber = DEFAULT_FLO_GRID_LIST_MAX_VIEWCOUNT + 1
 
       sut.componentInstance.setCount(testNumber)
       sut.detectChanges()
@@ -141,12 +149,29 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('min', 4))
     it('should expose setter function', () => testInputPropSetFunc('min', 'setMin', 4))
     it('should start with token value', () => expect(createSut().instance.min).toEqual(TestBed.get(FLO_GRID_LIST_MIN_COUNT)))
+    it('should enforce', () => {
+      const sut = TestBed.createComponent(FloGridListViewComponent)
+      expect(sut.componentInstance.count).toEqual(1)
+      sut.componentInstance.setMin(2)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(2)
+    })
   })
 
   describe('max property', () => {
     it('should double bind', () => testInputProperty('max', 52))
     it('should expose setter function', () => testInputPropSetFunc('max', 'setMax', 52))
     it('should start with token value', () => expect(createSut().instance.max).toEqual(TestBed.get(FLO_GRID_LIST_MAX_COUNT)))
+    it('should enforce', () => {
+      const sut = TestBed.createComponent(FloGridListViewComponent)
+      expect(sut.componentInstance.count).toEqual(1)
+      sut.componentInstance.setCount(14)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(14)
+      sut.componentInstance.setMax(5)
+      sut.detectChanges()
+      expect(sut.componentInstance.count).toEqual(5)
+    })
   })
 
   describe('maxheight property', () => {
@@ -422,6 +447,87 @@ describe(FloGridListViewComponent.name, () => {
     it('should double bind', () => testInputProperty('items', [{ id: '1' }]))
     it('should expose setter function', () => testInputPropSetFunc('items', 'setItems', [{ id: '1' }]))
     it('should start with token value', () => expect(createSut().instance.items).toEqual(TestBed.get(FLO_GRID_LIST_ITEMS)))
+  })
+
+  describe('dragDropHoverBgEnabled property', () => {
+    it('should double bind', () => testInputProperty('dragDropHoverBgEnabled', false))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropHoverBgEnabled', 'setDragDropHoverBgEnabled', false))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropHoverBgEnabled).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)))
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED))
+
+    describe('when enabled', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ dragDrop: { dragOverBgEnabled: true } })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+
+      it('should set correct DI value', () => {
+        expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)).toEqual(true)
+      })
+    })
+
+    describe('when disabled', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ dragDrop: { dragOverBgEnabled: false } })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+      it('should set correct DI value', () => {
+        expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED)).toEqual(false)
+      })
+    })
+  })
+
+  describe('dragDropHoverBgColor property', () => {
+    it('should double bind', () => testInputProperty('dragDropHoverBgColor', '#000'))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropHoverBgColor', 'setDragDropHoverBgColor', '#000'))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropHoverBgColor).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR)))
+
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR))
+
+    describe('when configured', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ dragDrop: { dragOverBgColor: '#000' } })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+      it('should set correct DI value', () => {
+        expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR)).toEqual('#000')
+      })
+    })
+  })
+
+  describe('dragDropHoverBgOpacity property', () => {
+    it('should double bind', () => testInputProperty('dragDropHoverBgOpacity', 0.2))
+    it('should expose setter function', () => testInputPropSetFunc('dragDropHoverBgOpacity', 'setDragDropHoverBgOpacity', 0.2))
+    it('should start with token value', () =>
+      expect(createSut().instance.dragDropHoverBgOpacity).toEqual(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY)))
+    it('should start with default token value', () =>
+      expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY)).toEqual(DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY))
+
+    describe('when configured', () => {
+      beforeEach(() => {
+        TestBed.resetTestingModule()
+        TestBed.configureTestingModule({
+          imports: [FloGridListModule.config({ dragDrop: { dragOverBgOpacity: 0.25 } })],
+          declarations: [FloGridTilesTestComponent]
+        }).compileComponents()
+      })
+      it('should set correct DI value', () => {
+        expect(TestBed.get(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY)).toEqual(0.25)
+      })
+    })
   })
 
   describe('selectFromLowerIndicesFirst property', () => {

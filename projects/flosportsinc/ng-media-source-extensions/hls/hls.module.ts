@@ -17,27 +17,26 @@ import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
 
 const exectionKey = 'HLS'
-export const MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg')
+export const MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg.mdl')
+export const MEDIA_SOURCE_EXTENSION_HLS_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg')
+export const MEDIA_SOURCE_EXTENSION_SELF_HEAL = new InjectionToken('fs.mse.lib.cfg.selfHeal')
+export const DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL = true
 
 export interface HlsMessage {
   readonly key: keyof typeof Hls.Events
   readonly message: any
 }
 
-export interface IFloHlsModuleConfig {
-  readonly selfHeal: boolean
-}
+export type IHlsConfig = Hls.Config
 
 export interface IHlsModuleConfig {
-  readonly floConfig: Partial<IFloHlsModuleConfig>
-  readonly hlsConfig: Partial<Hls.Config>
+  readonly selfHeal: boolean
+  readonly hlsConfig: Partial<IHlsConfig>
 }
 
-export const DEFAULT_MODULE_CONFIG: IHlsModuleConfig = {
-  floConfig: {
-    selfHeal: true
-  },
-  hlsConfig: {}
+export const DEFAULT_MODULE_HLS_CONFIG: Partial<IHlsConfig> = {
+  capLevelToPlayerSize: true,
+  startLevel: -1
 }
 
 export function defaultIsSupportedFactory() {
@@ -89,15 +88,15 @@ export const selfHealFunc = (client: Hls) => {
 
 // TODO: if another Media Error is raised 'quickly' after this first Media Error,
 // TODO: first call hls.swapAudioCodec(), then call hls.recoverMediaError().
-export function defaultMseClientInitFunction(config: IHlsModuleConfig): IMseInit<Hls, HlsMessage> {
+export function defaultMseClientInitFunction(selfHeal: boolean, hlsConfig: Hls.Config): IMseInit<Hls, HlsMessage> {
   const func: IMseInitFunc<Hls, HlsMessage> = initEvent => {
-    const client = new Hls(config.hlsConfig)
+    const client = new Hls(hlsConfig)
     Object.keys(Hls.Events).forEach(k => {
       client.on(Hls.Events[k], (key: any, message) => initEvent.messageSource.next({ key, message }))
     })
 
     // setup fatal error recovery if selfHeal = true
-    config.floConfig.selfHeal && selfHealFunc(client)
+    selfHeal && selfHealFunc(client)
 
     client.loadSource(initEvent.src)
     client.attachMedia(initEvent.videoElement)
@@ -129,13 +128,24 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
   }
 }
 
+export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>) {
+  return {
+    ...DEFAULT_MODULE_HLS_CONFIG,
+    ...hlsConfig
+  }
+}
+
 @NgModule({
   imports: [FloMseModule],
   exports: [FloMseModule],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-      useValue: DEFAULT_MODULE_CONFIG
+      provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+      useValue: DEFAULT_MODULE_HLS_CONFIG
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_SELF_HEAL,
+      useValue: DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL
     },
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
@@ -150,7 +160,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction,
-      deps: [MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG],
+      deps: [MEDIA_SOURCE_EXTENSION_SELF_HEAL, MEDIA_SOURCE_EXTENSION_HLS_CONFIG],
       multi: true
     },
     {
@@ -166,22 +176,19 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
   ]
 })
 export class FloHlsModule {
-  static config(config: Partial<IHlsModuleConfig> = DEFAULT_MODULE_CONFIG): ModuleWithProviders {
+  static config(config: Partial<IHlsModuleConfig>): ModuleWithProviders {
     return {
       ngModule: FloHlsModule,
       providers: [
+        { provide: MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG, useValue: config.hlsConfig },
         {
-          provide: MEDIA_SOURCE_EXTENSION_HLS_INIT_CONFIG,
-          useValue: {
-            floConfig: {
-              ...DEFAULT_MODULE_CONFIG.floConfig,
-              ...config.floConfig
-            },
-            hlsConfig: {
-              ...DEFAULT_MODULE_CONFIG.hlsConfig,
-              ...config.hlsConfig
-            }
-          }
+          provide: MEDIA_SOURCE_EXTENSION_SELF_HEAL,
+          useValue: config.selfHeal === undefined ? DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL : config.selfHeal
+        },
+        {
+          provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+          deps: [MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG],
+          useFactory: mergeModuleSettings
         }
       ]
     }
