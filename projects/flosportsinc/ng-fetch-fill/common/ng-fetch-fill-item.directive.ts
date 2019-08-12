@@ -7,12 +7,12 @@ import { Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, Input } fr
 @Directive({
   selector: '[floFetchFillItem]'
 })
-export class FloFetchFillItemDirective<TItem> {
+export class FloFetchFillItemDirective<TInItem, TOutItem> {
   constructor(private tr: TemplateRef<any>, private vc: ViewContainerRef, private cd: ChangeDetectorRef) { }
 
   private _outputKey: string
 
-  @Input('floFetchFillItemOf') readonly input: TItem
+  @Input('floFetchFillItemOf') readonly input: TInItem
   @Input('floFetchFillItemUsingOutputKey')
   get outputKey () {
     return this._outputKey
@@ -21,7 +21,7 @@ export class FloFetchFillItemDirective<TItem> {
     this._outputKey = val.toString()
   }
 
-  setResponse(res: IResult<TItem, TItem>) {
+  setResponse(res: IResult<TOutItem, any>) {
     if (res.isOk()) {
       this.vc.createEmbeddedView(this.tr, {
         $implicit: res.unwrap()

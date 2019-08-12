@@ -765,7 +765,7 @@
     },
     "@flosportsinc/ng-fetch-fill": {
       "root": "projects/flosportsinc/ng-fetch-fill",
-      "sourceRoot": "projects/flosportsinc/ng-fetch-fill/src",
+      "sourceRoot": "projects/flosportsinc/ng-fetch-fill",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -780,7 +780,7 @@
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
             "codeCoverage": true,
-            "main": "projects/flosportsinc/ng-fetch-fill/src/test.ts",
+            "main": "projects/flosportsinc/ng-fetch-fill/test.ts",
             "tsConfig": "projects/flosportsinc/ng-fetch-fill/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-fetch-fill/karma.conf.js"
           }

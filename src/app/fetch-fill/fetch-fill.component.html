@@ -1,20 +1,20 @@
 <h1>
   FETCH FILL
 </h1>
-
+<button (click)="add()">ADD ITEM</button>
 <!-- <h3>Test Single Item Item</h3> -->
 
 <h3>Test Collection 1</h3>
 <ul floFetchFill="geo">
   <li>
     <span>Item - 9684</span>
-    <span *floFetchFillItem="let response of 9684 usingOutputKey 9684">
+    <span *floFetchFillItem="let response of eventIds[0] usingOutputKey 9684">
       Unavailable in your area {{ response.message }}
     </span>
   </li>
-  <li>
+  <li *ngIf="eventIds[1]">
     <span>Item - 9428</span>
-    <span *floFetchFillItem="let response of 9428 usingOutputKey 9428">
+    <span *floFetchFillItem="let response of eventIds[1] usingOutputKey 9428">
       Unavailable in your area {{ response.message }}
     </span>
   </li>
@@ -24,11 +24,21 @@
 <ul floFetchFill="geo">
   <li *ngFor="let eventId of eventIds">
     <span>Item - {{ eventId }}</span>
-    <span *floFetchFillItem="let response of eventId usingOutputKey eventId">
-      <span>Unavailable in your area</span> <span [title]="response.message">I</span>
+    <span *floFetchFillItem="let response of eventId usingOutputKey eventId" [title]="response.message">
+      Unavailable in your area
     </span>
   </li>
 </ul>
+
+<!-- <h3>Test Collection 2 (ngFor loop)</h3>
+<ul floFetchGeo>
+  <li *ngFor="let eventId of eventIds">
+    <span>Item - {{ eventId }}</span>
+    <span *floFetchGeoItem="let response of eventId" [title]="response">
+      Unavailable in your area
+    </span>
+  </li>
+</ul> -->
 
 <!-- <h3>Test Collection 2 (ngFor loop)</h3>
 <ul floGeoIpInformationGroup>
