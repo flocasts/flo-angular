@@ -1,6 +1,5 @@
 export const swapItemsViaIndices =
   <T>(collection: ReadonlyArray<T>, idx1: number, idx2: number) => {
-    // tslint:disable-next-line: no-if-statement
     if (!collection.length) { return [] }
 
     // tslint:disable-next-line: readonly-array

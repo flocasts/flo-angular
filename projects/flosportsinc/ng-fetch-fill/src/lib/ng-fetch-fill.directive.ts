@@ -4,9 +4,7 @@ import { FloFetchFillItemDirective } from './ng-fetch-fill-item.directive'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
-// tslint:disable: no-input-rename
 // tslint:disable: readonly-array
-// tslint:disable: no-if-statement
 
 @Directive({
   selector: '[floFetchFill]'

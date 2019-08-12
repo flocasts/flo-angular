@@ -10,7 +10,6 @@ import {
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
-// tslint:disable: no-if-statement
 
 export interface IFloGridListViewItemRoles {
   readonly isSelected: boolean

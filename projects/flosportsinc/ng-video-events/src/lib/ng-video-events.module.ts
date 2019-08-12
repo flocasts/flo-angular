@@ -18,7 +18,6 @@ export function defaultIdGenerator(): VideoPlayerEventsIdGeneratorFunc {
 
 export function defaultTabIdGenerator(platformId: string): VideoPlayerEventsIdTabGeneratorFunc {
   const lambda = () => {
-    // tslint:disable-next-line: no-if-statement
     if (isPlatformServer(platformId) || typeof sessionStorage === 'undefined') { return '' }
 
     const SHARED_WIN_KEY = 'FLO-VIDEO-EVTS-TAB-ID'

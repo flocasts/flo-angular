@@ -88,7 +88,6 @@ export class FloVideoAutoplayDirective implements AfterContentInit, OnDestroy {
   }
 
   ngAfterContentInit() {
-    // tslint:disable-next-line: no-if-statement
     if (!this.canExecute()) { return }
 
     this.maybeVideoElement().tapSome(this.initOnVideo)

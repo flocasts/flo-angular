@@ -1,6 +1,5 @@
 // tslint:disable: no-object-mutation
 // tslint:disable: readonly-keyword
-// tslint:disable: no-if-statement
 
 import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
