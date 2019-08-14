@@ -7,6 +7,7 @@ import { FloGridListModule } from '@flosportsinc/ng-grid-list'
 import { FloNodeEnvTransferModule } from '@flosportsinc/ng-env-transfer-state'
 import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 import { FloFetchFillModule } from '@flosportsinc/ng-fetch-fill'
+import { FloMediaPlayerModule } from '@flosportsinc/ng-media-player'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 
 @NgModule({
@@ -17,6 +18,7 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
     FloMseModule,
     FloWindowModule,
     FloFetchFillModule,
+    FloMediaPlayerModule,
     SvgTransferStateModule,
     FloGridListModule.config({
       count: 2,
@@ -38,7 +40,8 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
     FloFetchFillModule,
     SvgTransferStateModule,
     FloGridListModule,
-    FloNodeEnvTransferModule
+    FloNodeEnvTransferModule,
+    FloMediaPlayerModule
   ]
 })
 export class FloModule { }

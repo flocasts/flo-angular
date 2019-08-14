@@ -22,6 +22,7 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloModule } from './flo.module'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
+import { VideoPlayerComponent } from './video-player/video-player.component'
 
 @NgModule({
   imports: [
@@ -49,6 +50,7 @@ import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
     GridListComponent,
     FullscreenComponent,
     FetchFillComponent,
+    VideoPlayerComponent,
     NotFoundComponent,
   ]
 })
