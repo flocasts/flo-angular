@@ -7,7 +7,7 @@ import { Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, Input } fr
 @Directive({
   selector: '[floFetchFillItem]'
 })
-export class FloFetchFillItemDirective<TInItem, TOutItem> {
+export class FloFetchFillItemDirective<TInItem = any, TOutItem = any> {
   constructor(private tr: TemplateRef<any>, private vc: ViewContainerRef, private cd: ChangeDetectorRef) { }
 
   private _outputKey: string
