@@ -23,7 +23,7 @@ export class FloFetchFillDirective<TInItem, TOutItem, TInError, TOutError> imple
   }
 
   @Input() readonly floFetchFill?: string
-  @ContentChildren(FloFetchFillItemDirective) readonly fillItems: Query<TInItem, TOutItem>
+  @ContentChildren(FloFetchFillItemDirective, { descendants: true }) readonly fillItems: Query<TInItem, TOutItem>
 
   ngAfterContentInit() {
     const loader = this.loaders.find(b => b.key === this.floFetchFill)
