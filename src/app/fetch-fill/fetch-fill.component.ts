@@ -7,11 +7,4 @@ import { Component, ChangeDetectionStrategy } from '@angular/core'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FetchFillComponent  {
-  // tslint:disable: readonly-array
-  // tslint:disable: readonly-keyword
-  eventIds: string[] = ['9684']
-
-  add() {
-    this.eventIds.push('9428')
-  }
 }
