@@ -26,7 +26,6 @@ const filterAndExecute =
   (ref: HTMLElement | HTMLDocument) =>
     (arr: ReadonlyArray<string>) => {
       const funcStringIdx = arr.findIndex(a => typeof ref[a] === 'function')
-      // tslint:disable-next-line: no-if-statement
       if (funcStringIdx >= 0) {
         ref[arr[funcStringIdx]]()
       }

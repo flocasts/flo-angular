@@ -13,7 +13,6 @@ import {
   HttpEvent
 } from '@angular/common/http'
 
-// tslint:disable:no-if-statement
 @Injectable()
 export class HttpCacheTagInterceptor implements HttpInterceptor {
   constructor(

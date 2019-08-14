@@ -282,6 +282,21 @@ jobs:
           root: .
           paths:
             - cc.ng-fullscreen.json
+  test_fetch-fill:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test @flosportsinc/ng-fetch-fill -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-fetch-fill.json ./coverage/ng-fetch-fill/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-fetch-fill.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -290,7 +305,7 @@ jobs:
       - run:
           name: Upload coverage results to Code Climate
           command: |
-            ./cc-test-reporter sum-coverage ./cc.*.json -p 15 -o ./cc.total.json
+            ./cc-test-reporter sum-coverage ./cc.*.json -p 16 -o ./cc.total.json
             ./cc-test-reporter upload-coverage -i ./cc.total.json
   publish:
     <<: *defaults
@@ -374,6 +389,10 @@ workflows:
           requires:
               - build
               - prep_coverage
+      - test_fetch-fill:
+          requires:
+              - build
+              - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -391,6 +410,7 @@ workflows:
             - test_video-events
             - test_grid-list
             - test_fullscreen
+            - test_fetch-fill
       - publish:
           requires:
             - test_docs_site
@@ -408,6 +428,7 @@ workflows:
             - test_video-events
             - test_grid-list
             - test_fullscreen
+            - test_fetch-fill
             - upload_coverage
             - e2e
           filters:
