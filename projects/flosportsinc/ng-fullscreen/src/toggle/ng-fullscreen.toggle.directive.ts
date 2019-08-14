@@ -5,6 +5,7 @@ import { DOCUMENT } from '@angular/common'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
+
 @Directive({
   selector: '[floClickToEnterFullscreen]',
 })

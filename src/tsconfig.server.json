@@ -103,6 +103,12 @@
       ],
       "@flosportsinc/ng-media-player/*": [
         "../dist/flosportsinc/ng-media-player/*"
+      ],
+      "@flosportsinc/ng-fetch-fill": [
+        "../dist/flosportsinc/ng-fetch-fill"
+      ],
+      "@flosportsinc/ng-fetch-fill/*": [
+        "../dist/flosportsinc/ng-fetch-fill/*"
       ]
     }
   },

@@ -10,7 +10,6 @@ import {
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
-// tslint:disable: no-if-statement
 // tslint:disable: no-let
 
 interface IDragDropMap<TItem> { readonly index: number, readonly value: TItem }

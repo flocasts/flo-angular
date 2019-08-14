@@ -13,6 +13,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { VideoPlayerComponent } from './video-player/video-player.component'
+import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,6 +33,7 @@ const routes: Routes = [
   { path: 'grid-list', component: GridListComponent },
   { path: 'fullscreen', component: FullscreenComponent },
   { path: 'video-player', component: VideoPlayerComponent },
+  { path: 'projects/flosportsinc/ng-fetch-fill/demo', component: FetchFillComponent },
   { path: '**', component: NotFoundComponent }
 ]
 
