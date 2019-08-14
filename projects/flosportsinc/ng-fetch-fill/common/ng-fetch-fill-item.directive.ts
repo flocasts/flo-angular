@@ -1,4 +1,4 @@
-import { IResult } from 'typescript-monads'
+import { IResult, maybe } from 'typescript-monads'
 import { Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, Input } from '@angular/core'
 
 // tslint:disable: readonly-keyword
@@ -10,15 +10,15 @@ import { Directive, TemplateRef, ViewContainerRef, ChangeDetectorRef, Input } fr
 export class FloFetchFillItemDirective<TInItem = any, TOutItem = any> {
   constructor(private tr: TemplateRef<any>, private vc: ViewContainerRef, private cd: ChangeDetectorRef) { }
 
-  private _outputKey: string
+  private _outputKey?: string
 
   @Input('floFetchFillItemOf') readonly input: TInItem
   @Input('floFetchFillItemUsingOutputKey')
   get outputKey () {
     return this._outputKey
   }
-  set outputKey(val: Object) {
-    this._outputKey = val.toString()
+  set outputKey(val: string | undefined) {
+    this._outputKey = maybe(val).map(a => a.toString()).valueOrUndefined()
   }
 
   setResponse(res: IResult<TOutItem, any>) {

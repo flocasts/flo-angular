@@ -1,6 +1,18 @@
 <h1>
   FETCH FILL
 </h1>
+
+<ul floFetchFill="geo">
+  <li>
+    <span>Item - 123</span>
+    <app-live-geo-ip *floFetchFillItem="let response of 123 usingOutputKey 123" title="test this out"></app-live-geo-ip>
+  </li>
+  <!-- <li *ngIf="eventIds[1]">
+    <span>Item - 9428</span>
+    <app-live-geo-ip [someId]="9428"></app-live-geo-ip>
+  </li> -->
+</ul>
+
 <!-- <button (click)="add()">ADD ITEM</button> -->
 <!-- <h3>Test Single Item Item</h3> -->
 
