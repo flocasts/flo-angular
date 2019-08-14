@@ -22,11 +22,9 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloModule } from './flo.module'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
-import { SamlpeFetchFillModule } from './fetch-fill/fetch-fill-extend.module'
 
 @NgModule({
   imports: [
-    SamlpeFetchFillModule,
     FloModule,
     FormsModule,
     ReactiveFormsModule,
