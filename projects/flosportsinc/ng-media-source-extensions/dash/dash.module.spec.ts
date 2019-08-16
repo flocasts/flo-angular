@@ -44,7 +44,8 @@ describe(FloDashModule.name, () => {
     TestBed.resetTestingModule()
     TestBed.configureTestingModule({ imports: [HlsTestingModule] })
     const videoElement = document.createElement('video')
-    const event: IMseInitOptions<DashMessage> = {
+    const event: IMseInitOptions<DashMessage, any> = {
+      config: {},
       videoElement,
       src: TEST_SRC,
       messageSource: new Subject()

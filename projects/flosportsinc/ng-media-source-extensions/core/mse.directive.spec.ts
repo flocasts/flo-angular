@@ -4,11 +4,11 @@ import { MseDirective } from './mse.directive'
 import { By } from '@angular/platform-browser'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY, MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
-  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
+  MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK, MEDIA_SOURCE_EXTENSION_PATTERN_MATCH, MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG
 } from './mse.tokens'
 import { FloMseModule } from './mse.module'
 import {
-  FloHlsModule, MEDIA_SOURCE_EXTENSION_HLS_CONFIG, defaultHlsSupportedNativelyFunction,
+  FloHlsModule, defaultHlsSupportedNativelyFunction,
   defaultIsSupportedFactory, defaultMseClientInitFunction, defaultMseClientDestroyFunction,
   defaultHlsPatternCheck,
   DEFAULT_MODULE_HLS_CONFIG
@@ -54,7 +54,7 @@ export class HlsTestComponent {
   exports: [HlsTestComponent],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+      provide: MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
       useValue: DEFAULT_MODULE_HLS_CONFIG
     },
     {
@@ -70,7 +70,7 @@ export class HlsTestComponent {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction,
-      deps: [MEDIA_SOURCE_EXTENSION_HLS_CONFIG],
+      deps: [MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG],
       multi: true
     },
     {
