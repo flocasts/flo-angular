@@ -12,11 +12,12 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  FloMseModule
+  FloMseModule,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG
 } from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
-const exectionKey = 'DASH'
+const execKey = 'DASH'
 
 export interface DashMessage {
   readonly key: string
@@ -26,7 +27,7 @@ export interface DashMessage {
 export function defaultDashIsSupportedFactory() {
   const func = () => typeof ((window as any).MediaSource || (window as any).WebKitMediaSource) === 'function'
   return {
-    exectionKey,
+    execKey,
     func
   }
 }
@@ -34,13 +35,13 @@ export function defaultDashIsSupportedFactory() {
 export function defaultDashSupportedNativelyFunction(): IVideoElementSupportsTargetMseCheckContext {
   const func: IVideoElementSupportsTargetMseCheck = ve => false
   return {
-    exectionKey,
+    execKey,
     func
   }
 }
 
-export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, DashMessage> {
-  const func: IMseInitFunc<MediaPlayerClass, DashMessage> = initEvent => {
+export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, DashMessage, any> {
+  const func: IMseInitFunc<MediaPlayerClass, DashMessage, any> = initEvent => {
     const client = MediaPlayer().create()
     client.initialize(initEvent.videoElement, initEvent.src)
     // Object.keys(Hls.Events).forEach(key => {
@@ -49,7 +50,7 @@ export function defaultDashClientInitFunction(): IMseInit<MediaPlayerClass, Dash
     return client
   }
   return {
-    exectionKey,
+    execKey,
     func
   }
 }
@@ -62,7 +63,7 @@ export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass
     hadAutoPlay && destroyEvent.videoElement.setAttribute('autoplay', 'true')
   }
   return {
-    exectionKey,
+    execKey,
     func
   }
 }
@@ -70,7 +71,7 @@ export function defaultDashClientDestroyFunction(): IMseDestroy<MediaPlayerClass
 export function defaultDashPatternCheck(): IMsePatternCheck {
   const func: IMsePatternCheckFunc = (videoSource: string) => videoSource.includes('.mpd')
   return {
-    exectionKey,
+    execKey,
     func
   }
 }
@@ -79,6 +80,11 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
   imports: [FloMseModule],
   exports: [FloMseModule],
   providers: [
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
+      useValue: { execKey, config: {}},
+      multi: true
+    },
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
       useFactory: defaultDashSupportedNativelyFunction,

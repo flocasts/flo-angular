@@ -4,15 +4,16 @@ import {
   SUPPORTS_MSE_TARGET_NATIVELY, SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
-  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH
+  MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG
 } from './mse.tokens'
 
 export function falseFunc() {
   return false
 }
 
-const exectionKey = 'default'
-const useValue = { func: falseFunc, exectionKey }
+const execKey = 'DEFAULT'
+const useValue = { func: falseFunc, execKey }
 
 @NgModule({
   declarations: [MseDirective],
@@ -41,6 +42,11 @@ const useValue = { func: falseFunc, exectionKey }
     {
       provide: MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
       useValue,
+      multi: true
+    },
+    {
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
+      useValue: { execKey, config: {} },
       multi: true
     }
   ]

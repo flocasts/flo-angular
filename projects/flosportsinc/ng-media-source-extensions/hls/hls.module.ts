@@ -11,14 +11,15 @@ import {
   IMsePatternCheckFunc,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
-  FloMseModule
+  FloMseModule,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
+  IMseExecutionConfig
 } from '@flosportsinc/ng-media-source-extensions'
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
 import * as Hls from 'hls.js'
 
-const exectionKey = 'HLS'
+export const FLO_MSE_HLS_EXEC_KEY = 'HLS'
 export const MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg.mdl')
-export const MEDIA_SOURCE_EXTENSION_HLS_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg')
 export const MEDIA_SOURCE_EXTENSION_SELF_HEAL = new InjectionToken('fs.mse.lib.cfg.selfHeal')
 export const DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL = true
 
@@ -42,7 +43,7 @@ export const DEFAULT_MODULE_HLS_CONFIG: Partial<IHlsConfig> = {
 export function defaultIsSupportedFactory() {
   const func = () => Hls.isSupported()
   return {
-    exectionKey,
+    execKey: FLO_MSE_HLS_EXEC_KEY,
     func
   }
 }
@@ -51,7 +52,7 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   const func: IVideoElementSupportsTargetMseCheck = ve =>
     typeof ve.canPlayType === 'function' && ve.canPlayType('application/vnd.apple.mpegurl') === 'probably'
   return {
-    exectionKey,
+    execKey: FLO_MSE_HLS_EXEC_KEY,
     func
   }
 }
@@ -87,9 +88,10 @@ export const selfHealFunc = (client: Hls) => {
 
 // TODO: if another Media Error is raised 'quickly' after this first Media Error,
 // TODO: first call hls.swapAudioCodec(), then call hls.recoverMediaError().
-export function defaultMseClientInitFunction(selfHeal: boolean, hlsConfig: Hls.Config): IMseInit<Hls, HlsMessage> {
-  const func: IMseInitFunc<Hls, HlsMessage> = initEvent => {
-    const client = new Hls(hlsConfig)
+export function defaultMseClientInitFunction(selfHeal: boolean): IMseInit<Hls, HlsMessage, Hls.Config> {
+  const func: IMseInitFunc<Hls, HlsMessage, Hls.Config> = initEvent => {
+    const client = new Hls(initEvent.config)
+
     Object.keys(Hls.Events).forEach(k => {
       client.on(Hls.Events[k], (key: any, message) => initEvent.messageSource.next({ key, message }))
     })
@@ -102,7 +104,7 @@ export function defaultMseClientInitFunction(selfHeal: boolean, hlsConfig: Hls.C
     return client
   }
   return {
-    exectionKey,
+    execKey: FLO_MSE_HLS_EXEC_KEY,
     func
   }
 }
@@ -114,7 +116,7 @@ export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
     destroyEvent.clientRef.destroy()
   }
   return {
-    exectionKey,
+    execKey: FLO_MSE_HLS_EXEC_KEY,
     func
   }
 }
@@ -122,15 +124,18 @@ export function defaultMseClientDestroyFunction(): IMseDestroy<Hls> {
 export function defaultHlsPatternCheck(): IMsePatternCheck {
   const func: IMsePatternCheckFunc = (videoSource: string) => videoSource.includes('.m3u8')
   return {
-    exectionKey,
+    execKey: FLO_MSE_HLS_EXEC_KEY,
     func
   }
 }
 
-export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>) {
+export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>): IMseExecutionConfig<Partial<Hls.Config>>  {
   return {
-    ...DEFAULT_MODULE_HLS_CONFIG,
-    ...hlsConfig
+    execKey: FLO_MSE_HLS_EXEC_KEY,
+    config: {
+      ...DEFAULT_MODULE_HLS_CONFIG,
+      ...hlsConfig
+    }
   }
 }
 
@@ -139,8 +144,9 @@ export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>) {
   exports: [FloMseModule],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
-      useValue: DEFAULT_MODULE_HLS_CONFIG
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
+      useValue: { execKey: FLO_MSE_HLS_EXEC_KEY, config: DEFAULT_MODULE_HLS_CONFIG },
+      multi: true
     },
     {
       provide: MEDIA_SOURCE_EXTENSION_SELF_HEAL,
@@ -159,7 +165,7 @@ export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>) {
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
       useFactory: defaultMseClientInitFunction,
-      deps: [MEDIA_SOURCE_EXTENSION_SELF_HEAL, MEDIA_SOURCE_EXTENSION_HLS_CONFIG],
+      deps: [MEDIA_SOURCE_EXTENSION_SELF_HEAL],
       multi: true
     },
     {
@@ -185,9 +191,10 @@ export class FloHlsModule {
           useValue: config.selfHeal === undefined ? DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL : config.selfHeal
         },
         {
-          provide: MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
+          provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
           deps: [MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG],
-          useFactory: mergeModuleSettings
+          useFactory: mergeModuleSettings,
+          multi: true
         }
       ]
     }
