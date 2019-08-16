@@ -12,7 +12,7 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
   FloMseModule,
-  MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
   IMseExecutionConfig
 } from '@flosportsinc/ng-media-source-extensions'
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
@@ -144,7 +144,7 @@ export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>): IMseExecuti
   exports: [FloMseModule],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
       useValue: { execKey: FLO_MSE_HLS_EXEC_KEY, config: DEFAULT_MODULE_HLS_CONFIG },
       multi: true
     },
@@ -191,7 +191,7 @@ export class FloHlsModule {
           useValue: config.selfHeal === undefined ? DEFAULT_MEDIA_SOURCE_EXTENSION_SELF_HEAL : config.selfHeal
         },
         {
-          provide: MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+          provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
           deps: [MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG],
           useFactory: mergeModuleSettings,
           multi: true

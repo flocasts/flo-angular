@@ -13,7 +13,7 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IVideoElementSupportsTargetMseCheckContext,
   FloMseModule,
-  MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG
 } from '@flosportsinc/ng-media-source-extensions'
 import { MediaPlayerClass, MediaPlayer } from 'dashjs'
 
@@ -81,7 +81,7 @@ export function defaultDashPatternCheck(): IMsePatternCheck {
   exports: [FloMseModule],
   providers: [
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
       useValue: { execKey, config: {}},
       multi: true
     },

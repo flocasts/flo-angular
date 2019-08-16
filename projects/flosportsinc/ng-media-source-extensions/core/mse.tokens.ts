@@ -3,7 +3,7 @@ import { InjectionToken } from '@angular/core'
 
 export const SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION = new InjectionToken('fs.mse.mse-supported')
 export const SUPPORTS_MSE_TARGET_NATIVELY = new InjectionToken('fs.mse.native-supported')
-export const MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG = new InjectionToken('fs.mse.lib.cfg')
+export const MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG = new InjectionToken('fs.mse.lib.cfg')
 export const MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK = new InjectionToken('fs.mse.lib.init')
 export const MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK = new InjectionToken('fs.mse.lib.create')
 export const MEDIA_SOURCE_EXTENSION_PATTERN_MATCH = new InjectionToken('fs.mse.lib.pattern')

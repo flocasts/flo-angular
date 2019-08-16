@@ -5,7 +5,7 @@ import {
   MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK,
   MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
-  MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG
 } from './mse.tokens'
 
 export function falseFunc() {
@@ -45,7 +45,7 @@ const useValue = { func: falseFunc, execKey }
       multi: true
     },
     {
-      provide: MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+      provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
       useValue: { execKey, config: {} },
       multi: true
     }

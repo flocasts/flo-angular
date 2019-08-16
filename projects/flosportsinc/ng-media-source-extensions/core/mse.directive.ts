@@ -16,7 +16,7 @@ import {
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IMsePlatformSupportCheck,
   IVideoElementSupportsTargetMseCheckContext,
-  MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
   IMseExecutionConfig
 } from './mse.tokens'
 import { Subject } from 'rxjs'
@@ -34,7 +34,7 @@ export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTasks: IMseInit<TMseClient, TMseMessage, TMseConfig>[],
-    @Inject(MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG) private readonly _mseConfigs: IMseExecutionConfig<TMseConfig>[],
+    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG) private readonly _mseConfigs: IMseExecutionConfig<TMseConfig>[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroy<TMseClient>[],
     @Inject(MEDIA_SOURCE_EXTENSION_PATTERN_MATCH) private readonly _msePatternCheckTask: IMsePatternCheck[]
   ) { }
