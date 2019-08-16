@@ -15,7 +15,9 @@ import {
   IMseDestroy, IMseInit, IMsePatternCheck,
   MEDIA_SOURCE_EXTENSION_PATTERN_MATCH,
   IMsePlatformSupportCheck,
-  IVideoElementSupportsTargetMseCheckContext
+  IVideoElementSupportsTargetMseCheckContext,
+  MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG,
+  IMseExecutionConfig
 } from './mse.tokens'
 import { Subject } from 'rxjs'
 import { maybe } from 'typescript-monads'
@@ -24,19 +26,15 @@ import { maybe } from 'typescript-monads'
 // tslint:disable: no-object-mutation
 // tslint:disable:readonly-array
 
-export interface IMseClientReadyEvent<TMseClient> {
-  readonly mseClient: TMseClient
-  readonly videoElement: HTMLVideoElement
-}
-
 @Directive({
   selector: 'video[floMse]'
 })
-export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy, OnChanges {
+export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit, OnDestroy, OnChanges {
   constructor(readonly _elementRef: ElementRef<HTMLVideoElement>,
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
-    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTasks: IMseInit<TMseClient, TMseMessage>[],
+    @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTasks: IMseInit<TMseClient, TMseMessage, TMseConfig>[],
+    @Inject(MEDIA_SOURCE_EXTENSION_LIBBARY_CONFIG) private readonly _mseConfigs: IMseExecutionConfig<TMseConfig>[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_DESTROY_TASK) private readonly _mseDestroyTask: IMseDestroy<TMseClient>[],
     @Inject(MEDIA_SOURCE_EXTENSION_PATTERN_MATCH) private readonly _msePatternCheckTask: IMsePatternCheck[]
   ) { }
@@ -87,30 +85,61 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
     this.floMseClient = val
   }
 
+  private _floMseConfig: IMseExecutionConfig<TMseConfig>[]
+
+  @Input()
+  get floMseConfig() {
+    return this._mseConfigs.reduce((acc, curr) => {
+      const execKey = curr.execKey
+      const injected = maybe(this._mseConfigs
+        .find(a => a.execKey === execKey))
+        .map(a => a.config)
+        .valueOr({} as NonNullable<TMseConfig>)
+      const override = maybe((this._floMseConfig || [])
+        .find(a => a.execKey === execKey))
+        .map(a => a.config)
+        .valueOr({} as NonNullable<TMseConfig>)
+
+      return [...acc, { execKey, config: { ...injected, ...override } }]
+    }, [])
+  }
+  set floMseConfig(val: IMseExecutionConfig<TMseConfig>[]) {
+    this._floMseConfig = val
+    this.floMseConfigChange.next(val)
+  }
+
+  public setFloMseConfig = (val: IMseExecutionConfig<TMseConfig>[]) => {
+    this.floMseConfig = val
+  }
+
   @Output() public readonly srcChange = new Subject<string | undefined>()
+  @Output() public readonly floMseConfigChange = new Subject<IMseExecutionConfig<TMseConfig>[]>()
   @Output() public readonly floMseClientChange = new Subject<TMseClient | undefined>()
   @Output() public readonly floMseClientMessageChange = new Subject<TMseMessage>()
 
-  private readonly getExecutionKey =
-    (src?: string) =>
-      maybe(src).flatMapAuto(s => this._msePatternCheckTask.find(a => a.func(s))).map(a => a.exectionKey)
+  private readonly getExecutionKey = (src?: string) =>
+    maybe(src).flatMapAuto(s => this._msePatternCheckTask.find(a => a.func(s))).map(a => a.execKey)
 
-  private readonly getTasks =
-    (src?: string) =>
-      this.getExecutionKey(src)
-        .map(currentExecutionKey => {
-          const canExec = maybe(this._isMediaSourceSupported.find(b => b.exectionKey === currentExecutionKey))
-            .map(a => a.func())
-            .filter(Boolean)
+  private readonly getTasks = (src?: string) =>
+    this.getExecutionKey(src)
+      .map(currentExecutionKey => {
+        const canExec = maybe(this._isMediaSourceSupported.find(b => b.execKey === currentExecutionKey))
+          .map(a => a.func())
+          .filter(Boolean)
 
-          return {
-            initialize: canExec.flatMapAuto(_ => this._mseInitTasks.find(b => b.exectionKey === currentExecutionKey)).map(b => b.func),
-            destroy: canExec.flatMapAuto(_ => this._mseDestroyTask.find(b => b.exectionKey === currentExecutionKey)).map(b => b.func)
-          }
-        })
+        return {
+          initialize: canExec.flatMapAuto(_ => this._mseInitTasks.find(b => b.execKey === currentExecutionKey)).map(b => b.func),
+          destroy: canExec.flatMapAuto(_ => this._mseDestroyTask.find(b => b.execKey === currentExecutionKey)).map(b => b.func)
+        }
+      })
+
+  private readonly getConfig = (src?: string) =>
+    this.getExecutionKey(src)
+      .flatMapAuto(key => this.floMseConfig.find(b => b.execKey === key))
+      .map(a => a.config)
+      .valueOr({} as NonNullable<TMseConfig>)
 
   private readonly getCurrentTasks = () => this.getTasks(this.src)
-
   private readonly setSrcUrl = (src: string) => this.videoElement.setAttribute('src', src)
 
   public ngOnDestroy() {
@@ -134,6 +163,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
           some: tsk => () => {
             this.setMseClient(tsk({
               src,
+              config: this.getConfig(src),
               messageSource: this.floMseClientMessageChange,
               videoElement: this.videoElement
             }))
@@ -176,6 +206,7 @@ export class MseDirective<TMseClient, TMseMessage> implements OnInit, OnDestroy,
 
         if (hasNextMseTask) {
           nextInitTask.tapSome(fn => this.setMseClient(fn({
+            config: this.getConfig(src),
             src,
             messageSource: this.floMseClientMessageChange,
             videoElement

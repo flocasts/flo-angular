@@ -29,4 +29,8 @@ export class HlsDemoComponent implements OnDestroy {
   ngOnDestroy() {
     this._dropdownSubscription.unsubscribe()
   }
+
+  public readonly cfgOveride: ReadonlyArray<any> = [
+    { execKey: 'HLS', config: { startLevel: 3 } }
+  ]
 }
