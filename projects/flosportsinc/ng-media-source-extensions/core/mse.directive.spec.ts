@@ -55,7 +55,8 @@ export class HlsTestComponent {
   providers: [
     {
       provide: MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
-      useValue: DEFAULT_MODULE_HLS_CONFIG
+      useValue: DEFAULT_MODULE_HLS_CONFIG,
+      multi: true
     },
     {
       provide: SUPPORTS_MSE_TARGET_NATIVELY,
