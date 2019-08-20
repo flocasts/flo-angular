@@ -5,7 +5,10 @@ import { isPlatformServer } from '@angular/common'
 import { maybe, IMaybe } from 'typescript-monads'
 import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
-import { map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged, takeUntil, shareReplay, take } from 'rxjs/operators'
+import {
+  map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged,
+  takeUntil, shareReplay, take, switchMap, first
+} from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,
   FloGridListItemSomeDirective, FloGridListItemSomeDragDirective, FloGridListItemNoneDragDirective
@@ -13,7 +16,7 @@ import {
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction, Renderer2
+  HostListener, AfterViewInit, TrackByFunction, Renderer2, ApplicationRef
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -66,6 +69,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     public elmRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
     private rd: Renderer2,
+    private appRef: ApplicationRef,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -521,9 +525,15 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart))
 
+
+  private streamStartWhenStable = <T>(fn: () => Observable<T>) => this.appRef.isStable.pipe(
+    first(stable => stable),
+    switchMap(() => fn()))
+
   private readonly fadeoutIntervalReset = new Subject<boolean>()
-  private readonly fadeoutInterval = interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
-  private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.fadeoutInterval))
+  private readonly fadeoutInterval = () => interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
+  private readonly stableFadeoutInterval = this.streamStartWhenStable(this.fadeoutInterval)
+  private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.stableFadeoutInterval))
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 

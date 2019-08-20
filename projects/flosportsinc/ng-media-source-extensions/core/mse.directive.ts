@@ -7,7 +7,8 @@ import {
   OnChanges,
   Inject,
   Output,
-  OnInit
+  OnInit,
+  ApplicationRef
 } from '@angular/core'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
@@ -21,6 +22,7 @@ import {
 } from './mse.tokens'
 import { Subject } from 'rxjs'
 import { maybe } from 'typescript-monads'
+import { first } from 'rxjs/operators'
 
 // tslint:disable: readonly-keyword
 // tslint:disable: no-object-mutation
@@ -31,6 +33,7 @@ import { maybe } from 'typescript-monads'
 })
 export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit, OnDestroy, OnChanges {
   constructor(readonly _elementRef: ElementRef<HTMLVideoElement>,
+    private readonly appRef: ApplicationRef,
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTasks: IMseInit<TMseClient, TMseMessage, TMseConfig>[],
@@ -161,12 +164,14 @@ export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit
         .flatMap(a => a.initialize)
         .match({
           some: tsk => () => {
-            this.setMseClient(tsk({
-              src,
-              config: this.getConfig(src),
-              messageSource: this.floMseClientMessageChange,
-              videoElement: this.videoElement
-            }))
+            this.appRef.isStable.pipe(first(a => a)).subscribe(() => {
+              this.setMseClient(tsk({
+                src,
+                config: this.getConfig(src),
+                messageSource: this.floMseClientMessageChange,
+                videoElement: this.videoElement
+              }))
+            })
           },
           none: () => () => this.setSrcUrl(src)
         }))
