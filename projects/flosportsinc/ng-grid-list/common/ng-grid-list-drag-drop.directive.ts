@@ -102,8 +102,8 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   }
 
   private resetStyles = (elm: HTMLElement) => {
-    this.rd.setStyle(elm, 'backgroundColor', 'inherit')
-    this.rd.setStyle(elm, 'opacity', 'inherit')
+    this.rd.removeStyle(elm, 'backgroundColor')
+    this.rd.removeStyle(elm, 'opacity')
   }
 
   private maybeItemOverlay = (elm: HTMLElement) => maybe(elm.querySelector<HTMLDivElement>(CLASS_ITEM_OVERLAY))

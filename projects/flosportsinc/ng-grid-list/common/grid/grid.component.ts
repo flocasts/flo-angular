@@ -523,16 +523,13 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
-  ).pipe(startWith(this.overlayStart))
+  ).pipe(startWith(this.overlayStart), distinctUntilChanged())
 
-
-  private streamStartWhenStable = <T>(fn: () => Observable<T>) => this.appRef.isStable.pipe(
-    first(stable => stable),
-    switchMap(() => fn()))
-
+  private readonly isStable = this.appRef.isStable.pipe(first(stable => stable), shareReplay(1))
   private readonly fadeoutIntervalReset = new Subject<boolean>()
-  private readonly fadeoutInterval = () => interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart))
-  private readonly stableFadeoutInterval = this.streamStartWhenStable(this.fadeoutInterval)
+  private readonly stableFadeoutInterval = this.isStable.pipe(switchMap(() => interval(this.overlayFadeout).pipe(
+    mapTo(false), startWith(this.overlayStart))))
+
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.stableFadeoutInterval))
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
@@ -543,7 +540,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   ).pipe(distinctUntilChanged(), shareReplay(1))
 
   public readonly showOverlay = this.fadeStream.pipe(map(b => this.overlayEnabled && b))
-  public readonly hideOverlay = this.showOverlay.pipe(map(show => !show))
+  public readonly hideOverlay = this.showOverlay.pipe(map(show => !show), shareReplay(1))
 
   private readonly toggleCursor = (show: boolean) => this.rd.setStyle(this.elmRef.nativeElement, 'cursor', show ? 'default' : 'none')
   public readonly trySelectNextEmpty = () => this.findNextEmptyIndex().tapSome(this.setSelectedIndex)
@@ -584,7 +581,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     })
   }
 
-  update() {
+  update = () => {
     this.viewItemSource.next(this.createViewItems())
     this.cdRef.detectChanges()
   }
@@ -594,8 +591,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       ? source.pipe(take(1))
       : source.pipe(takeUntil(this.onDestroy))
 
-    this.fadeStream.pipe(takeByPlatform).subscribe(show => this.toggleCursor(show))
-    this.cdRefChange.pipe(takeByPlatform).subscribe(() => this.update())
+    this.fadeStream.pipe(takeByPlatform).subscribe(this.toggleCursor)
+    this.cdRefChange.pipe(takeByPlatform).subscribe(this.update)
   }
 
   ngAfterViewInit() {
