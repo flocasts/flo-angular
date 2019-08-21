@@ -8,7 +8,7 @@ import {
   Inject,
   Output,
   OnInit,
-  ApplicationRef
+  NgZone
 } from '@angular/core'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION, SUPPORTS_MSE_TARGET_NATIVELY,
@@ -33,7 +33,7 @@ import { first } from 'rxjs/operators'
 })
 export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit, OnDestroy, OnChanges {
   constructor(readonly _elementRef: ElementRef<HTMLVideoElement>,
-    private readonly appRef: ApplicationRef,
+    private readonly zone: NgZone,
     @Inject(SUPPORTS_MSE_TARGET_NATIVELY) private readonly _nativeSupportCheck: IVideoElementSupportsTargetMseCheckContext[],
     @Inject(SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION) private readonly _isMediaSourceSupported: IMsePlatformSupportCheck[],
     @Inject(MEDIA_SOURCE_EXTENSION_LIBRARY_INIT_TASK) private readonly _mseInitTasks: IMseInit<TMseClient, TMseMessage, TMseConfig>[],
@@ -164,7 +164,7 @@ export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit
         .flatMap(a => a.initialize)
         .match({
           some: tsk => () => {
-            this.appRef.isStable.pipe(first(a => a)).subscribe(() => {
+            this.zone.runOutsideAngular(() => {
               this.setMseClient(tsk({
                 src,
                 config: this.getConfig(src),
