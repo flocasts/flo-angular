@@ -16,7 +16,11 @@ import { SvgTransferStateBrowserModule } from '@flosportsinc/ng-svg-transfer-sta
     CookieBrowserModule,
     AppModule,
     FloDashModule,
-    FloHlsModule,
+    FloHlsModule.config({
+      hlsConfig: {
+        capLevelToPlayerSize: false
+      }
+    }),
     FloNodeEnvTransferBrowserModule.config({
       mergeWithServer: {
         browserOnly: 'testing-123'

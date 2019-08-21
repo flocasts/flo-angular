@@ -31,6 +31,6 @@ export class HlsDemoComponent implements OnDestroy {
   }
 
   public readonly cfgOveride: ReadonlyArray<any> = [
-    { execKey: 'HLS', config: { startLevel: 3 } }
+    { execKey: 'HLS', config: { capLevelToPlayerSize: true } }
   ]
 }
