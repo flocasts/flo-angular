@@ -42,6 +42,7 @@
 <div class="video-responsive-container">
   <video *ngIf="config$ | async as config"
   floMse
+  [floMseConfig]="cfgOveride"
   class="video-responsive"
   floVideoEvents
   [src]="config?.src"

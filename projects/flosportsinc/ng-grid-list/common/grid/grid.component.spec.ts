@@ -829,51 +829,41 @@ describe(FloGridListViewComponent.name, () => {
           })]
         }).compileComponents()
       })
-      it('should handle counts of 1', fakeAsync(() => {
+      it('should handle counts of 1', () => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(1)
-        tick(0)
         sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(0)
-        discardPeriodicTasks()
-      }))
-      it('should handle counts of 2', fakeAsync(() => {
+      })
+      it('should handle counts of 2', () => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(2)
-        tick(0)
         sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(1)
-        discardPeriodicTasks()
-      }))
-      it('should handle counts of 3', fakeAsync(() => {
+      })
+      it('should handle counts of 3', () => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(3)
-        tick(0)
         sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(1)
-        discardPeriodicTasks()
-      }))
-      it('should handle counts of 4', fakeAsync(() => {
+      })
+      it('should handle counts of 4', () => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1]
         sut.instance.setCount(4)
-        tick(0)
         sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(1)
-        discardPeriodicTasks()
-      }))
-      it('should handle multi items w/ counts', fakeAsync(() => {
+      })
+      it('should handle multi items w/ counts', () => {
         const sut = createSut()
         sut.hoistInstance.items = [SAMPLE_ITEM_1, SAMPLE_ITEM_2]
         sut.instance.setCount(4)
-        tick(0)
         sut.hoistFixture.detectChanges()
         expect(sut.instance.selectedIndex).toEqual(2)
-        discardPeriodicTasks()
-      }))
+      })
     })
   })
 

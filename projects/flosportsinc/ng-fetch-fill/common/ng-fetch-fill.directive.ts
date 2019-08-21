@@ -1,7 +1,7 @@
 import { Directive, ContentChildren, AfterContentInit, Input, QueryList, Inject, Optional, OnDestroy } from '@angular/core'
-import { LOADERS, ILoader } from './ng-fetch-fill.tokens'
+import { LOADERS, ILoader, FS_FETCH_FILL_DEBOUNCE } from './ng-fetch-fill.tokens'
 import { FloFetchFillItemDirective } from './ng-fetch-fill-item.directive'
-import { filter, map, takeUntil, flatMap } from 'rxjs/operators'
+import { filter, map, takeUntil, flatMap, debounceTime } from 'rxjs/operators'
 import { Subject } from 'rxjs'
 
 // tslint:disable: readonly-keyword
@@ -14,7 +14,8 @@ type Query<TInItem, TOutItem> = QueryList<FloFetchFillItemDirective<TInItem, TOu
   selector: '[floFetchFill]'
 })
 export class FloFetchFillDirective<TInItem, TOutItem, TInError, TOutError> implements AfterContentInit, OnDestroy {
-  constructor(@Optional() @Inject(LOADERS) private _loaders: ILoader<TInItem, TOutItem, TInError, TOutError>[]) { }
+  constructor(@Optional() @Inject(LOADERS) private _loaders: ILoader<TInItem, TOutItem, TInError, TOutError>[],
+    @Inject(FS_FETCH_FILL_DEBOUNCE) private _debounceTime: number) { }
 
   private ngOnDestroy$ = new Subject()
 
@@ -22,8 +23,16 @@ export class FloFetchFillDirective<TInItem, TOutItem, TInError, TOutError> imple
     return this._loaders || []
   }
 
+  @Input()
+  get debounceTime() {
+    return this._debounceTime
+  }
+  set debounceTime(val: any) {
+    this._debounceTime = typeof val === 'number' ? val : this._debounceTime
+  }
+
   @Input() readonly floFetchFill?: string
-  @ContentChildren(FloFetchFillItemDirective) readonly fillItems: Query<TInItem, TOutItem>
+  @ContentChildren(FloFetchFillItemDirective, { descendants: true }) readonly fillItems: Query<TInItem, TOutItem>
 
   ngAfterContentInit() {
     const loader = this.loaders.find(b => b.key === this.floFetchFill)
@@ -31,6 +40,7 @@ export class FloFetchFillDirective<TInItem, TOutItem, TInError, TOutError> imple
     if (!loader) { return }
 
     this.fillItems.changes.pipe(
+      debounceTime(this.debounceTime),
       map((a: Query<TInItem, TOutItem>) => a.toArray()),
       takeUntil(this.ngOnDestroy$),
       flatMap(items => loader.func(items.map(a => a.input)).pipe(

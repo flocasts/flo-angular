@@ -14,3 +14,4 @@ export interface ILoader<TInItem, TOutItem, TInError, TOutError> {
 }
 
 export const LOADERS = new InjectionToken<ReadonlyArray<ILoader<any, any, any, any>>>('fs.ff.loaders')
+export const FS_FETCH_FILL_DEBOUNCE = new InjectionToken<ReadonlyArray<ILoader<any, any, any, any>>>('fs.ff.debounce')

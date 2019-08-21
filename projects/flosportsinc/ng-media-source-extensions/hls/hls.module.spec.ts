@@ -1,7 +1,5 @@
 import {
   FloHlsModule, defaultHlsSupportedNativelyFunction, defaultIsSupportedFactory,
-  MEDIA_SOURCE_EXTENSION_HLS_CONFIG,
-  MEDIA_SOURCE_EXTENSION_SELF_HEAL,
   DEFAULT_MODULE_HLS_CONFIG,
   selfHealSwitch
 } from './hls.module'
@@ -10,6 +8,7 @@ import * as Hls from 'hls.js'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   SUPPORTS_MSE_TARGET_NATIVELY,
+  MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG,
   MseDirective
 } from '@flosportsinc/ng-media-source-extensions'
 import { Component, Input, NgModule } from '@angular/core'
@@ -151,8 +150,8 @@ describe(FloHlsModule.name, () => {
     it('should handle empty config object', done => {
       TestBed.configureTestingModule({ imports: [FloHlsModule.config({})], declarations: [HlsTestComponent] })
 
-      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_CONFIG)
-      expect(sut).toEqual(DEFAULT_MODULE_HLS_CONFIG)
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG)[1]
+      expect(sut).toEqual({ execKey: 'HLS', config: DEFAULT_MODULE_HLS_CONFIG })
       done()
     })
 
@@ -162,8 +161,8 @@ describe(FloHlsModule.name, () => {
         declarations: [HlsTestComponent]
       })
 
-      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_HLS_CONFIG)
-      expect(sut).toEqual(DEFAULT_MODULE_HLS_CONFIG)
+      const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG)[1]
+      expect(sut).toEqual({ execKey: 'HLS', config: DEFAULT_MODULE_HLS_CONFIG })
       done()
     })
   })
