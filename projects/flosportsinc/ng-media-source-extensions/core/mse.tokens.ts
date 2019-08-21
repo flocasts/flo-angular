@@ -15,6 +15,7 @@ export interface IMseExecutionContext<TFunc> {
 
 export interface IMseExecutionConfig<TConfig> {
   readonly execKey: string
+  readonly override?: boolean
   readonly config: TConfig
 }
 

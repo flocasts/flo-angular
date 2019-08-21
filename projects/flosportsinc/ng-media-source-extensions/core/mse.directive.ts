@@ -88,23 +88,20 @@ export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit
     this.floMseClient = val
   }
 
-  private _floMseConfig: IMseExecutionConfig<TMseConfig>[]
+  private _floMseConfig: IMseExecutionConfig<TMseConfig>[] = []
 
   @Input()
   get floMseConfig() {
-    return this._mseConfigs.reduce((acc, curr) => {
-      const execKey = curr.execKey
-      const injected = maybe(this._mseConfigs
-        .find(a => a.execKey === execKey))
-        .map(a => a.config)
-        .valueOr({} as NonNullable<TMseConfig>)
-      const override = maybe((this._floMseConfig || [])
-        .find(a => a.execKey === execKey))
-        .map(a => a.config)
-        .valueOr({} as NonNullable<TMseConfig>)
+    return this._mseConfigs
+      .filter((a, _idx, arr) => arr.filter(z => z.execKey === a.execKey).length > 1 ? a.override ? true : false : true)
+      .reduce((acc, curr) => {
+        const injected = curr.config || {} as NonNullable<TMseConfig>
+        const inputOverride = maybe((this._floMseConfig || []).find(a => a.execKey === curr.execKey))
+          .map(a => a.config)
+          .valueOr({} as NonNullable<TMseConfig>)
 
-      return [...acc, { execKey, config: { ...injected, ...override } }]
-    }, [])
+        return [...acc, { execKey: curr.execKey, config: { ...injected, ...inputOverride } }]
+      }, [] as IMseExecutionConfig<TMseConfig>[])
   }
   set floMseConfig(val: IMseExecutionConfig<TMseConfig>[]) {
     this._floMseConfig = val
@@ -139,7 +136,7 @@ export class MseDirective<TMseClient, TMseMessage, TMseConfig> implements OnInit
   private readonly getConfig = (src?: string) =>
     this.getExecutionKey(src)
       .flatMapAuto(key => this.floMseConfig.find(b => b.execKey === key))
-      .map(a => a.config)
+      .map(a => ({ ...a.config }))
       .valueOr({} as NonNullable<TMseConfig>)
 
   private readonly getCurrentTasks = () => this.getTasks(this.src)
