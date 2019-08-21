@@ -517,6 +517,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @ContentChild(FloGridListOverlayDirective, { read: TemplateRef }) readonly gridListOverlayTemplate: TemplateRef<HTMLElement>
 
   public dragSource = new Subject<DragEvent>()
+  private readonly onDestroySource = new Subject()
+  private readonly onDestroy = this.onDestroySource.pipe(share())
 
   private cursorInsideElement = merge(
     this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
@@ -528,11 +530,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly isStable = this.appRef.isStable.pipe(first(stable => stable), shareReplay(1))
   private readonly fadeoutIntervalReset = new Subject<boolean>()
   private readonly stableFadeoutInterval = this.isStable.pipe(switchMap(() => interval(this.overlayFadeout).pipe(
-    mapTo(false), startWith(this.overlayStart))))
+    mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy))))
 
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.stableFadeoutInterval))
-  private readonly onDestroySource = new Subject()
-  private readonly onDestroy = this.onDestroySource.pipe(share())
 
   public readonly fadeStream = (isPlatformServer(this._platformId)
     ? of(this.overlayEnabled)
