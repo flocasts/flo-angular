@@ -66,16 +66,17 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
     ? maybe(this._document.getElementById(this.dragId))
     : maybe<HTMLElement>()
 
-  extractDisplayInfoFromDragEvent = (evt: DragEvent) => {
-    const elm = evt.target as HTMLElement
-    const clientRect = elm.getBoundingClientRect()
-    return {
-      offsetX: evt.clientX - clientRect.left,
-      offsetY: evt.clientY - clientRect.top,
-      height: `${elm.clientHeight}px`,
-      width: `${elm.clientWidth}px`
-    }
-  }
+  extractDisplayInfoFromDragEvent = (evt: DragEvent) =>
+    maybe(evt.target)
+      .map((elm: HTMLElement) => {
+        const clientRect = elm.getBoundingClientRect()
+        return {
+          offsetX: evt.clientX - clientRect.left,
+          offsetY: evt.clientY - clientRect.top,
+          height: `${elm.clientHeight}px`,
+          width: `${elm.clientWidth}px`
+        }
+      })
 
   mutateClonedOffsetPlaceholder = (elm: HTMLDivElement) => {
     this.rd.setStyle(elm, 'position', 'absolute')
@@ -90,8 +91,11 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
       .tapSome(dt => {
         dt.setData('text', JSON.stringify({ index: this.floGridListDragDropIndex, value: this.floGridListDragDropItem }))
         this.maybeClonedExists()
-          .tapSome(cloned => {
-            const info = this.extractDisplayInfoFromDragEvent(evt)
+          .flatMap(cloned => this.extractDisplayInfoFromDragEvent(evt)
+            .map(info => ({ info, cloned })))
+          .tapSome(details => {
+            const cloned = details.cloned
+            const info = details.info
             const zIndexPlus = Date.now().toString()
             this.rd.setStyle(cloned, 'height', info.height)
             this.rd.setStyle(cloned, 'width', info.width)
