@@ -16,6 +16,7 @@ import { take } from 'rxjs/operators'
 import { Subject, ObjectUnsubscribedError } from 'rxjs'
 import { By } from '@angular/platform-browser'
 import { TEST_SOURCES } from '../core/mse.directive.spec'
+import { IMseExecutionConfig } from '../core/mse.tokens'
 
 const TEST_SRC = TEST_SOURCES.HLS.TINY
 
@@ -61,7 +62,7 @@ const setTestBed = (supportsMle: boolean) => (native: boolean) => {
         multi: true
       }
     ]
-  })
+  }).compileComponents()
 }
 
 const shouldUnsubscribeFromInternalNgAfterViewInit = async(() => {
@@ -147,6 +148,8 @@ describe(FloHlsModule.name, () => {
   })
 
   describe('when using module config', () => {
+    afterEach(() => TestBed.resetTestingModule())
+
     it('should handle empty config object', done => {
       TestBed.configureTestingModule({ imports: [FloHlsModule.config({})], declarations: [HlsTestComponent] })
 
@@ -163,6 +166,56 @@ describe(FloHlsModule.name, () => {
 
       const sut = TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG)[1]
       expect(sut).toEqual({ execKey: 'HLS', config: DEFAULT_MODULE_HLS_CONFIG })
+      done()
+    })
+
+    it('should handle config object', done => {
+      TestBed.configureTestingModule({
+        imports: [FloHlsModule.config({
+          hlsConfig: {
+            capLevelToPlayerSize: false
+          }
+        })],
+        declarations: [HlsTestComponent]
+      }).compileComponents()
+
+      const sut = createSut()
+      sut.hoist.detectChanges()
+
+      const injectedConfigs = TestBed.get(MEDIA_SOURCE_EXTENSION_LIBRARY_CONFIG)
+      const hlsConfigs = injectedConfigs.filter(a => a.execKey === 'HLS')
+      const defaultConfig = hlsConfigs.find(a => !a.override)
+      const override = hlsConfigs.find(a => a.override)
+      const directiveParsed = sut.instance.floMseConfig
+      const directiveParsedHls = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<Hls.Config>
+
+      expect(injectedConfigs.length).toEqual(3)
+      expect(hlsConfigs.length).toEqual(2)
+      expect(defaultConfig.config).toEqual(DEFAULT_MODULE_HLS_CONFIG)
+      expect(override.config).toEqual({
+        ...DEFAULT_MODULE_HLS_CONFIG,
+        capLevelToPlayerSize: false
+      })
+
+      // directive should tidy up configs
+      expect(directiveParsed.length).toEqual(2)
+      expect(directiveParsedHls.config).toEqual({
+        ...DEFAULT_MODULE_HLS_CONFIG,
+        capLevelToPlayerSize: false
+      } as any)
+
+
+      // handle directive level override
+      sut.instance.setFloMseConfig([{ execKey: 'HLS', config: { capLevelToPlayerSize: true }}])
+      sut.hoist.detectChanges()
+
+      const retrieve = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<Hls.Config>
+
+      expect(retrieve.config).toEqual({
+        ...DEFAULT_MODULE_HLS_CONFIG,
+        capLevelToPlayerSize: true
+      } as any)
+
       done()
     })
   })

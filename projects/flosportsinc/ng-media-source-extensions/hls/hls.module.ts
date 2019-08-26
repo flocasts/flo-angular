@@ -132,6 +132,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
 export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>): IMseExecutionConfig<Partial<Hls.Config>>  {
   return {
     execKey: FLO_MSE_HLS_EXEC_KEY,
+    override: true,
     config: {
       ...DEFAULT_MODULE_HLS_CONFIG,
       ...hlsConfig

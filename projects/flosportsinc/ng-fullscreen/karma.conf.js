@@ -1,7 +1,7 @@
 const config = require('../../../src/karma.conf.shared')
 module.exports = config('../coverage/ng-fullscreen')()({
-  statements: 97,
-  lines: 98,
+  statements: 96,
+  lines: 96,
   branches: 85,
-  functions: 93
+  functions: 88
 })

@@ -5,7 +5,7 @@ import { Injectable, Inject, PLATFORM_ID, ApplicationRef } from '@angular/core'
 import { merge, fromEvent, Observable, throwError, of, interval, BehaviorSubject, EMPTY } from 'rxjs'
 import {
   debounceTime, map, startWith, shareReplay, filter, flatMap, tap,
-  distinctUntilChanged, take, first, switchMap
+  distinctUntilChanged, take, first, switchMap, takeUntil
 } from 'rxjs/operators'
 import {
   FS_FULLSCREEN_REQUEST_EVENTS, FS_FULLSCREEN_EXIT_EVENTS, FS_FULLSCREEN_ELEMENT,
@@ -85,7 +85,7 @@ export class FloFullscreenService implements IFloFullscreenService {
           flatMap(videoElements => merge(
             ...videoElements.map(ve => fromEvent(ve, 'webkitbeginfullscreen').pipe(tap(() => this.iOSVideoState.next(true)), take(1))),
             ...videoElements.map(ve => fromEvent(ve, 'webkitendfullscreen').pipe(tap(() => this.iOSVideoState.next(false)), take(1)))
-          )))))
+          )), takeUntil(this.iOSVideoState))))
 
 
   public readonly fullscreen$ = isPlatformServer(this.platformId)
