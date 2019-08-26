@@ -25,7 +25,8 @@ import {
   FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  FLO_GRID_LIST_REQUIRE_APP_IS_STABLE
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -51,7 +52,8 @@ import {
   DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  DEFAULT_FLO_GRID_LIST_REQUIRE_APP_IS_STABLE
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
@@ -122,7 +124,8 @@ export function defaultFloGridListTrackByFn() {
     { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
     { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
     { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
-    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
+    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY },
+    { provide: FLO_GRID_LIST_REQUIRE_APP_IS_STABLE, useValue: DEFAULT_FLO_GRID_LIST_REQUIRE_APP_IS_STABLE }
   ]
 })
 export class FloGridListModule {
@@ -154,7 +157,8 @@ export class FloGridListModule {
         { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: cfg.fillToFit !== undefined ? cfg.fillToFit : DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
         { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgEnabled !== undefined ? cfg.dragDrop.dragOverBgEnabled : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
         { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgColor !== undefined ? cfg.dragDrop.dragOverBgColor : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
-        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgOpacity !== undefined ? cfg.dragDrop.dragOverBgOpacity : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
+        { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: cfg.dragDrop && cfg.dragDrop.dragOverBgOpacity !== undefined ? cfg.dragDrop.dragOverBgOpacity : DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY },
+        { provide: FLO_GRID_LIST_REQUIRE_APP_IS_STABLE, useValue: cfg.requireAppIsStable !== undefined ? cfg.requireAppIsStable : DEFAULT_FLO_GRID_LIST_REQUIRE_APP_IS_STABLE }
       ]
     }
   }

@@ -13,6 +13,7 @@ export const FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST = new InjectionToken<
 export const FLO_GRID_LIST_CONTAINER_ID_PREFIX = new InjectionToken<string>('fs.grid.list.id.prefix')
 export const FLO_GRID_LIST_FILL_TO_FIT = new InjectionToken<boolean>('fs.grid.list.fill.fit')
 export const FLO_GRID_LIST_GUID_GEN = new InjectionToken('fs.grid.list.guid')
+export const FLO_GRID_LIST_REQUIRE_APP_IS_STABLE = new InjectionToken('fs.grid.list.stable')
 
 // PRIMARY OVERLAY
 export const FLO_GRID_LIST_OVERLAY_ENABLED = new InjectionToken<boolean>('fs.grid.list.overlay.enabled')

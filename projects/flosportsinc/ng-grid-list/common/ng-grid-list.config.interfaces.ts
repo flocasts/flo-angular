@@ -55,6 +55,9 @@ export interface FloGridListModuleConfiguration {
   /** Starting selection box. Defaults to 0 */
   readonly selectedIndex: number
 
+  /** Require app stable before starting any delay timers. Default: false  */
+  readonly requireAppIsStable: boolean
+
   /**
    * Prefix the grid-list-item container ID's so they do not conflict downstream
    * if ID is used elsewhere in the application.

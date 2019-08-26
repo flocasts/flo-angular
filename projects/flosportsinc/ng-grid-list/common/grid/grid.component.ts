@@ -43,7 +43,8 @@ import {
   FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  FLO_GRID_LIST_REQUIRE_APP_IS_STABLE
 } from '../ng-grid-list.tokens'
 
 export interface IViewItem<T> {
@@ -94,7 +95,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_FILL_TO_FIT) private _fillToFit: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED) private _dragDropHoverBgEnabled: boolean,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
-    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
+    @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number,
+    @Inject(FLO_GRID_LIST_REQUIRE_APP_IS_STABLE) private _requireAppIsStable: boolean
   ) { }
 
   @HostListener('fullscreenchange')
@@ -527,7 +529,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart), distinctUntilChanged())
 
-  private readonly isStable = this.appRef.isStable.pipe(first(stable => stable), shareReplay(1))
+  private readonly isStable = this._requireAppIsStable ? this.appRef.isStable.pipe(first(stable => stable), shareReplay(1)) : of(true)
   private readonly fadeoutIntervalReset = new Subject<boolean>()
   private readonly stableFadeoutInterval = this.isStable.pipe(switchMap(() => interval(this.overlayFadeout).pipe(
     mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy))))
