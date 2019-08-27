@@ -519,12 +519,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
-  private cursorInsideElement = merge(
+  private cursorInsideElement = this.zone.runOutsideAngular(() => merge(
     this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
-  ).pipe(startWith(this.overlayStart), distinctUntilChanged())
+  ).pipe(startWith(this.overlayStart), distinctUntilChanged()))
 
   private readonly fadeoutIntervalReset = new Subject<boolean>()
   private readonly stableFadeoutInterval = this.zone.runOutsideAngular(() =>
@@ -590,7 +590,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       : source.pipe(takeUntil(this.onDestroy))
 
     this.fadeStream.pipe(takeByPlatform).subscribe(this.toggleCursor)
-    this.cdRefChange.pipe(debounceTime(0), takeByPlatform).subscribe(this.update)
+    this.cdRefChange.pipe(takeByPlatform).subscribe(this.update)
   }
 
   ngAfterViewInit() {

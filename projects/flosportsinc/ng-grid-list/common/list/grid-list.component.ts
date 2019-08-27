@@ -185,8 +185,8 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
 
   public readonly autoFill = () =>
     this.maybeGridRef().tapSome(grid => this.items
-      .filter(i => grid.isItemNotInGrid(i))
-      .forEach(i => grid.fillNextEmpty(i)))
+      .filter(grid.isItemNotInGrid)
+      .forEach(grid.fillNextEmpty))
 
   ngOnInit() {
     this.maybeGridRef().tapSome(grid => {
