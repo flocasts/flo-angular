@@ -16,7 +16,7 @@ import {
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction, Renderer2, ApplicationRef
+  HostListener, AfterViewInit, TrackByFunction, Renderer2, NgZone
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -69,7 +69,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     public elmRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
     private rd: Renderer2,
-    private appRef: ApplicationRef,
+    private zone: NgZone,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -527,10 +527,9 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
   ).pipe(startWith(this.overlayStart), distinctUntilChanged())
 
-  private readonly isStable = this.appRef.isStable.pipe(first(stable => stable), shareReplay(1))
   private readonly fadeoutIntervalReset = new Subject<boolean>()
-  private readonly stableFadeoutInterval = this.isStable.pipe(switchMap(() => interval(this.overlayFadeout).pipe(
-    mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy))))
+  private readonly stableFadeoutInterval = this.zone.runOutsideAngular(() =>
+    interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy)))
 
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.stableFadeoutInterval))
 
