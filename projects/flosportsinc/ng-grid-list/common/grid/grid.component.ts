@@ -470,9 +470,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   get top() {
     return this.isIE11
-      ? this.count === 2
-        ? '25%'
-        : 0
+      ? '0px'
       : this.count === 2 || this.isFullscreen()
         ? 'inherit'
         : 0
