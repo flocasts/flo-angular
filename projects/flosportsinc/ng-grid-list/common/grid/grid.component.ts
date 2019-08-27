@@ -7,7 +7,7 @@ import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import {
   map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged,
-  takeUntil, shareReplay, take, switchMap, first
+  takeUntil, shareReplay, take, debounceTime
 } from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,
@@ -507,7 +507,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
-  @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
@@ -591,7 +590,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
       : source.pipe(takeUntil(this.onDestroy))
 
     this.fadeStream.pipe(takeByPlatform).subscribe(this.toggleCursor)
-    this.cdRefChange.pipe(takeByPlatform).subscribe(this.update)
+    this.cdRefChange.pipe(debounceTime(0), takeByPlatform).subscribe(this.update)
   }
 
   ngAfterViewInit() {
