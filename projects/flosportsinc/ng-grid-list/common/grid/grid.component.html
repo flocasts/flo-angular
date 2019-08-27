@@ -4,9 +4,9 @@
   [class.list-overlay-hide]="hideOverlay | async">
   <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
 </div>
-<div class="fg mg-auto" style="display: flex; align-items: center;" [style.max-width.px]="baseMaxWidth">
+<div class="fg mg-auto flx" [style.max-width.px]="baseMaxWidth">
   <div [style.padding-top.%]="aspectRatioPercentage"></div>
-  <div class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
+  <div class="fg mg-auto flx list-container" [style.max-width]="maxWidth" [style.top]="top">
     <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
       <div #offscreenDragContainer [ngSwitch]="item.hasValue" class="fg offscreen">
         <ng-container *ngSwitchCase="false">

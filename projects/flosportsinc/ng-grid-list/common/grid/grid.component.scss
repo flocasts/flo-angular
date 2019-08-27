@@ -19,9 +19,12 @@
       margin: auto;
     }
 
+    &.flx {
+      display: flex;
+    }
+
     &.list-container {
       width: 100%;
-      display: flex;
       flex-wrap: wrap;
       justify-content: center;
       position: absolute;
