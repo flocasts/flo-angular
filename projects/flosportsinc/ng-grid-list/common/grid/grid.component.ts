@@ -7,7 +7,7 @@ import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import {
   map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged,
-  takeUntil, shareReplay, take, switchMap, first
+  takeUntil, shareReplay, take
 } from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,
@@ -96,6 +96,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
+
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 
   @HostListener('fullscreenchange')
   @HostListener('webkitfullscreenchange')
@@ -468,9 +470,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   get top() {
     return this.isIE11
-      ? this.count === 2
-        ? '25%'
-        : 0
+      ? '0px'
       : this.count === 2 || this.isFullscreen()
         ? 'inherit'
         : 0
@@ -507,7 +507,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
-  @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
@@ -520,12 +519,12 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
-  private cursorInsideElement = merge(
+  private cursorInsideElement = this.zone.runOutsideAngular(() => merge(
     this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
-  ).pipe(startWith(this.overlayStart), distinctUntilChanged())
+  ).pipe(startWith(this.overlayStart), distinctUntilChanged()))
 
   private readonly fadeoutIntervalReset = new Subject<boolean>()
   private readonly stableFadeoutInterval = this.zone.runOutsideAngular(() =>
@@ -728,6 +727,4 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem) =>
       this.findNextEmptyIndex()
         .tapSome(idx => this.setItem(item, idx))
-
-  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 }
