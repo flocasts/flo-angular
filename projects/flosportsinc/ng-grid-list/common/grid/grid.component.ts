@@ -7,7 +7,7 @@ import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import {
   map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged,
-  takeUntil, shareReplay, take, debounceTime
+  takeUntil, shareReplay, take
 } from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,
@@ -96,6 +96,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR) private _dragDropHoverBgColor: string,
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
+
+  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 
   @HostListener('fullscreenchange')
   @HostListener('webkitfullscreenchange')
@@ -727,6 +729,4 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem) =>
       this.findNextEmptyIndex()
         .tapSome(idx => this.setItem(item, idx))
-
-  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 }
