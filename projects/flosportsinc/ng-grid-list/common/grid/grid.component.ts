@@ -361,9 +361,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
 
   @Input()
   get aspectRatio() {
-    return this.isFullscreen()
-      ? window.screen.height / window.screen.width
-      : this._aspectRatio
+    return this._aspectRatio
   }
   set aspectRatio(ratio: number) {
     const _ratio = typeof ratio === 'number' ? ratio : this._aspectRatio
@@ -464,8 +462,18 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
   }
 
-  get aspectRatioPercentage() {
+  get aspectRatioPct() {
     return this.aspectRatio * 100
+  }
+
+  get dynamicAspectRatio() {
+    return this.isFullscreen()
+      ? window.screen.height / window.screen.width
+      : this.aspectRatio
+  }
+
+  get dynamicAspectRatioPct() {
+    return this.dynamicAspectRatio * 100
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
@@ -561,8 +569,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         value: value.valueOrUndefined(),
         flexBasis: 100 / square,
         padTop: this.isFullscreen()
-          ? (this.aspectRatioPercentage / square) - (square / this.aspectRatio)
-          : this.aspectRatioPercentage / square,
+          ? (this.dynamicAspectRatioPct / square) - (square / this.dynamicAspectRatio)
+          : this.aspectRatioPct / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
         isNotSelected: !isSelected,
