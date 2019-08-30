@@ -75,7 +75,7 @@ const createSut = (detectChanges = true) => {
 }
 
 export const testInputProperty = (prop: string, testValue: any, component: any = FloGridListViewComponent) => {
-  const sut = TestBed.createComponent(component)
+  const sut = TestBed.createComponent(component) as any
   sut.componentInstance[prop] = testValue
   expect(sut.componentInstance[prop]).toEqual(testValue)
   sut.componentInstance[`${prop}Change`].toPromise().then((ve: number) => expect(ve).toEqual(testValue))
@@ -329,7 +329,13 @@ describe(FloGridListViewComponent.name, () => {
     it('should previous value if not of type number', () => {
       const sut = createSut().instance
       sut.setAspectRatio('fasdfasdfasdf' as any)
-      expect(sut.aspectRatio).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
+      if (sut.isFullscreen()) {
+        expect(sut.aspectRatio).toEqual(
+          (sut.aspectRatioPercentage / sut.count) - (sut.count / sut.aspectRatio)
+        )
+      } else {
+        expect(sut.aspectRatio).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
+      }
     })
 
     it('should get default', () => {
