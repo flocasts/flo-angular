@@ -330,11 +330,11 @@ describe(FloGridListViewComponent.name, () => {
       const sut = createSut().instance
       sut.setAspectRatio('fasdfasdfasdf' as any)
       if (sut.isFullscreen()) {
-        expect(sut.aspectRatio).toEqual(
+        expect(sut.aspectRatio).toBeCloseTo(
           (sut.aspectRatioPercentage / sut.count) - (sut.count / sut.aspectRatio)
         )
       } else {
-        expect(sut.aspectRatio).toEqual(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
+        expect(sut.aspectRatio).toBeCloseTo(TestBed.get(FLO_GRID_LIST_ASPECT_RATIO))
       }
     })
 
