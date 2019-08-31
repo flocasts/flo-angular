@@ -3,7 +3,9 @@
   position: relative;
   overflow: hidden;
   background: black; // TODO: make a config value
-
+  &:-webkit-full-screen .list-container  {
+    position: absolute;
+  }
   &:fullscreen {
     position: inherit;
 
