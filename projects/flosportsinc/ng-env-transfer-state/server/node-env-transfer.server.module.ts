@@ -9,11 +9,13 @@ import {
 
 export const DEFAULT_ENV_CONFIG_FILTER_KEYS: ReadonlyArray<string> = []
 export const DEFAULT_ENV_CONFIG_EXTRACTOR = 'NG_'
+export const DEFAULT_NODE_ENV_USE_VALUES = {}
 
 export function serverEnvConfigFactory(nodeEnv = {},
-  defaultValues: { readonly [key: string]: any },
+  merge: INodeEnvTransferServerModuleConfigDict,
   selectKeys: ReadonlyArray<string>,
-  extractor: string, replacer: (key: string) => string) {
+  extractor: string,
+  replacer: (key: string) => string) {
   const keys = Object.keys(nodeEnv)
   const extracted = keys.filter(key => extractor && new RegExp(extractor).test(key))
   const selected = keys.filter(key => selectKeys.includes(key))
@@ -24,9 +26,9 @@ export function serverEnvConfigFactory(nodeEnv = {},
     .filter((elem, pos, arr) => arr.indexOf(elem) === pos)
     .reduce((acc, curr) => ({ ...acc, [deriveNewKey(curr)]: nodeEnv[curr] }), {})
 
-  return !Object.keys(defaultValues).length ? lambda : {
+  return !Object.keys(merge).length ? lambda : {
     ...lambda,
-    ...defaultValues
+    ...merge
   }
 }
 
@@ -44,9 +46,14 @@ export function defaultReplaceExtract(extractionKey: string) {
   return lambda
 }
 
+export interface INodeEnvTransferServerModuleConfigDict {
+  readonly [key: string]: string | boolean | undefined
+}
+
 export interface INodeEnvTransferServerModuleConfig {
   readonly selectKeys: ReadonlyArray<string>
   readonly extractor: string
+  readonly mergeWithEnv?: INodeEnvTransferServerModuleConfigDict
 }
 
 @NgModule({
@@ -55,27 +62,22 @@ export interface INodeEnvTransferServerModuleConfig {
     FloNodeEnvTransferModule
   ],
   providers: [
-    {
-      provide: NODE_ENV,
-      useFactory: nodeEnvFactory
-    },
-    {
-      provide: ENV_CONFIG_SERVER_EXTRACTOR,
-      useValue: DEFAULT_ENV_CONFIG_EXTRACTOR
-    },
+    { provide: NODE_ENV, useFactory: nodeEnvFactory },
+    { provide: ENV_CONFIG_SERVER_EXTRACTOR, useValue: DEFAULT_ENV_CONFIG_EXTRACTOR },
     {
       provide: ENV_CONFIG_SERVER_REPLACER,
       useFactory: defaultReplaceExtract,
       deps: [ENV_CONFIG_SERVER_EXTRACTOR]
     },
-    {
-      provide: ENV_CONFIG_SERVER_SELECTED,
-      useValue: DEFAULT_ENV_CONFIG_FILTER_KEYS
-    },
+    { provide: ENV_CONFIG_SERVER_SELECTED, useValue: DEFAULT_ENV_CONFIG_FILTER_KEYS },
+    { provide: NODE_ENV_USE_VALUES, useValue: DEFAULT_NODE_ENV_USE_VALUES },
     {
       provide: ENV,
       useFactory: serverEnvConfigFactory,
-      deps: [NODE_ENV, NODE_ENV_USE_VALUES, ENV_CONFIG_SERVER_SELECTED, ENV_CONFIG_SERVER_EXTRACTOR, ENV_CONFIG_SERVER_REPLACER]
+      deps: [
+        NODE_ENV, NODE_ENV_USE_VALUES, ENV_CONFIG_SERVER_SELECTED,
+        ENV_CONFIG_SERVER_EXTRACTOR, ENV_CONFIG_SERVER_REPLACER
+      ]
     },
     {
       provide: APP_INITIALIZER,
@@ -97,6 +99,10 @@ export class FloNodeEnvTransferServerModule {
         {
           provide: ENV_CONFIG_SERVER_SELECTED,
           useValue: config.selectKeys || DEFAULT_ENV_CONFIG_FILTER_KEYS
+        },
+        {
+          provide: NODE_ENV_USE_VALUES,
+          useValue: config.mergeWithEnv || DEFAULT_NODE_ENV_USE_VALUES
         }
       ]
     }
