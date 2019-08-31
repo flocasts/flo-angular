@@ -9,9 +9,11 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 import { FloFetchFillModule } from '@flosportsinc/ng-fetch-fill'
 import { FloMediaPlayerModule } from '@flosportsinc/ng-media-player'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
+import { FloAdBlockModule } from '@flosportsinc/ng-ad-block'
 
 @NgModule({
   imports: [
+    FloAdBlockModule,
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     FloFullscreenModule,
@@ -32,6 +34,7 @@ import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
     })
   ],
   exports: [
+    FloAdBlockModule,
     FloVideoEventsModule,
     FloVideoAutoplayModule,
     FloFullscreenModule,

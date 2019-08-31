@@ -4,9 +4,9 @@
   [class.list-overlay-hide]="hideOverlay | async">
   <ng-container *ngTemplateOutlet="gridListOverlayTemplate"></ng-container>
 </div>
-<div class="fg mg-auto" style="display: flex; align-items: center;" [style.max-width.px]="baseMaxWidth">
-  <div [style.padding-top.%]="aspectRatioPercentage"></div>
-  <div #floGridListContainer class="fg mg-auto list-container" [style.max-width]="maxWidth" [style.top]="top">
+<div class="fg mg-auto flx fill" [style.max-width.px]="baseMaxWidth">
+  <div [style.padding-top.%]="aspectRatioPct"></div>
+  <div class="fg mg-auto flx fill list-container" [style.max-width]="maxWidth">
     <ng-container *ngFor="let item of viewItemChange | async; index as idx; trackBy: trackByFn">
       <div #offscreenDragContainer [ngSwitch]="item.hasValue" class="fg offscreen">
         <ng-container *ngSwitchCase="false">
@@ -39,7 +39,7 @@
             <ng-container *ngTemplateOutlet="gridListItemNoneTemplate; context: { $implicit: item }"></ng-container>
           </div>
         </ng-container>
-        <div class="fg list-item-overlay" [class.selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
+        <div class="fg fill list-item-overlay" [class.selection-border]="item.isShowingBorder" [class.list-overlay-hide]="hideOverlay | async"></div>
       </div>
     </ng-container>
   </div>

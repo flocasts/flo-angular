@@ -7,7 +7,7 @@ import { swapItemsViaIndices } from './helpers'
 import { Subject, fromEvent, of, interval, merge, BehaviorSubject, Observable } from 'rxjs'
 import {
   map, startWith, mapTo, share, switchMapTo, tap, distinctUntilChanged,
-  takeUntil, shareReplay, take, switchMap, first
+  takeUntil, shareReplay, take
 } from 'rxjs/operators'
 import {
   FloGridListOverlayDirective, FloGridListItemNoneDirective,
@@ -16,7 +16,7 @@ import {
 import {
   Component, ChangeDetectionStrategy, Input, Output, Inject, PLATFORM_ID, ElementRef, ContentChild,
   TemplateRef, ViewChild, ViewChildren, QueryList, OnDestroy, OnInit, ChangeDetectorRef,
-  HostListener, AfterViewInit, TrackByFunction, Renderer2, ApplicationRef
+  HostListener, AfterViewInit, TrackByFunction, Renderer2, NgZone
 } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT,
@@ -69,7 +69,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     public elmRef: ElementRef<HTMLElement>,
     private cdRef: ChangeDetectorRef,
     private rd: Renderer2,
-    private appRef: ApplicationRef,
+    private zone: NgZone,
     @Inject(PLATFORM_ID) private _platformId: string,
     @Inject(FLO_GRID_LIST_ITEMS) private _items: any,
     @Inject(FLO_GRID_LIST_COUNT) private _count: number,
@@ -462,18 +462,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
   }
 
-  get aspectRatioPercentage() {
+  get aspectRatioPct() {
     return this.aspectRatio * 100
-  }
-
-  get top() {
-    return this.isIE11
-      ? this.count === 2
-        ? '25%'
-        : 0
-      : this.count === 2 || this.isFullscreen()
-        ? 'inherit'
-        : 0
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
@@ -507,7 +497,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   @Output() public readonly cdRefChange = merge(this.selectedIdChange, this.selectedIndexChange, this.itemsChange, this.countChange)
   @Output() public readonly viewItemChange = this.viewItemSource.asObservable().pipe(shareReplay(1))
 
-  @ViewChild('floGridListContainer') readonly gridContainer: ElementRef<HTMLDivElement>
   @ViewChildren('floGridListItemContainer') readonly gridItemContainers: QueryList<ElementRef<HTMLDivElement>>
 
   @ContentChild(FloGridListItemSomeDirective, { read: TemplateRef }) readonly gridListItemSomeTemplate: TemplateRef<HTMLElement>
@@ -520,17 +509,16 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
   private readonly onDestroySource = new Subject()
   private readonly onDestroy = this.onDestroySource.pipe(share())
 
-  private cursorInsideElement = merge(
+  private cursorInsideElement = this.zone.runOutsideAngular(() => merge(
     this.dragSource.pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mousemove').pipe(mapTo(true), tap(() => this.cycleOverlay())),
     fromEvent(this.elmRef.nativeElement, 'mouseenter').pipe(mapTo(true)),
     fromEvent(this.elmRef.nativeElement, 'mouseleave').pipe(mapTo(false))
-  ).pipe(startWith(this.overlayStart), distinctUntilChanged())
+  ).pipe(startWith(this.overlayStart), distinctUntilChanged()))
 
-  private readonly isStable = this.appRef.isStable.pipe(first(stable => stable), shareReplay(1))
   private readonly fadeoutIntervalReset = new Subject<boolean>()
-  private readonly stableFadeoutInterval = this.isStable.pipe(switchMap(() => interval(this.overlayFadeout).pipe(
-    mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy))))
+  private readonly stableFadeoutInterval = this.zone.runOutsideAngular(() =>
+    interval(this.overlayFadeout).pipe(mapTo(false), startWith(this.overlayStart), takeUntil(this.onDestroy)))
 
   private readonly fadeoutIntervalWithReset = this.fadeoutIntervalReset.pipe(startWith(false), switchMapTo(this.stableFadeoutInterval))
 
@@ -570,7 +558,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         hasValue: value.isSome(),
         value: value.valueOrUndefined(),
         flexBasis: 100 / square,
-        padTop: this.aspectRatioPercentage / square,
+        padTop: this.aspectRatioPct / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
         isNotSelected: !isSelected,
@@ -729,6 +717,4 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     (item: TItem) =>
       this.findNextEmptyIndex()
         .tapSome(idx => this.setItem(item, idx))
-
-  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
 }

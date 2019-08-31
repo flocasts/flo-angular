@@ -3,7 +3,9 @@
   position: relative;
   overflow: hidden;
   background: black; // TODO: make a config value
-
+  &:-webkit-full-screen .list-container  {
+    position: absolute;
+  }
   &:fullscreen {
     position: inherit;
 
@@ -19,12 +21,20 @@
       margin: auto;
     }
 
+    &.flx {
+      display: flex;
+      align-items: center;
+      align-content: center;
+    }
+
+    &.fill {
+      height: 100%;
+    }
+
     &.list-container {
       width: 100%;
-      display: flex;
       flex-wrap: wrap;
       justify-content: center;
-      position: absolute;
       left: 0;
       right: 0;
     }
@@ -66,7 +76,6 @@
     &.list-item-overlay {
       pointer-events: none;
       position: absolute;
-      height: 100%;
       top: 0;
       left: 0;
       right: 0;
