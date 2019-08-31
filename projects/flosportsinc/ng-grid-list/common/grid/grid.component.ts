@@ -97,8 +97,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     @Inject(FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY) private _dragDropHoverBgOpacity: string | number
   ) { }
 
-  private isIE11 = typeof window !== 'undefined' && !!(window as any).MSInputMethodContext && !!(document as any).documentMode
-
   @HostListener('fullscreenchange')
   @HostListener('webkitfullscreenchange')
   @HostListener('mozfullscreenchange')
@@ -464,16 +462,8 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.count === 2 ? 'none' : this.baseMaxWidth + 'px'
   }
 
-  get aspectRatioPercentage() {
+  get aspectRatioPct() {
     return this.aspectRatio * 100
-  }
-
-  get top() {
-    return this.isIE11
-      ? '0px'
-      : this.count === 2 || this.isFullscreen()
-        ? 'inherit'
-        : 0
   }
 
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
@@ -568,7 +558,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         hasValue: value.isSome(),
         value: value.valueOrUndefined(),
         flexBasis: 100 / square,
-        padTop: this.aspectRatioPercentage / square,
+        padTop: this.aspectRatioPct / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
         isNotSelected: !isSelected,
