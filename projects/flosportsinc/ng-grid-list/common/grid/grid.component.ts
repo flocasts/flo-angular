@@ -466,16 +466,6 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
     return this.aspectRatio * 100
   }
 
-  get dynamicAspectRatio() {
-    return this.isFullscreen()
-      ? window.screen.height / window.screen.width
-      : this.aspectRatio
-  }
-
-  get dynamicAspectRatioPct() {
-    return this.dynamicAspectRatio * 100
-  }
-
   private readonly viewItemSource = new BehaviorSubject<ReadonlyArray<IViewItem<TItem>>>([])
 
   @Output() public readonly itemsChange = new Subject<ReadonlyArray<TItem | undefined>>()
@@ -568,9 +558,7 @@ export class FloGridListViewComponent<TItem extends IFloGridListBaseItem> implem
         hasValue: value.isSome(),
         value: value.valueOrUndefined(),
         flexBasis: 100 / square,
-        padTop: this.isFullscreen()
-          ? (this.dynamicAspectRatioPct / square) - (square / this.dynamicAspectRatio)
-          : this.aspectRatioPct / square,
+        padTop: this.aspectRatioPct / square,
         isShowingBorder: isSelected && this.count > 1,
         isSelected,
         isNotSelected: !isSelected,
