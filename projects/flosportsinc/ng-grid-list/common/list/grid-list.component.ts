@@ -5,7 +5,7 @@ import { maybe } from 'typescript-monads'
 import { takeUntil } from 'rxjs/operators'
 import {
   Component, ChangeDetectionStrategy, Input, Directive, ContentChild,
-  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy
+  TemplateRef, Inject, Output, ChangeDetectorRef, OnInit, OnDestroy, SimpleChanges, OnChanges
 } from '@angular/core'
 
 // tslint:disable: readonly-keyword
@@ -50,7 +50,7 @@ export class FloGridListItemDirective { }
   styleUrls: ['./grid-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnDestroy {
+export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements OnInit, OnChanges, OnDestroy {
   constructor(private _cdRef: ChangeDetectorRef,
     @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any,
     @Inject(FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD) private _autoFillOnLoad: boolean
@@ -193,18 +193,27 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
       grid.cdRefChange
         .pipe(takeUntil(this.onDestroy))
         .subscribe(() => this._cdRef.detectChanges())
-
-      const keys = Object.keys(this.initialFill)
-      if (keys.length) {
-        const _items: ReadonlyArray<any> = []
-        keys.forEach(key => {
-          _items[key] = this.items.find(a => a.id === this.initialFill[key])
-        })
-        grid.setItems(_items)
-      } else if (this.autoFillOnLoad) {
-        this.autoFill()
-      }
     })
+  }
+
+  ngOnChanges(sc: SimpleChanges) {
+    if (sc.initialFill) {
+      this.maybeGridRef().tapSome(grid => {
+
+        const keys = Object.keys(this.initialFill)
+        if (keys.length) {
+          const _items: ReadonlyArray<any> = []
+          keys.forEach(key => {
+            _items[key] = this.items.find(a => a.id === this.initialFill[key])
+          })
+          grid.setItems(_items)
+        } else if (this.autoFillOnLoad) {
+          this.autoFill()
+        }
+
+        this._cdRef.detectChanges()
+      })
+    }
   }
 
   ngOnDestroy() {
