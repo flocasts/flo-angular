@@ -193,26 +193,30 @@ export class FloGridListComponent<TItem extends IFloGridListBaseItem> implements
       grid.cdRefChange
         .pipe(takeUntil(this.onDestroy))
         .subscribe(() => this._cdRef.detectChanges())
+
+      if (this.autoFillOnLoad && Object.keys(this.initialFill).length === 0) {
+        this.autoFill()
+      }
+    })
+  }
+
+  checkAndUpdateInitialFill() {
+    this.maybeGridRef().tapSome(grid => {
+      const keys = Object.keys(this.initialFill)
+      if (keys.length) {
+        const _items: ReadonlyArray<any> = []
+        keys.forEach(key => {
+          _items[key] = this.items.find(a => a.id === this.initialFill[key])
+        })
+        grid.setItems(_items)
+      }
+      this._cdRef.detectChanges()
     })
   }
 
   ngOnChanges(sc: SimpleChanges) {
     if (sc.initialFill) {
-      this.maybeGridRef().tapSome(grid => {
-
-        const keys = Object.keys(this.initialFill)
-        if (keys.length) {
-          const _items: ReadonlyArray<any> = []
-          keys.forEach(key => {
-            _items[key] = this.items.find(a => a.id === this.initialFill[key])
-          })
-          grid.setItems(_items)
-        } else if (this.autoFillOnLoad) {
-          this.autoFill()
-        }
-
-        this._cdRef.detectChanges()
-      })
+      this.checkAndUpdateInitialFill()
     }
   }
 
