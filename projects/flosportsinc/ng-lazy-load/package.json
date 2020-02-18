@@ -1,8 +1,22 @@
 {
-  "name": "ng-lazy-load",
+  "name": "@flosportsinc/ng-lazy-load",
   "version": "0.0.1",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/flocasts/flo-angular/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flocasts/flo-angular"
+  },
+  "contributors": [],
   "peerDependencies": {
-    "@angular/common": "^7.2.0",
-    "@angular/core": "^7.2.0"
-  }
+    "@angular/common": ">= 6",
+    "@angular/core": ">= 6"
+  },
+  "keywords": [
+    "angular",
+    "universal",
+    "flosports"
+  ]
 }

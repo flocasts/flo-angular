@@ -9,6 +9,7 @@ import { FloFullscreenModule } from '@flosportsinc/ng-fullscreen'
 import { FloFetchFillModule } from '@flosportsinc/ng-fetch-fill'
 import { SvgTransferStateModule } from '@flosportsinc/ng-svg-transfer-state'
 import { FloAdBlockModule } from '@flosportsinc/ng-ad-block'
+import { FloLazyLoadModule } from '@flosportsinc/ng-lazy-load'
 
 @NgModule({
   imports: [
@@ -29,7 +30,8 @@ import { FloAdBlockModule } from '@flosportsinc/ng-ad-block'
       useValues: {
         manuallyShared: 'yay!'
       }
-    })
+    }),
+    FloLazyLoadModule
   ],
   exports: [
     FloAdBlockModule,
@@ -41,7 +43,8 @@ import { FloAdBlockModule } from '@flosportsinc/ng-ad-block'
     FloFetchFillModule,
     SvgTransferStateModule,
     FloGridListModule,
-    FloNodeEnvTransferModule
+    FloNodeEnvTransferModule,
+    FloLazyLoadModule
   ]
 })
 export class FloModule { }
