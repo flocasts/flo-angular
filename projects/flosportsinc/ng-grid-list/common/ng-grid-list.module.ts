@@ -1,6 +1,6 @@
 import { FloGridListComponent, FloGridListItemDirective } from './list/grid-list.component'
 import { FloGridListViewComponent, IViewItem, ITrackByFn } from './grid/grid.component'
-import { NgModule, ModuleWithProviders } from '@angular/core'
+import { NgModule, ModuleWithProviders, PLATFORM_ID } from '@angular/core'
 import { CommonModule } from '@angular/common'
 import { FloGridListDragDropDirective } from './ng-grid-list-drag-drop.directive'
 import { FloGridListModuleConfiguration } from './ng-grid-list.config.interfaces'
@@ -25,7 +25,8 @@ import {
   FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN
 } from './ng-grid-list.tokens'
 import {
   DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT,
@@ -51,7 +52,8 @@ import {
   DEFAULT_FLO_GRID_LIST_SELECT_FROM_LOWER_INDICES_FIRST,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED,
   DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR,
-  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY,
+  DEFAULT_FLO_GRID_LIST_DRAG_DROP_SUPPORTED
 } from './ng-grid-list.module.defaults'
 
 export function defaultFloGridListGuidGenerator() {
@@ -122,7 +124,8 @@ export function defaultFloGridListTrackByFn() {
     { provide: FLO_GRID_LIST_FILL_TO_FIT, useValue: DEFAULT_FLO_GRID_LIST_FILL_TO_FIT },
     { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_ENABLED },
     { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_COLOR },
-    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY }
+    { provide: FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY, useValue: DEFAULT_FLO_GRID_LIST_DRAG_DROP_HOVER_BG_OPACITY },
+    { provide: FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN, useFactory: DEFAULT_FLO_GRID_LIST_DRAG_DROP_SUPPORTED, deps: [PLATFORM_ID] }
   ]
 })
 export class FloGridListModule {

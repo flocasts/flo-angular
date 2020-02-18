@@ -1,3 +1,5 @@
+import { isPlatformServer } from '@angular/common'
+
 export const DEFAULT_FLO_GRID_LIST_ITEMS: ReadonlyArray<any> = []
 export const DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT = 1
 export const DEFAULT_FLO_GRID_LIST_MIN_VIEWCOUNT = 1
@@ -30,5 +32,12 @@ export const DEFAULT_FLO_GRID_LIST_OVERLAY_NG_STYLE = {
 }
 
 export const DEFAULT_FLO_GRID_LIST_AUTO_FILL_FROM_LIST_ON_LOAD = false
-
 export const DEFAULT_FLO_GRID_LIST_ASPECT_RATIO = .5625 // 16/9 <=> 9/16 => .5625
+
+export function DEFAULT_FLO_GRID_LIST_DRAG_DROP_SUPPORTED(platformId: string) {
+  return function supportsDragImage() {
+    return isPlatformServer(platformId)
+      ? false
+      : 'setDragImage' in (((window as any).DataTransfer || ((window as any).Clipboard) || {}).prototype || {})
+  }
+}

@@ -1,12 +1,14 @@
 import { FloGridListModule } from './ng-grid-list.module'
-import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT } from './ng-grid-list.module.defaults'
+import { DEFAULT_FLO_GRID_LIST_DEFAULT_VIEWCOUNT, DEFAULT_FLO_GRID_LIST_DRAG_DROP_SUPPORTED } from './ng-grid-list.module.defaults'
 import { TestBed } from '@angular/core/testing'
 import { By } from '@angular/platform-browser'
 import { NgModule, Component } from '@angular/core'
 import {
   FLO_GRID_LIST_COUNT, FLO_GRID_LIST_MIN_COUNT, FLO_GRID_LIST_MAX_COUNT,
-  FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE, FLO_GRID_LIST_OVERLAY_FADEOUT,
-  FLO_GRID_LIST_OVERLAY_START
+  FLO_GRID_LIST_OVERLAY_ENABLED, FLO_GRID_LIST_OVERLAY_THROTTLE,
+  FLO_GRID_LIST_OVERLAY_FADEOUT,
+  FLO_GRID_LIST_OVERLAY_START,
+  FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN
 } from './ng-grid-list.tokens'
 
 interface TItem {
@@ -128,5 +130,21 @@ describe(FloGridListModule.name, () => {
     fixture.detectChanges()
 
     fixture.debugElement.query(By.css('#setViewCount9')).nativeElement.click()
+  })
+
+  describe('drag drop support', () => {
+    it('should detect platform browser', done => {
+      const sut = TestBed.get(FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN)()
+
+      expect(sut).toEqual(true)
+      done()
+    })
+
+    it('should detect platform server', done => {
+      const sut = DEFAULT_FLO_GRID_LIST_DRAG_DROP_SUPPORTED('server')()
+
+      expect(sut).toEqual(false)
+      done()
+    })
   })
 })
