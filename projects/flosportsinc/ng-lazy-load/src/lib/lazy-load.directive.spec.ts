@@ -1,9 +1,9 @@
-import { Component, Input } from '@angular/core'
-import { FloLazyLoadDirective } from './lazy-load.directive'
-import { ComponentFixture, TestBed } from '@angular/core/testing'
-import { By } from '@angular/platform-browser'
-import { FLO_LAZY_LOAD_LOG_ERROR } from './lazy-load.tokens'
+import {Component, Input} from '@angular/core'
+import {FloLazyLoadDirective} from './lazy-load.directive'
+import {ComponentFixture, TestBed} from '@angular/core/testing'
+import {FLO_LAZY_LOAD_LOG_ERROR} from './lazy-load.tokens'
 import createSpy = jasmine.createSpy
+import {By} from '@angular/platform-browser'
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -12,7 +12,7 @@ import createSpy = jasmine.createSpy
     <div #trigger style="min-height: 500px"></div>
     <div
       data-test="lazy-boi"
-      *floLazyLoad="lazyLoad; trigger: trigger; threshold: 0.0"
+      *libLazyLoad="lazyLoad; trigger: trigger; threshold: 0.0"
     >
       loaded
     </div>
@@ -29,14 +29,14 @@ describe(FloLazyLoadDirective.name, () => {
   // tslint:disable-next-line:no-let
   let component: LazyBoiComponent
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
       declarations: [FloLazyLoadDirective, LazyBoiComponent],
       providers: [
         // tslint:disable-next-line:no-console
-        { provide: FLO_LAZY_LOAD_LOG_ERROR, useValue: createSpy('errorLogFn', console.error) }
+        { provide: FLO_LAZY_LOAD_LOG_ERROR, useValue: createSpy('errorLogFn') }
       ]
-    })
+    }).compileComponents()
 
     fixture = TestBed.createComponent(LazyBoiComponent)
     component = fixture.componentInstance
