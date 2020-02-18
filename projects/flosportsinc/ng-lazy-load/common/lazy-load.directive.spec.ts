@@ -1,9 +1,9 @@
-import {Component, Input} from '@angular/core'
-import {FloLazyLoadDirective} from './lazy-load.directive'
-import {ComponentFixture, TestBed} from '@angular/core/testing'
-import {FLO_LAZY_LOAD_LOG_ERROR} from './lazy-load.tokens'
+import { Component, Input } from '@angular/core'
+import { FloLazyLoadDirective } from './lazy-load.directive'
+import { ComponentFixture, TestBed } from '@angular/core/testing'
+import { FLO_LAZY_LOAD_LOG_ERROR } from './lazy-load.tokens'
 import createSpy = jasmine.createSpy
-import {By} from '@angular/platform-browser'
+import { By } from '@angular/platform-browser'
 
 // noinspection AngularMissingOrInvalidDeclarationInModule
 @Component({
@@ -43,6 +43,7 @@ describe(FloLazyLoadDirective.name, () => {
   })
 
   it('can disable lazy loading programmatically', () => {
+    // tslint:disable-next-line: no-object-mutation
     component.lazyLoad = false
     fixture.detectChanges()
     const el = fixture.debugElement.query(By.css('[data-test="lazy-boi"]'))
@@ -57,6 +58,7 @@ describe(FloLazyLoadDirective.name, () => {
     to true in a jest test, we can expect that an error would be thrown if this
     case wasn't handled.
      */
+    // tslint:disable-next-line: no-object-mutation
     component.lazyLoad = true
     fixture.detectChanges()
     const errorLogFn = TestBed.get(FLO_LAZY_LOAD_LOG_ERROR)

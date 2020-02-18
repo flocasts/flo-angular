@@ -35,7 +35,7 @@ const identity = <A>(a: A): A => a
  * @see https://developer.mozilla.org/en-US/docs/Web/API/Intersection_Observer_API
  */
 @Directive({
-  selector: '[libLazyLoad]'
+  selector: '[floLazyLoad]'
 })
 export class FloLazyLoadDirective {
   /**
@@ -45,7 +45,7 @@ export class FloLazyLoadDirective {
    * "single-pixel" triggers. It's more useful when trying to load after
    * scrolling some portion of the way through a larger preceding component.
    */
-  @Input('libLazyLoadThreshold') public readonly threshold = DEFAULT_THRESHOLD
+  @Input('floLazyLoadThreshold') public readonly threshold = DEFAULT_THRESHOLD
 
   /**
    * The trigger element which will cause the load to occur.
@@ -55,7 +55,7 @@ export class FloLazyLoadDirective {
    * be placed on the page as a trigger. The trigger must *always* be present
    * in the DOM (it cannot target an element with or in \*ngIf or \*ngFor).
    */
-  @Input('libLazyLoadTrigger') public readonly trigger: HTMLElement
+  @Input('floLazyLoadTrigger') public readonly trigger: HTMLElement
 
   /**
    * Enable or disable lazy loading.
@@ -65,9 +65,10 @@ export class FloLazyLoadDirective {
    * browser support if old browsers are a concern. If lazy loading is disabled
    * at any point, then the element will be immediately loaded.
    */
-  @Input('libLazyLoad') public set active(enabled: boolean) {
+  @Input('floLazyLoad') public set active(enabled: boolean) {
     if (enabled) {
       try {
+        // tslint:disable-next-line: no-object-mutation
         this.observer = new IntersectionObserver(
           entries => {
             this.checkForIntersection(entries)
@@ -97,7 +98,7 @@ export class FloLazyLoadDirective {
     private readonly lazyBoi: TemplateRef<HTMLElement>,
     private readonly viewContainer: ViewContainerRef,
     @Inject(FLO_LAZY_LOAD_LOG_ERROR) private readonly logError: ErrorLogFn
-  ) {}
+  ) { }
 
   private loadView() {
     this.viewContainer.createEmbeddedView(this.lazyBoi).detectChanges()
@@ -114,6 +115,7 @@ export class FloLazyLoadDirective {
       if (!this.isIntersecting(entry) || this.observer === undefined) {
         return
       }
+      // tslint:disable-next-line: no-object-mutation
       this.active = false
       this.observer.unobserve(this.trigger)
       this.observer.disconnect()
