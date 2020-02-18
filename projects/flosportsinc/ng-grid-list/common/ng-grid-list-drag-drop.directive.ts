@@ -53,7 +53,7 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   private supportsDragImage = () => isPlatformServer(this.platformId)
     ? false
-    : 'setDragImage' in ((window as any).DataTransfer || (window as any).Clipboard).prototype
+    : 'setDragImage' in (((window as any).DataTransfer || ((window as any).Clipboard) || {}).prototype || {})
   private getTiles = () => Array.from(this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER))
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
