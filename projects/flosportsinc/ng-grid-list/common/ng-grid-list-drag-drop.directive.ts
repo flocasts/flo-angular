@@ -1,4 +1,4 @@
-import { IFloGridListBaseItem, FLO_GRID_LIST_GUID_GEN } from './ng-grid-list.tokens'
+import { IFloGridListBaseItem, FLO_GRID_LIST_GUID_GEN, FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN, BooleanResultFn } from './ng-grid-list.tokens'
 import { FloGridListViewComponent } from './grid/grid.component'
 import { maybe } from 'typescript-monads'
 import { DOCUMENT, isPlatformServer } from '@angular/common'
@@ -25,7 +25,8 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
   constructor(public elmRef: ElementRef<TElement>, private rd: Renderer2,
     @Inject(PLATFORM_ID) private platformId: string,
     @Inject(DOCUMENT) private doc: any,
-    @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any) { }
+    @Inject(FLO_GRID_LIST_GUID_GEN) private guid: any,
+    @Inject(FLO_GRID_LIST_DRAG_DROP_SUPPORTED_FN) private readonly supportsDragImage: BooleanResultFn) { }
 
   private _floGridListDragDrop = false
   private _document = this.doc as HTMLDocument
@@ -51,9 +52,6 @@ export class FloGridListDragDropDirective<TItem extends IFloGridListBaseItem, TE
 
   @Output() floGridListDragDropDragoverChange = new Subject<DragEvent>()
 
-  private supportsDragImage = () => isPlatformServer(this.platformId)
-    ? false
-    : 'setDragImage' in ((window as any).DataTransfer || (window as any).Clipboard).prototype
   private getTiles = () => Array.from(this._document.querySelectorAll<HTMLDivElement>(CLASS_CONTAINER))
   private removeTileDragStyling = () => this.getTiles().forEach(this.clearItemOverlayStyle)
   private preventDefaults(evt: DragEvent) {
