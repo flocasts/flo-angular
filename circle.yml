@@ -297,6 +297,21 @@ jobs:
           root: .
           paths:
             - cc.ng-fetch-fill.json
+  test_lazy-load:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test @flosportsinc/ng-lazy-load -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-lazy-load.json ./coverage/ng-lazy-load/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-lazy-load.json
   upload_coverage:
     <<: *defaults
     steps:
@@ -393,6 +408,10 @@ workflows:
           requires:
               - build
               - prep_coverage
+      - test_lazy-load:
+          requires:
+              - build
+              - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -411,6 +430,7 @@ workflows:
             - test_grid-list
             - test_fullscreen
             - test_fetch-fill
+            - test_lazy-load
       - publish:
           requires:
             - test_docs_site
@@ -429,6 +449,7 @@ workflows:
             - test_grid-list
             - test_fullscreen
             - test_fetch-fill
+            - test_lazy-load
             - upload_coverage
             - e2e
           filters:
