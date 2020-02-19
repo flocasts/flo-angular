@@ -3,7 +3,8 @@ import {
   Inject,
   Input,
   TemplateRef,
-  ViewContainerRef
+  ViewContainerRef,
+  Optional
 } from '@angular/core'
 import { maybe } from 'typescript-monads'
 import { ErrorLogFn } from './lazy-load.interface'
@@ -38,6 +39,12 @@ const identity = <A>(a: A): A => a
   selector: '[floLazyLoad]'
 })
 export class FloLazyLoadDirective {
+  constructor(
+    private readonly lazyBoi: TemplateRef<HTMLElement>,
+    private readonly viewContainer: ViewContainerRef,
+    @Optional() @Inject(FLO_LAZY_LOAD_LOG_ERROR) private readonly logErrorFn?: ErrorLogFn
+  ) { }
+
   /**
    * The proportion of the `trigger` element which must be visible to trigger a load.
    *
@@ -77,7 +84,7 @@ export class FloLazyLoadDirective {
         )
         this.observer.observe(this.trigger)
       } catch (e) {
-        if (!(e instanceof ReferenceError)) {
+        if (!(e instanceof ReferenceError) && typeof this.logErrorFn === 'function') {
           this.logError(e)
         }
         this.loadView()
@@ -94,12 +101,6 @@ export class FloLazyLoadDirective {
     return this.validateThreshold(this.threshold)
   }
 
-  constructor(
-    private readonly lazyBoi: TemplateRef<HTMLElement>,
-    private readonly viewContainer: ViewContainerRef,
-    @Inject(FLO_LAZY_LOAD_LOG_ERROR) private readonly logError: ErrorLogFn
-  ) { }
-
   private loadView() {
     this.viewContainer.createEmbeddedView(this.lazyBoi).detectChanges()
   }
@@ -108,9 +109,12 @@ export class FloLazyLoadDirective {
     return entry.isIntersecting && entry.target === this.trigger
   }
 
-  private checkForIntersection(
-    entries: ReadonlyArray<IntersectionObserverEntry>
-  ): void {
+  private logError(msg?: string) {
+    if (typeof this.logErrorFn !== 'function') { return }
+    this.logErrorFn(msg)
+  }
+
+  private checkForIntersection(entries: ReadonlyArray<IntersectionObserverEntry>): void {
     entries.forEach(entry => {
       if (!this.isIntersecting(entry) || this.observer === undefined) {
         return
@@ -122,16 +126,14 @@ export class FloLazyLoadDirective {
     })
   }
 
-  private validateThreshold(val: number): number {
+  private validateThreshold(val?: number): number {
     return maybe(val)
       .filter(a => a >= 0)
       .filter(a => a <= 1)
       .match({
         some: identity,
         none: () => {
-          this.logError(
-            `Invalid lazy load threshold. Must be from 0.0 to 1.0; defaulting to ${DEFAULT_THRESHOLD}.`
-          )
+          this.logError(`Invalid lazy load threshold. Must be from 0.0 to 1.0; defaulting to ${DEFAULT_THRESHOLD}.`)
           return DEFAULT_THRESHOLD
         }
       })

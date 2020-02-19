@@ -801,7 +801,7 @@
     },
     "@flosportsinc/ng-lazy-load": {
       "root": "projects/flosportsinc/ng-lazy-load",
-      "sourceRoot": "projects/flosportsinc/ng-lazy-load/src",
+      "sourceRoot": "projects/flosportsinc/ng-lazy-load",
       "projectType": "library",
       "prefix": "lib",
       "architect": {
@@ -815,7 +815,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "projects/flosportsinc/ng-lazy-load/src/test.ts",
+            "main": "projects/flosportsinc/ng-lazy-load/test.ts",
             "tsConfig": "projects/flosportsinc/ng-lazy-load/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-lazy-load/karma.conf.js"
           }
