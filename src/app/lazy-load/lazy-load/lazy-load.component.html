@@ -1,0 +1,53 @@
+<div class="wrapper">
+  <div class="container">
+    <h1>Lazy Load Directive Demo</h1>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <div [eagerLoad]="false" [threshold]="0.5" (floLazyLoad)="this.show = true" class="trigger">
+      <p>This will trigger the load</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+    </div>
+  </div>
+  <div class="loaded-content">
+    <h1 *ngIf="show">Boo!</h1>
+  </div>
+</div>

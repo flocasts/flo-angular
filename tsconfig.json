@@ -118,6 +118,12 @@
       ],
       "@flosportsinc/ng-fetch-fill/*": [
         "dist/flosportsinc/ng-fetch-fill/*"
+      ],
+      "@flosportsinc/ng-lazy-load": [
+        "dist/flosportsinc/ng-lazy-load"
+      ],
+      "@flosportsinc/ng-lazy-load/*": [
+        "dist/flosportsinc/ng-lazy-load/*"
       ]
     }
   }

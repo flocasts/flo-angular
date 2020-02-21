@@ -21,7 +21,8 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloModule } from './flo.module'
-import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
+import { FetchFillComponent } from './fetch-fill/fetch-fill.component';
+import { LazyLoadModule } from './lazy-load/lazy-load.module'
 
 @NgModule({
   imports: [
@@ -33,7 +34,8 @@ import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
     HttpClientModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
     BrowserModule.withServerTransition({ appId: 'my-app' }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    LazyLoadModule
   ],
   declarations: [
     AppComponent,
@@ -49,7 +51,7 @@ import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
     GridListComponent,
     FullscreenComponent,
     FetchFillComponent,
-    NotFoundComponent,
+    NotFoundComponent
   ]
 })
 export class AppModule { }
