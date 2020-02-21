@@ -1,0 +1,12 @@
+.wrapper {
+  margin: 30px 30px 30px 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.loaded-content {
+  position: fixed;
+  left: auto;
+  right: 30px;
+  text-align: right;
+}

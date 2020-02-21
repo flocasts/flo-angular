@@ -22,6 +22,7 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloModule } from './flo.module'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
+import {LazyLoadComponent} from './lazy-load/lazy-load.component'
 
 @NgModule({
   imports: [
@@ -33,7 +34,7 @@ import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
     HttpClientModule,
     MarkdownModule.forRoot({ loader: HttpClient }),
     BrowserModule.withServerTransition({ appId: 'my-app' }),
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
   ],
   declarations: [
     AppComponent,
@@ -50,6 +51,7 @@ import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
     FullscreenComponent,
     FetchFillComponent,
     NotFoundComponent,
+    LazyLoadComponent
   ]
 })
 export class AppModule { }

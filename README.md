@@ -44,6 +44,7 @@
 | [ng-ima](projects/flosportsinc/ng-ima) | Goolge IMA adapter for Angular | [![](https://img.shields.io/npm/v/@flosportsinc/ng-ima.svg)](https://www.npmjs.com/package/@flosportsinc/ng-ima)
 | [ng-video-autoplay](projects/flosportsinc/ng-video-autoplay) | Video Autoplay | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-autoplay.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-autoplay)
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
+| [ng-lazy-load](projects/flosportsinc/ng-lazy-load) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-lazy-load.svg)](https://www.npmjs.com/package/@flosportsinc/ng-lazy-load)
 
 ## Building ALL libraries
 Run `npm run prepare`. This commmand is also exectud after every `npm install`.
