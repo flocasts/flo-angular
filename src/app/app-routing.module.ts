@@ -13,7 +13,7 @@ import { AutoplayComponent } from './autoplay/autoplay.component'
 import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
-import {LazyLoadComponent} from './lazy-load/lazy-load/lazy-load.component'
+import {LazyLoadComponent} from './lazy-load/lazy-load.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
