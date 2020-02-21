@@ -13,12 +13,12 @@ $ npm i @trademe/ng-lazy-load
 ```
 ## Usage
 
-1. Import `DeferLoadModule` into the module corresponding to your component
+1. Import `FloLazyLoadModule` into the module corresponding to your component
 
 2. Use the directive with the element you wish to lazy load
 ```html
   <div
-    (floDeferLoad)="showMyElement=true">
+    (floLazyLoad)="showMyElement=true">
     <my-element
        *ngIf=showMyElement>
       ...
@@ -36,7 +36,7 @@ It loads the element on the server by default supporting Search Engine Optimizat
 ```html
   <div
     [preRender]="false"
-    (floDeferLoad)="showMyElement=true">
+    (floLazyLoad)="showMyElement=true">
     <my-element
        *ngIf=showMyElement>
       ...
@@ -53,7 +53,7 @@ If you do not want to allow this fallback, and would prefer the browser to just 
 ```html
   <div
     [fallbackEnabled]="false"
-    (floDeferLoad)="showMyElement=true">
+    (floLazyLoad)="showMyElement=true">
     <my-element
        *ngIf=showMyElement>
       ...
