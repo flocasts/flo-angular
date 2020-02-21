@@ -9,7 +9,7 @@ It uses [Intersection Observer API](https://developer.mozilla.org/en-US/docs/Web
 
 Using npm:
 ```shell
-$ npm i @trademe/ng-lazy-load
+$ npm i @flosportsinc/ng-lazy-load
 ```
 ## Usage
 
