@@ -59,7 +59,7 @@ export class FloLazyLoadDirective implements OnInit, AfterViewInit, OnDestroy {
           || (isPlatformServer(this.platformId) && this.preRender)
           || (isPlatformBrowser(this.platformId) && !this.fallbackEnabled && !this.hasCompatibleBrowser())
         ) {
-            this.load();
+            this.load()
         }
     }
 

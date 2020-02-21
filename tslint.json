@@ -125,7 +125,7 @@
     "decorator-not-allowed": true,
     "templates-no-negated-async": true,
     "directive-class-suffix": true,
-    "readonly-keyword": true,
+    "readonly-keyword": false,
     "readonly-array": true,
     "no-let": true,
     "no-object-mutation": true,
