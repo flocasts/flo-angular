@@ -22,8 +22,8 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FloModule } from './flo.module'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
-import {LazyLoadComponent} from './lazy-load/lazy-load.component';
-import { LazyLoadDemoComponent } from './lazy-load/lazy-load-demo/lazy-load-demo.component';
+import {LazyLoadComponent} from './lazy-load/lazy-load.component'
+import { LazyLoadDemoComponent } from './lazy-load/lazy-load-demo/lazy-load-demo.component'
 import { LazyLoadReadmeComponent } from './lazy-load/lazy-load-readme/lazy-load-readme.component'
 
 @NgModule({
