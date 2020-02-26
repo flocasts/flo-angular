@@ -27,6 +27,7 @@
   </a>
 </p>
 
+## Current Libraries
 | Package       | Description   | Latest |
 | ------------- | ------------- | -------|
 | [ng-styles](projects/flosportsinc/ng-styles) | FloSports Stylesheets | [![](https://img.shields.io/npm/v/@flosportsinc/ng-styles.svg)](https://www.npmjs.com/package/@flosportsinc/ng-styles)
@@ -46,8 +47,116 @@
 | [ng-video-player](projects/flosportsinc/ng-video-player) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-video-player.svg)](https://www.npmjs.com/package/@flosportsinc/ng-video-player)
 | [ng-lazy-load](projects/flosportsinc/ng-lazy-load) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-lazy-load.svg)](https://www.npmjs.com/package/@flosportsinc/ng-lazy-load)
 
+## Developing a New Project
+
+ 1. [Create a New Library](#create-a-new-library)
+ 2. [Update Server tsconfig](#update-server-tsconfig)
+ 3. [Write the Library](#write-the-library)
+ 4. [Create the Sample Page](#create-the-sample-page)
+ 5. [Write Tests](#write-tests)
+ 6. [Add to Main Readme](#add-to-main-readme)
+ 
+### Create a New Library
+
+To create a new library in this project, use a command like the following:
+
+```shell script
+ng g lib @flosportsinc/ng-<your-library-name> --prefix flo
+```
+
+This will generate all of the files you need to start working on your library.
+It will also register the library path in the main tsconfig.
+
+### Update Server tsconfig
+
+Once your library is generated, you'll need to add the config generated for 
+the main tsconfig to the [server tsconfig](./src/tsconfig.server.json).
+
+You'll need to copy these path configs from the 
+[main tsconfig](./tsconfig.json). There are two ways you can do this:
+
+  * Git Diff
+  * Quick copy
+  
+If you diff the main tsconfig, you should see a change like this:
+  
+```shell script
+diff --git a/tsconfig.json b/tsconfig.json
+index 8eb42c0..40cea21 100644
+--- a/tsconfig.json
++++ b/tsconfig.json
+@@ -124,6 +124,12 @@
+       ],
+       "@flosportsinc/ng-lazy-load/*": [
+         "dist/flosportsinc/ng-lazy-load/*"
++      ],
++      "@flosportsinc/ng-test": [
++        "dist/flosportsinc/ng-test"
++      ],
++      "@flosportsinc/ng-test/*": [
++        "dist/flosportsinc/ng-test/*"
+       ]
+     }
+   }
+```
+
+You'll need to add those new lines into the 
+[server tsconfig](./src/tsconfig.server.json) under the paths key.
+
+Alternatively, you can get the lines to add by running this command in the
+project root:
+
+```shell script
+# Omit `| pbcopy` if it is not available on your system and copy it manually
+grep -A1 -i ng-lazy-load tsconfig.json | sed '4d' | pbcopy
+```
+
+This will put the added lines directly into your clipboard, and you can paste
+them into the server tsconfig.
+
+### Write the Library
+
+You can now navigate to the [project directory](./projects/flosportsinc) and
+into your library. First, review the generated files. Make any updates you
+feel are necessary. Replace the content of karma.conf.js with this:
+
+```js
+const config = require('../../../src/karma.conf.shared')
+module.exports = config('../coverage/ng-http-cache-tags')()()
+```
+
+Other than that, everything else is pretty much ready to go. Remember to
+export all of your public modules in your public_api.ts.
+
+### Create the Sample Page
+
+In order to test and provide live documentation and examples of your library,
+add a new set of components to the app.
+
+```shell script
+ng g c your-library-name --module app
+```
+
+You may import your library in the [Flo Module](./src/app/flo.module.ts), or
+you can create your own module if manual configuration is required.
+
+You should take a look at the [hls library](./src/app/hls) as an example of 
+how to produce rich and accurate documentation for your new library.
+
+### Write Tests
+
+Spec files can be included in your library folder. You can also write E2E
+tests using protractor in [this directory](./e2e/src). Feel free to write
+tests earlier in your process, but you must cover your code wherever possible.
+
+### Add to Main Readme
+
+Add your library to the table in readme. Copy another one of the lines in the
+[library list](#current-libraries) and replace the relevant parts with the
+name of your library.
+
 ## Building ALL libraries
-Run `npm run prepare`. This commmand is also exectud after every `npm install`.
+Run `npm run build.lib`.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
