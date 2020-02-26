@@ -14,6 +14,8 @@ import { GridListComponent } from './grid-list/grid-list.component'
 import { FullscreenComponent } from './fullscreen/fullscreen.component'
 import { FetchFillComponent } from './fetch-fill/fetch-fill.component'
 import {LazyLoadComponent} from './lazy-load/lazy-load.component'
+import {LazyLoadReadmeComponent} from './lazy-load/lazy-load-readme/lazy-load-readme.component'
+import {LazyLoadDemoComponent} from './lazy-load/lazy-load-demo/lazy-load-demo.component'
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -32,7 +34,14 @@ const routes: Routes = [
   { path: 'autoplay', component: AutoplayComponent },
   { path: 'grid-list', component: GridListComponent },
   { path: 'fullscreen', component: FullscreenComponent },
-  { path: 'lazy-load', component: LazyLoadComponent },
+  {
+    path: 'lazy-load',
+    component: LazyLoadComponent,
+    children: [
+      { path: '', component: LazyLoadReadmeComponent },
+      { path: 'demo', component: LazyLoadDemoComponent }
+    ]
+  },
   { path: 'projects/flosportsinc/ng-fetch-fill/demo', component: FetchFillComponent },
   { path: '**', component: NotFoundComponent }
 ]

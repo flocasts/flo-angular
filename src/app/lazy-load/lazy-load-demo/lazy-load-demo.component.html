@@ -1,0 +1,47 @@
+<div class="wrapper">
+  <div class="container">
+    <h1>Lazy Load Directive Demo</h1>
+    <p>Scroll down the page to trigger the load. Look out for the lightcoral colored area.</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <p>spacer</p>
+    <div class="trigger-zone" [eagerLoad]="false" [threshold]="0.5" (floLazyLoad)="this.show = true">
+      <p>This lightcoral colored area will trigger the load when it is 50% in view</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+      <p>spacer</p>
+    </div>
+  </div>
+  <div class="loaded-content">
+    <h1 *ngIf="show">Boo!</h1>
+  </div>
+</div>

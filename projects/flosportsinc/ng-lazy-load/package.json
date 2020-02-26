@@ -1,8 +1,32 @@
 {
   "name": "@flosportsinc/ng-lazy-load",
   "version": "0.0.1",
+  "license": "MIT",
+  "private": false,
+  "homepage": "https://flosports-component-library.herokuapp.com",
+  "bugs": {
+    "url": "https://github.com/flocasts/flo-angular/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/flocasts/flo-angular"
+  },
+  "author": "William Reynolds <williamareynolds@icloud.com>",
+  "contributors": [
+    "Vamsi Vempati"
+  ],
   "peerDependencies": {
     "@angular/common": "^7.2.0",
     "@angular/core": "^7.2.0"
-  }
+  },
+  "keywords": [
+    "angular",
+    "directive",
+    "lazy",
+    "lazyload",
+    "defer",
+    "deferload",
+    "intersection",
+    "intersectionobserver"
+  ]
 }

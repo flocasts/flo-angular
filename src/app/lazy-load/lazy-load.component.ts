@@ -6,8 +6,4 @@ import {Component, OnInit, ChangeDetectionStrategy, Input} from '@angular/core'
   styleUrls: ['./lazy-load.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LazyLoadComponent {
-  @Input() public show = false
-
-  constructor() { }
-}
+export class LazyLoadComponent {}
