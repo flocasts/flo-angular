@@ -62,7 +62,7 @@
 To create a new library in this project, use a command like the following:
 
 ```shell script
-npm run ng g lib @flosportsinc/ng-<your-library-name> --prefix flo
+npm run ng g lib @flosportsinc/ng-<your-library-name> --prefix flo --lint-fix
 ```
 
 This will generate all of the files you need to start working on your library.
@@ -135,7 +135,7 @@ In order to test and provide live documentation and examples of your library,
 add a new set of components to the app.
 
 ```shell script
-npm run ng g c your-library-name --module app
+npm run ng g c your-library-name --module app --lint-fix
 ```
 
 You may import your library in the [Flo Module](./src/app/flo.module.ts), or
@@ -190,6 +190,9 @@ Run `npm run ng serve` for a dev server. Navigate to `http://localhost:4200/`. T
 
 ## Code scaffolding
 Run `npm run ng generate component component-name` to generate a new component. You can also use `npm run ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+Note: be sure to use the --lint-fix switch to ensure that generated files don't
+contain lint errors
 
 ## Build
 Run `npm run ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
