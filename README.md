@@ -61,7 +61,7 @@
 To create a new library in this project, use a command like the following:
 
 ```shell script
-ng g lib @flosportsinc/ng-<your-library-name> --prefix flo
+npm run ng g lib @flosportsinc/ng-<your-library-name> --prefix flo
 ```
 
 This will generate all of the files you need to start working on your library.
@@ -134,7 +134,7 @@ In order to test and provide live documentation and examples of your library,
 add a new set of components to the app.
 
 ```shell script
-ng g c your-library-name --module app
+npm run ng g c your-library-name --module app
 ```
 
 You may import your library in the [Flo Module](./src/app/flo.module.ts), or
@@ -155,26 +155,52 @@ Add your library to the table in readme. Copy another one of the lines in the
 [library list](#current-libraries) and replace the relevant parts with the
 name of your library.
 
+### Add CI Step
+
+In order to make sure CircleCI tests your new library, you'll have to add it
+to [circle.yml](circle.yml). There are several examples under the `jobs` key,
+and you can simply copy one of them and replace the library name with your 
+own.
+
+Example:
+```yaml
+test_my-library:
+    <<: *defaults
+    steps:
+      - checkout
+      - attach_workspace:
+          at: .
+      - run:
+          name: Test
+          command: |
+            npm run test @flosportsinc/ng-my-libary -- --watch=false --progress=false --browsers=ChromeHeadlessCI
+            ./cc-test-reporter format-coverage -t lcov -o ./cc.ng-my-library.json ./coverage/ng-my-library/lcov.info
+      - persist_to_workspace:
+          root: .
+          paths:
+            - cc.ng-my-library.json
+```
+
 ## Building ALL libraries
 Run `npm run build.lib`.
 
 ## Development server
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `npm run ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Run `npm run ng generate component component-name` to generate a new component. You can also use `npm run ng generate directive|pipe|service|class|guard|interface|enum|module`.
 
 ## Build
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+Run `npm run ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running unit tests
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+Run `npm run ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
 
 ## Running end-to-end tests
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Run `npm run ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
 
 ## Further help
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+To get more help on the Angular CLI use `npm run ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
 
 ## License
 The MIT License (MIT)  
