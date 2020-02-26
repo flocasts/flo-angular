@@ -1,11 +1,8 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing'
+import { async, TestBed } from '@angular/core/testing'
 
 import { LazyLoadReadmeComponent } from './lazy-load-readme.component'
 
 describe('LazyLoadReadmeComponent', () => {
-  const component: LazyLoadReadmeComponent
-  const fixture: ComponentFixture<LazyLoadReadmeComponent>
-
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ LazyLoadReadmeComponent ]
@@ -13,13 +10,10 @@ describe('LazyLoadReadmeComponent', () => {
     .compileComponents()
   }))
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(LazyLoadReadmeComponent)
-    component = fixture.componentInstance
-    fixture.detectChanges()
-  })
-
   it('should create', () => {
+    const fixture = TestBed.createComponent(LazyLoadReadmeComponent)
+    const component = fixture.componentInstance
+    fixture.detectChanges()
     expect(component).toBeTruthy()
   })
 })
