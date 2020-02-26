@@ -55,6 +55,7 @@
  4. [Create the Sample Page](#create-the-sample-page)
  5. [Write Tests](#write-tests)
  6. [Add to Main Readme](#add-to-main-readme)
+ 7. [Add CI Step](#add-ci-step)
  
 ### Create a New Library
 
