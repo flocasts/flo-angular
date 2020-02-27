@@ -1,10 +1,12 @@
 import { async, TestBed } from '@angular/core/testing'
 
 import { LazyLoadReadmeComponent } from './lazy-load-readme.component'
+import { SharedTestingModule } from '../../shared.testing.module'
 
 describe('LazyLoadReadmeComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [ SharedTestingModule ],
       declarations: [ LazyLoadReadmeComponent ]
     })
     .compileComponents()
