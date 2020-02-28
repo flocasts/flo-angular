@@ -37,7 +37,7 @@
     "styles.scss": "npm run styles.scss.full && npm run styles.scss.min",
     "styles.scss.full": "node-sass projects/flosportsinc/ng-styles/common/styles/main.scss dist/flosportsinc/ng-styles/css/flo.css",
     "styles.scss.min": "node-sass projects/flosportsinc/ng-styles/common/styles/main.scss dist/flosportsinc/ng-styles/css/flo.min.css --output-style=compressed",
-    "test": "ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
+    "test": "node --max_old_space_size=8192 node_modules/@angular/cli/bin/ng test --watch=false --progress=false --browsers=ChromeHeadlessCI",
     "webpack.server": "webpack --config webpack.server.config.js --progress --colors"
   },
   "dependencies": {
