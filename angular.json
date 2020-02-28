@@ -815,6 +815,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
+            "codeCoverage": true,
             "main": "projects/flosportsinc/ng-lazy-load/test.ts",
             "tsConfig": "projects/flosportsinc/ng-lazy-load/tsconfig.spec.json",
             "karmaConfig": "projects/flosportsinc/ng-lazy-load/karma.conf.js"
