@@ -1,4 +1,4 @@
-import { Component, NgModule, ContentChild, ContentChildren, QueryList, TemplateRef, ViewChildren } from '@angular/core'
+import { Component, NgModule, QueryList, ViewChildren } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
 import { FloFetchFillItemDirective } from './ng-fetch-fill-item.directive'
 import { By } from '@angular/platform-browser'
