@@ -180,6 +180,25 @@ test_my-library:
           root: .
           paths:
             - cc.ng-my-library.json
+
+build:
+  jobs:
+    - ...
+    - test_my-library:
+        requires:
+          - build
+          - prep_coverage
+    - ...
+    - upload_coverage:
+          requires:
+            - ...
+            - test_my-library
+            - ...
+     - publish:
+          requires:
+            - ...
+            - test_my-library
+            - ...
 ```
 
 ## Building ALL libraries
