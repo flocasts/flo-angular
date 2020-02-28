@@ -12,6 +12,7 @@
       "element",
       "flo",
       "kebab-case"
-    ]
+    ],
+    "prefer-const": false
   }
 }
