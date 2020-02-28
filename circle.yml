@@ -408,6 +408,10 @@ workflows:
           requires:
               - build
               - prep_coverage
+      - test_lazy-load:
+          requires:
+              - build
+              - prep_coverage
       - upload_coverage:
           requires:
             - test_docs_site
@@ -426,6 +430,7 @@ workflows:
             - test_grid-list
             - test_fullscreen
             - test_fetch-fill
+            - test_lazy-load
       - publish:
           requires:
             - test_docs_site
@@ -444,6 +449,7 @@ workflows:
             - test_grid-list
             - test_fullscreen
             - test_fetch-fill
+            - test_lazy-load
             - upload_coverage
             - e2e
           filters:
