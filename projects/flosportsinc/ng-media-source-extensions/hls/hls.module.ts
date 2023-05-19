@@ -16,7 +16,7 @@ import {
   IMseExecutionConfig
 } from '@flosportsinc/ng-media-source-extensions'
 import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core'
-import * as Hls from 'hls.js'
+import Hls, { HlsConfig, ErrorData } from 'hls.js'
 
 export const FLO_MSE_HLS_EXEC_KEY = 'HLS'
 export const MEDIA_SOURCE_EXTENSION_HLS_MODULE_CONFIG = new InjectionToken('fs.mse.lib.hls.init.cfg.mdl')
@@ -28,7 +28,7 @@ export interface HlsMessage {
   readonly message: any
 }
 
-export type IHlsConfig = Hls.Config
+export type IHlsConfig = HlsConfig
 
 export interface IHlsModuleConfig {
   readonly selfHeal: boolean
@@ -54,7 +54,7 @@ export function defaultHlsSupportedNativelyFunction(): IVideoElementSupportsTarg
   }
 }
 
-export const selfHealSwitch = (client: Hls, errorData: Hls.errorData) => {
+export const selfHealSwitch = (client: Hls, errorData: ErrorData) => {
   if (!errorData.fatal) { return }
 
   const report = { type: errorData.type, details: errorData.details, fatal: true }
@@ -85,8 +85,8 @@ export const selfHealFunc = (client: Hls) => {
 
 // TODO: if another Media Error is raised 'quickly' after this first Media Error,
 // TODO: first call hls.swapAudioCodec(), then call hls.recoverMediaError().
-export function defaultMseClientInitFunction(selfHeal: boolean): IMseInit<Hls, HlsMessage, Hls.Config> {
-  const func: IMseInitFunc<Hls, HlsMessage, Hls.Config> = initEvent => {
+export function defaultMseClientInitFunction(selfHeal: boolean): IMseInit<Hls, HlsMessage, HlsConfig> {
+  const func: IMseInitFunc<Hls, HlsMessage, HlsConfig> = initEvent => {
     const client = new Hls(initEvent.config)
 
     Object.keys(Hls.Events).forEach(k => {
@@ -126,7 +126,7 @@ export function defaultHlsPatternCheck(): IMsePatternCheck {
   }
 }
 
-export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>): IMseExecutionConfig<Partial<Hls.Config>>  {
+export function mergeModuleSettings(hlsConfig: Partial<IHlsConfig>): IMseExecutionConfig<Partial<HlsConfig>>  {
   return {
     execKey: FLO_MSE_HLS_EXEC_KEY,
     override: true,

@@ -47,7 +47,7 @@
 | [ng-lazy-load](projects/flosportsinc/ng-lazy-load) | Extensible HTML5 based video player | [![](https://img.shields.io/npm/v/@flosportsinc/ng-lazy-load.svg)](https://www.npmjs.com/package/@flosportsinc/ng-lazy-load)
 
 ## Building ALL libraries
-Run `npm run prepare`. This commmand is also exectud after every `npm install`.
+Run `npm run build.lib`.
 
 ## Development server
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.

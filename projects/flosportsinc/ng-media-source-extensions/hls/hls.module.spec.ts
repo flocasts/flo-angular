@@ -4,7 +4,7 @@ import {
   selfHealSwitch
 } from './hls.module'
 import { TestBed, async } from '@angular/core/testing'
-import * as Hls from 'hls.js'
+import Hls, { HlsConfig } from 'hls.js'
 import {
   SUPPORTS_TARGET_VIA_MEDIA_SOURCE_EXTENSION,
   SUPPORTS_MSE_TARGET_NATIVELY,
@@ -187,7 +187,7 @@ describe(FloHlsModule.name, () => {
       const defaultConfig = hlsConfigs.find(a => !a.override)
       const override = hlsConfigs.find(a => a.override)
       const directiveParsed = sut.instance.floMseConfig
-      const directiveParsedHls = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<Hls.Config>
+      const directiveParsedHls = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<HlsConfig>
 
       expect(injectedConfigs.length).toEqual(3)
       expect(hlsConfigs.length).toEqual(2)
@@ -209,7 +209,7 @@ describe(FloHlsModule.name, () => {
       sut.instance.setFloMseConfig([{ execKey: 'HLS', config: { capLevelToPlayerSize: true }}])
       sut.hoist.detectChanges()
 
-      const retrieve = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<Hls.Config>
+      const retrieve = sut.instance.floMseConfig.find(a => a.execKey === 'HLS') as IMseExecutionConfig<HlsConfig>
 
       expect(retrieve.config).toEqual({
         ...DEFAULT_MODULE_HLS_CONFIG,
